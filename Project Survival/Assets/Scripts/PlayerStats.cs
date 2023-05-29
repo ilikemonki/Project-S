@@ -1,0 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerStats : MonoBehaviour
+{
+    public EnemyManager enemyManager;
+    public float moveSpeed;
+    public float currentHealth;
+    public float maxHealth;
+    public float damageRate;
+    public float defense;
+    public float criticalChance, criticalChanceRate;
+    public float regen, regenRate;
+    public float currentMoveSpeed;
+    public float magnetRange;
+
+    //I-Frames
+    public float iFrameDuration;
+    float iFrameTimer;
+    public bool isInvincible;
+    public bool onRegen;
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+        currentMoveSpeed = moveSpeed;
+    }
+    private void Start()
+    {
+
+    }
+
+    private void Update()
+    {
+        if(currentHealth < maxHealth && !onRegen)
+        {
+            onRegen = true;
+            StartCoroutine(Regenerate(regen));
+        }
+        if(iFrameTimer > 0)
+        {
+            iFrameTimer -= Time.deltaTime;
+        }
+        else if (isInvincible)
+        {
+            isInvincible = false;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (isInvincible)
+        {
+            return;
+        }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyStats enemy = collision.GetComponent<EnemyStats>();
+            TakeDamage(enemy.damage); //Do damage to player
+            //Debug.Log(enemy.damage);
+        }
+    }
+
+    public void TakeDamage(float dmg)
+    {
+        if (!isInvincible)
+        {
+            currentHealth -= dmg;
+            iFrameTimer = iFrameDuration;
+            isInvincible = true;
+            if (currentHealth <= 0)
+            {
+                //Die();
+            }
+        }
+    }
+
+    void Die()
+    {
+        gameObject.SetActive(false);
+    }
+
+
+    public void Heal(float amt)
+    {
+        if (currentHealth + amt > maxHealth) currentHealth = maxHealth;
+        else currentHealth += amt;
+    }
+
+    IEnumerator Regenerate(float amt)
+    {
+        Heal(amt);
+        yield return new WaitForSeconds(1);
+        onRegen = false;
+    }
+
+}
