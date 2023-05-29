@@ -28,6 +28,7 @@ public class EnemyManager : MonoBehaviour
     public EnemyController enemyController;
     public GameplayManager gameplayMananger;
     public GameObject basePrefab;
+    public SpawnMarks spawnMarks;
     public int roundCounter;
     public float spawnTimer;
     public int enemiesAliveCap;
@@ -105,17 +106,14 @@ public class EnemyManager : MonoBehaviour
                         maxEnemiesReached = true;
                         return;
                     }
-                    Vector2 spawnPos = new Vector2(player.transform.position.x + Random.Range(-10f, 10f), player.transform.position.y + Random.Range(-10f, 10f));
 
                     for (int i = 0; i < enemyController.enemyList.Count; i++)   //Find an inactive enemy to spawn
                     {
-                        if (!enemyController.enemyList[i].isActiveAndEnabled)
+                        if (!enemyController.enemyList[i].isActiveAndEnabled && !enemyController.enemyList[i].isSpawning)
                         {
-                            enemyController.enemyList[i].transform.position = spawnPos;    //set starting position when spawn
-                            enemyController.enemyList[i].gameObject.SetActive(true);
+                            StartCoroutine(SpawnMarkAndEnemy(i));
                             eGroup.currentSpawned++;
                             rounds[roundCounter].currentTotalSpawned++;
-                            enemiesAlive++;
                             break;
                         }
                     }
@@ -126,6 +124,21 @@ public class EnemyManager : MonoBehaviour
         {
             maxEnemiesReached = false;
         }
+    }
+
+    IEnumerator SpawnMarkAndEnemy(int indexEnemy)
+    {
+        enemyController.enemyList[indexEnemy].isSpawning = true;
+        Vector2 spawnPos = new Vector2(player.transform.position.x + Random.Range(-10f, 10f), player.transform.position.y + Random.Range(-10f, 10f));
+        enemyController.enemyList[indexEnemy].transform.position = spawnPos;    //set starting position when spawn
+        int indexToDespawn = spawnMarks.Spawn(spawnPos);
+        yield return new WaitForSeconds(1f);
+        spawnMarks.Despawn(indexToDespawn);
+        enemyController.enemyList[indexEnemy].gameObject.SetActive(true);
+        enemyController.enemyList[indexEnemy].isSpawning = false;
+        enemiesAlive++;
+
+
     }
 
     public void GoToNextRound()

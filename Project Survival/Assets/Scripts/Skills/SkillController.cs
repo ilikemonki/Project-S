@@ -42,16 +42,16 @@ public class SkillController : MonoBehaviour
     //Check for closest enemy to target
     protected virtual void UpdateTarget()
     {
+        if (maxLoops <= 0)
+        {
+            Debug.Log("max update target reached");
+            return;
+        }
+        maxLoops--;
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
         for (int i = 0; i < enemyController.enemyList.Count; i++)
         {
-            if (maxLoops == 0)
-            {
-                Debug.Log("0");
-                return;
-            }
-            maxLoops--;
             if (enemyController.enemyList[i].isActiveAndEnabled)
             {
                 distanceToEnemy = Vector3.Distance(transform.position, enemyController.enemyList[i].transform.position);

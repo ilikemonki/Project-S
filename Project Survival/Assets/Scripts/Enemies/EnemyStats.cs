@@ -12,7 +12,8 @@ public class EnemyStats : MonoBehaviour
     public float currentMoveSpeed;
     public float currentHealth;
     public int exp;
-    public bool spawnInPool;
+    public bool spawnInPool;    //Used in OnDisabled when populating pool as to not run code
+    public bool isSpawning; //check if enemy is beginning to spawn
     // Start is called before the first frame update
     void Awake()
     {

@@ -6,6 +6,7 @@ using TMPro;
 
 public class GameplayManager : MonoBehaviour
 {
+    public int totalKills;
     public TextMeshProUGUI killsNeededText;
     public List<int> killsNeededInRound;    //make sure to have same amount for killCounters too.
     public List<int> killCounters;
@@ -43,6 +44,7 @@ public class GameplayManager : MonoBehaviour
     //called when enemy dies
     public void CalculateKillCounter()
     {
+        totalKills++;
         killCounters[enemyManager.roundCounter]++;
         UpdateKillText();
         CheckKillRequirement();
