@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6735852499324766263}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.92, y: -2.79, z: 0.015377788}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 34, y: 34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be4ec79b5772424b8f940bd1dabf854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyController: {fileID: 0}
+  enemyManager: {fileID: 0}
   enemyMovement: {fileID: 6735852499324766267}
   moveSpeed: 2
   maxHealth: 2
@@ -108,6 +108,8 @@ MonoBehaviour:
   currentMoveSpeed: 0
   currentHealth: 0
   exp: 1
+  spawnInPool: 0
+  isSpawning: 0
 --- !u!114 &6735852499324766267
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class HealthPotion : ICollectibles
     {
         if (collision.CompareTag("Player"))
         {
-            player.Heal(hp);
+            gameplayManager.player.Heal(hp);
             gameObject.SetActive(false);
         }
     }

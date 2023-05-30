@@ -29,7 +29,6 @@ public class EnemyManager : MonoBehaviour
     public GameplayManager gameplayMananger;
     public GameObject basePrefab;
     public SpawnMarks spawnMarks;
-    public int roundCounter;
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
@@ -44,7 +43,7 @@ public class EnemyManager : MonoBehaviour
     private void Update()
     {
         spawnTimer += Time.deltaTime;
-        if(spawnTimer >= rounds[roundCounter].spawnInterval)
+        if(spawnTimer >= rounds[gameplayMananger.roundCounter].spawnInterval)
         {
             spawnTimer = 0f;
             SpawnEnemies();
@@ -95,11 +94,11 @@ public class EnemyManager : MonoBehaviour
         public void SpawnEnemies()
     {
         CheckPoolAmount();
-        if (rounds[roundCounter].currentTotalSpawned < rounds[roundCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
+        if (rounds[gameplayMananger.roundCounter].currentTotalSpawned < rounds[gameplayMananger.roundCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
         {
-            foreach(var eGroup in rounds[roundCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
+            foreach(var eGroup in rounds[gameplayMananger.roundCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
             {
-                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[roundCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
+                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[gameplayMananger.roundCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
                 {
                     if(enemiesAlive >= enemiesAliveCap) //Stop spawning if cap is reached
                     {
@@ -113,7 +112,7 @@ public class EnemyManager : MonoBehaviour
                         {
                             StartCoroutine(SpawnMarkAndEnemy(i));
                             eGroup.currentSpawned++;
-                            rounds[roundCounter].currentTotalSpawned++;
+                            rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
                             break;
                         }
                     }
@@ -141,11 +140,4 @@ public class EnemyManager : MonoBehaviour
 
     }
 
-    public void GoToNextRound()
-    {
-        if (roundCounter < rounds.Count - 1)
-        {
-            roundCounter++;
-        }
-    }
 }

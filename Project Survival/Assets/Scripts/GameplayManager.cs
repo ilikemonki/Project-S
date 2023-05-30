@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
     public int totalKills;
+    public int roundCounter;
     public TextMeshProUGUI killsNeededText;
     public List<int> killsNeededInRound;    //make sure to have same amount for killCounters too.
     public List<int> killCounters;
     public int level, exp, expCap, expCapIncrease;
     public int coins;
+    public PlayerStats player;
     public EnemyManager enemyManager;
+    public GameObject roundUI;
+    public TextMeshProUGUI roundText;
+    public TextMeshProUGUI levelText;
+    public Slider expSlider; public ParticleSystem expSliderParticle;
+
 
     private void Start()
     {
         UpdateKillText();
+        expSlider.maxValue = expCap;
     }
 
     // Update is called once per frame
@@ -26,18 +35,23 @@ public class GameplayManager : MonoBehaviour
     public void GainExp(int amt)
     {
         exp += amt;
-        if (exp >= expCap)
+        if (exp >= expCap)  //Level UP
         {
+            expSliderParticle.Play();
             level++;
+            UpdateLevelText();
             exp -= expCap;
             expCap += expCapIncrease;
+            expSlider.maxValue = expCap;
         }
+        UpdateExpBar();
     }
     public void CheckKillRequirement()
     {
-        if (killCounters[enemyManager.roundCounter] >= killsNeededInRound[enemyManager.roundCounter])
+        if (killCounters[roundCounter] >= killsNeededInRound[roundCounter])
         {
-            enemyManager.GoToNextRound();
+            GoToNextRound();
+            UpdateRoundText();
             UpdateKillText();
         }
     }
@@ -45,7 +59,7 @@ public class GameplayManager : MonoBehaviour
     public void CalculateKillCounter()
     {
         totalKills++;
-        killCounters[enemyManager.roundCounter]++;
+        killCounters[roundCounter]++;
         UpdateKillText();
         CheckKillRequirement();
     }
@@ -56,6 +70,26 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdateKillText()
     {
-        killsNeededText.text = (killsNeededInRound[enemyManager.roundCounter] - killCounters[enemyManager.roundCounter]).ToString();
+        killsNeededText.text = (killsNeededInRound[roundCounter] - killCounters[roundCounter]).ToString();
+    }
+
+    public void UpdateRoundText()
+    {
+        roundText.text = "Round " + (roundCounter + 1);
+    }
+    public void UpdateLevelText()
+    {
+        levelText.text = "Lv. " + level;
+    }
+    public void UpdateExpBar()
+    {
+        expSlider.value = exp;
+    }
+    public void GoToNextRound()
+    {
+        if (roundCounter < enemyManager.rounds.Count - 1)
+        {
+            roundCounter++;
+        }
     }
 }
