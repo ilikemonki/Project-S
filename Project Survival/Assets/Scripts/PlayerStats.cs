@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerStats : MonoBehaviour
     public float regen, regenRate;
     public float currentMoveSpeed;
     public float magnetRange;
+    public Slider healthBar;
 
     //I-Frames
     public float iFrameDuration;
@@ -28,7 +30,8 @@ public class PlayerStats : MonoBehaviour
     }
     private void Start()
     {
-
+        healthBar.maxValue = maxHealth;
+        UpdateHealthBar(maxHealth);
     }
 
     private void Update()
@@ -67,6 +70,7 @@ public class PlayerStats : MonoBehaviour
         if (!isInvincible)
         {
             currentHealth -= dmg;
+            UpdateHealthBar(-dmg);
             iFrameTimer = iFrameDuration;
             isInvincible = true;
             if (currentHealth <= 0)
@@ -75,17 +79,44 @@ public class PlayerStats : MonoBehaviour
             }
         }
     }
+    public void CheckHealthBarVisibility()  //Show health if life is below max, else dont show
+    {
+        if (currentHealth >= maxHealth)
+        {
+            healthBar.gameObject.SetActive(false);
+        }
+        else
+        {
+            healthBar.gameObject.SetActive(true);
+        }
+    }
+    public void ChangeMaxHealthBar(float maxAmt)   //set health bar to current max
+    {
+        healthBar.maxValue = maxAmt;
+        UpdateHealthBar(maxAmt - currentHealth);
+    }
+    public void UpdateHealthBar(float amt)
+    {
+        healthBar.value += amt;
+        CheckHealthBarVisibility();
+    }
 
     void Die()
     {
         gameObject.SetActive(false);
     }
 
-
     public void Heal(float amt)
     {
-        if (currentHealth + amt > maxHealth) currentHealth = maxHealth;
-        else currentHealth += amt;
+        if (currentHealth + amt > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        else
+        {
+            currentHealth += amt;
+        }
+        UpdateHealthBar(amt);
     }
 
     IEnumerator Regenerate(float amt)
