@@ -13,6 +13,7 @@ public class SkillBehavior : MonoBehaviour
     protected EnemyStats nearestEnemy;
     protected Transform target;
     protected float shortestDistance, distanceToEnemy;
+    public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     // Start is called before the first frame update
     private void Awake()
     {
@@ -46,6 +47,13 @@ public class SkillBehavior : MonoBehaviour
             EnemyStats enemy = col.GetComponent<EnemyStats>();
             enemy.TakeDamage(currentDamage);
             skillController.floatingTextController.DisplayDamageText(enemy.transform, currentDamage);
+            if (currentPierce <= 0 && currentChain > 0) //check if there are chains, add enemy to list to not chain again.
+            {
+                if (!enemyIndexChain.Contains(skillController.enemyController.enemyList.IndexOf(enemy)))    //if enemy is not in list, add it.
+                {
+                    enemyIndexChain.Add(skillController.enemyController.enemyList.IndexOf(enemy));
+                }
+            }
             ProjectileBehavior();
         }
     }
@@ -67,7 +75,7 @@ public class SkillBehavior : MonoBehaviour
             StartCoroutine(ChainToEnemy());
         }
     }
-
+    
     IEnumerator ChainToEnemy()
     {
         yield return new WaitForSeconds(0.1f);
@@ -75,13 +83,25 @@ public class SkillBehavior : MonoBehaviour
         nearestEnemy = null;
         for (int i = 0; i < skillController.enemyController.enemyList.Count; i++)
         {
+            bool dontChain = false;
             if (skillController.enemyController.enemyList[i].isActiveAndEnabled)
             {
-                distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyController.enemyList[i].transform.position);
-                if (distanceToEnemy < shortestDistance)
+                for (int j = 0; j < enemyIndexChain.Count; j++)
                 {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = skillController.enemyController.enemyList[i];
+                    if (enemyIndexChain[j] == i)
+                    {
+                        dontChain = true;
+                        break;
+                    }
+                }
+                if (!dontChain)
+                {
+                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyController.enemyList[i].transform.position);
+                    if (distanceToEnemy < shortestDistance)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = skillController.enemyController.enemyList[i];
+                    }
                 }
             }
         }
@@ -108,6 +128,10 @@ public class SkillBehavior : MonoBehaviour
         currentPierce = skillController.pierce;
         currentChain = skillController.chain;
         currentDespawnTime = skillController.despawnTime;
+    }
+    private void OnDisable()
+    {
+        enemyIndexChain.Clear();
     }
 
 }

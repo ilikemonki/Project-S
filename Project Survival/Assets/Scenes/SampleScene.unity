@@ -1021,17 +1021,17 @@ MonoBehaviour:
   enemiesAlive: 0
   rounds:
   - enemyGroups:
-    - enemyPrefab: {fileID: 4436017927707606116, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-      numberToSpawn: 10
+    - enemyPrefab: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      numberToSpawn: 30
       whenToSpawn: 0
       currentSpawned: 0
     - enemyPrefab: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
-      numberToSpawn: 10
-      whenToSpawn: 5
+      numberToSpawn: 30
+      whenToSpawn: 0
       currentSpawned: 0
-    - enemyPrefab: {fileID: 4436017927707606116, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-      numberToSpawn: 10
-      whenToSpawn: 15
+    - enemyPrefab: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      numberToSpawn: 30
+      whenToSpawn: 0
       currentSpawned: 0
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
@@ -17056,9 +17056,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 3139460322398848796, guid: 825b72de0a508864a8fc361043aed917, type: 3}
   level: 0
-  damage: 2
-  speed: 10
-  attackRange: 5
+  damage: 1
+  speed: 20
+  attackRange: 7
   chainRange: 7
   cooldown: 1
   currentCooldown: 0
@@ -17066,7 +17066,7 @@ MonoBehaviour:
   strike: 1
   projectile: 1
   pierce: 0
-  chain: 1
+  chain: 6
   poolList: []
   shortestDistance: 0
   distanceToEnemy: 0

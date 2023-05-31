@@ -19,7 +19,8 @@ public class GameplayManager : MonoBehaviour
     public GameObject roundUI;
     public TextMeshProUGUI roundText;
     public TextMeshProUGUI levelText;
-    public Slider expSlider; public ParticleSystem expSliderParticle;
+    public Slider expSlider; 
+    public ParticleSystem expSliderParticle;
     public TextMeshProUGUI coinText;
 
 
