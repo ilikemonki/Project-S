@@ -13,7 +13,6 @@ public class SkillBehavior : MonoBehaviour
     protected EnemyStats nearestEnemy;
     protected Transform target;
     protected float shortestDistance, distanceToEnemy;
-    protected
     // Start is called before the first frame update
     private void Awake()
     {
@@ -46,6 +45,7 @@ public class SkillBehavior : MonoBehaviour
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
             enemy.TakeDamage(currentDamage);
+            skillController.floatingTextController.DisplayDamageText(enemy.transform, currentDamage);
             ProjectileBehavior();
         }
     }

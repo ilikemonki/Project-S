@@ -6,12 +6,13 @@ public class EnemyStats : MonoBehaviour
 {
     public EnemyManager enemyManager;
     public EnemyMovement enemyMovement;
-    public float moveSpeed;
-    public float maxHealth;
     public float damage;
-    public float currentMoveSpeed;
+    public float maxHealth;
     public float currentHealth;
+    public float moveSpeed;
+    public float currentMoveSpeed;
     public int exp;
+    public SpriteRenderer spriteRenderer;
     public bool spawnInPool;    //Used in OnDisabled when populating pool as to not run code
     public bool isSpawning; //check if enemy is beginning to spawn
     // Start is called before the first frame update
@@ -23,12 +24,8 @@ public class EnemyStats : MonoBehaviour
 
     private void Start()
     {
-        //player = GetComponentInParent<PlayerStats>();
-        //enemyMovement.playerTransform = player.transform;
         enemyMovement.SetMoveSpeed(currentMoveSpeed);
     }
-
-
 
     public void TakeDamage(float dmg)
     {
@@ -38,6 +35,15 @@ public class EnemyStats : MonoBehaviour
             Die();
         }
     }
+    public void SetStats(float moveSpeed, float maxHealth, float damage, int exp)
+    {
+        this.moveSpeed = moveSpeed;
+        currentMoveSpeed = moveSpeed;
+        this.maxHealth = maxHealth;
+        currentHealth = maxHealth;
+        this.damage = damage;
+        this.exp = exp;
+    }
 
 
     public void Die()
@@ -45,14 +51,6 @@ public class EnemyStats : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
-    //private void OnCollisionStay2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Player"))
-    //    {
-    //        enemyController.player.TakeDamage(damage);  //Do damage to player
-    //    }
-    //}
     //Becareful if destorying gameobject, this may get called.
     private void OnDisable()
     {
@@ -62,5 +60,6 @@ public class EnemyStats : MonoBehaviour
             enemyManager.gameplayMananger.CalculateKillCounter();
             enemyManager.enemiesAlive--;
         }
+        isSpawning = false;
     }
 }

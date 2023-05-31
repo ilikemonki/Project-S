@@ -15,9 +15,9 @@ public class SkillController : MonoBehaviour
     public float despawnTime;
     public int strike = 1, projectile, pierce, chain;
     public List<SkillBehavior> poolList = new();
-    int inactive;
     public float shortestDistance, distanceToEnemy;
     public EnemyController enemyController;
+    public FloatingTextController floatingTextController;
     public EnemyStats nearestEnemy;
     public Transform target;
     int maxLoops = 10000;
@@ -96,7 +96,7 @@ public class SkillController : MonoBehaviour
 
     protected virtual void CheckPoolAmount()
     {
-        inactive = 0;
+        int inactive = 0;
         for (int i = 0; i < poolList.Count; i++)
         {
             if (!poolList[i].isActiveAndEnabled) inactive++;    //Calculate how many inactives there are

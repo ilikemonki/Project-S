@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerStats : MonoBehaviour
 {
     public EnemyManager enemyManager;
+    public FloatingTextController floatingTextController;
     public float moveSpeed;
     public float currentHealth;
     public float maxHealth;
@@ -71,6 +72,7 @@ public class PlayerStats : MonoBehaviour
         {
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
+            floatingTextController.DisplayDamageText(transform, dmg);
             iFrameTimer = iFrameDuration;
             isInvincible = true;
             if (currentHealth <= 0)

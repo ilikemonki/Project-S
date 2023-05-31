@@ -16,7 +16,7 @@ public class EnemyManager : MonoBehaviour
     [System.Serializable]
     public class EnemyGroup
     {
-        public GameObject enemyPrefab;
+        public EnemyStats enemyPrefab;
         public int numberToSpawn;
         public int whenToSpawn;   //start spawning when spawner reach the amount of mobs spawned
         public int currentSpawned;
@@ -24,7 +24,6 @@ public class EnemyManager : MonoBehaviour
     public int enemiesAlive;
     public List<Round> rounds;
     public PlayerStats player;
-    public Transform enemyParent;
     public EnemyController enemyController;
     public GameplayManager gameplayMananger;
     public GameObject basePrefab;
@@ -32,7 +31,6 @@ public class EnemyManager : MonoBehaviour
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
-    int inactive;
 
     private void Start()
     {
@@ -62,11 +60,10 @@ public class EnemyManager : MonoBehaviour
         }
 
     }
-    //Check if kill count meets requirement for next round, then go to next round.
 
     protected virtual void CheckPoolAmount()
     {
-        inactive = 0;
+        int inactive = 0;
         for (int i = 0; i < enemyController.enemyList.Count; i++)
         {
             if (!enemyController.enemyList[i].isActiveAndEnabled) inactive++;    //Calculate how many inactives there are
@@ -110,7 +107,7 @@ public class EnemyManager : MonoBehaviour
                     {
                         if (!enemyController.enemyList[i].isActiveAndEnabled && !enemyController.enemyList[i].isSpawning)
                         {
-                            StartCoroutine(SpawnMarkAndEnemy(i));
+                            StartCoroutine(SpawnMarkAndEnemy(i, eGroup.enemyPrefab));
                             eGroup.currentSpawned++;
                             rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
                             break;
@@ -125,16 +122,19 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnMarkAndEnemy(int indexEnemy)
+    IEnumerator SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyStats prefab )
     {
-        enemyController.enemyList[indexEnemy].isSpawning = true;
+        enemyController.enemyList[indexEnemyToSpawn].isSpawning = true;
         Vector2 spawnPos = new Vector2(player.transform.position.x + Random.Range(-10f, 10f), player.transform.position.y + Random.Range(-10f, 10f));
-        enemyController.enemyList[indexEnemy].transform.position = spawnPos;    //set starting position when spawn
+        enemyController.enemyList[indexEnemyToSpawn].transform.position = spawnPos;    //set starting position when spawn
+        enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
+        enemyController.enemyList[indexEnemyToSpawn].transform.localScale = prefab.transform.localScale;
+        enemyController.enemyList[indexEnemyToSpawn].SetStats(prefab.moveSpeed, prefab.maxHealth, prefab.damage, prefab.exp);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
         yield return new WaitForSeconds(1f);
         spawnMarks.Despawn(indexToDespawn);
-        enemyController.enemyList[indexEnemy].gameObject.SetActive(true);
-        enemyController.enemyList[indexEnemy].isSpawning = false;
+        enemyController.enemyList[indexEnemyToSpawn].gameObject.SetActive(true);
+        enemyController.enemyList[indexEnemyToSpawn].isSpawning = false;
         enemiesAlive++;
 
 

@@ -20,11 +20,13 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI roundText;
     public TextMeshProUGUI levelText;
     public Slider expSlider; public ParticleSystem expSliderParticle;
+    public TextMeshProUGUI coinText;
 
 
     private void Start()
     {
         UpdateKillText();
+        UpdateCoinText();
         expSlider.maxValue = expCap;
     }
 
@@ -66,6 +68,11 @@ public class GameplayManager : MonoBehaviour
     public void GainCoins(int amt)
     {
         coins += amt;
+        UpdateCoinText();
+    }
+    public void UpdateCoinText()
+    {
+        coinText.text = coins.ToString();
     }
 
     public void UpdateKillText()
