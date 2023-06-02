@@ -82,7 +82,6 @@ public class EnemyManager : MonoBehaviour
             enemy.SetActive(false);
             EnemyStats es = enemy.GetComponent<EnemyStats>();
             es.enemyManager = this;
-            es.enemyMovement.playerTransform = player.transform;
             enemyController.AddToList(es);
         }
     }

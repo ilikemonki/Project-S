@@ -30,7 +30,7 @@ public class SkillController : MonoBehaviour
     {
         currentCooldown = cooldown;
         PopulatePool((projectile * strike) * 4);
-        InvokeRepeating(nameof(UpdateTarget), 0, 0.15f);    //Repeat looking for target
+        InvokeRepeating(nameof(UpdateTarget), 0, 0.25f);    //Repeat looking for target
     }
 
     // Update is called once per frame

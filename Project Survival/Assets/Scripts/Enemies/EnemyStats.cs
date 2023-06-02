@@ -14,9 +14,15 @@ public class EnemyStats : MonoBehaviour
     public int exp;
     public SpriteRenderer spriteRenderer;
     public Rigidbody2D rb;
+    Material defaultMaterial;
+    public Material damageFlashMaterial;
     public bool knockedBack;
     public bool isSpawning; //check if enemy is beginning to spawn
 
+    private void Awake()
+    {
+        defaultMaterial = spriteRenderer.material;
+    }
     private void Start()
     {
         enemyMovement.SetMoveSpeed(currentMoveSpeed);
@@ -24,6 +30,10 @@ public class EnemyStats : MonoBehaviour
 
     public void TakeDamage(float dmg)
     {
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(DamageFlash());
+        }
         currentHealth -= dmg;
         if (currentHealth <= 0f)
         {
@@ -34,6 +44,7 @@ public class EnemyStats : MonoBehaviour
     {
         this.moveSpeed = moveSpeed;
         currentMoveSpeed = moveSpeed;
+        enemyMovement.SetMoveSpeed(currentMoveSpeed);
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
         this.damage = damage;
@@ -50,6 +61,7 @@ public class EnemyStats : MonoBehaviour
     private void OnDisable()
     {
         StopAllCoroutines();
+        spriteRenderer.material = defaultMaterial;
         if (enemyManager != null)
         {
             enemyManager.gameplayMananger.GainExp(exp);
@@ -74,6 +86,13 @@ public class EnemyStats : MonoBehaviour
             rb.AddForce(power, ForceMode2D.Impulse);
             StartCoroutine(ResetVelocity());
         }
+    }
+
+    public IEnumerator DamageFlash()
+    {
+        spriteRenderer.material = damageFlashMaterial;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.material = defaultMaterial;
     }
     
 }

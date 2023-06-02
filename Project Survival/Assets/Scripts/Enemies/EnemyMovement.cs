@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    public Transform playerTransform;
-    public Rigidbody2D rb;
+    public EnemyStats enemyStats;
     float moveSpeed;
-
+    private void Start()
+    {
+        InvokeRepeating(nameof(AlwaysFacePlayer), 0, 0.25f);
+    }
     public void MoveEnemy()
     {
-        rb.MovePosition(transform.position + (moveSpeed * Time.fixedDeltaTime * (playerTransform.transform.position - transform.position).normalized));
-        //transform.position = Vector2.MoveTowards(transform.position, playerTransform.transform.position, moveSpeed * Time.deltaTime);
+        enemyStats.rb.MovePosition(transform.position + (moveSpeed * Time.fixedDeltaTime * (enemyStats.enemyManager.player.transform.position - transform.position).normalized));
+    }
+
+    public void AlwaysFacePlayer()
+    {
+        if (enemyStats.enemyManager.player.transform.position.x > transform.position.x)
+        {
+            enemyStats.spriteRenderer.flipX = false;
+        }
+        else enemyStats.spriteRenderer.flipX = true;
     }
 
     public void SetMoveSpeed(float mvs)
