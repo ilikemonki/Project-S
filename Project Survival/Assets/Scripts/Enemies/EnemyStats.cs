@@ -49,6 +49,7 @@ public class EnemyStats : MonoBehaviour
     //Becareful if destorying gameobject, this may get called.
     private void OnDisable()
     {
+        StopAllCoroutines();
         if (enemyManager != null)
         {
             enemyManager.gameplayMananger.GainExp(exp);
@@ -67,10 +68,12 @@ public class EnemyStats : MonoBehaviour
 
     public void KnockBack(Vector2 power)
     {
-        knockedBack = true;
-        rb.AddForce(power, ForceMode2D.Impulse);
-        //StopAllCoroutines();
-        StartCoroutine(ResetVelocity());
+        if (gameObject.activeSelf)
+        {
+            knockedBack = true;
+            rb.AddForce(power, ForceMode2D.Impulse);
+            StartCoroutine(ResetVelocity());
+        }
     }
     
 }

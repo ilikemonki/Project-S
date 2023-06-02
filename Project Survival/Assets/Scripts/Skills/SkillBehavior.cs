@@ -44,10 +44,6 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>(); 
-            if (skillController.knockBackForce >= 1 && !enemy.knockedBack)
-            {
-                enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBackForce);
-            }
             enemy.TakeDamage(currentDamage);
             skillController.floatingTextController.DisplayDamageText(enemy.transform, currentDamage);
             if (currentPierce <= 0 && currentChain > 0) //check if there are chains, add enemy to list to not chain again.
@@ -58,6 +54,10 @@ public class SkillBehavior : MonoBehaviour
                 }
             }
             ProjectileBehavior();
+            if (skillController.knockBackForce >= 1 && !enemy.knockedBack)
+            {
+                enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBackForce);
+            }
 
         }
     }

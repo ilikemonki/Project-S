@@ -19574,14 +19574,14 @@ MonoBehaviour:
   speed: 10
   attackRange: 7
   chainRange: 7
-  cooldown: 1
+  cooldown: 0.3
   currentCooldown: 0
   despawnTime: 1
   strike: 1
   projectile: 1
   pierce: 0
   chain: 6
-  knockBackForce: 10
+  knockBackForce: 5
   poolList: []
   shortestDistance: 0
   distanceToEnemy: 0

@@ -27,11 +27,10 @@ public class EnemyController : MonoBehaviour
         {
             if (enemyList[i].isActiveAndEnabled)
             {
-                if (!enemyList[i].knockedBack && enemyList[i].rb.velocity != Vector2.zero)   //check if enemy has velocity and wasn't knockedback, reset to zero
+                if (!enemyList[i].knockedBack)   //knockedback
                 {
-                    //enemyList[i].rb.velocity = Vector2.zero;
+                    enemyList[i].enemyMovement.MoveEnemy();
                 }
-                enemyList[i].enemyMovement.MoveEnemy();
             }
         }
     }

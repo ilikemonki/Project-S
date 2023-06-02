@@ -111,7 +111,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6735852499324766268}
   rb: {fileID: 6735852499324766266}
   knockedBack: 0
-  spawnInPool: 0
   isSpawning: 0
 --- !u!114 &6735852499324766267
 MonoBehaviour:
