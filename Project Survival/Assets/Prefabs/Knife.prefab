@@ -81,7 +81,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53064612f12f30848bab15851cc1d1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyIndexChain: 
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4
@@ -107,7 +108,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3139460322398848796}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -138,14 +139,14 @@ PolygonCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 64, y: 64}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -32, y: 32}
-      - {x: -32, y: -32}
-      - {x: 32, y: -32}
-      - {x: 32, y: 32}
+    - - {x: -11.95, y: 16.7}
+      - {x: -11.98, y: -25}
+      - {x: 10.7, y: -26.3}
+      - {x: 10.2, y: 18.4}

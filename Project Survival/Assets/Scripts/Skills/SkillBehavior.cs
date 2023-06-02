@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class SkillBehavior : MonoBehaviour
 {
-    protected SkillController skillController;
+    public SkillController skillController;
     protected Vector3 direction;
-
     protected float currentDamage, currentSpeed;
     protected int currentPierce, currentChain;
     protected float currentDespawnTime;
@@ -15,14 +14,14 @@ public class SkillBehavior : MonoBehaviour
     protected float shortestDistance, distanceToEnemy;
     public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     // Start is called before the first frame update
-    private void Awake()
+
+    public void SetStats(float damage, float speed, int pierce, int chain, float despawnTime)
     {
-        skillController = GetComponentInParent<SkillController>();
-        currentDamage = skillController.damage;
-        currentSpeed = skillController.speed;
-        currentPierce = skillController.pierce;
-        currentChain = skillController.chain;
-        currentDespawnTime = skillController.despawnTime;
+        currentDamage = damage;
+        currentSpeed = speed;
+        currentPierce = pierce;
+        currentChain = chain;
+        currentDespawnTime = despawnTime;
     }
 
     protected virtual void Update()
@@ -44,7 +43,11 @@ public class SkillBehavior : MonoBehaviour
     {
         if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponent<EnemyStats>();
+            EnemyStats enemy = col.GetComponent<EnemyStats>(); 
+            if (skillController.knockBackForce >= 1 && !enemy.knockedBack)
+            {
+                enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBackForce);
+            }
             enemy.TakeDamage(currentDamage);
             skillController.floatingTextController.DisplayDamageText(enemy.transform, currentDamage);
             if (currentPierce <= 0 && currentChain > 0) //check if there are chains, add enemy to list to not chain again.
@@ -55,6 +58,7 @@ public class SkillBehavior : MonoBehaviour
                 }
             }
             ProjectileBehavior();
+
         }
     }
 
@@ -72,13 +76,12 @@ public class SkillBehavior : MonoBehaviour
         else if (currentChain > 0)   //behavior for chain
         {
             currentChain--;
-            StartCoroutine(ChainToEnemy());
+            ChainToEnemy();
         }
     }
     
-    IEnumerator ChainToEnemy()
+    void  ChainToEnemy()
     {
-        yield return new WaitForSeconds(0.1f);
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
         for (int i = 0; i < skillController.enemyController.enemyList.Count; i++)
@@ -125,9 +128,12 @@ public class SkillBehavior : MonoBehaviour
 
     private void OnEnable()
     {
-        currentPierce = skillController.pierce;
-        currentChain = skillController.chain;
-        currentDespawnTime = skillController.despawnTime;
+        if (skillController != null)
+        {
+            currentPierce = skillController.pierce;
+            currentChain = skillController.chain;
+            currentDespawnTime = skillController.despawnTime;
+        }
     }
     private void OnDisable()
     {

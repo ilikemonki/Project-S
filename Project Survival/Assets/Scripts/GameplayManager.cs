@@ -40,7 +40,7 @@ public class GameplayManager : MonoBehaviour
         exp += amt;
         if (exp >= expCap)  //Level UP
         {
-            expSliderParticle.Play();
+            if (expSliderParticle != null) expSliderParticle.Play();
             level++;
             UpdateLevelText();
             exp -= expCap;

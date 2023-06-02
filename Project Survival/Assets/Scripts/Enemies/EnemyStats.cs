@@ -13,14 +13,9 @@ public class EnemyStats : MonoBehaviour
     public float currentMoveSpeed;
     public int exp;
     public SpriteRenderer spriteRenderer;
-    public bool spawnInPool;    //Used in OnDisabled when populating pool as to not run code
+    public Rigidbody2D rb;
+    public bool knockedBack;
     public bool isSpawning; //check if enemy is beginning to spawn
-    // Start is called before the first frame update
-    void Awake()
-    {
-        currentHealth = maxHealth;
-        currentMoveSpeed = moveSpeed;
-    }
 
     private void Start()
     {
@@ -54,12 +49,28 @@ public class EnemyStats : MonoBehaviour
     //Becareful if destorying gameobject, this may get called.
     private void OnDisable()
     {
-        if (!spawnInPool)
+        if (enemyManager != null)
         {
             enemyManager.gameplayMananger.GainExp(exp);
             enemyManager.gameplayMananger.CalculateKillCounter();
             enemyManager.enemiesAlive--;
         }
+        knockedBack = false;
         isSpawning = false;
     }
+    public IEnumerator ResetVelocity()
+    {
+        yield return new WaitForSeconds(0.15f);
+        rb.velocity = Vector2.zero;
+        knockedBack = false;
+    }
+
+    public void KnockBack(Vector2 power)
+    {
+        knockedBack = true;
+        rb.AddForce(power, ForceMode2D.Impulse);
+        //StopAllCoroutines();
+        StartCoroutine(ResetVelocity());
+    }
+    
 }

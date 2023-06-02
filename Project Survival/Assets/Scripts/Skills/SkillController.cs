@@ -5,6 +5,7 @@ using UnityEngine;
 public class SkillController : MonoBehaviour
 {
     public GameObject prefab;
+    public GameObject poolParent;
     public int level;
     public float damage;
     public float speed;
@@ -14,8 +15,10 @@ public class SkillController : MonoBehaviour
     public float currentCooldown;
     public float despawnTime;
     public int strike = 1, projectile, pierce, chain;
+    public float knockBackForce;
     public List<SkillBehavior> poolList = new();
     public float shortestDistance, distanceToEnemy;
+    public PlayerStats player;
     public EnemyController enemyController;
     public FloatingTextController floatingTextController;
     public EnemyStats nearestEnemy;
@@ -27,7 +30,7 @@ public class SkillController : MonoBehaviour
     {
         currentCooldown = cooldown;
         PopulatePool((projectile * strike) * 4);
-        InvokeRepeating(nameof(UpdateTarget), 0, 0.25f);
+        InvokeRepeating(nameof(UpdateTarget), 0, 0.15f);    //Repeat looking for target
     }
 
     // Update is called once per frame
@@ -111,9 +114,11 @@ public class SkillController : MonoBehaviour
     {
         for (int i = 0; i < spawnAmount; i++)
         {
-            GameObject skill = Instantiate(prefab, gameObject.transform);    //Spawn, add to list, and initialize prefabs
+            GameObject skill = Instantiate(prefab, poolParent.transform);    //Spawn, add to list, and initialize prefabs
             skill.SetActive(false);
             SkillBehavior sb = skill.GetComponent<SkillBehavior>();
+            sb.skillController = this;
+            sb.SetStats(damage, speed, pierce, chain, despawnTime);
             poolList.Add(sb);
         }
     }

@@ -79,12 +79,10 @@ public class EnemyManager : MonoBehaviour
         for (int i = 0; i < spawnAmount; i++)
         {
             GameObject enemy = Instantiate(basePrefab, enemyController.transform);    //Spawn, add to list, and initialize prefabs
+            enemy.SetActive(false);
             EnemyStats es = enemy.GetComponent<EnemyStats>();
-            es.spawnInPool = true;
             es.enemyManager = this;
             es.enemyMovement.playerTransform = player.transform;
-            enemy.SetActive(false);
-            es.spawnInPool = false;
             enemyController.AddToList(es);
         }
     }
