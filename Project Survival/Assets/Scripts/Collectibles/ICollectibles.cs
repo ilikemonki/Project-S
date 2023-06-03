@@ -9,7 +9,14 @@ public class ICollectibles : MonoBehaviour
     public bool isCollecting;
     public void PullCollectible(float pullspeed)
     {
-        transform.position = Vector2.MoveTowards(transform.position, gameplayManager.player.transform.position, pullspeed * Time.deltaTime);
+        if (gameplayManager != null)
+        {
+            rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (gameplayManager.player.transform.position - transform.position).normalized));
+        }
+    }
+    public void OnEnable()
+    {
+        isCollecting = false;
     }
 
     public void OnDisable()

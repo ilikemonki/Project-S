@@ -78,14 +78,17 @@ public class SkillController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    //Activate skill
+    //Spawn/Activate skill
     protected virtual void UseSkill()
     {
         if (target == null) return;
-        CheckPoolAmount();
         currentCooldown = cooldown;
         for (int i = 0; i < poolList.Count; i++)
         {
+            if (i > poolList.Count - 5)
+            {
+                PopulatePool(5);
+            }
             if (!poolList[i].isActiveAndEnabled)
             {
                 //Put this in the other controllers later
@@ -95,19 +98,7 @@ public class SkillController : MonoBehaviour
                 return;
             }
         }
-    }
-
-    protected virtual void CheckPoolAmount()
-    {
-        int inactive = 0;
-        for (int i = 0; i < poolList.Count; i++)
-        {
-            if (!poolList[i].isActiveAndEnabled) inactive++;    //Calculate how many inactives there are
-        }
-        if (inactive <= (projectile * strike) * 2) //if inactives are close to the number of prefabs needed, spawn more.
-        {
-            PopulatePool((projectile * strike) * 2);
-        }
+        Debug.Log("skill");
     }
 
     protected virtual void PopulatePool(int spawnAmount)

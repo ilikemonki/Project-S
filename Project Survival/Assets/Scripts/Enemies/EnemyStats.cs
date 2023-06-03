@@ -16,6 +16,7 @@ public class EnemyStats : MonoBehaviour
     public Rigidbody2D rb;
     Material defaultMaterial;
     public Material damageFlashMaterial;
+    public DropRate dropRate;
     public bool knockedBack;
     public bool isSpawning; //check if enemy is beginning to spawn
 
@@ -54,6 +55,7 @@ public class EnemyStats : MonoBehaviour
 
     public void Die()
     {
+        dropRate.DropLoot(transform);
         gameObject.SetActive(false);
     }
 

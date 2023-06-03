@@ -10,7 +10,8 @@ public class Coin : ICollectibles
     {
         if (collision.CompareTag("Player"))
         {
-            gameplayManager.GainCoins(coins);
+            gameplayManager.GainCoins(coins); 
+            isCollecting = false;
             gameObject.SetActive(false);
         }
     }

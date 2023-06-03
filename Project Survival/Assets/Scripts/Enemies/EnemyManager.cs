@@ -28,6 +28,7 @@ public class EnemyManager : MonoBehaviour
     public GameplayManager gameplayMananger;
     public GameObject basePrefab;
     public SpawnMarks spawnMarks;
+    public DropRate dropRate;
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
@@ -61,19 +62,6 @@ public class EnemyManager : MonoBehaviour
 
     }
 
-    protected virtual void CheckPoolAmount()
-    {
-        int inactive = 0;
-        for (int i = 0; i < enemyController.enemyList.Count; i++)
-        {
-            if (!enemyController.enemyList[i].isActiveAndEnabled) inactive++;    //Calculate how many inactives there are
-        }
-        if (inactive <= 20) //if inactives are less than the number, spawn more. Change number if not enough.
-        {
-            PopulatePool(20);
-        }
-    }
-
     protected virtual void PopulatePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
@@ -82,12 +70,12 @@ public class EnemyManager : MonoBehaviour
             enemy.SetActive(false);
             EnemyStats es = enemy.GetComponent<EnemyStats>();
             es.enemyManager = this;
+            es.dropRate = dropRate;
             enemyController.AddToList(es);
         }
     }
         public void SpawnEnemies()
     {
-        CheckPoolAmount();
         if (rounds[gameplayMananger.roundCounter].currentTotalSpawned < rounds[gameplayMananger.roundCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
         {
             foreach(var eGroup in rounds[gameplayMananger.roundCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
@@ -102,6 +90,10 @@ public class EnemyManager : MonoBehaviour
 
                     for (int i = 0; i < enemyController.enemyList.Count; i++)   //Find an inactive enemy to spawn
                     {
+                        if (i > enemyController.enemyList.Count - 5)    //Check pool, add more if neccessary
+                        {
+                            PopulatePool(5);
+                        }
                         if (!enemyController.enemyList[i].isActiveAndEnabled && !enemyController.enemyList[i].isSpawning)
                         {
                             StartCoroutine(SpawnMarkAndEnemy(i, eGroup.enemyPrefab));
@@ -118,7 +110,7 @@ public class EnemyManager : MonoBehaviour
             maxEnemiesReached = false;
         }
     }
-
+    //Spawns the mark, waits a sec, then spawns the enemy on top of it.
     IEnumerator SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyStats prefab )
     {
         enemyController.enemyList[indexEnemyToSpawn].isSpawning = true;

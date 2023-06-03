@@ -14,16 +14,23 @@ public class PlayerCollector : MonoBehaviour
         magnet.radius = player.magnetRange;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(collectibles.Count > 0)
         {
             for (int i = 0; i < collectibles.Count; ++i)
             {
-                collectibles[i].PullCollectible(pullSpeed);
-                if (!collectibles[i].isActiveAndEnabled)
+                if (collectibles[i] == null)
+                { 
+                    collectibles.RemoveAt(i); 
+                }
+                else
                 {
-                    collectibles.Remove(collectibles[i]);
+                    collectibles[i].PullCollectible(pullSpeed);
+                    if (!collectibles[i].isActiveAndEnabled)
+                    {
+                        collectibles.Remove(collectibles[i]);
+                    }
                 }
             }
         }
