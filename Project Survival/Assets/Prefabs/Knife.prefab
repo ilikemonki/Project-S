@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53064612f12f30848bab15851cc1d1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillController: {fileID: 0}
+  rb: {fileID: 2398783455814874361}
   enemyIndexChain: 
 --- !u!50 &2398783455814874361
 Rigidbody2D:

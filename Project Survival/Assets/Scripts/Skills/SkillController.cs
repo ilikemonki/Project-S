@@ -78,8 +78,7 @@ public class SkillController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    //Spawn/Activate skill
-    protected virtual void UseSkill()
+    protected virtual void UseSkill()       //Spawn/Activate skill
     {
         if (target == null) return;
         currentCooldown = cooldown;
@@ -92,8 +91,10 @@ public class SkillController : MonoBehaviour
             if (!poolList[i].isActiveAndEnabled)
             {
                 //Put this in the other controllers later
+                Vector3 direction = target.position - transform.position;
                 poolList[i].transform.position = transform.position;    //set starting position on player
-                poolList[i].SetDirection((target.position - transform.position).normalized);   //Set direction
+                poolList[i].SetDirection((direction).normalized);   //Set direction
+                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 poolList[i].gameObject.SetActive(true);
                 return;
             }

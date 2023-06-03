@@ -12,6 +12,7 @@ public class SkillBehavior : MonoBehaviour
     protected EnemyStats nearestEnemy;
     protected Transform target;
     protected float shortestDistance, distanceToEnemy;
+    public Rigidbody2D rb;
     public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     // Start is called before the first frame update
 
@@ -45,7 +46,7 @@ public class SkillBehavior : MonoBehaviour
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>(); 
             enemy.TakeDamage(currentDamage);
-            skillController.floatingTextController.DisplayDamageText(enemy.transform, currentDamage);
+            skillController.floatingTextController.DisplayFloatingText(enemy.transform, currentDamage, Color.white);
             if (currentPierce <= 0 && currentChain > 0) //check if there are chains, add enemy to list to not chain again.
             {
                 if (!enemyIndexChain.Contains(skillController.enemyController.enemyList.IndexOf(enemy)))    //if enemy is not in list, add it.
@@ -79,7 +80,7 @@ public class SkillBehavior : MonoBehaviour
             ChainToEnemy();
         }
     }
-    
+    //Find new enemy to target.
     void  ChainToEnemy()
     {
         shortestDistance = Mathf.Infinity;
@@ -117,6 +118,7 @@ public class SkillBehavior : MonoBehaviour
         {
             currentDespawnTime = skillController.despawnTime;   //reset despawntime
             SetDirection((target.position - transform.position).normalized); //if target is found, set direction
+            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
         else
         {

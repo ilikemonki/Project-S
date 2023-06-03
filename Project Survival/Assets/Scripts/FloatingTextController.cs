@@ -14,19 +14,6 @@ public class FloatingTextController : MonoBehaviour
         PopulatePool(30);
     }
 
-    public void CheckPoolAmount()
-    {
-        int inactive = 0;
-        for (int i = 0; i < damageTextList.Count; i++)
-        {
-            if (!damageTextList[i].isActiveAndEnabled) inactive++;    //Calculate how many inactives there are
-        }
-        if (inactive <= 20) //if inactives are less than the number, spawn more. Change number if not enough.
-        {
-            PopulatePool(10);
-        }
-    }
-
     public void PopulatePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
@@ -38,16 +25,21 @@ public class FloatingTextController : MonoBehaviour
         }
     }
 
-    public void DisplayDamageText(Transform transform, float dmg)
+    public void DisplayFloatingText(Transform transform, float dmg, Color color)
     {
         for (int i = 0; i < damageTextList.Count; i++)
         {
             if (!damageTextList[i].isActiveAndEnabled)
             {
+                if (i > damageTextList.Count - 5)
+                {
+                    PopulatePool(10);
+                }
                 damageTextList[i].text = (dmg).ToString();
+                damageTextList[i].color = color;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + 1f, 0.5f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + 1f, 0.8f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }

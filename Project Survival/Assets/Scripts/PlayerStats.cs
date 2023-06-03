@@ -37,7 +37,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        if(currentHealth < maxHealth && !onRegen)
+        if(currentHealth < maxHealth && !onRegen && regen > 0)  //Start regen if health below 100%
         {
             onRegen = true;
             StartCoroutine(Regenerate(regen));
@@ -72,7 +72,7 @@ public class PlayerStats : MonoBehaviour
         {
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
-            floatingTextController.DisplayDamageText(transform, dmg);
+            floatingTextController.DisplayFloatingText(transform, dmg, Color.red);
             iFrameTimer = iFrameDuration;
             isInvincible = true;
             if (currentHealth <= 0)
@@ -110,12 +110,15 @@ public class PlayerStats : MonoBehaviour
 
     public void Heal(float amt)
     {
+        if (currentHealth == maxHealth) return;
         if (currentHealth + amt > maxHealth)
         {
+            floatingTextController.DisplayFloatingText(transform, maxHealth - currentHealth, Color.green);
             currentHealth = maxHealth;
         }
         else
         {
+            floatingTextController.DisplayFloatingText(transform, amt, Color.green);
             currentHealth += amt;
         }
         UpdateHealthBar(amt);

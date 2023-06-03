@@ -5,11 +5,14 @@ using UnityEngine;
 public class KnifeBehavior : SkillBehavior
 {
 
-    // Update is called once per frame
-    protected override void Update()
+    //protected override void Update()
+    //{
+    //    base.Update();
+    //    transform.position += skillController.speed * Time.deltaTime * direction;
+    //}
+    private void FixedUpdate()
     {
-        base.Update();
-        transform.position += skillController.speed * Time.deltaTime * direction;
+        rb.MovePosition(transform.position + (skillController.speed * Time.fixedDeltaTime * direction));
     }
 
     private void OnDrawGizmos()
