@@ -24,6 +24,8 @@ public class SkillController : MonoBehaviour
     public EnemyStats nearestEnemy;
     public Transform target;
     int maxLoops = 10000;
+    int counter;
+    float projectileSpreadAngle;
     public bool stopFiring;
 
     // Start is called before the first frame update
@@ -43,7 +45,7 @@ public class SkillController : MonoBehaviour
             if (currentCooldown <= 0f)
             {
                 if (target == null) return;
-                StartCoroutine(UseSkill());
+                StartCoroutine(UseSkillBarrage());
             }
         }
     }
@@ -84,13 +86,13 @@ public class SkillController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    public IEnumerator UseSkill()       //Spawn/Activate skill. Can now barrage.
+    public IEnumerator UseSkillBarrage()       //Spawn/Activate skill. Projectiles barrages.
     {
         stopFiring = true;
         currentCooldown = cooldown;
         for (int p = 0; p < projectile; p++)    //number of projectiles
         {
-            yield return new WaitForSeconds(0.05f);  //change this value later
+            yield return new WaitForSeconds(0.1f);  //change this value later
             for (int i = 0; i < poolList.Count; i++)
             {
                 if (i > poolList.Count - 5)
@@ -104,6 +106,50 @@ public class SkillController : MonoBehaviour
                     poolList[i].transform.position = transform.position;    //set starting position on player
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                    poolList[i].gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+        stopFiring = false;
+    }
+    public void UseSkillSpread()       //Spawn/Activate skill. Projectiles spread.
+    {
+        counter = 0;
+        stopFiring = true;
+        currentCooldown = cooldown;
+        projectileSpreadAngle = 90 / projectile;
+        Vector3 direction = target.position - transform.position;
+        for (int p = 0; p < projectile; p++)    //number of projectiles
+        {
+            if (p != 0) counter++;
+            for (int i = 0; i < poolList.Count; i++)
+            {
+                if (i > poolList.Count - 5)
+                {
+                    PopulatePool(projectile);
+                }
+                if (!poolList[i].isActiveAndEnabled)
+                {
+                    poolList[i].transform.position = transform.position;    //set starting position on player
+                    if (p == 0)
+                    {
+                        poolList[i].SetDirection((direction).normalized);   //Set direction
+                        poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                    }
+                    else if(p % 2 != 0) //shoots up angle
+                    {
+                        counter--;
+                        poolList[i].SetDirection((Quaternion.AngleAxis(projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
+                        poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + projectileSpreadAngle * p);
+                        Debug.Log((Quaternion.AngleAxis(projectileSpreadAngle * p, Vector3.forward) * direction).normalized);
+                    }
+                    else //shoots down angle
+                    {
+                        poolList[i].SetDirection((Quaternion.AngleAxis(-projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
+                        poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + -projectileSpreadAngle * (p - 1));
+                        Debug.Log((Quaternion.AngleAxis(-projectileSpreadAngle * (p-1), Vector3.forward) * direction).normalized);
+                    }
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }

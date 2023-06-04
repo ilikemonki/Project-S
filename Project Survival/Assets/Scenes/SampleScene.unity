@@ -308,7 +308,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyManager: {fileID: 230398754}
-  enemyList: []
+  enemyList:
+  - {fileID: 1465713308}
 --- !u!1 &71284097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +1008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &230398754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2434,6 +2435,7 @@ RectTransform:
   - {fileID: 2140166866}
   - {fileID: 1485570789}
   - {fileID: 2135092637}
+  - {fileID: 1465713304}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7878,6 +7880,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333212425}
   m_CullTransparentMesh: 1
+--- !u!1001 &1361530702
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 432648553}
+    m_Modifications:
+    - target: {fileID: 6735852499324766263, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_Name
+      value: Enemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: dropRate
+      value: 
+      objectReference: {fileID: 2135092638}
+    - target: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: enemyManager
+      value: 
+      objectReference: {fileID: 230398754}
+    - target: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: currentHealth
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -171
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 88
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
 --- !u!1 &1391835111
 GameObject:
   m_ObjectHideFlags: 0
@@ -8589,6 +8660,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463041205}
   m_CullTransparentMesh: 1
+--- !u!4 &1465713304 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6735852499324766269, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+  m_PrefabInstance: {fileID: 1361530702}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1465713308 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6735852499324766264, guid: b0dbc933aa42d9c41be13e2903f9eb58, type: 3}
+  m_PrefabInstance: {fileID: 1361530702}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be4ec79b5772424b8f940bd1dabf854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1485570788
 GameObject:
   m_ObjectHideFlags: 0
@@ -16968,11 +17055,11 @@ MonoBehaviour:
   speed: 4
   attackRange: 5
   chainRange: 50
-  cooldown: 0.25
+  cooldown: 1
   currentCooldown: 0
   despawnTime: 1.25
   strike: 1
-  projectile: 5
+  projectile: 3
   pierce: 0
   chain: 0
   knockBackForce: 0
