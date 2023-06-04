@@ -24,27 +24,33 @@ public class SkillController : MonoBehaviour
     public EnemyStats nearestEnemy;
     public Transform target;
     int maxLoops = 10000;
+    public bool stopFiring;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
         currentCooldown = cooldown;
         PopulatePool((projectile * strike) * 4);
-        InvokeRepeating(nameof(UpdateTarget), 0, 0.25f);    //Repeat looking for target
+        InvokeRepeating(nameof(UpdateTarget), 0, 0.1f);    //Repeat looking for target
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        currentCooldown -= Time.deltaTime;
-        if (currentCooldown <= 0f)
+        if (!stopFiring)
         {
-            UseSkill();
+            currentCooldown -= Time.deltaTime;
+            if (currentCooldown <= 0f)
+            {
+                if (target == null) return;
+                StartCoroutine(UseSkill());
+            }
         }
     }
     //Check for closest enemy to target
     protected virtual void UpdateTarget()
     {
+        if (stopFiring) return;
         if (maxLoops <= 0)
         {
             Debug.Log("max update target reached");
@@ -78,28 +84,32 @@ public class SkillController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    protected virtual void UseSkill()       //Spawn/Activate skill
+    public IEnumerator UseSkill()       //Spawn/Activate skill. Can now barrage.
     {
-        if (target == null) return;
+        stopFiring = true;
         currentCooldown = cooldown;
-        for (int i = 0; i < poolList.Count; i++)
+        for (int p = 0; p < projectile; p++)    //number of projectiles
         {
-            if (i > poolList.Count - 5)
+            yield return new WaitForSeconds(0.05f);  //change this value later
+            for (int i = 0; i < poolList.Count; i++)
             {
-                PopulatePool(5);
-            }
-            if (!poolList[i].isActiveAndEnabled)
-            {
-                //Put this in the other controllers later
-                Vector3 direction = target.position - transform.position;
-                poolList[i].transform.position = transform.position;    //set starting position on player
-                poolList[i].SetDirection((direction).normalized);   //Set direction
-                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                poolList[i].gameObject.SetActive(true);
-                return;
+                if (i > poolList.Count - 5)
+                {
+                    PopulatePool(5);
+                }
+                if (!poolList[i].isActiveAndEnabled)
+                {
+                    //Put this in the other controllers later
+                    Vector3 direction = target.position - transform.position;
+                    poolList[i].transform.position = transform.position;    //set starting position on player
+                    poolList[i].SetDirection((direction).normalized);   //Set direction
+                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                    poolList[i].gameObject.SetActive(true);
+                    break;
+                }
             }
         }
-        Debug.Log("skill");
+        stopFiring = false;
     }
 
     protected virtual void PopulatePool(int spawnAmount)

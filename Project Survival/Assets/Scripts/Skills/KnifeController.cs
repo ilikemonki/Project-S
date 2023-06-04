@@ -11,8 +11,8 @@ public class KnifeController : SkillController
     }
 
 
-    protected override void UseSkill()
-    {
-        base.UseSkill();
-    }
+    //protected override void UseSkill()
+    //{
+    //    base.UseSkill();
+    //}
 }

@@ -103,7 +103,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyMovement: {fileID: 6735852499324766267}
   damage: 4
-  maxHealth: 2
+  maxHealth: 50
   currentHealth: 0
   moveSpeed: 1
   currentMoveSpeed: 0

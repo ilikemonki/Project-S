@@ -17,6 +17,7 @@ public class PlayerStats : MonoBehaviour
     public float currentMoveSpeed;
     public float magnetRange;
     public Slider healthBar;
+    public Image healthBarImage;
 
     //I-Frames
     public float iFrameDuration;
@@ -95,16 +96,19 @@ public class PlayerStats : MonoBehaviour
     public void ChangeMaxHealthBar(float maxAmt)   //set health bar to current max
     {
         healthBar.maxValue = maxAmt;
+        CheckHPBarColor();
         UpdateHealthBar(maxAmt - currentHealth);
     }
     public void UpdateHealthBar(float amt)
     {
         healthBar.value += amt;
+        CheckHPBarColor();
         CheckHealthBarVisibility();
     }
 
     void Die()
     {
+        healthBarImage.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
 
@@ -129,6 +133,23 @@ public class PlayerStats : MonoBehaviour
         Heal(amt);
         yield return new WaitForSeconds(1);
         onRegen = false;
+    }
+
+    public void CheckHPBarColor()
+    {
+        float hpPercent = currentHealth * 100 / maxHealth;
+        if (hpPercent <= 30)
+        {
+            healthBarImage.color = Color.red;
+        }
+        else if (hpPercent <= 60)
+        {
+            healthBarImage.color = Color.yellow;
+        }
+        else
+        {
+            healthBarImage.color = Color.green;
+        }
     }
 
 }
