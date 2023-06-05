@@ -16,6 +16,7 @@ public class SkillBehavior : MonoBehaviour
     public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     // Start is called before the first frame update
 
+
     public void SetStats(float damage, float speed, int pierce, int chain, float despawnTime)
     {
         currentDamage = damage;

@@ -24,16 +24,20 @@ public class SkillController : MonoBehaviour
     public EnemyStats nearestEnemy;
     public Transform target;
     int maxLoops = 10000;
-    int counter;
+    int counter;    //Used in spread skill
+    Vector3 direction;
     float projectileSpreadAngle;
     public bool stopFiring;
+    public bool useBarrage, useSpread;
+    public bool autoUseSkill;
+    private Vector3 mousePos;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
         currentCooldown = cooldown;
         PopulatePool((projectile * strike) * 4);
-        InvokeRepeating(nameof(UpdateTarget), 0, 0.1f);    //Repeat looking for target
+        InvokeRepeating(nameof(UpdateTarget), 0, 0.15f);    //Repeat looking for target
     }
 
     // Update is called once per frame
@@ -44,8 +48,17 @@ public class SkillController : MonoBehaviour
             currentCooldown -= Time.deltaTime;
             if (currentCooldown <= 0f)
             {
-                if (target == null) return;
-                StartCoroutine(UseSkillBarrage());
+                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePos.z = 0;
+                if (target == null && autoUseSkill) return;
+                if (useBarrage)
+                {
+                    StartCoroutine(UseSkillBarrage());
+                }
+                else if (useSpread)
+                {
+                    UseSkillSpread();
+                }
             }
         }
     }
@@ -92,7 +105,7 @@ public class SkillController : MonoBehaviour
         currentCooldown = cooldown;
         for (int p = 0; p < projectile; p++)    //number of projectiles
         {
-            yield return new WaitForSeconds(0.1f);  //change this value later
+            yield return new WaitForSeconds(0.1f);
             for (int i = 0; i < poolList.Count; i++)
             {
                 if (i > poolList.Count - 5)
@@ -101,8 +114,9 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    //Put this in the other controllers later
-                    Vector3 direction = target.position - transform.position;
+                    if (autoUseSkill) direction = target.position - transform.position;
+                    else direction = mousePos - transform.position;
+
                     poolList[i].transform.position = transform.position;    //set starting position on player
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
@@ -119,7 +133,8 @@ public class SkillController : MonoBehaviour
         stopFiring = true;
         currentCooldown = cooldown;
         projectileSpreadAngle = 90 / projectile;
-        Vector3 direction = target.position - transform.position;
+        if (autoUseSkill) direction = target.position - transform.position;
+        else direction = mousePos - transform.position;
         for (int p = 0; p < projectile; p++)    //number of projectiles
         {
             if (p != 0) counter++;
@@ -142,13 +157,11 @@ public class SkillController : MonoBehaviour
                         counter--;
                         poolList[i].SetDirection((Quaternion.AngleAxis(projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
                         poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + projectileSpreadAngle * p);
-                        Debug.Log((Quaternion.AngleAxis(projectileSpreadAngle * p, Vector3.forward) * direction).normalized);
                     }
                     else //shoots down angle
                     {
                         poolList[i].SetDirection((Quaternion.AngleAxis(-projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
                         poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + -projectileSpreadAngle * (p - 1));
-                        Debug.Log((Quaternion.AngleAxis(-projectileSpreadAngle * (p-1), Vector3.forward) * direction).normalized);
                     }
                     poolList[i].gameObject.SetActive(true);
                     break;
@@ -158,6 +171,33 @@ public class SkillController : MonoBehaviour
         stopFiring = false;
     }
 
+    public IEnumerator UseSkillManual()       //Spawn/Activate skill. Projectiles barrages.
+    {
+        stopFiring = true;
+        currentCooldown = cooldown;
+        for (int p = 0; p < projectile; p++)    //number of projectiles
+        {
+            yield return new WaitForSeconds(0.1f);
+            for (int i = 0; i < poolList.Count; i++)
+            {
+                if (i > poolList.Count - 5)
+                {
+                    PopulatePool(5);
+                }
+                if (!poolList[i].isActiveAndEnabled)
+                {
+                    //Put this in the other controllers later
+                    direction = mousePos - transform.position;
+                    poolList[i].transform.position = transform.position;    //set starting position on player
+                    poolList[i].SetDirection((direction).normalized);   //Set direction
+                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                    poolList[i].gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+        stopFiring = false;
+    }
     protected virtual void PopulatePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
