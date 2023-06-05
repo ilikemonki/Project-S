@@ -6,8 +6,17 @@ public class PlayerMovement : MonoBehaviour
 {
     public PlayerStats playerStats;
     public Rigidbody2D rb;
+    public TrailRenderer trailRend;
     public Vector2 moveDirection;
+    public float dashIFrameSeconds, dashCooldown;
+    public float dashPower;
+    public bool isDashing, canDash;
+    float moveX, moveY;
 
+    private void Start()
+    {
+        canDash = true;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -16,20 +25,47 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PlayerMove();
+        if (!isDashing)
+        {
+            PlayerMove();
+        }
     }
 
     void InputManagement()
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
+        moveX = Input.GetAxisRaw("Horizontal");
+        moveY = Input.GetAxisRaw("Vertical");
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (canDash)
+            {
+                if (moveX == 0 && moveY == 0)
+                {
 
+                }
+                else StartCoroutine(Dashing());
+            }
+        }
         moveDirection = new Vector2(moveX, moveY).normalized;
     }
 
     void PlayerMove() 
     { 
         rb.velocity = new Vector2(moveDirection.x * playerStats.currentMoveSpeed, moveDirection.y * playerStats.currentMoveSpeed);
+    }
+
+    public IEnumerator Dashing()
+    {
+        Debug.Log(moveX + " " + moveY);
+        canDash = false;
+        isDashing = true;
+        trailRend.emitting = true;
+        rb.velocity = new Vector2(moveDirection.x * playerStats.currentMoveSpeed * dashPower, moveDirection.y * playerStats.currentMoveSpeed * dashPower);
+        yield return new WaitForSeconds(dashIFrameSeconds);
+        isDashing = false;
+        trailRend.emitting = false;
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
     }
 }
 

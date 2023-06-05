@@ -23,6 +23,7 @@ public class PlayerStats : MonoBehaviour
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
+
     public bool onRegen;
 
     private void Awake()
