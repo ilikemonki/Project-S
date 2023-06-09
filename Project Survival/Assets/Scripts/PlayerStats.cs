@@ -6,30 +6,38 @@ using UnityEngine.UI;
 public class PlayerStats : MonoBehaviour
 {
     public EnemyManager enemyManager;
+    public GameplayManager gameplayManager;
     public FloatingTextController floatingTextController;
+    public float baseMoveSpeed;
+    public float baseMaxHealth;
+    public float baseDefense;
+    public float baseRegen;
+    public float baseMagnetRange;
+    public Slider healthBar;
+    public Image healthBarImage; 
     public float moveSpeed;
     public float currentHealth;
     public float maxHealth;
-    public float damageRate;
     public float defense;
-    public float criticalChance, criticalChanceRate;
-    public float regen, regenRate;
-    public float currentMoveSpeed;
+    public float regen;
     public float magnetRange;
-    public Slider healthBar;
-    public Image healthBarImage;
+    public bool onRegen;
+    float regenTemp;
 
     //I-Frames
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
 
-    public bool onRegen;
 
     private void Awake()
     {
+        moveSpeed = baseMoveSpeed;
+        maxHealth = baseMaxHealth;
+        defense = baseDefense;
+        regen = baseRegen;
+        magnetRange = baseMagnetRange;
         currentHealth = maxHealth;
-        currentMoveSpeed = moveSpeed;
     }
     private void Start()
     {
@@ -131,7 +139,12 @@ public class PlayerStats : MonoBehaviour
 
     IEnumerator Regenerate(float amt)
     {
-        Heal(amt);
+        regenTemp += amt;
+        if (regenTemp >= 1)
+        {
+            Heal(Mathf.Floor(regenTemp));
+            regenTemp -= Mathf.Floor(regenTemp);
+        }
         yield return new WaitForSeconds(1);
         onRegen = false;
     }
@@ -153,4 +166,12 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public void UpdatePlayerStats()
+    {
+        moveSpeed = baseMoveSpeed * gameplayManager.moveSpeedMultiplier;
+        maxHealth = baseMaxHealth * gameplayManager.maxHealthMultiplier;
+        defense = gameplayManager.defenseMultiplier;
+        regen = gameplayManager.regenMultiplier;
+        magnetRange = baseMagnetRange * gameplayManager.magnetRangeMultiplier;
+    }
 }

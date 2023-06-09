@@ -68,12 +68,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyManager: {fileID: 0}
   enemyMovement: {fileID: 3096171719315698499}
-  damage: 4
-  maxHealth: 10
   currentHealth: 0
-  moveSpeed: 1
-  currentMoveSpeed: 0
+  maxHealth: 10
+  damage: 4
+  moveSpeed: 2
   exp: 1
+  fireRes: 0
+  coldRes: 0
+  lightningRes: 0
+  physicalRes: 0
+  chilled: 0
+  burned: 0
+  shocked: 0
+  bleeding: 0
   spriteRenderer: {fileID: 844990432030414420}
   rb: {fileID: 3532865930147841948}
   damageFlashMaterial: {fileID: 2100000, guid: 500d9a9f0a337474899d23a092db3fde, type: 2}

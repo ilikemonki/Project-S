@@ -888,23 +888,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyManager: {fileID: 230398754}
+  gameplayManager: {fileID: 944733854}
   floatingTextController: {fileID: 2140166867}
-  moveSpeed: 4
-  currentHealth: 0
-  maxHealth: 100
-  damageRate: 0
-  defense: 0
-  criticalChance: 0
-  criticalChanceRate: 0
-  regen: 5
-  regenRate: 0
-  currentMoveSpeed: 0
-  magnetRange: 12
+  baseMoveSpeed: 5
+  baseMaxHealth: 100
+  baseDefense: 0
+  baseRegen: 0
+  baseMagnetRange: 12
   healthBar: {fileID: 1650751183}
   healthBarImage: {fileID: 1130241373}
+  moveSpeed: 0
+  currentHealth: 0
+  maxHealth: 0
+  defense: 0
+  regen: 0
+  magnetRange: 0
+  onRegen: 0
   iFrameDuration: 0.5
   isInvincible: 0
-  onRegen: 0
 --- !u!61 &177331394
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1034,6 +1035,15 @@ MonoBehaviour:
       numberToSpawn: 50
       whenToSpawn: 0
       currentSpawned: 0
+      damage: 0
+      maxHealth: 0
+      currentHealth: 0
+      moveSpeed: 0
+      exp: 0
+      fireRes: 0
+      coldRes: 0
+      lightningRes: 0
+      physicalRes: 0
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
     spawnInterval: 1
@@ -4634,6 +4644,36 @@ MonoBehaviour:
   expSlider: {fileID: 404847438}
   expSliderParticle: {fileID: 1557717548}
   coinText: {fileID: 723749150}
+  mousePos: {x: 0, y: 0, z: 0}
+  damageMultiplier: 1
+  speedMultiplier: 1
+  attackRangeMultiplier: 1
+  chainRangeMultiplier: 1
+  cooldownMultiplier: 1
+  moveSpeedMultiplier: 1
+  maxHealthMultiplier: 1
+  defenseMultiplier: 0
+  criticalChanceMultiplier: 0
+  criticalDamageMultiplier: 0
+  regenMultiplier: 0
+  magnetRangeMultiplier: 1
+  chillChanceMultiplier: 0
+  burnChanceMultiplier: 0
+  shockChanceMultiplier: 0
+  bleedChanceMultiplier: 0
+  chillSlowMultiplier: 0
+  burnDamageMultiplier: 0
+  shockDamageMultiplier: 0
+  bleedDamageMultiplier: 0
+  knockBackMultiplier: 1
+  enemyMoveSpeedMultiplier: 1
+  enemyMaxHealthMultiplier: 1
+  enemyDamageMultiplier: 1
+  enemyExpMultiplier: 1
+  enemyFireResMultiplier: 0
+  enemyColdResMultiplier: 0
+  enemyLightningResMultiplier: 0
+  enemyPhysicalResMultiplier: 0
 --- !u!4 &944733855
 Transform:
   m_ObjectHideFlags: 0
@@ -5038,7 +5078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &990592655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17019,31 +17059,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 3139460322398848796, guid: 825b72de0a508864a8fc361043aed917, type: 3}
   poolParent: {fileID: 1913619780}
+  gameplayManager: {fileID: 944733854}
   level: 0
-  damage: 1
-  speed: 5
-  attackRange: 5
-  chainRange: 50
-  cooldown: 1
+  baseDamage: 1
+  baseSpeed: 5
+  baseAttackRange: 5
+  baseChainRange: 8
+  baseCooldown: 1
+  baseKnockBack: 0
+  baseCriticalChance: 0
+  baseCriticalDamage: 0
   currentCooldown: 0
   despawnTime: 2
   strike: 1
-  projectile: 3
-  pierce: 30
-  chain: 0
-  knockBackForce: 0
+  projectile: 5
+  pierce: 0
+  chain: 6
+  chillChance: 0
+  burnChance: 0
+  shockChance: 0
+  bleedChance: 0
+  chillSlow: 0
+  burnDamage: 0
+  shockDamage: 0
+  bleedDamage: 0
+  damage: 0
+  speed: 0
+  attackRange: 0
+  chainRange: 0
+  cooldown: 0
+  knockBack: 0
+  criticalChance: 0
+  criticalDamage: 0
+  chainSpeed: 20
   poolList: []
-  shortestDistance: 0
-  distanceToEnemy: 0
   player: {fileID: 177331393}
   enemyController: {fileID: 56640376}
   floatingTextController: {fileID: 2140166867}
   nearestEnemy: {fileID: 0}
   target: {fileID: 0}
   stopFiring: 0
-  useBarrage: 1
-  useSpread: 0
-  autoUseSkill: 1
+  useBarrage: 0
+  useSpread: 1
+  autoUseSkill: 0
 --- !u!1 &2099470369
 GameObject:
   m_ObjectHideFlags: 0

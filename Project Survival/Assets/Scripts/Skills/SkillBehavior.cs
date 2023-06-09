@@ -14,8 +14,6 @@ public class SkillBehavior : MonoBehaviour
     protected float shortestDistance, distanceToEnemy;
     public Rigidbody2D rb;
     public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
-    // Start is called before the first frame update
-
 
     public void SetStats(float damage, float speed, int pierce, int chain, float despawnTime)
     {
@@ -56,9 +54,9 @@ public class SkillBehavior : MonoBehaviour
                 }
             }
             ProjectileBehavior();
-            if (skillController.knockBackForce >= 1 && !enemy.knockedBack)
+            if (skillController.knockBack >= 1 && !enemy.knockedBack)
             {
-                enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBackForce);
+                enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
             }
 
         }
@@ -84,6 +82,7 @@ public class SkillBehavior : MonoBehaviour
     //Find new enemy to target.
     void  ChainToEnemy()
     {
+        currentSpeed = skillController.chainSpeed;
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
         for (int i = 0; i < skillController.enemyController.enemyList.Count; i++)
@@ -128,16 +127,6 @@ public class SkillBehavior : MonoBehaviour
 
     }
 
-
-    private void OnEnable()
-    {
-        if (skillController != null)
-        {
-            currentPierce = skillController.pierce;
-            currentChain = skillController.chain;
-            currentDespawnTime = skillController.despawnTime;
-        }
-    }
     private void OnDisable()
     {
         enemyIndexChain.Clear();

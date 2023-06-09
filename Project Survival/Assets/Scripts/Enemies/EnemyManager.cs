@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MEC;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -20,6 +21,13 @@ public class EnemyManager : MonoBehaviour
         public int numberToSpawn;
         public int whenToSpawn;   //start spawning when spawner reach the amount of mobs spawned
         public int currentSpawned;
+        //Make changes to these stats only when enemy stat changes happen. This way we don't need to keep calculating their stats everytime an enemy spawns.
+        public float damage;
+        public float maxHealth;
+        public float currentHealth;
+        public float moveSpeed;
+        public int exp;
+        public float fireRes, coldRes, lightningRes, physicalRes;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -37,6 +45,7 @@ public class EnemyManager : MonoBehaviour
     {
         PopulatePool(40);
         CalculateTotalEnemiesInRound();
+        UpdateAllEnemyStats();
     }
 
     private void Update()
@@ -96,7 +105,7 @@ public class EnemyManager : MonoBehaviour
                         }
                         if (!enemyController.enemyList[i].isActiveAndEnabled && !enemyController.enemyList[i].isSpawning)
                         {
-                            StartCoroutine(SpawnMarkAndEnemy(i, eGroup.enemyPrefab));
+                            Timing.RunCoroutine(SpawnMarkAndEnemy(i, eGroup));
                             eGroup.currentSpawned++;
                             rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
                             break;
@@ -111,22 +120,35 @@ public class EnemyManager : MonoBehaviour
         }
     }
     //Spawns the mark, waits a sec, then spawns the enemy on top of it.
-    IEnumerator SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyStats prefab )
+    IEnumerator<float> SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyGroup enemyGroup )
     {
         enemyController.enemyList[indexEnemyToSpawn].isSpawning = true;
         Vector2 spawnPos = new Vector2(player.transform.position.x + Random.Range(-10f, 10f), player.transform.position.y + Random.Range(-10f, 10f));
         enemyController.enemyList[indexEnemyToSpawn].transform.position = spawnPos;    //set starting position when spawn
-        enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
-        enemyController.enemyList[indexEnemyToSpawn].transform.localScale = prefab.transform.localScale;
-        enemyController.enemyList[indexEnemyToSpawn].SetStats(prefab.moveSpeed, prefab.maxHealth, prefab.damage, prefab.exp);   //Set new stats to enemy
+        enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
+        enemyController.enemyList[indexEnemyToSpawn].transform.localScale = enemyGroup.enemyPrefab.transform.localScale;
+        enemyController.enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.fireRes, enemyGroup.coldRes, enemyGroup.lightningRes, enemyGroup.physicalRes);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
-        yield return new WaitForSeconds(1f);
+        yield return Timing.WaitForSeconds(1f);
         spawnMarks.Despawn(indexToDespawn);
         enemyController.enemyList[indexEnemyToSpawn].gameObject.SetActive(true);
         enemyController.enemyList[indexEnemyToSpawn].isSpawning = false;
         enemiesAlive++;
+    }
 
-
+    public void UpdateAllEnemyStats()
+    {
+        foreach (var eGroup in rounds[gameplayMananger.roundCounter].enemyGroups)
+        {
+            eGroup.damage = eGroup.enemyPrefab.damage * gameplayMananger.enemyDamageMultiplier;
+            eGroup.moveSpeed = eGroup.enemyPrefab.moveSpeed * gameplayMananger.enemyMoveSpeedMultiplier;
+            eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * gameplayMananger.enemyMaxHealthMultiplier;
+            eGroup.exp = eGroup.enemyPrefab.exp * gameplayMananger.enemyExpMultiplier;
+            eGroup.fireRes = gameplayMananger.enemyFireResMultiplier;
+            eGroup.coldRes = gameplayMananger.enemyColdResMultiplier;
+            eGroup.lightningRes = gameplayMananger.enemyLightningResMultiplier;
+            eGroup.physicalRes = gameplayMananger.enemyPhysicalResMultiplier;
+        }
     }
 
 }

@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerMove() 
     { 
-        rb.velocity = new Vector2(moveDirection.x * playerStats.currentMoveSpeed, moveDirection.y * playerStats.currentMoveSpeed);
+        rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
     }
 
     public IEnumerator Dashing()
@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
         canDash = false;
         isDashing = true;
         trailRend.emitting = true;
-        rb.velocity = new Vector2(moveDirection.x * playerStats.currentMoveSpeed * dashPower, moveDirection.y * playerStats.currentMoveSpeed * dashPower);
+        rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed * dashPower, moveDirection.y * playerStats.moveSpeed * dashPower);
         yield return new WaitForSeconds(dashIFrameSeconds);
         isDashing = false;
         trailRend.emitting = false;

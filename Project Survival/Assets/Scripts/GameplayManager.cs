@@ -22,7 +22,31 @@ public class GameplayManager : MonoBehaviour
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
     public TextMeshProUGUI coinText;
+    public Vector3 mousePos;
 
+    //Player/Skill Global Multipliers
+    public float damageMultiplier;
+    public float speedMultiplier;
+    public float attackRangeMultiplier;
+    public float chainRangeMultiplier;
+    public float cooldownMultiplier;
+    public float moveSpeedMultiplier;
+    public float maxHealthMultiplier;
+    public float defenseMultiplier;
+    public float criticalChanceMultiplier, criticalDamageMultiplier;
+    public float regenMultiplier;
+    public float magnetRangeMultiplier;
+    public float chillChanceMultiplier, burnChanceMultiplier, shockChanceMultiplier, bleedChanceMultiplier;
+    public float chillSlowMultiplier, burnDamageMultiplier, shockDamageMultiplier, bleedDamageMultiplier;
+    public float knockBackMultiplier;
+
+
+    //Enemy Global Multipliers
+    public float enemyMoveSpeedMultiplier;
+    public float enemyMaxHealthMultiplier;
+    public float enemyDamageMultiplier;
+    public int enemyExpMultiplier;
+    public float enemyFireResMultiplier, enemyColdResMultiplier, enemyLightningResMultiplier, enemyPhysicalResMultiplier;
 
     private void Start()
     {
@@ -34,6 +58,8 @@ public class GameplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
     }
     public void GainExp(int amt)
     {

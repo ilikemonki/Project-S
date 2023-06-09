@@ -6,13 +6,11 @@ public class PItem1 : PassiveItem
 {
     protected override void ApplyModifier()
     {
-        player.moveSpeed += multiplier;
-        player.currentMoveSpeed = player.moveSpeed;
+        //player.moveSpeed += multiplier;
     }
 
     protected override void UnApplyModifier()
     {
-        player.moveSpeed -= multiplier;
-        player.currentMoveSpeed = player.moveSpeed;
+        //player.moveSpeed -= multiplier;
     }
 }

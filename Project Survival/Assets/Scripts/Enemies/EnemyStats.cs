@@ -6,12 +6,15 @@ public class EnemyStats : MonoBehaviour
 {
     public EnemyManager enemyManager;
     public EnemyMovement enemyMovement;
-    public float damage;
-    public float maxHealth;
+    //Stats
     public float currentHealth;
+    public float maxHealth;
+    public float damage;
     public float moveSpeed;
-    public float currentMoveSpeed;
     public int exp;
+    public float fireRes, coldRes, lightningRes, physicalRes;
+    public bool chilled, burned, shocked, bleeding;
+
     public SpriteRenderer spriteRenderer;
     public Rigidbody2D rb;
     Material defaultMaterial;
@@ -24,11 +27,6 @@ public class EnemyStats : MonoBehaviour
     {
         defaultMaterial = spriteRenderer.material;
     }
-    private void Start()
-    {
-        enemyMovement.SetMoveSpeed(currentMoveSpeed);
-    }
-
     public void TakeDamage(float dmg)
     {
         if (gameObject.activeSelf)
@@ -41,15 +39,17 @@ public class EnemyStats : MonoBehaviour
             Die();
         }
     }
-    public void SetStats(float moveSpeed, float maxHealth, float damage, int exp)
+    public void SetStats(float moveSpeed, float maxHealth, float damage, int exp, float fireRes, float coldRes, float lightningRes, float physicalRes)
     {
         this.moveSpeed = moveSpeed;
-        currentMoveSpeed = moveSpeed;
-        enemyMovement.SetMoveSpeed(currentMoveSpeed);
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
         this.damage = damage;
         this.exp = exp;
+        this.fireRes = fireRes;
+        this.coldRes = coldRes;
+        this.lightningRes = lightningRes;
+        this.physicalRes = physicalRes;
     }
 
 

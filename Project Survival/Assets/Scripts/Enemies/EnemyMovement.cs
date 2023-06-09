@@ -5,14 +5,13 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     public EnemyStats enemyStats;
-    float moveSpeed;
     private void Start()
     {
         InvokeRepeating(nameof(AlwaysFacePlayer), 0, 0.25f);
     }
     public void MoveEnemy()
     {
-        enemyStats.rb.MovePosition(transform.position + (moveSpeed * Time.fixedDeltaTime * (enemyStats.enemyManager.player.transform.position - transform.position).normalized));
+        enemyStats.rb.MovePosition(transform.position + (enemyStats.moveSpeed * Time.fixedDeltaTime * (enemyStats.enemyManager.player.transform.position - transform.position).normalized));
     }
 
     public void AlwaysFacePlayer()
@@ -22,11 +21,6 @@ public class EnemyMovement : MonoBehaviour
             enemyStats.spriteRenderer.flipX = false;
         }
         else enemyStats.spriteRenderer.flipX = true;
-    }
-
-    public void SetMoveSpeed(float mvs)
-    {
-        moveSpeed = mvs;
     }
 
 }

@@ -6,36 +6,55 @@ public class SkillController : MonoBehaviour
 {
     public GameObject prefab;
     public GameObject poolParent;
+    public GameplayManager gameplayManager;
     public int level;
+    public float baseDamage;    //base stats used in multipliers
+    public float baseSpeed;
+    public float baseAttackRange;
+    public float baseChainRange;
+    public float baseCooldown;
+    public float baseKnockBack;
+    public float baseCriticalChance, baseCriticalDamage;
+    public float currentCooldown;
+    public float despawnTime;
+    public int strike = 1, projectile, pierce, chain;
+    public float chillChance, burnChance, shockChance, bleedChance;
+    public float chillSlow, burnDamage, shockDamage, bleedDamage;
     public float damage;
     public float speed;
     public float attackRange;
     public float chainRange;
     public float cooldown;
-    public float currentCooldown;
-    public float despawnTime;
-    public int strike = 1, projectile, pierce, chain;
-    public float knockBackForce;
+    public float knockBack;
+    public float criticalChance, criticalDamage;
+    public float chainSpeed;
     public List<SkillBehavior> poolList = new();
-    public float shortestDistance, distanceToEnemy;
+    float shortestDistance, distanceToEnemy;
     public PlayerStats player;
     public EnemyController enemyController;
     public FloatingTextController floatingTextController;
     public EnemyStats nearestEnemy;
     public Transform target;
-    int maxLoops = 10000;
     int counter;    //Used in spread skill
     Vector3 direction;
     float projectileSpreadAngle;
     public bool stopFiring;
     public bool useBarrage, useSpread;
     public bool autoUseSkill;
-    private Vector3 mousePos;
 
+    private void Awake()
+    {
+        damage = baseDamage;
+        speed = baseSpeed;
+        attackRange = baseAttackRange;
+        chainRange = baseChainRange;
+        cooldown = baseCooldown;
+        knockBack = baseKnockBack;
+        currentCooldown = cooldown;
+    }
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        currentCooldown = cooldown;
         PopulatePool((projectile * strike) * 4);
         InvokeRepeating(nameof(UpdateTarget), 0, 0.15f);    //Repeat looking for target
     }
@@ -48,8 +67,6 @@ public class SkillController : MonoBehaviour
             currentCooldown -= Time.deltaTime;
             if (currentCooldown <= 0f)
             {
-                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePos.z = 0;
                 if (target == null && autoUseSkill) return;
                 if (useBarrage)
                 {
@@ -66,12 +83,6 @@ public class SkillController : MonoBehaviour
     protected virtual void UpdateTarget()
     {
         if (stopFiring) return;
-        if (maxLoops <= 0)
-        {
-            Debug.Log("max update target reached");
-            return;
-        }
-        maxLoops--;
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
         for (int i = 0; i < enemyController.enemyList.Count; i++)
@@ -115,9 +126,10 @@ public class SkillController : MonoBehaviour
                 if (!poolList[i].isActiveAndEnabled)
                 {
                     if (autoUseSkill) direction = target.position - transform.position;
-                    else direction = mousePos - transform.position;
+                    else direction = gameplayManager.mousePos - transform.position;
 
                     poolList[i].transform.position = transform.position;    //set starting position on player
+                    poolList[i].SetStats(damage, speed, pierce, chain, despawnTime);
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                     poolList[i].gameObject.SetActive(true);
@@ -134,7 +146,7 @@ public class SkillController : MonoBehaviour
         currentCooldown = cooldown;
         projectileSpreadAngle = 90 / projectile;
         if (autoUseSkill) direction = target.position - transform.position;
-        else direction = mousePos - transform.position;
+        else direction = gameplayManager.mousePos - transform.position;
         for (int p = 0; p < projectile; p++)    //number of projectiles
         {
             if (p != 0) counter++;
@@ -146,6 +158,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
+                    poolList[i].SetStats(damage, speed, pierce, chain, despawnTime);
                     poolList[i].transform.position = transform.position;    //set starting position on player
                     if (p == 0)
                     {
@@ -171,33 +184,6 @@ public class SkillController : MonoBehaviour
         stopFiring = false;
     }
 
-    public IEnumerator UseSkillManual()       //Spawn/Activate skill. Projectiles barrages.
-    {
-        stopFiring = true;
-        currentCooldown = cooldown;
-        for (int p = 0; p < projectile; p++)    //number of projectiles
-        {
-            yield return new WaitForSeconds(0.1f);
-            for (int i = 0; i < poolList.Count; i++)
-            {
-                if (i > poolList.Count - 5)
-                {
-                    PopulatePool(5);
-                }
-                if (!poolList[i].isActiveAndEnabled)
-                {
-                    //Put this in the other controllers later
-                    direction = mousePos - transform.position;
-                    poolList[i].transform.position = transform.position;    //set starting position on player
-                    poolList[i].SetDirection((direction).normalized);   //Set direction
-                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
-                    poolList[i].gameObject.SetActive(true);
-                    break;
-                }
-            }
-        }
-        stopFiring = false;
-    }
     protected virtual void PopulatePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
@@ -209,5 +195,15 @@ public class SkillController : MonoBehaviour
             sb.SetStats(damage, speed, pierce, chain, despawnTime);
             poolList.Add(sb);
         }
+    }
+
+    public void UpdateSkillStats()
+    {
+        damage = baseDamage * gameplayManager.damageMultiplier;
+        speed = baseSpeed * gameplayManager.speedMultiplier;
+        attackRange = baseAttackRange * gameplayManager.attackRangeMultiplier;
+        chainRange = baseChainRange * gameplayManager.chainRangeMultiplier;
+        cooldown = baseCooldown * gameplayManager.cooldownMultiplier;
+        knockBack = baseKnockBack * gameplayManager.knockBackMultiplier;
     }
 }

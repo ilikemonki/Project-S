@@ -160,9 +160,14 @@ MonoBehaviour:
   damage: 4
   maxHealth: 10
   currentHealth: 0
-  moveSpeed: 1
-  currentMoveSpeed: 0
+  moveSpeed: 3
   exp: 1
+  fireRes: 0
+  coldRes: 0
+  lightningRes: 0
+  chilled: 0
+  burned: 0
+  shocked: 0
   spriteRenderer: {fileID: 7806664790469157943}
   rb: {fileID: 6263267698700629503}
   damageFlashMaterial: {fileID: 2100000, guid: 500d9a9f0a337474899d23a092db3fde, type: 2}
