@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using MEC;
 public class PlayerStats : MonoBehaviour
 {
     public EnemyManager enemyManager;
@@ -50,7 +50,7 @@ public class PlayerStats : MonoBehaviour
         if(currentHealth < maxHealth && !onRegen && regen > 0)  //Start regen if health below 100%
         {
             onRegen = true;
-            StartCoroutine(Regenerate(regen));
+            Timing.RunCoroutine(Regenerate(regen));
         }
         if(iFrameTimer > 0)
         {
@@ -72,7 +72,6 @@ public class PlayerStats : MonoBehaviour
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage); //Do damage to player
-            //Debug.Log(enemy.damage);
         }
     }
 
@@ -137,7 +136,7 @@ public class PlayerStats : MonoBehaviour
         UpdateHealthBar(amt);
     }
 
-    IEnumerator Regenerate(float amt)
+    IEnumerator<float> Regenerate(float amt)
     {
         regenTemp += amt;
         if (regenTemp >= 1)
@@ -145,7 +144,7 @@ public class PlayerStats : MonoBehaviour
             Heal(Mathf.Floor(regenTemp));
             regenTemp -= Mathf.Floor(regenTemp);
         }
-        yield return new WaitForSeconds(1);
+        yield return Timing.WaitForSeconds(1);
         onRegen = false;
     }
 

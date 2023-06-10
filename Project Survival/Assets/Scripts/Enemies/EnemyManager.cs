@@ -27,7 +27,6 @@ public class EnemyManager : MonoBehaviour
         public float currentHealth;
         public float moveSpeed;
         public int exp;
-        public float fireRes, coldRes, lightningRes, physicalRes;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -40,7 +39,10 @@ public class EnemyManager : MonoBehaviour
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
-
+    private void Awake()
+    {
+        
+    }
     private void Start()
     {
         PopulatePool(40);
@@ -126,8 +128,10 @@ public class EnemyManager : MonoBehaviour
         Vector2 spawnPos = new Vector2(player.transform.position.x + Random.Range(-10f, 10f), player.transform.position.y + Random.Range(-10f, 10f));
         enemyController.enemyList[indexEnemyToSpawn].transform.position = spawnPos;    //set starting position when spawn
         enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
-        enemyController.enemyList[indexEnemyToSpawn].transform.localScale = enemyGroup.enemyPrefab.transform.localScale;
-        enemyController.enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.fireRes, enemyGroup.coldRes, enemyGroup.lightningRes, enemyGroup.physicalRes);   //Set new stats to enemy
+        enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
+        enemyController.enemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
+        enemyController.enemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
+        enemyController.enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
         yield return Timing.WaitForSeconds(1f);
         spawnMarks.Despawn(indexToDespawn);
@@ -144,10 +148,6 @@ public class EnemyManager : MonoBehaviour
             eGroup.moveSpeed = eGroup.enemyPrefab.moveSpeed * gameplayMananger.enemyMoveSpeedMultiplier;
             eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * gameplayMananger.enemyMaxHealthMultiplier;
             eGroup.exp = eGroup.enemyPrefab.exp * gameplayMananger.enemyExpMultiplier;
-            eGroup.fireRes = gameplayMananger.enemyFireResMultiplier;
-            eGroup.coldRes = gameplayMananger.enemyColdResMultiplier;
-            eGroup.lightningRes = gameplayMananger.enemyLightningResMultiplier;
-            eGroup.physicalRes = gameplayMananger.enemyPhysicalResMultiplier;
         }
     }
 

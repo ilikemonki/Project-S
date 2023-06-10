@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MEC;
+using TMPro;
+using System.Linq;
 
 public class EnemyStats : MonoBehaviour
 {
@@ -12,11 +15,11 @@ public class EnemyStats : MonoBehaviour
     public float damage;
     public float moveSpeed;
     public int exp;
-    public float fireRes, coldRes, lightningRes, physicalRes;
     public bool chilled, burned, shocked, bleeding;
 
     public SpriteRenderer spriteRenderer;
     public Rigidbody2D rb;
+    public BoxCollider2D boxCollider;
     Material defaultMaterial;
     public Material damageFlashMaterial;
     public DropRate dropRate;
@@ -27,29 +30,25 @@ public class EnemyStats : MonoBehaviour
     {
         defaultMaterial = spriteRenderer.material;
     }
-    public void TakeDamage(float dmg)
+    public void TakeDamage(float damage)
     {
         if (gameObject.activeSelf)
         {
-            StartCoroutine(DamageFlash());
+            Timing.RunCoroutine(DamageFlash());
         }
-        currentHealth -= dmg;
+        currentHealth -= damage;
         if (currentHealth <= 0f)
         {
             Die();
         }
     }
-    public void SetStats(float moveSpeed, float maxHealth, float damage, int exp, float fireRes, float coldRes, float lightningRes, float physicalRes)
+    public void SetStats(float moveSpeed, float maxHealth, float damage, int exp)
     {
         this.moveSpeed = moveSpeed;
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
         this.damage = damage;
         this.exp = exp;
-        this.fireRes = fireRes;
-        this.coldRes = coldRes;
-        this.lightningRes = lightningRes;
-        this.physicalRes = physicalRes;
     }
 
 
@@ -62,7 +61,6 @@ public class EnemyStats : MonoBehaviour
     //Becareful if destorying gameobject, this may get called.
     private void OnDisable()
     {
-        StopAllCoroutines();
         spriteRenderer.material = defaultMaterial;
         if (enemyManager != null)
         {
@@ -73,9 +71,9 @@ public class EnemyStats : MonoBehaviour
         knockedBack = false;
         isSpawning = false;
     }
-    public IEnumerator ResetVelocity()
+    public IEnumerator<float> ResetVelocity()
     {
-        yield return new WaitForSeconds(0.15f);
+        yield return Timing.WaitForSeconds(0.15f);
         rb.velocity = Vector2.zero;
         knockedBack = false;
     }
@@ -86,14 +84,14 @@ public class EnemyStats : MonoBehaviour
         {
             knockedBack = true;
             rb.AddForce(power, ForceMode2D.Impulse);
-            StartCoroutine(ResetVelocity());
+            Timing.RunCoroutine(ResetVelocity());
         }
     }
 
-    public IEnumerator DamageFlash()
+    public IEnumerator<float> DamageFlash()
     {
         spriteRenderer.material = damageFlashMaterial;
-        yield return new WaitForSeconds(0.1f);
+        yield return Timing.WaitForSeconds(0.1f);
         spriteRenderer.material = defaultMaterial;
     }
     

@@ -46,7 +46,7 @@ public class GameplayManager : MonoBehaviour
     public float enemyMaxHealthMultiplier;
     public float enemyDamageMultiplier;
     public int enemyExpMultiplier;
-    public float enemyFireResMultiplier, enemyColdResMultiplier, enemyLightningResMultiplier, enemyPhysicalResMultiplier;
+    public List<float> resistances;
 
     private void Start()
     {

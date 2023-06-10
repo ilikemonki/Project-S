@@ -6,7 +6,7 @@ public class KnifeBehavior : SkillBehavior
 {
     private void FixedUpdate()
     {
-        rb.MovePosition(transform.position + (currentSpeed * Time.fixedDeltaTime * direction));
+        rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
     }
 
     private void OnDrawGizmos()

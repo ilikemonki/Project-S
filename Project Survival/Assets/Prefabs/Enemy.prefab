@@ -83,6 +83,7 @@ MonoBehaviour:
   bleeding: 0
   spriteRenderer: {fileID: 844990432030414420}
   rb: {fileID: 3532865930147841948}
+  boxCollider: {fileID: 9141154206070049219}
   damageFlashMaterial: {fileID: 2100000, guid: 500d9a9f0a337474899d23a092db3fde, type: 2}
   dropRate: {fileID: 0}
   knockedBack: 0

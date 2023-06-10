@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using MEC;
 public class PlayerMovement : MonoBehaviour
 {
     public PlayerStats playerStats;
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                 }
-                else StartCoroutine(Dashing());
+                else Timing.RunCoroutine(Dashing());
             }
         }
         moveDirection = new Vector2(moveX, moveY).normalized;
@@ -54,17 +54,17 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
     }
 
-    public IEnumerator Dashing()
+    public IEnumerator<float> Dashing()
     {
         Debug.Log(moveX + " " + moveY);
         canDash = false;
         isDashing = true;
         trailRend.emitting = true;
         rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed * dashPower, moveDirection.y * playerStats.moveSpeed * dashPower);
-        yield return new WaitForSeconds(dashIFrameSeconds);
+        yield return Timing.WaitForSeconds(dashIFrameSeconds);
         isDashing = false;
         trailRend.emitting = false;
-        yield return new WaitForSeconds(dashCooldown);
+        yield return Timing.WaitForSeconds(dashCooldown);
         canDash = true;
     }
 }

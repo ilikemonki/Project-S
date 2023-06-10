@@ -1,41 +1,65 @@
+using MEC;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SkillBehavior : MonoBehaviour
 {
     public SkillController skillController;
     protected Vector3 direction;
-    protected float currentDamage, currentSpeed;
-    protected int currentPierce, currentChain;
-    protected float currentDespawnTime;
+    public List<float> damages;
+    protected float speed;
+    protected int pierce, chain;
+    protected float despawnTime;
     protected EnemyStats nearestEnemy;
     protected Transform target;
     protected float shortestDistance, distanceToEnemy;
     public Rigidbody2D rb;
     public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
 
-    public void SetStats(float damage, float speed, int pierce, int chain, float despawnTime)
+    public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime)
     {
-        currentDamage = damage;
-        currentSpeed = speed;
-        currentPierce = pierce;
-        currentChain = chain;
-        currentDespawnTime = despawnTime;
+        this.damages = damages;
+        this.speed = speed;
+        this.pierce = pierce;
+        this.chain = chain;
+        this.despawnTime = despawnTime;
     }
 
     protected virtual void Update()
     {
-        currentDespawnTime -= Time.deltaTime;
-        if (currentDespawnTime <= 0f)
+        despawnTime -= Time.deltaTime;
+        if (despawnTime <= 0f)
         {
             gameObject.SetActive(false);
         }
     }
 
+
     public void SetDirection(Vector3 dir)
     {
         direction = dir;
+    }
+
+    public void DoDamage(EnemyStats enemy)
+    {
+        float totalDamage = Mathf.Ceil(damages.Sum());
+        Color textColor = Color.white;
+        if (skillController.highestDamageType.Equals(1)) textColor = Color.red;
+        else if (skillController.highestDamageType.Equals(2)) textColor = Color.cyan;
+        else if(skillController.highestDamageType.Equals(3)) textColor = Color.yellow;
+        if (Random.Range(0, 100) <= skillController.criticalChance)  //Crit damage
+        {
+            totalDamage *= (skillController.criticalDamage / 100);
+            enemy.TakeDamage(totalDamage);
+            skillController.floatingTextController.DisplayFloatingCritText(enemy.transform, totalDamage, textColor);
+        }
+        else
+        {
+            enemy.TakeDamage(totalDamage);
+            skillController.floatingTextController.DisplayFloatingText(enemy.transform, totalDamage, textColor);
+        }
     }
 
     //Do damage when in contact w/ enemy
@@ -43,10 +67,9 @@ public class SkillBehavior : MonoBehaviour
     {
         if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponent<EnemyStats>(); 
-            enemy.TakeDamage(currentDamage);
-            skillController.floatingTextController.DisplayFloatingText(enemy.transform, currentDamage, Color.white);
-            if (currentPierce <= 0 && currentChain > 0) //check if there are chains, add enemy to list to not chain again.
+            EnemyStats enemy = col.GetComponent<EnemyStats>();
+            DoDamage(enemy);
+            if (pierce <= 0 && chain > 0) //check if there are chains, add enemy to list to not chain again.
             {
                 if (!enemyIndexChain.Contains(skillController.enemyController.enemyList.IndexOf(enemy)))    //if enemy is not in list, add it.
                 {
@@ -65,24 +88,24 @@ public class SkillBehavior : MonoBehaviour
     //How projectile act after hitting enemy
     void ProjectileBehavior()
     {
-        if (currentPierce <= 0 && currentChain <= 0)
+        if (pierce <= 0 && chain <= 0)
         {
             gameObject.SetActive(false);
         }
-        if (currentPierce > 0)  //behavior for pierce
+        if (pierce > 0)  //behavior for pierce
         {
-            currentPierce--;
+            pierce--;
         }
-        else if (currentChain > 0)   //behavior for chain
+        else if (chain > 0)   //behavior for chain
         {
-            currentChain--;
+            chain--;
             ChainToEnemy();
         }
     }
     //Find new enemy to target.
     void  ChainToEnemy()
     {
-        currentSpeed = skillController.chainSpeed;
+        speed = skillController.chainSpeed;
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
         for (int i = 0; i < skillController.enemyController.enemyList.Count; i++)
@@ -116,7 +139,7 @@ public class SkillBehavior : MonoBehaviour
         else target = null;
         if (target != null)
         {
-            currentDespawnTime = skillController.despawnTime;   //reset despawntime
+            despawnTime = skillController.despawnTime;
             SetDirection((target.position - transform.position).normalized); //if target is found, set direction
             transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }

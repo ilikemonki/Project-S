@@ -1037,7 +1037,7 @@ namespace MEC
         /// function to complete the task before ending the current one.
         /// </summary>
         /// <returns>The number of coroutines that were killed.</returns>
-        public static int KillCoroutines()
+        public static int KillCoroutines(object startDespawnTime)
         {
             return _instance == null ? 0 : _instance.KillCoroutinesOnInstance();
         }
