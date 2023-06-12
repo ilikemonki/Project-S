@@ -9,9 +9,8 @@ public class GameplayManager : MonoBehaviour
 {
     public int totalKills;
     public int roundCounter;
-    public TextMeshProUGUI killsNeededText;
-    public List<int> killsNeededInRound;    //make sure to have same amount for killCounters too.
-    public List<int> killCounters;
+    public TextMeshProUGUI timerText;
+    public float timer, maxTimer;
     public int level, exp, expCap, expCapIncrease;
     public int coins;
     public PlayerStats player;
@@ -32,25 +31,24 @@ public class GameplayManager : MonoBehaviour
     public float cooldownMultiplier;
     public float moveSpeedMultiplier;
     public float maxHealthMultiplier;
-    public float defenseMultiplier;
-    public float criticalChanceMultiplier, criticalDamageMultiplier;
-    public float regenMultiplier;
+    public float defenseAdditive;
+    public float criticalChanceAdditive, criticalDamageAdditive;
+    public float regenAdditive;
     public float magnetRangeMultiplier;
-    public float chillChanceMultiplier, burnChanceMultiplier, shockChanceMultiplier, bleedChanceMultiplier;
-    public float chillSlowMultiplier, burnDamageMultiplier, shockDamageMultiplier, bleedDamageMultiplier;
+    public List<float> ailmentsChanceAdditive;
+    public List<float> ailmentsEffectAdditive;
     public float knockBackMultiplier;
-
 
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;
     public float enemyMaxHealthMultiplier;
     public float enemyDamageMultiplier;
     public int enemyExpMultiplier;
-    public List<float> resistances;
+    public List<float> resistances;//[0]physical,[1]fire,[2]cold,[3]lightning
 
     private void Start()
     {
-        UpdateKillText();
+        timer = maxTimer;
         UpdateCoinText();
         expSlider.maxValue = expCap;
     }
@@ -60,6 +58,16 @@ public class GameplayManager : MonoBehaviour
     {
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
+        if(timer > 0)
+        {
+            timer -= Time.deltaTime;
+            UpdateTime(timer);
+        }
+        else
+        {
+            timer = 0;
+            GoToNextRound();
+        }
     }
     public void GainExp(int amt)
     {
@@ -75,36 +83,25 @@ public class GameplayManager : MonoBehaviour
         }
         UpdateExpBar();
     }
-    public void CheckKillRequirement()
-    {
-        if (killCounters[roundCounter] >= killsNeededInRound[roundCounter])
-        {
-            GoToNextRound();
-            UpdateRoundText();
-            UpdateKillText();
-        }
-    }
-    //called when enemy dies
     public void CalculateKillCounter()
     {
         totalKills++;
-        killCounters[roundCounter]++;
-        UpdateKillText();
-        CheckKillRequirement();
     }
     public void GainCoins(int amt)
     {
         coins += amt;
         UpdateCoinText();
     }
+    public void UpdateTime(float timer)
+    {
+        timer += 1;
+        float minutes = Mathf.FloorToInt(timer / 60);
+        float seconds = Mathf.FloorToInt(timer % 60);
+        timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
+    }
     public void UpdateCoinText()
     {
         coinText.text = coins.ToString();
-    }
-
-    public void UpdateKillText()
-    {
-        killsNeededText.text = (killsNeededInRound[roundCounter] - killCounters[roundCounter]).ToString();
     }
 
     public void UpdateRoundText()
@@ -124,6 +121,7 @@ public class GameplayManager : MonoBehaviour
         if (roundCounter < enemyManager.rounds.Count - 1)
         {
             roundCounter++;
+            UpdateRoundText();
         }
     }
 }

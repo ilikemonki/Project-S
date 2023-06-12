@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using MEC;
 public class PlayerStats : MonoBehaviour
 {
+    public PlayerMovement playerMovement;
     public EnemyManager enemyManager;
     public GameplayManager gameplayManager;
     public FloatingTextController floatingTextController;
@@ -64,7 +65,7 @@ public class PlayerStats : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (isInvincible)
+        if (isInvincible || playerMovement.isDashing)
         {
             return;
         }
@@ -77,6 +78,8 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(float dmg)
     {
+        if (dmg <= 0) dmg = 1;
+        dmg = Mathf.Round(dmg);
         if (!isInvincible)
         {
             currentHealth -= dmg;
@@ -150,6 +153,11 @@ public class PlayerStats : MonoBehaviour
 
     public void CheckHPBarColor()
     {
+        if (currentHealth <= 0)
+        {
+            healthBarImage.gameObject.SetActive(false);
+            return;
+        }
         float hpPercent = currentHealth * 100 / maxHealth;
         if (hpPercent <= 30)
         {
@@ -167,10 +175,10 @@ public class PlayerStats : MonoBehaviour
 
     public void UpdatePlayerStats()
     {
-        moveSpeed = baseMoveSpeed * gameplayManager.moveSpeedMultiplier;
-        maxHealth = baseMaxHealth * gameplayManager.maxHealthMultiplier;
-        defense = gameplayManager.defenseMultiplier;
-        regen = gameplayManager.regenMultiplier;
-        magnetRange = baseMagnetRange * gameplayManager.magnetRangeMultiplier;
+        moveSpeed = baseMoveSpeed * (1 + gameplayManager.moveSpeedMultiplier / 100);
+        maxHealth = baseMaxHealth * (1 + gameplayManager.maxHealthMultiplier / 100);
+        defense = gameplayManager.defenseAdditive;
+        regen = gameplayManager.regenAdditive;
+        magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100);
     }
 }

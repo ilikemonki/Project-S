@@ -12,19 +12,23 @@ public class SkillBehavior : MonoBehaviour
     protected float speed;
     protected int pierce, chain;
     protected float despawnTime;
+    public List<float> ailmentsChance;
+    public List<float> ailmentsEffect;
     protected EnemyStats nearestEnemy;
     protected Transform target;
     protected float shortestDistance, distanceToEnemy;
     public Rigidbody2D rb;
     public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
 
-    public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime)
+    public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
         this.damages = damages;
         this.speed = speed;
         this.pierce = pierce;
         this.chain = chain;
         this.despawnTime = despawnTime;
+        this.ailmentsChance = ailmentsChance;
+        this.ailmentsEffect = ailmentsEffect;
     }
 
     protected virtual void Update()
@@ -44,22 +48,53 @@ public class SkillBehavior : MonoBehaviour
 
     public void DoDamage(EnemyStats enemy)
     {
-        float totalDamage = Mathf.Ceil(damages.Sum());
-        Color textColor = Color.white;
-        if (skillController.highestDamageType.Equals(1)) textColor = Color.red;
-        else if (skillController.highestDamageType.Equals(2)) textColor = Color.cyan;
-        else if(skillController.highestDamageType.Equals(3)) textColor = Color.yellow;
-        if (Random.Range(0, 100) <= skillController.criticalChance)  //Crit damage
+        float totalDamage = damages.Sum();
+        bool isCrit = false;
+        if (Random.Range(1, 100) <= skillController.criticalChance)  //Crit damage
         {
+            isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
-            enemy.TakeDamage(totalDamage);
-            skillController.floatingTextController.DisplayFloatingCritText(enemy.transform, totalDamage, textColor);
         }
-        else
+        Color textColor = Color.white;
+        if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
-            enemy.TakeDamage(totalDamage);
-            skillController.floatingTextController.DisplayFloatingText(enemy.transform, totalDamage, textColor);
+            textColor = Color.red; 
+            if (Random.Range(1, 100) <= ailmentsChance[1] + skillController.gameplayManager.ailmentsChanceAdditive[1])
+            {
+                if (isCrit)
+                    enemy.ApplyBurn(damages[1] * (skillController.criticalDamage / 100) * ((ailmentsEffect[1] + skillController.gameplayManager.ailmentsEffectAdditive[1]) / 100));
+                else
+                    enemy.ApplyBurn(damages[1] * ((ailmentsEffect[1] + skillController.gameplayManager.ailmentsEffectAdditive[1]) / 100));
+            }
         }
+        else if (skillController.highestDamageType.Equals(2))   //cold, chill
+        {
+            textColor = Color.cyan;
+            if (Random.Range(1, 100) <= ailmentsChance[2] + skillController.gameplayManager.ailmentsChanceAdditive[2])
+            {
+                enemy.ApplyChill(ailmentsEffect[2] + skillController.gameplayManager.ailmentsEffectAdditive[2]);
+            }
+        }
+        else if (skillController.highestDamageType.Equals(3))   //lightning, shock
+        {
+            textColor = Color.yellow;
+            if (Random.Range(1, 100) <= ailmentsChance[3] + skillController.gameplayManager.ailmentsChanceAdditive[3])
+            {
+                enemy.ApplyShock(ailmentsEffect[3] + skillController.gameplayManager.ailmentsEffectAdditive[3]);
+            }
+        }
+        else //physical, bleed
+        {
+            if (Random.Range(1, 100) <= ailmentsChance[0] + skillController.gameplayManager.ailmentsChanceAdditive[0])
+            {
+                if (isCrit)
+                    enemy.ApplyBleed(damages[0] * (skillController.criticalDamage / 100) * ((ailmentsEffect[0] + skillController.gameplayManager.ailmentsEffectAdditive[0]) / 100));
+                else
+                    enemy.ApplyBleed(damages[0] * ((ailmentsEffect[0] + skillController.gameplayManager.ailmentsEffectAdditive[0]) / 100));
+            }
+        }
+        
+        enemy.TakeDamage(totalDamage, isCrit, textColor);
     }
 
     //Do damage when in contact w/ enemy

@@ -29,7 +29,7 @@ public class DropRate : MonoBehaviour
     {
         foreach (ItemsToDrop item in collectiblesList)
         {
-            rand = Random.Range(0, 100);
+            rand = Random.Range(1, 100);
             if (rand <= item.chance)
             {
                 SpawnItem(item, pos);
@@ -97,7 +97,6 @@ public class DropRate : MonoBehaviour
                     }
                 }
             }
-            Debug.Log(item.parent.name + " " + inactive + " " + destroyed);
         }
     }
 }

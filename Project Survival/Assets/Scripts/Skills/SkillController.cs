@@ -10,7 +10,9 @@ public class SkillController : MonoBehaviour
     public GameObject poolParent;
     public GameplayManager gameplayManager;
     public int level;
-    public List<float> baseDamages;
+    public List<float> baseDamages; //[0]physical,[1]fire,[2]cold,[3]lightning
+    public List<float> baseAilmentsChance;
+    public List<float> baseAilmentsEffect;
     public float baseSpeed;
     public float baseAttackRange;
     public float baseChainRange;
@@ -20,9 +22,9 @@ public class SkillController : MonoBehaviour
     public float currentCooldown;
     public float despawnTime;
     public int strike = 1, projectile, pierce, chain;
-    public float chillChance, burnChance, shockChance, bleedChance;
-    public float chillSlow, burnDamage, shockDamage, bleedDamage;
     public List<float> damages;
+    public List<float> ailmentsChance;
+    public List<float> ailmentsEffect;
     public float speed;
     public float attackRange;
     public float chainRange;
@@ -34,7 +36,6 @@ public class SkillController : MonoBehaviour
     float shortestDistance, distanceToEnemy;
     public PlayerStats player;
     public EnemyController enemyController;
-    public FloatingTextController floatingTextController;
     public EnemyStats nearestEnemy;
     public Transform target;
     int counter;    //Used in spread skill
@@ -48,6 +49,8 @@ public class SkillController : MonoBehaviour
     private void Awake()
     {
         damages = baseDamages;
+        ailmentsChance = baseAilmentsChance;
+        ailmentsEffect = baseAilmentsEffect;
         speed = baseSpeed;
         attackRange = baseAttackRange;
         chainRange = baseChainRange;
@@ -135,7 +138,7 @@ public class SkillController : MonoBehaviour
                     else direction = gameplayManager.mousePos - transform.position;
 
                     poolList[i].transform.position = transform.position;    //set starting position on player
-                    poolList[i].SetStats(damages, speed, pierce, chain, despawnTime);
+                    poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                     poolList[i].gameObject.SetActive(true);
@@ -164,7 +167,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    poolList[i].SetStats(damages, speed, pierce, chain, despawnTime);
+                    poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
                     poolList[i].transform.position = transform.position;    //set starting position on player
                     if (p == 0)
                     {
@@ -198,7 +201,7 @@ public class SkillController : MonoBehaviour
             skill.SetActive(false);
             SkillBehavior sb = skill.GetComponent<SkillBehavior>();
             sb.skillController = this;
-            sb.SetStats(damages, speed, pierce, chain, despawnTime);
+            sb.SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
             poolList.Add(sb);
         }
     }
@@ -207,13 +210,23 @@ public class SkillController : MonoBehaviour
     {
         for (int i = 0; i < damages.Count; i++)
         {
-            damages[i] = damages[i] * (1 - gameplayManager.resistances[i] / 100);
+            damages[i] = baseDamages[i] * (1 - gameplayManager.resistances[i] / 100);
         }
-        speed = baseSpeed * gameplayManager.speedMultiplier;
-        attackRange = baseAttackRange * gameplayManager.attackRangeMultiplier;
-        chainRange = baseChainRange * gameplayManager.chainRangeMultiplier;
-        cooldown = baseCooldown * gameplayManager.cooldownMultiplier;
-        knockBack = baseKnockBack * gameplayManager.knockBackMultiplier;
-        highestDamageType = damages.IndexOf(Mathf.Max(damages.ToArray()));
+        for (int i = 0; i < ailmentsChance.Count; i++)
+        {
+            ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i];
+        }
+        for (int i = 0; i < ailmentsEffect.Count; i++)
+        {
+            ailmentsEffect[i] = baseAilmentsEffect[i] + gameplayManager.ailmentsEffectAdditive[i];
+        }
+        speed = baseSpeed * (1 + gameplayManager.speedMultiplier / 100);
+        attackRange = baseAttackRange * (1 + gameplayManager.attackRangeMultiplier / 100);
+        chainRange = baseChainRange * (1 + gameplayManager.chainRangeMultiplier / 100);
+        cooldown = baseCooldown * (1 + gameplayManager.cooldownMultiplier / 100);
+        knockBack = baseKnockBack * (1 + gameplayManager.knockBackMultiplier / 100);
+        criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive;
+        criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive;
+        highestDamageType = damages.IndexOf(Mathf.Max(damages.ToArray()));  //Find highest damage type.
     }
 }
