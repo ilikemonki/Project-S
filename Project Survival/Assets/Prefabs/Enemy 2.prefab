@@ -38,8 +38,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 112.7, y: -6.6}
-  m_SizeDelta: {x: 64, y: 64}
+  m_AnchoredPosition: {x: 104.8749, y: -22.7392}
+  m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3688102166529814595
 MonoBehaviour:
@@ -69,7 +69,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyMovement: {fileID: 3688102166529814595}
   currentHealth: 0
-  maxHealth: 40
+  maxHealth: 100
   damage: 4
   moveSpeed: 2
   baseMoveSpeed: 0
@@ -130,7 +130,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 6.9}
+  m_Offset: {x: 0, y: 7.021225}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -141,7 +141,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 35.06, y: 25.6}
+  m_Size: {x: 35.06, y: 26.107574}
   m_EdgeRadius: 0
 --- !u!1 &6415432799057986981
 GameObject:

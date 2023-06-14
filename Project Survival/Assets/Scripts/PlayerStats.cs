@@ -75,7 +75,6 @@ public class PlayerStats : MonoBehaviour
             TakeDamage(enemy.damage); //Do damage to player
         }
     }
-
     public void TakeDamage(float dmg)
     {
         if (dmg <= 0) dmg = 1;

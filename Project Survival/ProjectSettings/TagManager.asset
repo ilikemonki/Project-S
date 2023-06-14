@@ -15,8 +15,8 @@ TagManager:
   - Player
   - Enemy
   - Sprite Ignore
-  - 
-  - 
+  - Wall
+  - Wall Collider
   - 
   - 
   - 

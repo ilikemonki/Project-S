@@ -39,6 +39,8 @@ public class EnemyManager : MonoBehaviour
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
+    float spawnPosX, spawnPosY;
+    Vector2 spawnPos;
     private void Start()
     {
         PopulatePool(40);
@@ -121,8 +123,30 @@ public class EnemyManager : MonoBehaviour
     IEnumerator<float> SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyGroup enemyGroup )
     {
         enemyController.enemyList[indexEnemyToSpawn].isSpawning = true;
-        Vector2 spawnPos = new Vector2(player.transform.position.x + Random.Range(-10f, 10f), player.transform.position.y + Random.Range(-10f, 10f));
-        enemyController.enemyList[indexEnemyToSpawn].transform.position = spawnPos;    //set starting position when spawn
+        spawnPosX = Random.Range(-1000f, 1000f);
+        spawnPosY = Random.Range(-1000f, 1000f);
+        if (spawnPosX > -100 && spawnPosX < 100)
+        {
+            if (spawnPosX > 0)
+                spawnPosX += 100;
+            else spawnPosX -= 100;
+        }
+        if (spawnPosY > -100 && spawnPosY < 100)
+        {
+            if (spawnPosY > 0)
+                spawnPosY += 100;
+            else spawnPosY -= 100;
+        }
+        if (player.transform.localPosition.x + spawnPosX > 1950 || player.transform.localPosition.x + spawnPosX < -1950)
+            spawnPosX = player.transform.localPosition.x + (-1 * spawnPosX);
+        else
+            spawnPosX = player.transform.localPosition.x + spawnPosX;
+        if (player.transform.localPosition.y + spawnPosY > 1400 || player.transform.localPosition.y + spawnPosY < -1400)
+            spawnPosY = player.transform.localPosition.y + (-1 * spawnPosY);
+        else
+            spawnPosY = player.transform.localPosition.y + spawnPosY;
+        spawnPos = new Vector2(spawnPosX, spawnPosY);
+        enemyController.enemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
         enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
         enemyController.enemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         enemyController.enemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;

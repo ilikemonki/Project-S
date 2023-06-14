@@ -56,7 +56,6 @@ public class PlayerMovement : MonoBehaviour
 
     public IEnumerator<float> Dashing()
     {
-        Debug.Log(moveX + " " + moveY);
         canDash = false;
         isDashing = true;
         trailRend.emitting = true;

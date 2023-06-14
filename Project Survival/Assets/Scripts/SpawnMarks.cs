@@ -49,7 +49,7 @@ public class SpawnMarks : MonoBehaviour
         {
             if (!spawnMarkList[i].activeSelf)   //find inactive mark to spawn
             {
-                spawnMarkList[i].transform.position = spawnPos;
+                spawnMarkList[i].transform.localPosition = spawnPos;
                 spawnMarkList[i].SetActive(true);
                 return i;
             }
