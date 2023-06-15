@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Coin 1
+  - Coin 5
+  - Coin 10
+  - Coin 20
+  - Magnet
+  - Health Potion
   layers:
   - Default
   - TransparentFX
@@ -17,7 +23,7 @@ TagManager:
   - Sprite Ignore
   - Wall
   - Wall Collider
-  - 
+  - Collectibles
   - 
   - 
   - 

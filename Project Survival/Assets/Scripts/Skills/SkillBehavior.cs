@@ -33,6 +33,11 @@ public class SkillBehavior : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (target != null && target.gameObject.activeSelf)
+        {
+            SetDirection((target.position - transform.position).normalized);
+            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+        }
         despawnTime -= Time.deltaTime;
         if (despawnTime <= 0f)
         {
@@ -50,7 +55,7 @@ public class SkillBehavior : MonoBehaviour
     {
         float totalDamage = damages.Sum();
         bool isCrit = false;
-        if (Random.Range(1, 100) <= skillController.criticalChance)  //Crit damage
+        if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
         {
             isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
@@ -59,7 +64,7 @@ public class SkillBehavior : MonoBehaviour
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
             textColor = Color.red; 
-            if (Random.Range(1, 100) <= ailmentsChance[1] + skillController.gameplayManager.ailmentsChanceAdditive[1])
+            if (Random.Range(1, 101) <= ailmentsChance[1] + skillController.gameplayManager.ailmentsChanceAdditive[1])
             {
                 if (isCrit)
                     enemy.ApplyBurn(damages[1] * (skillController.criticalDamage / 100) * ((ailmentsEffect[1] + skillController.gameplayManager.ailmentsEffectAdditive[1]) / 100));
@@ -70,7 +75,7 @@ public class SkillBehavior : MonoBehaviour
         else if (skillController.highestDamageType.Equals(2))   //cold, chill
         {
             textColor = Color.cyan;
-            if (Random.Range(1, 100) <= ailmentsChance[2] + skillController.gameplayManager.ailmentsChanceAdditive[2])
+            if (Random.Range(1, 101) <= ailmentsChance[2] + skillController.gameplayManager.ailmentsChanceAdditive[2])
             {
                 enemy.ApplyChill(ailmentsEffect[2] + skillController.gameplayManager.ailmentsEffectAdditive[2]);
             }
@@ -78,14 +83,14 @@ public class SkillBehavior : MonoBehaviour
         else if (skillController.highestDamageType.Equals(3))   //lightning, shock
         {
             textColor = Color.yellow;
-            if (Random.Range(1, 100) <= ailmentsChance[3] + skillController.gameplayManager.ailmentsChanceAdditive[3])
+            if (Random.Range(1, 101) <= ailmentsChance[3] + skillController.gameplayManager.ailmentsChanceAdditive[3])
             {
                 enemy.ApplyShock(ailmentsEffect[3] + skillController.gameplayManager.ailmentsEffectAdditive[3]);
             }
         }
         else //physical, bleed
         {
-            if (Random.Range(1, 100) <= ailmentsChance[0] + skillController.gameplayManager.ailmentsChanceAdditive[0])
+            if (Random.Range(1, 101) <= ailmentsChance[0] + skillController.gameplayManager.ailmentsChanceAdditive[0])
             {
                 if (isCrit)
                     enemy.ApplyBleed(damages[0] * (skillController.criticalDamage / 100) * ((ailmentsEffect[0] + skillController.gameplayManager.ailmentsEffectAdditive[0]) / 100));

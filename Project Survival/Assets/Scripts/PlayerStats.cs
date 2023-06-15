@@ -8,6 +8,7 @@ public class PlayerStats : MonoBehaviour
     public PlayerMovement playerMovement;
     public EnemyManager enemyManager;
     public GameplayManager gameplayManager;
+    public PlayerCollector playerCollector;
     public FloatingTextController floatingTextController;
     public float baseMoveSpeed;
     public float baseMaxHealth;
@@ -73,7 +74,25 @@ public class PlayerStats : MonoBehaviour
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage); //Do damage to player
+            return;
         }
+        ICollectibles collectible = collision.GetComponent<ICollectibles>();
+        if (collision.tag.Contains("Coin"))
+        {
+            collision.gameObject.SetActive(false);
+            gameplayManager.GainCoins(int.Parse(collision.tag.Substring(5)));
+        }
+        else if (collision.CompareTag("Health Potion"))
+        {
+            collision.gameObject.SetActive(false);
+            Heal(maxHealth * 0.15f);
+        }
+        else if (collision.CompareTag("Magnet"))
+        {
+            collision.gameObject.SetActive(false);
+            playerCollector.MagnetCollectible();
+        }
+        playerCollector.collectibles.Remove(collectible);
     }
     public void TakeDamage(float dmg)
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using MEC;
 public class PlayerCollector : MonoBehaviour
 {
     public PlayerStats player;
@@ -11,9 +11,8 @@ public class PlayerCollector : MonoBehaviour
 
     private void Awake()
     {
-        magnet.radius = player.magnetRange;
+        SetMagnetRange(player.magnetRange);
     }
-
     private void FixedUpdate()
     {
         if(collectibles.Count > 0)
@@ -26,11 +25,7 @@ public class PlayerCollector : MonoBehaviour
                 }
                 else
                 {
-                    collectibles[i].PullCollectible(pullSpeed);
-                    if (!collectibles[i].isActiveAndEnabled)
-                    {
-                        collectibles.Remove(collectibles[i]);
-                    }
+                    collectibles[i].PullCollectible(pullSpeed, player.transform);
                 }
             }
         }
@@ -41,12 +36,27 @@ public class PlayerCollector : MonoBehaviour
     {
         if (collision.TryGetComponent(out ICollectibles collectibles))
         {
-            if (!collectibles.isCollecting)
+            if (!collectibles.isCollecting && !collision.CompareTag("Magnet") && !collision.CompareTag("Health Potion"))
             {
-                this.collectibles.Add(collectibles);
                 collectibles.isCollecting = true;
+                this.collectibles.Add(collectibles);
             }
 
         }
+    }
+    public void SetMagnetRange(float magnetRange)
+    {
+        magnet.radius = magnetRange;
+    }
+    public void MagnetCollectible()
+    {
+        Timing.RunCoroutine(CollectibleDuration());
+    }
+    public IEnumerator<float> CollectibleDuration()
+    {
+        magnet.radius = 300;
+        yield return Timing.WaitForSeconds(0.5f);
+        magnet.radius = player.magnetRange;
+
     }
 }

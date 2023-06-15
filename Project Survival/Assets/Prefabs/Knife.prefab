@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7636711164442120139}
   - component: {fileID: 8558217897996643977}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 5855205079706190287}
   - component: {fileID: 2398783455814874361}
   - component: {fileID: 2398783455814874362}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Knife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,6 +142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillController: {fileID: 0}
+  damages: []
+  ailmentsChance: []
+  ailmentsEffect: []
   rb: {fileID: 2398783455814874361}
   enemyIndexChain: 
 --- !u!50 &2398783455814874361

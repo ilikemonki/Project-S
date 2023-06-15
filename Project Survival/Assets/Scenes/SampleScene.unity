@@ -292,7 +292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: 107}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &56640376
@@ -871,7 +871,7 @@ GameObject:
   - component: {fileID: 177331396}
   - component: {fileID: 177331395}
   - component: {fileID: 177331394}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -893,12 +893,13 @@ MonoBehaviour:
   playerMovement: {fileID: 177331396}
   enemyManager: {fileID: 230398754}
   gameplayManager: {fileID: 944733854}
+  playerCollector: {fileID: 1245201450}
   floatingTextController: {fileID: 2140166867}
   baseMoveSpeed: 5
   baseMaxHealth: 100
   baseDefense: 0
   baseRegen: 0
-  baseMagnetRange: 12
+  baseMagnetRange: 10
   healthBar: {fileID: 1650751183}
   healthBarImage: {fileID: 1130241373}
   moveSpeed: 0
@@ -1083,7 +1084,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &230398754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1123,9 +1124,25 @@ MonoBehaviour:
       maxHealth: 0
       baseMoveSpeed: 0
       exp: 0
+    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      numberToSpawn: 50
+      whenToSpawn: 0
+      currentSpawned: 0
+      damage: 0
+      maxHealth: 0
+      baseMoveSpeed: 0
+      exp: 0
+    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      numberToSpawn: 50
+      whenToSpawn: 0
+      currentSpawned: 0
+      damage: 0
+      maxHealth: 0
+      baseMoveSpeed: 0
+      exp: 0
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
-    spawnInterval: 1
+    spawnInterval: 0.2
   - enemyGroups: []
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
@@ -1495,7 +1512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -49.299988, y: -15.099976}
+  m_AnchoredPosition: {x: -49.30005, y: -15.099976}
   m_SizeDelta: {x: 84.83002, y: 20.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &296005714
@@ -2933,7 +2950,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
   m_Name: 
@@ -3099,42 +3116,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589719304}
   m_CullTransparentMesh: 1
---- !u!1 &596475646
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 596475647}
-  m_Layer: 5
-  m_Name: Coin Pool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &596475647
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 596475646}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2135092637}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &631215600
 GameObject:
   m_ObjectHideFlags: 0
@@ -7058,7 +7039,7 @@ GameObject:
   - component: {fileID: 1245201451}
   - component: {fileID: 1245201450}
   - component: {fileID: 1245201453}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player Collector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14289,42 +14270,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1592688848}
   m_CullTransparentMesh: 1
---- !u!1 &1597524821
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1597524822}
-  m_Layer: 5
-  m_Name: Health Potion Pool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1597524822
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597524821}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2135092637}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1613466590
 GameObject:
   m_ObjectHideFlags: 0
@@ -17216,8 +17161,8 @@ MonoBehaviour:
   gameplayManager: {fileID: 944733854}
   level: 0
   baseDamages:
-  - 10
   - 0
+  - 10
   - 0
   - 0
   baseAilmentsChance:
@@ -17230,10 +17175,10 @@ MonoBehaviour:
   - 30
   - 15
   - 20
-  baseSpeed: 5
+  baseSpeed: 10
   baseAttackRange: 5
   baseChainRange: 8
-  baseCooldown: 1
+  baseCooldown: 0.6
   baseKnockBack: 0
   baseCriticalChance: 10
   baseCriticalDamage: 0
@@ -17242,7 +17187,7 @@ MonoBehaviour:
   strike: 1
   projectile: 1
   pierce: 0
-  chain: 20
+  chain: 30
   damages: []
   ailmentsChance: []
   ailmentsEffect: []
@@ -17253,7 +17198,7 @@ MonoBehaviour:
   knockBack: 0
   criticalChance: 0
   criticalDamage: 0
-  chainSpeed: 30
+  chainSpeed: 25
   poolList: []
   player: {fileID: 177331393}
   enemyController: {fileID: 56640376}
@@ -17452,9 +17397,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 596475647}
-  - {fileID: 1597524822}
+  m_Children: []
   m_Father: {fileID: 432648553}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -17476,17 +17419,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectiblesList:
-  - prefab: {fileID: 2884399647324929338, guid: 5aeb6bb2a491c0e40b2ec7c216c0eb23, type: 3}
+  - prefab: {fileID: 7634057221192717879, guid: ce49127374f825440b93d3fb0c9b0e2c, type: 3}
+    chance: 25
+    chanceOver: 100
+  - prefab: {fileID: 7634057221192717879, guid: 4d2b976529986c2478278a2205c3f192, type: 3}
+    chance: 25
+    chanceOver: 100
+  - prefab: {fileID: 7634057221192717879, guid: 52011abeeec09794b82388e758d1558f, type: 3}
+    chance: 5
+    chanceOver: 100
+  - prefab: {fileID: 3173158488911125165, guid: 5aeb6bb2a491c0e40b2ec7c216c0eb23, type: 3}
     chance: 1
-    spawnAtStart: 10
-    parent: {fileID: 1597524821}
-    itemList: []
-  - prefab: {fileID: 5043445816700823444, guid: 796c3a078a02fca46b609b2c39238064, type: 3}
+    chanceOver: 100
+  - prefab: {fileID: 7634057221192717879, guid: 8eb7959e169ef4345843484abcecea44, type: 3}
+    chance: 50
+    chanceOver: 100
+  - prefab: {fileID: 7634057221192717879, guid: 796c3a078a02fca46b609b2c39238064, type: 3}
     chance: 100
-    spawnAtStart: 30
-    parent: {fileID: 596475646}
-    itemList: []
-  gameplayManager: {fileID: 944733854}
+    chanceOver: 100
+  itemList: []
 --- !u!1 &2137048820
 GameObject:
   m_ObjectHideFlags: 0

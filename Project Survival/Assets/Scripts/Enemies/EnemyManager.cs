@@ -123,8 +123,8 @@ public class EnemyManager : MonoBehaviour
     IEnumerator<float> SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyGroup enemyGroup )
     {
         enemyController.enemyList[indexEnemyToSpawn].isSpawning = true;
-        spawnPosX = Random.Range(-1000f, 1000f);
-        spawnPosY = Random.Range(-1000f, 1000f);
+        spawnPosX = Random.Range(-1000f, 1001f);
+        spawnPosY = Random.Range(-1000f, 1001f);
         if (spawnPosX > -100 && spawnPosX < 100)
         {
             if (spawnPosX > 0)

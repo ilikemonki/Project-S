@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class ICollectibles : MonoBehaviour
 {
-    public GameplayManager gameplayManager;
     public Rigidbody2D rb;
+    public TextMeshProUGUI text;
     public bool isCollecting;
-    public void PullCollectible(float pullspeed)
+    public SpriteRenderer spriteRenderer;
+    public void PullCollectible(float pullspeed, Transform moveTo)
     {
-        if (gameplayManager != null)
+            rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (moveTo.position - transform.position).normalized));
+    }
+    public IEnumerator StartDuration()
+    {
+        int timer = 15;
+        while (timer > 0)
         {
-            rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (gameplayManager.player.transform.position - transform.position).normalized));
+            text.text = timer.ToString() + "s";
+            yield return new WaitForSeconds(1);
+            timer--;
         }
+        gameObject.SetActive(false);
     }
     public void OnEnable()
     {
@@ -21,7 +30,12 @@ public class ICollectibles : MonoBehaviour
 
     public void OnDisable()
     {
+        StopAllCoroutines();
+        if (text != null) text.text = "";
         isCollecting = false;
     }
-
+    public void MagnetDuration()
+    {
+        StartCoroutine(StartDuration());
+    }
 }

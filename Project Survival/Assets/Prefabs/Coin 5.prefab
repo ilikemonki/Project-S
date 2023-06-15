@@ -8,33 +8,54 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5043445816700823440}
+  - component: {fileID: 22795738566038746}
+  - component: {fileID: 7634057221192717879}
   - component: {fileID: 5043445816700823441}
   - component: {fileID: 5043445816700823442}
-  - component: {fileID: 5043445816700823443}
   - component: {fileID: 5043445816700823471}
-  m_Layer: 0
-  m_Name: Coin
-  m_TagString: Untagged
+  m_Layer: 11
+  m_Name: Coin 5
+  m_TagString: Coin 5
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5043445816700823440
-Transform:
+--- !u!224 &22795738566038746
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5043445816700823444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -131, y: -191, z: 0}
-  m_LocalScale: {x: 34.97937, y: 35.0812, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -131, y: -191}
+  m_SizeDelta: {x: 64, y: 64}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7634057221192717879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043445816700823444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a1026c0cfc7cd4f958f7282f5294d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 5043445816700823471}
+  text: {fileID: 0}
+  isCollecting: 0
+  spriteRenderer: {fileID: 5043445816700823441}
 --- !u!212 &5043445816700823441
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -76,12 +97,12 @@ SpriteRenderer:
   m_SortingLayerID: -2123694131
   m_SortingLayer: 2
   m_SortingOrder: -15
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0.99695545, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 078523340d11a9848a17ce448e1c6c03, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -102,23 +123,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &5043445816700823443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5043445816700823444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 214c1fdba423d914794032abe5c8ab3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameplayManager: {fileID: 0}
-  rb: {fileID: 5043445816700823471}
-  isCollecting: 0
-  coins: 1
+  m_Radius: 6
 --- !u!50 &5043445816700823471
 Rigidbody2D:
   serializedVersion: 4
