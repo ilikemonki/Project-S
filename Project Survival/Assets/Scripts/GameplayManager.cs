@@ -38,6 +38,7 @@ public class GameplayManager : MonoBehaviour
     public List<float> ailmentsChanceAdditive;
     public List<float> ailmentsEffectAdditive;
     public float knockBackMultiplier;
+    public int dashChargesAdditive, dashCooldownMultiplier;
 
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;

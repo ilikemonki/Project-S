@@ -8,14 +8,16 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D rb;
     public TrailRenderer trailRend;
     public Vector2 moveDirection;
-    public float dashIFrameSeconds, dashCooldown;
+    public float dashIFrameSeconds, baseDashCooldown, dashCooldown;
     public float dashPower;
+    public int charges;
     public bool isDashing, canDash;
     float moveX, moveY;
 
     private void Start()
     {
-        canDash = true;
+        dashCooldown = baseDashCooldown;
+        UpdateDashStats();
     }
     // Update is called once per frame
     void Update()
@@ -37,9 +39,9 @@ public class PlayerMovement : MonoBehaviour
         moveY = Input.GetAxisRaw("Vertical");
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (canDash)
+            if (!isDashing && charges > 0)
             {
-                if (moveX == 0 && moveY == 0)
+                if (moveX == 0 && moveY == 0)   //do not dash
                 {
 
                 }
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
     public IEnumerator<float> Dashing()
     {
+        charges--;
         canDash = false;
         isDashing = true;
         trailRend.emitting = true;
@@ -64,7 +67,13 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
         trailRend.emitting = false;
         yield return Timing.WaitForSeconds(dashCooldown);
+        charges++;
         canDash = true;
+    }
+    public void UpdateDashStats()
+    {
+        charges += playerStats.gameplayManager.dashChargesAdditive;
+        dashCooldown = baseDashCooldown * (1 + (playerStats.gameplayManager.dashCooldownMultiplier / 100));
     }
 }
 

@@ -973,11 +973,13 @@ MonoBehaviour:
   rb: {fileID: 177331395}
   trailRend: {fileID: 1685166654}
   moveDirection: {x: 0, y: 0}
-  dashIFrameSeconds: 0.3
-  dashCooldown: 2
+  dashIFrameSeconds: 0.25
+  baseDashCooldown: 2
+  dashCooldown: 0
   dashPower: 3
+  charges: 3
   isDashing: 0
-  canDash: 0
+  canDash: 1
 --- !u!224 &177331397
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4677,6 +4679,8 @@ MonoBehaviour:
   - 0
   - 0
   knockBackMultiplier: 0
+  dashChargesAdditive: 0
+  dashCooldownMultiplier: 0
   enemyMoveSpeedMultiplier: 0
   enemyMaxHealthMultiplier: 0
   enemyDamageMultiplier: 0
