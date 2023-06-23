@@ -4,40 +4,73 @@ using UnityEngine;
 
 public class DropRate : MonoBehaviour
 {
-    public List<ItemsToDrop> collectiblesList;  //Health Potion, Coin
+    public GameplayManager gameplayManager;
+    public List<CoinsToDrop> collectiblesList;  //Coin
     private float rand;
+    public GameObject magnetParent;
     public List<ICollectibles> itemList;    //pool list
+    public List<ICollectibles> magnetList;    //magnet pool list
     [System.Serializable]
-    public class ItemsToDrop
+    public class CoinsToDrop    //plus magnet
     {
         public ICollectibles prefab;
         public float chance;
-        public float chanceOver;
+        public float baseChanceRange;
+        public float chanceRange;
+    }
+    [System.Serializable]
+    public class SkillsToDrop
+    {
+        public ICollectibles prefab;
+        public float chance;
+        public float baseChanceRange;
+        public float chanceRange;
     }
     private void Start()
     {
         InvokeRepeating(nameof(DeleteInactives), 10, 30f);
-        PopulatePool(collectiblesList[^1], 100);
+        PopulatePool(collectiblesList[0].prefab, 100, transform, itemList);
+        PopulatePool(collectiblesList[4].prefab, 5, magnetParent.transform, magnetList);
+        UpdateDropChance(); 
     }
 
     public void DropLoot(Transform pos)
     {
-        foreach (ItemsToDrop item in collectiblesList)
+        foreach (CoinsToDrop item in collectiblesList)  //coin drop chance
         {
-            rand = Random.Range(1, item.chanceOver + 1);
+            rand = Random.Range(1, item.chanceRange + 1);
             if (rand <= item.chance)
             {
-                SpawnItem(item, pos);
-                return;
+                SpawnItem(item.prefab, pos);
+                break;
             }
+        }
+        rand = Random.Range(1, collectiblesList[4].chanceRange + 1);
+        if (rand <= collectiblesList[4].chance) //magnet drop chance
+        {
+            SpawnItem(collectiblesList[4].prefab, pos);
         }
     }
 
-    public void SpawnItem(ItemsToDrop item, Transform pos)
+    public void SpawnItem(ICollectibles prefab, Transform pos)
     {
-        if (item.prefab.CompareTag("Magnet"))
+        if (prefab.CompareTag("Magnet"))
         {
-            ICollectibles obj = Instantiate(item.prefab, transform);    //Spawn, add to list, and initialize prefabs
+            for (int i = 0; i < magnetList.Count; i++)
+            {
+                if (i > magnetList.Count - 5)
+                {
+                    PopulatePool(collectiblesList[4].prefab, 5, magnetParent.transform, magnetList);
+                }
+                if (!magnetList[i].isActiveAndEnabled)
+                {
+                    magnetList[i].transform.position = pos.position;
+                    magnetList[i].gameObject.SetActive(true);
+                    magnetList[i].MagnetDuration();
+                    return;
+                }
+            }
+            ICollectibles obj = Instantiate(prefab, magnetParent.transform);    //Spawn, add to list, and initialize prefabs
             obj.transform.position = pos.position;
             obj.gameObject.SetActive(true);
             obj.MagnetDuration();
@@ -47,27 +80,26 @@ public class DropRate : MonoBehaviour
         {
             if (i > itemList.Count - 5)
             {
-                PopulatePool(collectiblesList[^1], 5);
+                PopulatePool(collectiblesList[0].prefab, 5, transform, itemList);
             }
             if (!itemList[i].isActiveAndEnabled)
             {
                 itemList[i].transform.position = pos.position;
-                itemList[i].tag = item.prefab.tag;
-                itemList[i].spriteRenderer.sprite = item.prefab.spriteRenderer.sprite;
+                itemList[i].tag = prefab.tag;
+                itemList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
             itemList[i].gameObject.SetActive(true);
                 return;
             }
         }
     }
 
-    protected virtual void PopulatePool(ItemsToDrop item, int numToSpawn)
+    protected virtual void PopulatePool(ICollectibles prefab, int numToSpawn, Transform parent, List<ICollectibles> poolList)
     {
         for (int i = 0; i < numToSpawn; i++)
         {
-            ICollectibles obj = Instantiate(collectiblesList[^1].prefab, transform);    //Spawn, add to list, and initialize prefabs
+            ICollectibles obj = Instantiate(prefab, parent);    //Spawn, add to list, and initialize prefabs
             obj.gameObject.SetActive(false);
-            //ICollectibles c = obj.GetComponent<ICollectibles>();
-            itemList.Add(obj);
+            poolList.Add(obj);
         }
     }
 
@@ -95,6 +127,14 @@ public class DropRate : MonoBehaviour
                     destroyed++;
                 }
             }
+        }
+    }
+
+    public void UpdateDropChance()
+    {
+        foreach (CoinsToDrop item in collectiblesList)
+        {
+            item.chanceRange = Mathf.Round(item.baseChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
         }
     }
 }

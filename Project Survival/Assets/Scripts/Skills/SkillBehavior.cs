@@ -98,22 +98,25 @@ public class SkillBehavior : MonoBehaviour
                     enemy.ApplyBleed(damages[0] * ((ailmentsEffect[0] + skillController.gameplayManager.ailmentsEffectAdditive[0]) / 100));
             }
         }
-        
         enemy.TakeDamage(totalDamage, isCrit, textColor);
     }
 
     //Do damage when in contact w/ enemy
     protected virtual void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Enemy"))
+        if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
             DoDamage(enemy);
             if (pierce <= 0 && chain > 0) //check if there are chains, add enemy to list to not chain again.
             {
-                if (!enemyIndexChain.Contains(skillController.enemyController.enemyList.IndexOf(enemy)))    //if enemy is not in list, add it.
+                if (!enemyIndexChain.Contains(skillController.enemyManager.enemyList.IndexOf(enemy)) && col.CompareTag("Enemy"))    //if enemy is not in list, add it.
                 {
-                    enemyIndexChain.Add(skillController.enemyController.enemyList.IndexOf(enemy));
+                    enemyIndexChain.Add(skillController.enemyManager.enemyList.IndexOf(enemy));
+                }
+                else if (!enemyIndexChain.Contains(skillController.enemyManager.rareEnemyList.IndexOf(enemy)) && col.CompareTag("Rare Enemy"))    //if enemy is not in list, add it.
+                {
+                    enemyIndexChain.Add(skillController.enemyManager.rareEnemyList.IndexOf(enemy));
                 }
             }
             ProjectileBehavior();
@@ -148,10 +151,10 @@ public class SkillBehavior : MonoBehaviour
         speed = skillController.chainSpeed;
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
-        for (int i = 0; i < skillController.enemyController.enemyList.Count; i++)
+        for (int i = 0; i < skillController.enemyManager.enemyList.Count; i++)
         {
             bool dontChain = false;
-            if (skillController.enemyController.enemyList[i].isActiveAndEnabled)
+            if (skillController.enemyManager.enemyList[i].isActiveAndEnabled)
             {
                 for (int j = 0; j < enemyIndexChain.Count; j++)
                 {
@@ -163,11 +166,35 @@ public class SkillBehavior : MonoBehaviour
                 }
                 if (!dontChain)
                 {
-                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyController.enemyList[i].transform.position);
+                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
                     if (distanceToEnemy < shortestDistance)
                     {
                         shortestDistance = distanceToEnemy;
-                        nearestEnemy = skillController.enemyController.enemyList[i];
+                        nearestEnemy = skillController.enemyManager.enemyList[i];
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < skillController.enemyManager.rareEnemyList.Count; i++)
+        {
+            bool dontChain = false;
+            if (skillController.enemyManager.rareEnemyList[i].isActiveAndEnabled)
+            {
+                for (int j = 0; j < enemyIndexChain.Count; j++)
+                {
+                    if (enemyIndexChain[j] == i)
+                    {
+                        dontChain = true;
+                        break;
+                    }
+                }
+                if (!dontChain)
+                {
+                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.rareEnemyList[i].transform.position);
+                    if (distanceToEnemy < shortestDistance)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = skillController.enemyManager.rareEnemyList[i];
                     }
                 }
             }

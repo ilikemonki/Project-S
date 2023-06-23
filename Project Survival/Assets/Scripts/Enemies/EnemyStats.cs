@@ -34,13 +34,17 @@ public class EnemyStats : MonoBehaviour
     {
         defaultMaterial = spriteRenderer.material;
     }
-    public void TakeDamage(float damage, bool isCrit, Color textColor)
+    public float CalculateDamage(float damage)
     {
         if (damage < 1) damage = 1;
-        if(shocked) 
-            damage = Mathf.Round(damage * (1 + (topAilmentsEffect[3] / 100)));
-        else 
-            damage = Mathf.Round(damage);
+        if (shocked)
+            return Mathf.Round(damage * (1 + (topAilmentsEffect[3] / 100)));
+        else
+            return Mathf.Round(damage);
+    }
+    public virtual void TakeDamage(float damage, bool isCrit, Color textColor)
+    {
+        damage = CalculateDamage(damage);
         if (gameObject.activeSelf)
         {
             Timing.RunCoroutine(DamageFlash());
@@ -55,14 +59,11 @@ public class EnemyStats : MonoBehaviour
         {
             Die();
         }
+
     }
-    public void TakeDotDamage(float damage)
+    public virtual void TakeDotDamage(float damage)
     {
-        if (damage < 1) damage = 1;
-        if (shocked) 
-            damage = Mathf.Round(damage * (1 + (topAilmentsEffect[3] / 100)));
-        else
-            damage = Mathf.Round(damage);
+        damage = CalculateDamage(damage);
         if (bleeding && burned)
             dotTextDamage.text = totalBleedDamage.ToString() + " " + "<color=red>" + totalBurnDamage.ToString();
         else if (bleeding)
@@ -112,7 +113,7 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[i] = 0;
         }
     }
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         isDead = false;
     }

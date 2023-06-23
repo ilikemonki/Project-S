@@ -71,8 +71,8 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 100
   damage: 4
-  moveSpeed: 2
-  baseMoveSpeed: 0
+  moveSpeed: 0
+  baseMoveSpeed: 2
   exp: 1
   chilled: 0
   burned: 0

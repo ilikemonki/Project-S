@@ -6,7 +6,7 @@ using System.Linq;
 
 public class SkillController : MonoBehaviour
 {
-    public GameObject prefab;
+    public SkillBehavior prefab;
     public GameObject poolParent;
     public GameplayManager gameplayManager;
     public int level;
@@ -35,7 +35,7 @@ public class SkillController : MonoBehaviour
     public List<SkillBehavior> poolList = new();
     float shortestDistance, distanceToEnemy;
     public PlayerStats player;
-    public EnemyController enemyController;
+    public EnemyManager enemyManager;
     public EnemyStats nearestEnemy;
     public Transform target;
     int counter;    //Used in spread skill
@@ -94,15 +94,28 @@ public class SkillController : MonoBehaviour
         if (stopFiring) return;
         shortestDistance = Mathf.Infinity;
         nearestEnemy = null;
-        for (int i = 0; i < enemyController.enemyList.Count; i++)
+        for (int i = 0; i < enemyManager.enemyList.Count; i++)
         {
-            if (enemyController.enemyList[i].isActiveAndEnabled)
+            if (enemyManager.enemyList[i].isActiveAndEnabled)
             {
-                distanceToEnemy = Vector3.Distance(transform.position, enemyController.enemyList[i].transform.position);
+                distanceToEnemy = Vector3.Distance(transform.position, enemyManager.enemyList[i].transform.position);
                 if (distanceToEnemy < shortestDistance)
                 {
                     shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemyController.enemyList[i];
+                    nearestEnemy = enemyManager.enemyList[i];
+                }
+
+            }
+        }
+        for (int i = 0; i < enemyManager.rareEnemyList.Count; i++)
+        {
+            if (enemyManager.rareEnemyList[i].isActiveAndEnabled)
+            {
+                distanceToEnemy = Vector3.Distance(transform.position, enemyManager.rareEnemyList[i].transform.position);
+                if (distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    nearestEnemy = enemyManager.rareEnemyList[i];
                 }
 
             }
@@ -197,12 +210,11 @@ public class SkillController : MonoBehaviour
     {
         for (int i = 0; i < spawnAmount; i++)
         {
-            GameObject skill = Instantiate(prefab, poolParent.transform);    //Spawn, add to list, and initialize prefabs
-            skill.SetActive(false);
-            SkillBehavior sb = skill.GetComponent<SkillBehavior>();
-            sb.skillController = this;
-            sb.SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
-            poolList.Add(sb);
+            SkillBehavior skill = Instantiate(prefab, poolParent.transform);    //Spawn, add to list, and initialize prefabs
+            skill.gameObject.SetActive(false);
+            skill.skillController = this;
+            skill.SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+            poolList.Add(skill);
         }
     }
 

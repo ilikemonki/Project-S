@@ -45,6 +45,7 @@ public class PlayerStats : MonoBehaviour
     {
         healthBar.maxValue = maxHealth;
         UpdateHealthBar(maxHealth);
+        UpdatePlayerStats();
     }
 
     private void Update()

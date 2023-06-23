@@ -5,23 +5,28 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public EnemyManager enemyManager;
-    public List<EnemyStats> enemyList = new();
     private void FixedUpdate()
     {
-        for (int i = 0; i < enemyList.Count; ++i)   //Move all enemies
+        for (int i = 0; i < enemyManager.enemyList.Count; ++i)   //Move all enemies
         {
-            if (enemyList[i].isActiveAndEnabled)
+            if (enemyManager.enemyList[i].isActiveAndEnabled)
             {
-                if (!enemyList[i].knockedBack)   //knockedback
+                if (!enemyManager.enemyList[i].knockedBack)   //knockedback
                 {
-                    enemyList[i].enemyMovement.MoveEnemy();
+                    enemyManager.enemyList[i].enemyMovement.MoveEnemy();
                 }
             }
         }
-    }
-    public void AddToList(EnemyStats e)
-    {
-        enemyList.Add(e);
+        for (int i = 0; i < enemyManager.rareEnemyList.Count; ++i)   //Move all enemies
+        {
+            if (enemyManager.rareEnemyList[i].isActiveAndEnabled)
+            {
+                if (!enemyManager.rareEnemyList[i].knockedBack)   //knockedback
+                {
+                    enemyManager.rareEnemyList[i].enemyMovement.MoveEnemy();
+                }
+            }
+        }
     }
 
 }

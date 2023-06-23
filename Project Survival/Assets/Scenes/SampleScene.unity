@@ -308,7 +308,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyManager: {fileID: 230398754}
-  enemyList: []
 --- !u!1 &71284097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132,18 +1131,6 @@ MonoBehaviour:
       maxHealth: 0
       baseMoveSpeed: 0
       exp: 0
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-      numberToSpawn: 50
-      whenToSpawn: 0
-      currentSpawned: 0
-      damage: 0
-      maxHealth: 0
-      baseMoveSpeed: 0
-      exp: 0
-    totalEnemiesInRound: 0
-    currentTotalSpawned: 0
-    spawnInterval: 0.2
-  - enemyGroups: []
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
     spawnInterval: 1
@@ -1151,12 +1138,18 @@ MonoBehaviour:
   enemyController: {fileID: 56640376}
   gameplayMananger: {fileID: 944733854}
   floatingTextController: {fileID: 2140166867}
-  basePrefab: {fileID: 1273539247791564998, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+  basePrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
   spawnMarks: {fileID: 1306391348}
   dropRate: {fileID: 2135092638}
   spawnTimer: 0
   enemiesAliveCap: 1000
   maxEnemiesReached: 0
+  enemyList: []
+  rareEnemyList: []
+  baseRarePrefab: {fileID: -620101226529741865, guid: 9b6586b7e88af294bae49e1612f685dc, type: 3}
+  rareEnemyParent: {fileID: 1888395308}
+  rareSpawnChance: 5
+  rareSpawnChanceRange: 100
 --- !u!4 &230398755
 Transform:
   m_ObjectHideFlags: 0
@@ -2453,9 +2446,11 @@ RectTransform:
   - {fileID: 177331397}
   - {fileID: 1306391349}
   - {fileID: 56640375}
+  - {fileID: 1888395309}
   - {fileID: 2140166866}
   - {fileID: 1485570789}
   - {fileID: 2135092637}
+  - {fileID: 1017147235}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4691,6 +4686,11 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  rareMoveSpeedMultiplier: 120
+  rareHealthMultiplier: 250
+  rareDamageMultiplier: 200
+  rareExpMultiplier: 250
+  dropChanceMultiplier: 0
 --- !u!4 &944733855
 Transform:
   m_ObjectHideFlags: 0
@@ -5551,6 +5551,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1015674951}
   m_CullTransparentMesh: 1
+--- !u!1 &1017147234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1017147235}
+  m_Layer: 5
+  m_Name: Magnet Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1017147235
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017147234}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 432648553}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1024639456
 GameObject:
   m_ObjectHideFlags: 0
@@ -8713,7 +8749,7 @@ RectTransform:
   m_Children:
   - {fileID: 1913619781}
   m_Father: {fileID: 432648553}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16130,6 +16166,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1884756889}
   m_CullTransparentMesh: 1
+--- !u!1 &1888395308
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1888395309}
+  m_Layer: 5
+  m_Name: Rare Enemy Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1888395309
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888395308}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 432648553}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1889108655
 GameObject:
   m_ObjectHideFlags: 0
@@ -17156,18 +17228,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 576d7c6676515224c94a53fa00328b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 3139460322398848796, guid: 825b72de0a508864a8fc361043aed917, type: 3}
+  prefab: {fileID: 5855205079706190287, guid: 825b72de0a508864a8fc361043aed917, type: 3}
   poolParent: {fileID: 1913619780}
   gameplayManager: {fileID: 944733854}
   level: 0
   baseDamages:
   - 0
-  - 10
+  - 50
   - 0
   - 0
   baseAilmentsChance:
   - 100
-  - 100
+  - 0
   - 100
   - 100
   baseAilmentsEffect:
@@ -17178,7 +17250,7 @@ MonoBehaviour:
   baseSpeed: 10
   baseAttackRange: 5
   baseChainRange: 8
-  baseCooldown: 0.6
+  baseCooldown: 0.5
   baseKnockBack: 0
   baseCriticalChance: 10
   baseCriticalDamage: 0
@@ -17201,7 +17273,7 @@ MonoBehaviour:
   chainSpeed: 25
   poolList: []
   player: {fileID: 177331393}
-  enemyController: {fileID: 56640376}
+  enemyManager: {fileID: 230398754}
   nearestEnemy: {fileID: 0}
   target: {fileID: 0}
   stopFiring: 0
@@ -17380,7 +17452,7 @@ GameObject:
   - component: {fileID: 2135092637}
   - component: {fileID: 2135092638}
   m_Layer: 5
-  m_Name: Collectibles
+  m_Name: Drops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17399,7 +17471,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 432648553}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -17418,26 +17490,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dec4324e94d3aff4da433495078ebcac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameplayManager: {fileID: 944733854}
   collectiblesList:
   - prefab: {fileID: 7634057221192717879, guid: ce49127374f825440b93d3fb0c9b0e2c, type: 3}
     chance: 25
-    chanceOver: 100
+    baseChanceRange: 100
+    chanceRange: 0
   - prefab: {fileID: 7634057221192717879, guid: 4d2b976529986c2478278a2205c3f192, type: 3}
     chance: 25
-    chanceOver: 100
-  - prefab: {fileID: 7634057221192717879, guid: 52011abeeec09794b82388e758d1558f, type: 3}
-    chance: 5
-    chanceOver: 100
-  - prefab: {fileID: 3173158488911125165, guid: 5aeb6bb2a491c0e40b2ec7c216c0eb23, type: 3}
-    chance: 1
-    chanceOver: 100
+    baseChanceRange: 100
+    chanceRange: 0
   - prefab: {fileID: 7634057221192717879, guid: 8eb7959e169ef4345843484abcecea44, type: 3}
     chance: 50
-    chanceOver: 100
+    baseChanceRange: 100
+    chanceRange: 0
   - prefab: {fileID: 7634057221192717879, guid: 796c3a078a02fca46b609b2c39238064, type: 3}
     chance: 100
-    chanceOver: 100
+    baseChanceRange: 100
+    chanceRange: 0
+  - prefab: {fileID: 7634057221192717879, guid: 52011abeeec09794b82388e758d1558f, type: 3}
+    chance: 1
+    baseChanceRange: 100
+    chanceRange: 0
+  magnetParent: {fileID: 1017147234}
   itemList: []
+  magnetList: []
 --- !u!1 &2137048820
 GameObject:
   m_ObjectHideFlags: 0
@@ -17544,7 +17621,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 432648553}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

@@ -11,6 +11,7 @@ TagManager:
   - Coin 20
   - Magnet
   - Health Potion
+  - Rare Enemy
   layers:
   - Default
   - TransparentFX
