@@ -96,6 +96,10 @@ MonoBehaviour:
   dropRate: {fileID: 0}
   knockedBack: 0
   isSpawning: 0
+  canAttack: 0
+  attackCooldown: 1
+  attackTimer: 0
+  attackRange: 6
 --- !u!50 &2944870918720930972
 Rigidbody2D:
   serializedVersion: 4

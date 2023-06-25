@@ -29,6 +29,8 @@ public class EnemyStats : MonoBehaviour
     public bool knockedBack;
     public bool isSpawning; //check if enemy is beginning to spawn
     bool isDead;
+    public bool canAttack;
+    public float attackCooldown, attackTimer, attackRange;
 
     private void Awake()
     {
@@ -76,7 +78,7 @@ public class EnemyStats : MonoBehaviour
             Die();
         }
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp)
+    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float attackRange)
     {
         this.baseMoveSpeed = baseMoveSpeed;
         moveSpeed = baseMoveSpeed;
@@ -84,6 +86,8 @@ public class EnemyStats : MonoBehaviour
         currentHealth = maxHealth;
         this.damage = damage;
         this.exp = exp;
+        this.attackCooldown = attackCooldown;
+        this.attackRange = attackRange;
     }
 
     public void Die()
@@ -93,7 +97,6 @@ public class EnemyStats : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    //Becareful if destorying gameobject, this may get called.
     private void OnDisable()
     {
         spriteRenderer.material = defaultMaterial;
@@ -107,6 +110,8 @@ public class EnemyStats : MonoBehaviour
         isSpawning = false;
         chilled = false; burned = false; shocked = false; bleeding = false;
         totalBurnDamage = 0; totalBleedDamage = 0;
+        attackTimer = attackCooldown;
+        canAttack = false;
         dotTextDamage.text = "";
         for(int i = 0; i > topAilmentsEffect.Count; i++)
         {

@@ -65,7 +65,7 @@ public class SkillController : MonoBehaviour
     {
         UpdateSkillStats();
         PopulatePool((projectile * strike) * 4);
-        InvokeRepeating(nameof(UpdateTarget), 0, 0.15f);    //Repeat looking for target
+        InvokeRepeating(nameof(UpdateTarget), 0, 0.10f);    //Repeat looking for target
     }
 
     // Update is called once per frame
@@ -125,11 +125,6 @@ public class SkillController : MonoBehaviour
             target = nearestEnemy.transform;
         }
         else target = null;
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
     public IEnumerator<float> UseSkillBarrage()       //Spawn/Activate skill. Projectiles barrages.
@@ -236,7 +231,7 @@ public class SkillController : MonoBehaviour
         attackRange = baseAttackRange * (1 + gameplayManager.attackRangeMultiplier / 100);
         chainRange = baseChainRange * (1 + gameplayManager.chainRangeMultiplier / 100);
         cooldown = baseCooldown * (1 + gameplayManager.cooldownMultiplier / 100);
-        knockBack = baseKnockBack * (1 + gameplayManager.knockBackMultiplier / 100);
+        //knockBack = baseKnockBack * (1 + gameplayManager.knockBackMultiplier / 100);
         criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive;
         criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive;
         highestDamageType = damages.IndexOf(Mathf.Max(damages.ToArray()));  //Find highest damage type.

@@ -33,7 +33,7 @@ public class SkillBehavior : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (target != null && target.gameObject.activeSelf)
+        if (target != null && target.gameObject.activeSelf)     //Have skill keep following target and change its angle.
         {
             SetDirection((target.position - transform.position).normalized);
             transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);

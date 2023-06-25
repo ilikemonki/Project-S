@@ -74,7 +74,14 @@ public class PlayerStats : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
-            TakeDamage(enemy.damage); //Do damage to player
+            TakeDamage(enemy.damage, false); //Do damage to player
+            return;
+        }
+        if (collision.gameObject.CompareTag("Enemy Projectile"))
+        {
+            EnemyProjectile enemyProj = collision.GetComponent<EnemyProjectile>();
+            TakeDamage(enemyProj.enemyStats.damage, true); //Do damage to player
+            enemyProj.gameObject.SetActive(false);
             return;
         }
         ICollectibles collectible = collision.GetComponent<ICollectibles>();
@@ -95,21 +102,30 @@ public class PlayerStats : MonoBehaviour
         }
         playerCollector.collectibles.Remove(collectible);
     }
-    public void TakeDamage(float dmg)
+    public void TakeDamage(float dmg, bool isProjectileDamage)
     {
         if (dmg <= 0) dmg = 1;
         dmg = Mathf.Round(dmg);
-        if (!isInvincible)
+        if (isProjectileDamage)
         {
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
             floatingTextController.DisplayFloatingText(transform, dmg, Color.red);
-            iFrameTimer = iFrameDuration;
-            isInvincible = true;
-            if (currentHealth <= 0)
+        }
+        else
+        {
+            if (!isInvincible)
             {
-                //Die();
+                currentHealth -= dmg;
+                UpdateHealthBar(-dmg);
+                floatingTextController.DisplayFloatingText(transform, dmg, Color.red);
+                iFrameTimer = iFrameDuration;
+                isInvincible = true;
             }
+        }
+        if (currentHealth <= 0)
+        {
+            //Die();
         }
     }
     public void CheckHealthBarVisibility()  //Show health if life is below max, else dont show

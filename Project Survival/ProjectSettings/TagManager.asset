@@ -12,6 +12,7 @@ TagManager:
   - Magnet
   - Health Potion
   - Rare Enemy
+  - Enemy Projectile
   layers:
   - Default
   - TransparentFX

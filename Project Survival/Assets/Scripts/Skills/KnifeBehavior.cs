@@ -9,10 +9,4 @@ public class KnifeBehavior : SkillBehavior
         rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, skillController.chainRange);
-    }
-
 }

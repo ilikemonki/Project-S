@@ -24,8 +24,9 @@ public class EnemyManager : MonoBehaviour
         //Make changes to these stats only when enemy stat changes happen. This way we don't need to keep calculating their stats everytime an enemy spawns.
         public float damage;
         public float maxHealth;
-        public float baseMoveSpeed;
+        public float moveSpeed;
         public int exp;
+        public float attackCooldown;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -181,12 +182,16 @@ public class EnemyManager : MonoBehaviour
         else
             spawnPosY = player.transform.localPosition.y + spawnPosY;
         spawnPos = new Vector2(spawnPosX, spawnPosY);
+        if (Random.Range(1, 15) <= 10)
+        {
+            enemyList[indexEnemyToSpawn].canAttack = true;
+        }
         enemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
         enemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
         enemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         enemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         enemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
-        enemyList[indexEnemyToSpawn].SetStats(enemyGroup.baseMoveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp);   //Set new stats to enemy
+        enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.enemyPrefab.attackRange);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
         yield return Timing.WaitForSeconds(1f);
         spawnMarks.Despawn(indexToDespawn);
@@ -220,15 +225,21 @@ public class EnemyManager : MonoBehaviour
         else
             spawnPosY = player.transform.localPosition.y + spawnPosY;
         spawnPos = new Vector2(spawnPosX, spawnPosY);
+        if (Random.Range(1, 15) <= 10)
+        {
+            rareEnemyList[indexEnemyToSpawn].canAttack = true;
+        }
         rareEnemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
         rareEnemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
         rareEnemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         rareEnemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         rareEnemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
-        rareEnemyList[indexEnemyToSpawn].SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (gameplayMananger.rareMoveSpeedMultiplier / 100),
-            Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (gameplayMananger.rareHealthMultiplier / 100)),
-            Mathf.Round(enemyGroup.enemyPrefab.damage * (gameplayMananger.rareDamageMultiplier / 100)),
-            (int)Mathf.Round((enemyGroup.enemyPrefab.exp * (gameplayMananger.rareExpMultiplier / 100))));   //Set new stats to enemy
+        rareEnemyList[indexEnemyToSpawn].SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.rareMoveSpeedMultiplier / 100),
+            Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.rareHealthMultiplier / 100)),
+            Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayMananger.rareDamageMultiplier / 100)),
+            (int)Mathf.Round(enemyGroup.enemyPrefab.exp * (1 + gameplayMananger.rareExpMultiplier / 100)),
+            Mathf.Round(enemyGroup.enemyPrefab.attackCooldown * (1 + gameplayMananger.rareAttackCooldownMultiplier / 100)), 
+            enemyGroup.enemyPrefab.attackRange);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
         yield return Timing.WaitForSeconds(1f);
         spawnMarks.Despawn(indexToDespawn);
@@ -243,9 +254,10 @@ public class EnemyManager : MonoBehaviour
             foreach (var eGroup in rounds[i].enemyGroups)
             {
                 eGroup.damage = eGroup.enemyPrefab.damage * (1 + gameplayMananger.enemyDamageMultiplier / 100);
-                eGroup.baseMoveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.enemyMoveSpeedMultiplier / 100);
+                eGroup.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.enemyMoveSpeedMultiplier / 100);
                 eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.enemyMaxHealthMultiplier / 100);
                 eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayMananger.enemyExpMultiplier / 100);
+                eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayMananger.enemyAttackCooldownMultiplier / 100);
             }
         }
     }

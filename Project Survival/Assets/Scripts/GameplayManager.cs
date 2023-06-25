@@ -37,7 +37,7 @@ public class GameplayManager : MonoBehaviour
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
     public List<float> ailmentsEffectAdditive;
-    public float knockBackMultiplier;
+    //public float knockBackMultiplier;
     public int dashChargesAdditive, dashCooldownMultiplier;
 
     //Enemy Global Multipliers
@@ -45,8 +45,9 @@ public class GameplayManager : MonoBehaviour
     public float enemyMaxHealthMultiplier;
     public float enemyDamageMultiplier;
     public int enemyExpMultiplier;
+    public float enemyAttackCooldownMultiplier;
     public List<float> resistances;//[0]physical,[1]fire,[2]cold,[3]lightning
-    public float rareMoveSpeedMultiplier, rareHealthMultiplier, rareDamageMultiplier, rareExpMultiplier;
+    public float rareMoveSpeedMultiplier, rareHealthMultiplier, rareDamageMultiplier, rareExpMultiplier, rareAttackCooldownMultiplier;
     public float dropChanceMultiplier;
 
     private void Start()

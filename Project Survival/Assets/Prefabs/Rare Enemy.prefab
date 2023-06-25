@@ -172,6 +172,9 @@ MonoBehaviour:
   dropRate: {fileID: 0}
   knockedBack: 0
   isSpawning: 0
+  canAttack: 0
+  attackCooldown: 0
+  attackTimer: 0
   hpBar: {fileID: 525361610342205419}
 --- !u!50 &3532865930147841948
 Rigidbody2D:
