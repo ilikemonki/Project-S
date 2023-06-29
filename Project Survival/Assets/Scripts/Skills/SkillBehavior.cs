@@ -18,7 +18,7 @@ public class SkillBehavior : MonoBehaviour
     protected Transform target;
     protected float shortestDistance, distanceToEnemy;
     public Rigidbody2D rb;
-    public List<int> enemyIndexChain;    //remember the index of enemies hit by chain, will not hit the same enemy again.
+    public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
 
     public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
@@ -107,22 +107,25 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            DoDamage(enemy);
-            if (pierce <= 0 && chain > 0) //check if there are chains, add enemy to list to not chain again.
+            if (skillController.useMelee && enemyChainList.Contains(enemy)) //Melee will hit enemies only once
             {
-                if (!enemyIndexChain.Contains(skillController.enemyManager.enemyList.IndexOf(enemy)) && col.CompareTag("Enemy"))    //if enemy is not in list, add it.
-                {
-                    enemyIndexChain.Add(skillController.enemyManager.enemyList.IndexOf(enemy));
-                }
-                else if (!enemyIndexChain.Contains(skillController.enemyManager.rareEnemyList.IndexOf(enemy)) && col.CompareTag("Rare Enemy"))    //if enemy is not in list, add it.
-                {
-                    enemyIndexChain.Add(skillController.enemyManager.rareEnemyList.IndexOf(enemy));
-                }
+                return;
             }
-            ProjectileBehavior();
-            if (skillController.knockBack >= 1 && !enemy.knockedBack)
+            DoDamage(enemy);
+            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)
             {
                 enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
+            }
+            if (pierce <= 0 && chain > 0 || skillController.useMelee) //check if there are chains, add enemy to list to not chain again.
+            {
+                if (!enemyChainList.Contains(enemy))    //if enemy is not in list, add it.
+                {
+                    enemyChainList.Add(enemy);
+                }
+            }
+            if (!skillController.useMelee)
+            {
+                ProjectileBehavior();
             }
 
         }
@@ -134,6 +137,7 @@ public class SkillBehavior : MonoBehaviour
         if (pierce <= 0 && chain <= 0)
         {
             gameObject.SetActive(false);
+            return;
         }
         if (pierce > 0)  //behavior for pierce
         {
@@ -149,61 +153,7 @@ public class SkillBehavior : MonoBehaviour
     void  ChainToEnemy()
     {
         speed = skillController.chainSpeed;
-        shortestDistance = Mathf.Infinity;
-        nearestEnemy = null;
-        for (int i = 0; i < skillController.enemyManager.enemyList.Count; i++)
-        {
-            bool dontChain = false;
-            if (skillController.enemyManager.enemyList[i].isActiveAndEnabled)
-            {
-                for (int j = 0; j < enemyIndexChain.Count; j++)
-                {
-                    if (enemyIndexChain[j] == i)
-                    {
-                        dontChain = true;
-                        break;
-                    }
-                }
-                if (!dontChain)
-                {
-                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
-                    if (distanceToEnemy < shortestDistance)
-                    {
-                        shortestDistance = distanceToEnemy;
-                        nearestEnemy = skillController.enemyManager.enemyList[i];
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < skillController.enemyManager.rareEnemyList.Count; i++)
-        {
-            bool dontChain = false;
-            if (skillController.enemyManager.rareEnemyList[i].isActiveAndEnabled)
-            {
-                for (int j = 0; j < enemyIndexChain.Count; j++)
-                {
-                    if (enemyIndexChain[j] == i)
-                    {
-                        dontChain = true;
-                        break;
-                    }
-                }
-                if (!dontChain)
-                {
-                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.rareEnemyList[i].transform.position);
-                    if (distanceToEnemy < shortestDistance)
-                    {
-                        shortestDistance = distanceToEnemy;
-                        nearestEnemy = skillController.enemyManager.rareEnemyList[i];
-                    }
-                }
-            }
-        }
-        if (nearestEnemy != null && shortestDistance <= skillController.chainRange)
-        {
-            target = nearestEnemy.transform;
-        }
-        else target = null;
+        target = FindTarget(true);
         if (target != null)
         {
             despawnTime = skillController.despawnTime;
@@ -214,12 +164,87 @@ public class SkillBehavior : MonoBehaviour
         {
             gameObject.SetActive(false);    //despawn if no targets found
         }
+    }
 
+    public Transform FindTarget(bool closest)
+    {
+        if (closest) shortestDistance = Mathf.Infinity;
+        else shortestDistance = 0;
+        nearestEnemy = null;
+        for (int i = 0; i < skillController.enemyManager.enemyList.Count; i++)  //find target in normal enemy list
+        {
+            bool dontChain = false;
+            if (skillController.enemyManager.enemyList[i].isActiveAndEnabled)
+            {
+                for (int j = 0; j < enemyChainList.Count; j++)
+                {
+                    if (enemyChainList.Contains(skillController.enemyManager.enemyList[i]))
+                    {
+                        dontChain = true;
+                        break;
+                    }
+                }
+                if (!dontChain)
+                {
+                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
+                    if (!closest)
+                    {
+                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.chainRange)
+                        {
+                            shortestDistance = distanceToEnemy;
+                            nearestEnemy = skillController.enemyManager.enemyList[i];
+                        }
+                    }
+                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.chainRange)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = skillController.enemyManager.enemyList[i];
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < skillController.enemyManager.rareEnemyList.Count; i++)  //find target in rare enemy list
+        {
+            bool dontChain = false;
+            if (skillController.enemyManager.rareEnemyList[i].isActiveAndEnabled)
+            {
+                for (int j = 0; j < enemyChainList.Count; j++)
+                {
+                    if (enemyChainList.Contains(skillController.enemyManager.enemyList[i]))
+                    {
+                        dontChain = true;
+                        break;
+                    }
+                }
+                if (!dontChain)
+                {
+                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.rareEnemyList[i].transform.position); 
+                    if (!closest)
+                    {
+                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.chainRange)
+                        {
+                            shortestDistance = distanceToEnemy;
+                            nearestEnemy = skillController.enemyManager.rareEnemyList[i];
+                        }
+                    }
+                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.chainRange)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = skillController.enemyManager.rareEnemyList[i];
+                    }
+                }
+            }
+        }
+        if (nearestEnemy != null)
+        {
+            return nearestEnemy.transform;
+        }
+        else return null;
     }
 
     private void OnDisable()
     {
-        enemyIndexChain.Clear();
+        enemyChainList.Clear();
     }
 
 }

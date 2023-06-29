@@ -501,6 +501,7 @@ GameObject:
   m_Component:
   - component: {fileID: 230398755}
   - component: {fileID: 230398754}
+  - component: {fileID: 230398756}
   m_Layer: 0
   m_Name: Enemy Manager
   m_TagString: Untagged
@@ -532,25 +533,7 @@ MonoBehaviour:
       moveSpeed: 0
       exp: 0
       attackCooldown: 0
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-      numberToSpawn: 50
-      whenToSpawn: 0
-      currentSpawned: 0
-      damage: 0
-      maxHealth: 0
-      moveSpeed: 0
-      exp: 0
-      attackCooldown: 0
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-      numberToSpawn: 50
-      whenToSpawn: 0
-      currentSpawned: 0
-      damage: 0
-      maxHealth: 0
-      moveSpeed: 0
-      exp: 0
-      attackCooldown: 0
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+    - enemyPrefab: {fileID: 1732526505297304020, guid: 92915f96541be5c4aa279a6f0c24efa2, type: 3}
       numberToSpawn: 50
       whenToSpawn: 0
       currentSpawned: 0
@@ -593,6 +576,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &230398756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230398753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ea9740e82be5744c8275b9243838bc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyManager: {fileID: 230398754}
+  tempClosestEnemyList: []
+  closestEnemyList: []
+  maxAmountToCheck: 10
+  updatingInProgress: 0
 --- !u!1 &259049942
 GameObject:
   m_ObjectHideFlags: 0
@@ -3341,6 +3341,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2096920679}
+  - {fileID: 1836794110}
   m_Father: {fileID: 177331397}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3715,6 +3716,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1913619781}
+  - {fileID: 2066841259}
   m_Father: {fileID: 432648553}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9410,6 +9412,104 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754020070}
   m_CullTransparentMesh: 1
+--- !u!1 &1836794109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1836794110}
+  - component: {fileID: 1836794111}
+  m_Layer: 0
+  m_Name: Slash Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1836794110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836794109}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1257135658}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1836794111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836794109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 576d7c6676515224c94a53fa00328b46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 4206719122683353907, guid: 0c5b84863b1368c46a32ea7c2200ae8f, type: 3}
+  poolParent: {fileID: 2066841258}
+  gameplayManager: {fileID: 944733854}
+  level: 0
+  baseDamages:
+  - 0
+  - 1
+  - 0
+  - 0
+  baseAilmentsChance:
+  - 100
+  - 0
+  - 100
+  - 100
+  baseAilmentsEffect:
+  - 45
+  - 30
+  - 15
+  - 20
+  baseSpeed: 0
+  baseAttackRange: 3
+  baseChainRange: 0
+  baseCooldown: 1
+  baseKnockBack: 1
+  baseCriticalChance: 10
+  baseCriticalDamage: 0
+  currentCooldown: 0
+  despawnTime: 0.2
+  strike: 6
+  projectile: 0
+  pierce: 0
+  chain: 0
+  damages: []
+  ailmentsChance: []
+  ailmentsEffect: []
+  speed: 0
+  attackRange: 0
+  chainRange: 0
+  cooldown: 0
+  knockBack: 0
+  criticalChance: 0
+  criticalDamage: 0
+  chainSpeed: 0
+  poolList: []
+  player: {fileID: 177331393}
+  enemyManager: {fileID: 230398754}
+  enemyDistances: {fileID: 230398756}
+  stopFiring: 0
+  useBarrage: 0
+  useSpread: 0
+  useMelee: 1
+  autoUseSkill: 1
+  skillSpawnsOnEnemy: 1
+  highestDamageType: 0
 --- !u!1 &1888395308
 GameObject:
   m_ObjectHideFlags: 0
@@ -9791,6 +9891,42 @@ Transform:
   m_Father: {fileID: 177331397}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2066841258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066841259}
+  m_Layer: 5
+  m_Name: Slash Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2066841259
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066841258}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1485570789}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2096920678
 GameObject:
   m_ObjectHideFlags: 0
@@ -9863,7 +9999,7 @@ MonoBehaviour:
   baseCriticalDamage: 0
   currentCooldown: 0
   despawnTime: 2
-  strike: 1
+  strike: 0
   projectile: 1
   pierce: 0
   chain: 0
@@ -9881,12 +10017,13 @@ MonoBehaviour:
   poolList: []
   player: {fileID: 177331393}
   enemyManager: {fileID: 230398754}
-  nearestEnemy: {fileID: 0}
-  target: {fileID: 0}
+  enemyDistances: {fileID: 230398756}
   stopFiring: 0
   useBarrage: 1
   useSpread: 0
+  useMelee: 0
   autoUseSkill: 1
+  skillSpawnsOnEnemy: 0
   highestDamageType: 0
 --- !u!1 &2135092636
 GameObject:
@@ -10015,3 +10152,4 @@ MonoBehaviour:
   damageTextList: []
   textSize: 30
   textCritSize: 45
+  rand: 0

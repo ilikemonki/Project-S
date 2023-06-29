@@ -182,15 +182,17 @@ public class EnemyManager : MonoBehaviour
         else
             spawnPosY = player.transform.localPosition.y + spawnPosY;
         spawnPos = new Vector2(spawnPosX, spawnPosY);
-        if (Random.Range(1, 15) <= 10)
-        {
-            enemyList[indexEnemyToSpawn].canAttack = true;
-        }
+        //if (Random.Range(1, 15) <= 10)
+        //{
+        //    enemyList[indexEnemyToSpawn].canAttack = true;
+        //}
         enemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
         enemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
         enemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         enemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         enemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
+        enemyList[indexEnemyToSpawn].knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
+        enemyList[indexEnemyToSpawn].canAttack = enemyGroup.enemyPrefab.canAttack;
         enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.enemyPrefab.attackRange);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
         yield return Timing.WaitForSeconds(1f);
@@ -225,15 +227,17 @@ public class EnemyManager : MonoBehaviour
         else
             spawnPosY = player.transform.localPosition.y + spawnPosY;
         spawnPos = new Vector2(spawnPosX, spawnPosY);
-        if (Random.Range(1, 15) <= 10)
-        {
-            rareEnemyList[indexEnemyToSpawn].canAttack = true;
-        }
+        //if (Random.Range(1, 15) <= 10)
+        //{
+        //    rareEnemyList[indexEnemyToSpawn].canAttack = true;
+        //}
         rareEnemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
         rareEnemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
         rareEnemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         rareEnemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         rareEnemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
+        rareEnemyList[indexEnemyToSpawn].knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
+        rareEnemyList[indexEnemyToSpawn].canAttack = enemyGroup.enemyPrefab.canAttack;
         rareEnemyList[indexEnemyToSpawn].SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.rareMoveSpeedMultiplier / 100),
             Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.rareHealthMultiplier / 100)),
             Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayMananger.rareDamageMultiplier / 100)),

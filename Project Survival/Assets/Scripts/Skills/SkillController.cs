@@ -21,7 +21,7 @@ public class SkillController : MonoBehaviour
     public float baseCriticalChance, baseCriticalDamage;
     public float currentCooldown;
     public float despawnTime;
-    public int strike = 1, projectile, pierce, chain;
+    public int strike, projectile, pierce, chain;
     public List<float> damages;
     public List<float> ailmentsChance;
     public List<float> ailmentsEffect;
@@ -33,19 +33,17 @@ public class SkillController : MonoBehaviour
     public float criticalChance, criticalDamage;
     public float chainSpeed;
     public List<SkillBehavior> poolList = new();
-    float shortestDistance, distanceToEnemy;
     public PlayerStats player;
     public EnemyManager enemyManager;
-    public EnemyStats nearestEnemy;
-    public Transform target;
+    public EnemyDistances enemyDistances;
+    //Transform target;
     int counter;    //Used in spread skill
     Vector3 direction;
     float projectileSpreadAngle;
     public bool stopFiring;
-    public bool useBarrage, useSpread;
-    public bool autoUseSkill;
+    public bool useBarrage, useSpread, useMelee;
+    public bool autoUseSkill, skillSpawnsOnEnemy;
     public int highestDamageType;
-
     private void Awake()
     {
         damages = baseDamages;
@@ -55,17 +53,16 @@ public class SkillController : MonoBehaviour
         attackRange = baseAttackRange;
         chainRange = baseChainRange;
         cooldown = baseCooldown;
+        currentCooldown = cooldown;
         knockBack = baseKnockBack;
         criticalChance = baseCriticalChance;
         criticalDamage = baseCriticalDamage;
-        currentCooldown = cooldown;
     }
     // Start is called before the first frame update
     protected virtual void Start()
     {
         UpdateSkillStats();
-        PopulatePool((projectile * strike) * 4);
-        InvokeRepeating(nameof(UpdateTarget), 0, 0.10f);    //Repeat looking for target
+        PopulatePool(10);
     }
 
     // Update is called once per frame
@@ -76,7 +73,17 @@ public class SkillController : MonoBehaviour
             currentCooldown -= Time.deltaTime;
             if (currentCooldown <= 0f)
             {
-                if (target == null && autoUseSkill) return;
+                if (enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) return; //if no enemies alive, return.
+                if (autoUseSkill)
+                {
+                    direction = enemyDistances.closestEnemyList[0].transform.position - transform.position;
+                    if (direction.magnitude > attackRange)
+                    {
+                        return;
+                    }
+                }
+                stopFiring = true;
+                currentCooldown = cooldown;
                 if (useBarrage)
                 {
                     Timing.RunCoroutine(UseSkillBarrage());
@@ -85,52 +92,15 @@ public class SkillController : MonoBehaviour
                 {
                     UseSkillSpread();
                 }
+                else if (useMelee)
+                {
+                    UseSkillMelee();
+                }
             }
         }
     }
-    //Check for closest enemy to target
-    protected virtual void UpdateTarget()
-    {
-        if (stopFiring) return;
-        shortestDistance = Mathf.Infinity;
-        nearestEnemy = null;
-        for (int i = 0; i < enemyManager.enemyList.Count; i++)
-        {
-            if (enemyManager.enemyList[i].isActiveAndEnabled)
-            {
-                distanceToEnemy = Vector3.Distance(transform.position, enemyManager.enemyList[i].transform.position);
-                if (distanceToEnemy < shortestDistance)
-                {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemyManager.enemyList[i];
-                }
-
-            }
-        }
-        for (int i = 0; i < enemyManager.rareEnemyList.Count; i++)
-        {
-            if (enemyManager.rareEnemyList[i].isActiveAndEnabled)
-            {
-                distanceToEnemy = Vector3.Distance(transform.position, enemyManager.rareEnemyList[i].transform.position);
-                if (distanceToEnemy < shortestDistance)
-                {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemyManager.rareEnemyList[i];
-                }
-
-            }
-        }
-        if (nearestEnemy != null && shortestDistance <= attackRange)
-        {
-            target = nearestEnemy.transform;
-        }
-        else target = null;
-    }
-
     public IEnumerator<float> UseSkillBarrage()       //Spawn/Activate skill. Projectiles barrages.
     {
-        stopFiring = true;
-        currentCooldown = cooldown;
         for (int p = 0; p < projectile; p++)    //number of projectiles
         {
             yield return Timing.WaitForSeconds(0.1f);
@@ -138,11 +108,11 @@ public class SkillController : MonoBehaviour
             {
                 if (i > poolList.Count - 5)
                 {
-                    PopulatePool(5);
+                    PopulatePool(projectile);
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (autoUseSkill) direction = target.position - transform.position;
+                    if (autoUseSkill) direction = enemyDistances.closestEnemyList[0].transform.position - transform.position;
                     else direction = gameplayManager.mousePos - transform.position;
 
                     poolList[i].transform.position = transform.position;    //set starting position on player
@@ -159,10 +129,8 @@ public class SkillController : MonoBehaviour
     public void UseSkillSpread()       //Spawn/Activate skill. Projectiles spread.
     {
         counter = 0;
-        stopFiring = true;
-        currentCooldown = cooldown;
         projectileSpreadAngle = 90 / projectile;
-        if (autoUseSkill) direction = target.position - transform.position;
+        if (autoUseSkill) direction = enemyDistances.closestEnemyList[0].transform.position - transform.position;
         else direction = gameplayManager.mousePos - transform.position;
         for (int p = 0; p < projectile; p++)    //number of projectiles
         {
@@ -200,8 +168,90 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
+    public void UseSkillMelee()       //Spawn/Activate skill. Melee.
+    {
+        //counter = 0;
+        //projectileSpreadAngle = 90 / strike;
+        //if (autoUseSkill) direction = target.position - transform.position;
+        //else direction = gameplayManager.mousePos - transform.position;
+        //for (int p = 0; p < strike; p++)    //number of strikes
+        //{
+        //    if (p != 0) counter++;
+        //    for (int i = 0; i < poolList.Count; i++)
+        //    {
+        //        if (i > poolList.Count - 5)
+        //        {
+        //            PopulatePool(strike);
+        //        }
+        //        if (!poolList[i].isActiveAndEnabled)
+        //        {
+        //            poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+        //            if (autoUseSkill) poolList[i].transform.position = target.position;    //set starting position on player
+        //            else
+        //            {
+        //                if (direction.magnitude < attackRange)
+        //                {
+        //                    poolList[i].transform.position = transform.position + (direction.normalized * direction.magnitude);
+        //                }
+        //                else poolList[i].transform.position = transform.position + (direction.normalized * attackRange);
+        //            }
+        //            if (p == 0)
+        //            {
+        //                poolList[i].SetDirection((direction).normalized);   //Set direction
+        //                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+        //            }
+        //            else if (p % 2 != 0) //shoots up angle
+        //            {
+        //                counter--;
+        //                poolList[i].SetDirection((Quaternion.AngleAxis(projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
+        //                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + projectileSpreadAngle * p);
+        //            }
+        //            else //shoots down angle
+        //            {
+        //                poolList[i].SetDirection((Quaternion.AngleAxis(-projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
+        //                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + -projectileSpreadAngle * (p - 1));
+        //            }
+        //            poolList[i].gameObject.SetActive(true);
+        //            break;
+        //        }
+        //    }
+        //}
+        //stopFiring = false;
 
-    protected virtual void PopulatePool(int spawnAmount)
+        if (skillSpawnsOnEnemy)
+        {
+            for (int t = 0; t < strike; t++)
+            {
+                if (t >= enemyDistances.closestEnemyList.Count) break;
+                for (int i = 0; i < poolList.Count; i++)
+                {
+                    if (i > poolList.Count - 5)
+                    {
+                        PopulatePool(strike);
+                    }
+                    if (!poolList[i].isActiveAndEnabled)
+                    {
+                        direction = enemyDistances.closestEnemyList[t].transform.position - transform.position;
+                        if (direction.magnitude <= attackRange)
+                            poolList[i].transform.position = enemyDistances.closestEnemyList[t].transform.position;
+                        else
+                        {
+                            stopFiring = false;
+                            return;
+                        }
+                        poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                        poolList[i].SetDirection((direction).normalized);   //Set direction
+                        poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                        poolList[i].gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+        }
+        stopFiring = false;
+    }
+
+    public virtual void PopulatePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
         {

@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour
                 distanceToPlayer = Vector3.Distance(enemyManager.enemyList[i].transform.position, enemyManager.player.transform.position);
                 if (!enemyManager.enemyList[i].knockedBack)   //knockedback
                 {
-                    if ((distanceToPlayer <= enemyManager.enemyList[i].attackRange))   //stop and attack
+                    if (enemyManager.enemyList[i].canAttack && (distanceToPlayer <= enemyManager.enemyList[i].attackRange))   //stop and attack
                     {
                         enemyManager.enemyList[i].rb.velocity = Vector2.zero;
                     }

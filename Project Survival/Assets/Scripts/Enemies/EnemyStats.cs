@@ -26,7 +26,7 @@ public class EnemyStats : MonoBehaviour
     Material defaultMaterial;
     public Material damageFlashMaterial;
     public DropRate dropRate;
-    public bool knockedBack;
+    public bool knockedBack, knockBackImmune;
     public bool isSpawning; //check if enemy is beginning to spawn
     bool isDead;
     public bool canAttack;
@@ -35,6 +35,17 @@ public class EnemyStats : MonoBehaviour
     private void Awake()
     {
         defaultMaterial = spriteRenderer.material;
+    }
+    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float attackRange)
+    {
+        this.baseMoveSpeed = baseMoveSpeed;
+        moveSpeed = baseMoveSpeed;
+        this.maxHealth = maxHealth;
+        currentHealth = maxHealth;
+        this.damage = damage;
+        this.exp = exp;
+        this.attackCooldown = attackCooldown;
+        this.attackRange = attackRange;
     }
     public float CalculateDamage(float damage)
     {
@@ -78,18 +89,6 @@ public class EnemyStats : MonoBehaviour
             Die();
         }
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float attackRange)
-    {
-        this.baseMoveSpeed = baseMoveSpeed;
-        moveSpeed = baseMoveSpeed;
-        this.maxHealth = maxHealth;
-        currentHealth = maxHealth;
-        this.damage = damage;
-        this.exp = exp;
-        this.attackCooldown = attackCooldown;
-        this.attackRange = attackRange;
-    }
-
     public void Die()
     {
         isDead = true;
@@ -111,7 +110,6 @@ public class EnemyStats : MonoBehaviour
         chilled = false; burned = false; shocked = false; bleeding = false;
         totalBurnDamage = 0; totalBleedDamage = 0;
         attackTimer = attackCooldown;
-        canAttack = false;
         dotTextDamage.text = "";
         for(int i = 0; i > topAilmentsEffect.Count; i++)
         {
