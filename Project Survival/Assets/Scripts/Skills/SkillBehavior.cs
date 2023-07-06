@@ -64,7 +64,7 @@ public class SkillBehavior : MonoBehaviour
             isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
         }
-        Color textColor = Color.gray;
+        Color textColor = Color.white;
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
             textColor = Color.red; 
