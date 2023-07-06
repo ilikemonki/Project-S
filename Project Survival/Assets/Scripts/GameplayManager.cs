@@ -12,7 +12,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public float timer, maxTimer;
     public int level, exp, expCap, expCapIncrease;
-    public int coins;
+    public int coins, classStars;
     public PlayerStats player;
     public EnemyManager enemyManager;
     public GameObject roundUI;
@@ -20,7 +20,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
-    public TextMeshProUGUI coinText;
+    public TextMeshProUGUI coinText, classStarText, hpText, dashText, dashTimerText;
     public Vector3 mousePos;
 
     //Player/Skill Global Multipliers
@@ -39,6 +39,7 @@ public class GameplayManager : MonoBehaviour
     public List<float> ailmentsEffectAdditive;
     //public float knockBackMultiplier;
     public int dashChargesAdditive, dashCooldownMultiplier;
+    public float dashPowerMultiplier;
 
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;
@@ -54,7 +55,10 @@ public class GameplayManager : MonoBehaviour
     {
         timer = maxTimer;
         UpdateCoinText();
+        UpdateClassStarText();
+        UpdateDashText();
         expSlider.maxValue = expCap;
+        hpText.text = "<color=green>" + player.currentHealth.ToString();
     }
 
     // Update is called once per frame
@@ -96,6 +100,11 @@ public class GameplayManager : MonoBehaviour
         coins += amt;
         UpdateCoinText();
     }
+    public void GainClassStars(int amt)
+    {
+        classStars += amt;
+        UpdateClassStarText();
+    }
     public void UpdateTime(float timer)
     {
         timer += 1;
@@ -107,6 +116,10 @@ public class GameplayManager : MonoBehaviour
     {
         coinText.text = coins.ToString();
     }
+    public void UpdateClassStarText()
+    {
+        classStarText.text = classStars.ToString();
+    }
 
     public void UpdateRoundText()
     {
@@ -115,6 +128,14 @@ public class GameplayManager : MonoBehaviour
     public void UpdateLevelText()
     {
         levelText.text = "Lv. " + level;
+    }
+    public void UpdateDashText()
+    {
+        dashText.text = player.playerMovement.currentCharges.ToString();
+    }
+    public void UpdateDashTime(float timer)
+    {
+        dashTimerText.text = timer.ToString("F1");
     }
     public void UpdateExpBar()
     {

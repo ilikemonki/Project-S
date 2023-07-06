@@ -30,22 +30,12 @@ public class PlayerStats : MonoBehaviour
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
-
-
-    private void Awake()
-    {
-        moveSpeed = baseMoveSpeed;
-        maxHealth = baseMaxHealth;
-        defense = baseDefense;
-        regen = baseRegen;
-        magnetRange = baseMagnetRange;
-        currentHealth = maxHealth;
-    }
     private void Start()
     {
         healthBar.maxValue = maxHealth;
         UpdateHealthBar(maxHealth);
         UpdatePlayerStats();
+        currentHealth = maxHealth;
     }
 
     private void Update()
@@ -99,6 +89,11 @@ public class PlayerStats : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             playerCollector.MagnetCollectible();
+        }
+        else if (collision.CompareTag("Class Star"))
+        {
+            collision.gameObject.SetActive(false);
+            gameplayManager.GainClassStars(1);
         }
         playerCollector.collectibles.Remove(collectible);
     }
@@ -190,6 +185,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
+            gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
             healthBarImage.gameObject.SetActive(false);
             return;
         }
@@ -197,14 +193,17 @@ public class PlayerStats : MonoBehaviour
         if (hpPercent <= 30)
         {
             healthBarImage.color = Color.red;
+            gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
         }
         else if (hpPercent <= 60)
         {
             healthBarImage.color = Color.yellow;
+            gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString();
         }
         else
         {
             healthBarImage.color = Color.green;
+            gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString();
         }
     }
 
@@ -214,6 +213,7 @@ public class PlayerStats : MonoBehaviour
         maxHealth = baseMaxHealth * (1 + gameplayManager.maxHealthMultiplier / 100);
         defense = gameplayManager.defenseAdditive;
         regen = gameplayManager.regenAdditive;
-        magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100);
+        magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
+        playerCollector.SetMagnetRange(magnetRange);
     }
 }

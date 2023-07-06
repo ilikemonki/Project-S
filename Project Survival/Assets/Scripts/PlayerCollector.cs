@@ -9,10 +9,6 @@ public class PlayerCollector : MonoBehaviour
     public float pullSpeed;
     public List<ICollectibles> collectibles= new();
 
-    private void Awake()
-    {
-        SetMagnetRange(player.magnetRange);
-    }
     private void FixedUpdate()
     {
         if(collectibles.Count > 0)

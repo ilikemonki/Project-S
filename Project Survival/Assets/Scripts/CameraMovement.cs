@@ -18,4 +18,8 @@ public class CameraMovement : MonoBehaviour
     {
         transform.position = target.position + offset;
     }
+    private void LateUpdate()
+    {
+        transform.position = target.position + offset;
+    }
 }

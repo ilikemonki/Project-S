@@ -98,7 +98,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6593507805115416358}
-  - component: {fileID: 5855205079706190287}
+  - component: {fileID: -6595649996783161566}
   - component: {fileID: 2398783455814874361}
   - component: {fileID: 2398783455814874362}
   m_Layer: 6
@@ -129,7 +129,7 @@ RectTransform:
   m_AnchoredPosition: {x: -2.2666974, y: 1.3605523}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5855205079706190287
+--- !u!114 &-6595649996783161566
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3139460322398848796}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53064612f12f30848bab15851cc1d1c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   skillController: {fileID: 0}
@@ -146,7 +146,7 @@ MonoBehaviour:
   ailmentsChance: []
   ailmentsEffect: []
   rb: {fileID: 2398783455814874361}
-  enemyIndexChain: 
+  enemyChainList: []
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4

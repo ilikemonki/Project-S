@@ -13,6 +13,7 @@ TagManager:
   - Health Potion
   - Rare Enemy
   - Enemy Projectile
+  - Class Star
   layers:
   - Default
   - TransparentFX
@@ -55,6 +56,9 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2171273165
+    locked: 0
+  - name: UI
+    uniqueID: 2296967045
     locked: 0
   - name: Menu
     uniqueID: 2968950639

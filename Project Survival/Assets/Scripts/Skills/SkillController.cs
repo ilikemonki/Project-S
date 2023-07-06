@@ -170,54 +170,6 @@ public class SkillController : MonoBehaviour
     }
     public void UseSkillMelee()       //Spawn/Activate skill. Melee.
     {
-        //counter = 0;
-        //projectileSpreadAngle = 90 / strike;
-        //if (autoUseSkill) direction = target.position - transform.position;
-        //else direction = gameplayManager.mousePos - transform.position;
-        //for (int p = 0; p < strike; p++)    //number of strikes
-        //{
-        //    if (p != 0) counter++;
-        //    for (int i = 0; i < poolList.Count; i++)
-        //    {
-        //        if (i > poolList.Count - 5)
-        //        {
-        //            PopulatePool(strike);
-        //        }
-        //        if (!poolList[i].isActiveAndEnabled)
-        //        {
-        //            poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
-        //            if (autoUseSkill) poolList[i].transform.position = target.position;    //set starting position on player
-        //            else
-        //            {
-        //                if (direction.magnitude < attackRange)
-        //                {
-        //                    poolList[i].transform.position = transform.position + (direction.normalized * direction.magnitude);
-        //                }
-        //                else poolList[i].transform.position = transform.position + (direction.normalized * attackRange);
-        //            }
-        //            if (p == 0)
-        //            {
-        //                poolList[i].SetDirection((direction).normalized);   //Set direction
-        //                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
-        //            }
-        //            else if (p % 2 != 0) //shoots up angle
-        //            {
-        //                counter--;
-        //                poolList[i].SetDirection((Quaternion.AngleAxis(projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
-        //                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + projectileSpreadAngle * p);
-        //            }
-        //            else //shoots down angle
-        //            {
-        //                poolList[i].SetDirection((Quaternion.AngleAxis(-projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
-        //                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + -projectileSpreadAngle * (p - 1));
-        //            }
-        //            poolList[i].gameObject.SetActive(true);
-        //            break;
-        //        }
-        //    }
-        //}
-        //stopFiring = false;
-
         if (skillSpawnsOnEnemy)
         {
             for (int t = 0; t < strike; t++)
@@ -242,6 +194,47 @@ public class SkillController : MonoBehaviour
                         poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
                         poolList[i].SetDirection((direction).normalized);   //Set direction
                         poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                        poolList[i].gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            counter = 0;
+            projectileSpreadAngle = 90 / strike;
+            if (autoUseSkill) direction = enemyDistances.closestEnemyList[0].transform.position - transform.position;
+            else direction = gameplayManager.mousePos - transform.position;
+            for (int p = 0; p < strike; p++)    //number of projectiles
+            {
+                if (p != 0) counter++;
+                for (int i = 0; i < poolList.Count; i++)
+                {
+                    if (i > poolList.Count - 5)
+                    {
+                        PopulatePool(strike);
+                    }
+                    if (!poolList[i].isActiveAndEnabled)
+                    {
+                        poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                        poolList[i].transform.position = transform.position;    //set starting position on player
+                        if (p == 0)
+                        {
+                            poolList[i].SetDirection((direction).normalized);   //Set direction
+                            poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                        }
+                        else if (p % 2 != 0) //shoots up angle
+                        {
+                            counter--;
+                            poolList[i].SetDirection((Quaternion.AngleAxis(projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
+                            poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + projectileSpreadAngle * p);
+                        }
+                        else //shoots down angle
+                        {
+                            poolList[i].SetDirection((Quaternion.AngleAxis(-projectileSpreadAngle * (p - counter), Vector3.forward) * direction).normalized);
+                            poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + -projectileSpreadAngle * (p - 1));
+                        }
                         poolList[i].gameObject.SetActive(true);
                         break;
                     }

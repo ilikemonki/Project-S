@@ -44,7 +44,11 @@ public class SkillBehavior : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
+    private void FixedUpdate()
+    {
+        if (speed > 0)
+            rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
+    }
 
     public void SetDirection(Vector3 dir)
     {
@@ -60,7 +64,7 @@ public class SkillBehavior : MonoBehaviour
             isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
         }
-        Color textColor = Color.white;
+        Color textColor = Color.gray;
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
             textColor = Color.red; 

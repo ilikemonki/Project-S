@@ -7,22 +7,38 @@ public class PlayerMovement : MonoBehaviour
     public PlayerStats playerStats;
     public Rigidbody2D rb;
     public TrailRenderer trailRend;
-    public Vector2 moveDirection;
+    public SpriteRenderer spriteRenderer;
+    public Vector3 moveDirection;
     public float dashIFrameSeconds, baseDashCooldown, dashCooldown;
-    public float dashPower;
-    public int charges;
-    public bool isDashing, canDash;
+    public float baseDashPower, dashPower;
+    public int baseCharges, maxCharges, currentCharges;
+    public bool isDashing;
     float moveX, moveY;
+    public float timer;
 
     private void Start()
     {
-        dashCooldown = baseDashCooldown;
         UpdateDashStats();
     }
     // Update is called once per frame
     void Update()
     {
         InputManagement();
+        if (currentCharges < maxCharges)
+        {
+            timer -= Time.deltaTime;
+            playerStats.gameplayManager.UpdateDashTime(timer);
+            if (timer <= 0)
+            {
+                currentCharges++;
+                playerStats.gameplayManager.UpdateDashText();
+                timer = dashCooldown;
+                if (currentCharges == maxCharges)
+                {
+                    playerStats.gameplayManager.dashTimerText.text = "";
+                }
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -37,43 +53,48 @@ public class PlayerMovement : MonoBehaviour
     {
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
+        if (moveX > 0)
+            spriteRenderer.flipX = false;
+        else if (moveX < 0)
+            spriteRenderer.flipX = true;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!isDashing && charges > 0)
+            if (!isDashing && currentCharges > 0)
             {
-                if (moveX == 0 && moveY == 0)   //do not dash
+                if (moveX == 0 && moveY == 0)   //do not dash when standing still
                 {
 
                 }
-                else Timing.RunCoroutine(Dashing());
+                else Timing.RunCoroutine(Dash());
             }
         }
         moveDirection = new Vector2(moveX, moveY).normalized;
     }
 
     void PlayerMove() 
-    { 
-        rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
+    {
+        rb.MovePosition(transform.position + (playerStats.moveSpeed * Time.fixedDeltaTime * moveDirection));
+        //rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
     }
 
-    public IEnumerator<float> Dashing()
+    public IEnumerator<float> Dash()
     {
-        charges--;
-        canDash = false;
+        currentCharges--;
+        playerStats.gameplayManager.UpdateDashText();
         isDashing = true;
         trailRend.emitting = true;
         rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed * dashPower, moveDirection.y * playerStats.moveSpeed * dashPower);
         yield return Timing.WaitForSeconds(dashIFrameSeconds);
         isDashing = false;
         trailRend.emitting = false;
-        yield return Timing.WaitForSeconds(dashCooldown);
-        charges++;
-        canDash = true;
     }
     public void UpdateDashStats()
     {
-        charges += playerStats.gameplayManager.dashChargesAdditive;
+        dashPower = baseDashPower * (1 + (playerStats.gameplayManager.dashPowerMultiplier / 100)); ;
+        maxCharges = baseCharges + playerStats.gameplayManager.dashChargesAdditive;
+        currentCharges = maxCharges;
         dashCooldown = baseDashCooldown * (1 + (playerStats.gameplayManager.dashCooldownMultiplier / 100));
+        timer = dashCooldown;
     }
 }
 

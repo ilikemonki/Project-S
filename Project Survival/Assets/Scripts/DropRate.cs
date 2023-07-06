@@ -30,13 +30,13 @@ public class DropRate : MonoBehaviour
     {
         InvokeRepeating(nameof(DeleteInactives), 10, 30f);
         PopulatePool(collectiblesList[0].prefab, 100, transform, itemList);
-        PopulatePool(collectiblesList[4].prefab, 5, magnetParent.transform, magnetList);
+        PopulatePool(collectiblesList[5].prefab, 5, magnetParent.transform, magnetList);
         UpdateDropChance(); 
     }
 
     public void DropLoot(Transform pos)
     {
-        foreach (CoinsToDrop item in collectiblesList)  //coin drop chance
+        foreach (CoinsToDrop item in collectiblesList)  //coin drop chance only
         {
             rand = Random.Range(1, item.chanceRange + 1);
             if (rand <= item.chance)
@@ -45,10 +45,10 @@ public class DropRate : MonoBehaviour
                 break;
             }
         }
-        rand = Random.Range(1, collectiblesList[4].chanceRange + 1);
-        if (rand <= collectiblesList[4].chance) //magnet drop chance
+        rand = Random.Range(1, collectiblesList[5].chanceRange + 1);
+        if (rand <= collectiblesList[5].chance) //magnet drop chance only
         {
-            SpawnItem(collectiblesList[4].prefab, pos);
+            SpawnItem(collectiblesList[5].prefab, pos);
         }
     }
 
@@ -58,9 +58,9 @@ public class DropRate : MonoBehaviour
         {
             for (int i = 0; i < magnetList.Count; i++)
             {
-                if (i > magnetList.Count - 5)
+                if (i > magnetList.Count - 2)
                 {
-                    PopulatePool(collectiblesList[4].prefab, 5, magnetParent.transform, magnetList);
+                    PopulatePool(collectiblesList[5].prefab, 5, magnetParent.transform, magnetList);
                 }
                 if (!magnetList[i].isActiveAndEnabled)
                 {
@@ -70,11 +70,6 @@ public class DropRate : MonoBehaviour
                     return;
                 }
             }
-            ICollectibles obj = Instantiate(prefab, magnetParent.transform);    //Spawn, add to list, and initialize prefabs
-            obj.transform.position = pos.position;
-            obj.gameObject.SetActive(true);
-            obj.MagnetDuration();
-            return;
         }
         for (int i = 0; i < itemList.Count; i++)
         {

@@ -69,7 +69,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyMovement: {fileID: 3096171719315698499}
   currentHealth: 0
-  maxHealth: 100
+  maxHealth: 5
   damage: 3
   moveSpeed: 0
   baseMoveSpeed: 2
@@ -95,6 +95,7 @@ MonoBehaviour:
   damageFlashMaterial: {fileID: 2100000, guid: 500d9a9f0a337474899d23a092db3fde, type: 2}
   dropRate: {fileID: 0}
   knockedBack: 0
+  knockBackImmune: 0
   isSpawning: 0
   canAttack: 0
   attackCooldown: 2
