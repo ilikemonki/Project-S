@@ -9,16 +9,17 @@ public class SkillBehavior : MonoBehaviour
     public SkillController skillController;
     protected Vector3 direction;
     public List<float> damages;
-    protected float speed;
-    protected int pierce, chain;
-    protected float despawnTime;
+    public float speed;
+    public int pierce, chain;
+    public float despawnTime;
     public List<float> ailmentsChance;
     public List<float> ailmentsEffect;
     protected EnemyStats nearestEnemy;
-    protected Transform target;
+    public Transform target;
     protected float shortestDistance, distanceToEnemy;
     public Rigidbody2D rb;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
+    public bool isOrbitObject, rotateSkill;
 
     public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
@@ -33,21 +34,30 @@ public class SkillBehavior : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (rotateSkill)
+        {
+            transform.Rotate(new Vector3(0, 0, 160 + (speed * 8)) * Time.deltaTime);
+        }
         if (target != null && target.gameObject.activeSelf)     //Have skill keep following target and change its angle.
         {
             SetDirection((target.position - transform.position).normalized);
             transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
-        despawnTime -= Time.deltaTime;
-        if (despawnTime <= 0f)
+        if (!isOrbitObject)
         {
-            gameObject.SetActive(false);
+            despawnTime -= Time.deltaTime;
+            if (despawnTime <= 0f)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
     private void FixedUpdate()
     {
-        if (speed > 0)
+        if (speed > 0 && !isOrbitObject)
+        {
             rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
+        }
     }
 
     public void SetDirection(Vector3 dir)
@@ -111,23 +121,37 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            if (skillController.useMelee && enemyChainList.Contains(enemy)) //Melee will hit enemies only once
+            if (skillController.useOrbit && isOrbitObject && gameObject.activeSelf)   //Object is a weapon and using orbit behavior
+            {
+                despawnTime = skillController.cooldown;
+                if (skillController.isMelee)
+                {
+                    gameObject.SetActive(false);
+                    if (skillController.useCloseCombat)
+                        Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, enemy.transform));    //spawn skill on enemy.
+                    else
+                        Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, transform));    //spawn skill on weapon.
+                    return;
+                }
+            }
+
+            if ((skillController.isMelee || pierce <= 0) && enemyChainList.Contains(enemy)) //Melee and chain will hit enemies only once
             {
                 return;
             }
             DoDamage(enemy);
-            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)
+            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
             {
                 enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
             }
-            if (pierce <= 0 && chain > 0 || skillController.useMelee) //check if there are chains, add enemy to list to not chain again.
+            if ((pierce <= 0 && chain > 0 || skillController.isMelee)) //check if there are chains, add enemy to list to not chain again.
             {
                 if (!enemyChainList.Contains(enemy))    //if enemy is not in list, add it.
                 {
                     enemyChainList.Add(enemy);
                 }
             }
-            if (!skillController.useMelee)
+            if (!skillController.isMelee)   //For projectiles only
             {
                 ProjectileBehavior();
             }
@@ -149,6 +173,16 @@ public class SkillBehavior : MonoBehaviour
         }
         else if (chain > 0)   //behavior for chain
         {
+            if (isOrbitObject) //if projectile is an orbit object, despawn it and spawn in skill from poolList
+            {
+                target = FindTarget(true);
+                if (target != null)
+                {
+                    skillController.SpawnChainProjectile(enemyChainList, target, transform);
+                }
+                gameObject.SetActive(false);
+                return;
+            }
             chain--;
             ChainToEnemy();
         }
@@ -214,7 +248,7 @@ public class SkillBehavior : MonoBehaviour
             {
                 for (int j = 0; j < enemyChainList.Count; j++)
                 {
-                    if (enemyChainList.Contains(skillController.enemyManager.enemyList[i]))
+                    if (enemyChainList.Contains(skillController.enemyManager.rareEnemyList[i]))
                     {
                         dontChain = true;
                         break;
@@ -249,6 +283,7 @@ public class SkillBehavior : MonoBehaviour
     private void OnDisable()
     {
         enemyChainList.Clear();
+        target = null;
     }
 
 }

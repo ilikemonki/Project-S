@@ -32,10 +32,10 @@ public class PlayerStats : MonoBehaviour
     public bool isInvincible;
     private void Start()
     {
-        healthBar.maxValue = maxHealth;
-        UpdateHealthBar(maxHealth);
         UpdatePlayerStats();
         currentHealth = maxHealth;
+        healthBar.maxValue = maxHealth;
+        UpdateHealthBar(maxHealth);
     }
 
     private void Update()
@@ -134,7 +134,7 @@ public class PlayerStats : MonoBehaviour
             healthBar.gameObject.SetActive(true);
         }
     }
-    public void ChangeMaxHealthBar(float maxAmt)   //set health bar to current max
+    public void UpdateMaxHealthBar(float maxAmt)   //set health bar to current max
     {
         healthBar.maxValue = maxAmt;
         CheckHPBarColor();

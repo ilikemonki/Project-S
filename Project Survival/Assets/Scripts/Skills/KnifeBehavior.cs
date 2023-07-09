@@ -4,9 +4,5 @@ using UnityEngine;
 
 public class KnifeBehavior : SkillBehavior
 {
-    private void FixedUpdate()
-    {
-        rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
-    }
 
 }

@@ -22,9 +22,11 @@ public class GameplayManager : MonoBehaviour
     public ParticleSystem expSliderParticle;
     public TextMeshProUGUI coinText, classStarText, hpText, dashText, dashTimerText;
     public Vector3 mousePos;
+    public Camera cam;
 
     //Player/Skill Global Multipliers
-    public float damageMultiplier;
+    public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
+    public List<float> damageTypeMultiplier;
     public float speedMultiplier;
     public float attackRangeMultiplier;
     public float chainRangeMultiplier;
@@ -53,6 +55,8 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
+        cam.transparencySortMode = TransparencySortMode.CustomAxis;
+        cam.transparencySortAxis = new Vector3(0, 1, 1);
         timer = maxTimer;
         UpdateCoinText();
         UpdateClassStarText();

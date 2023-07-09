@@ -64,7 +64,7 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].color = color;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + 1f, 0.75f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + 1f, 0.60f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
