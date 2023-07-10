@@ -10727,9 +10727,9 @@ MonoBehaviour:
   - 0
   - 0
   baseSpeed: 5
-  baseAttackRange: 2
+  baseAttackRange: 4
   baseChainRange: 0
-  baseCooldown: 3
+  baseCooldown: 0.3
   baseKnockBack: 1
   baseCriticalChance: 0
   baseCriticalDamage: 0
@@ -10758,10 +10758,11 @@ MonoBehaviour:
   stopFiring: 0
   highestDamageType: 0
   useBarrage: 0
-  useSpread: 0
-  useOrbit: 1
+  useSpread: 1
+  useOrbit: 0
+  useRandomDirection: 1
   isMelee: 1
-  autoUseSkill: 1
+  autoUseSkill: 0
   useCloseCombat: 0
 --- !u!1 &1888395308
 GameObject:
@@ -11235,7 +11236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2096920680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11272,14 +11273,14 @@ MonoBehaviour:
   baseSpeed: 10
   baseAttackRange: 4
   baseChainRange: 8
-  baseCooldown: 2
+  baseCooldown: 0.2
   baseKnockBack: 5
   baseCriticalChance: 10
   baseCriticalDamage: 0
   currentCooldown: 0
-  despawnTime: 2
+  despawnTime: 1
   strike: 0
-  projectile: 8
+  projectile: 10
   pierce: 0
   chain: 10
   damages: []
@@ -11300,11 +11301,12 @@ MonoBehaviour:
   enemyDistances: {fileID: 230398756}
   stopFiring: 0
   highestDamageType: 0
-  useBarrage: 0
+  useBarrage: 1
   useSpread: 0
-  useOrbit: 1
+  useOrbit: 0
+  useRandomDirection: 1
   isMelee: 0
-  autoUseSkill: 1
+  autoUseSkill: 0
   useCloseCombat: 0
 --- !u!224 &2096920681
 RectTransform:
