@@ -47,12 +47,14 @@ public class SkillController : MonoBehaviour
     //Behaviors 
     public bool autoUseSkill;
     public bool isMelee;
-    bool targetless; //Keeps using it's skill regardless of enemies.
+    public bool useCloseCombat;    //close Combat spawns on enemies, is always automatic unless behavior is changed.
     public bool useBarrage, useSpread;
     public bool useOrbit; //targetless
+    public bool useCircular; //targetless
     public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
-    public bool useCircleDirection; //targetless
-    public bool useCloseCombat;    //close Combat spawns on enemies, is always automatic unless behavior is changed.
+    public bool useBackwardsDirection; //Shoots from behind
+    public bool useReturnDirection; //projectiles only.
+    public bool targetless; //Keeps using it's skill regardless of enemies.
     private void Awake()
     {
         damages = baseDamages;
@@ -66,7 +68,7 @@ public class SkillController : MonoBehaviour
         knockBack = baseKnockBack;
         criticalChance = baseCriticalChance;
         criticalDamage = baseCriticalDamage;
-        if (useOrbit || useRandomDirection || useCircleDirection)
+        if (useOrbit || useRandomDirection || useCircular || !autoUseSkill)
             targetless = true;
     }
     // Start is called before the first frame update
@@ -111,7 +113,7 @@ public class SkillController : MonoBehaviour
                 currentCooldown = cooldown;
                 if (useBarrage)
                 {
-                    if (useRandomDirection)
+                    if (useRandomDirection || targetless)
                         Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform));
                     else
                         Timing.RunCoroutine(BarrageBehavior(strike + projectile, enemyDistances.closestEnemyList[0].transform, transform));
@@ -119,17 +121,35 @@ public class SkillController : MonoBehaviour
                 else if (useSpread)
                 {
                     if (useRandomDirection)
-                        SpreadBehavior(strike + projectile, null, transform);
+                        SpreadBehavior(strike + projectile, null, transform, false);
+                    else if (useBackwardsDirection)
+                    {
+                        if (targetless)
+                        {
+                            SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), null, transform, false);
+                            SpreadBehavior((strike + projectile) / 2, null, transform, true);
+                        }
+                        else
+                        {
+                            SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), enemyDistances.closestEnemyList[0].transform, transform, false);
+                            SpreadBehavior((strike + projectile) / 2, enemyDistances.closestEnemyList[0].transform, transform, true);
+                        }
+                    }
                     else
-                        SpreadBehavior(strike + projectile, enemyDistances.closestEnemyList[0].transform, transform);
+                    {
+                        if (targetless)
+                            SpreadBehavior(strike + projectile, null, transform, false);
+                        else
+                            SpreadBehavior(strike + projectile, enemyDistances.closestEnemyList[0].transform, transform, false);
+                    }
                 }
-                else if (useCircleDirection && !isMelee)
+                else if (useCircular && !useCloseCombat)
                 {
                     CircleBehavior(strike + projectile, transform);
                 }
                 else if (useCloseCombat)
                 {
-                    CloseCombatMelee(strike, enemyDistances.closestEnemyList);
+                    CloseCombatMelee(strike, transform, enemyDistances.closestEnemyList);
                 }
             }
         }
@@ -153,12 +173,20 @@ public class SkillController : MonoBehaviour
                     poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
+                    if (useBackwardsDirection && p % 2 == 1)
+                    {
+                        poolList[i].SetDirection((-direction).normalized);   //Set direction
+                    }
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
             }
-            yield return Timing.WaitForSeconds(0.1f);
-            currentCooldown -= 0.1f;
+            if (useBackwardsDirection && p % 2 == 0)
+            {
+                yield return Timing.WaitForSeconds(0);
+            }
+            else
+                yield return Timing.WaitForSeconds(0.1f);
         }
         stopFiring = false;
     }
@@ -198,7 +226,7 @@ public class SkillController : MonoBehaviour
             {
                 if (!pList[i].isActiveAndEnabled)
                 {
-                    pList[i].isOrbitObject = true;
+                    pList[i].isOrbitSkill = true;
                     pList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * attackRange;
                     pList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
                     pList[i].gameObject.SetActive(true);
@@ -241,13 +269,17 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void SpreadBehavior(int numOfAttacks, Transform target, Transform spawnPos)       //Spawn/Activate skill. Projectiles spread.
+    public void SpreadBehavior(int numOfAttacks, Transform target, Transform spawnPos, bool useBackwards)       //Spawn/Activate skill. Projectiles spread.
     {
         counter = 0;
         spreadAngle = 90 / numOfAttacks;
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if(autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
+        if (useBackwards)
+        {
+            direction = -direction;   //Set direction
+        }
         for (int p = 0; p < numOfAttacks; p++)    //number of projectiles
         {
             if (p != 0) counter++;
@@ -284,7 +316,7 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void CloseCombatMelee(int numOfAttacks, List<EnemyStats> closestEnemyList)       //Spawn on closest enemies. Melee.
+    public void CloseCombatMelee(int numOfAttacks, Transform spawnPos, List<EnemyStats> closestEnemyList)       //Spawn on closest enemies. Melee.
     {
         for (int p = 0; p < numOfAttacks; p++)
         {
@@ -300,27 +332,27 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useRandomDirection) 
+                    if (useRandomDirection)
                     {
                         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-                        poolList[i].transform.position = new Vector3(transform.position.x + Random.Range(-attackRange, attackRange), transform.position.y + Random.Range(-attackRange, attackRange), 0);
+                        poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
                     } 
-                    else if (useCircleDirection)
+                    else if (useCircular)
                     {
                         spreadAngle = 360 / numOfAttacks;
                         if (autoUseSkill)
                         {
-                            poolList[i].transform.position = transform.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * attackRange;
+                            poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * attackRange;
                         }
                         else
                         {
-                            direction = gameplayManager.mousePos - transform.position;
-                            poolList[i].transform.position = transform.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + spreadAngle * p, Vector3.forward) * Vector3.right * attackRange;
+                            direction = gameplayManager.mousePos - spawnPos.position;
+                            poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + spreadAngle * p, Vector3.forward) * Vector3.right * attackRange;
                         }
                     }
-                    else
+                    else //target enemy
                     {
-                        direction = closestEnemyList[p].transform.position - transform.position;
+                        direction = closestEnemyList[p].transform.position - spawnPos.position;
                         if (direction.magnitude <= attackRange)
                             poolList[i].transform.position = closestEnemyList[p].transform.position;
                         else
@@ -330,8 +362,6 @@ public class SkillController : MonoBehaviour
                         }
                     } 
                     poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
-                    //poolList[i].SetDirection((direction).normalized);   //Set direction
-                    //poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -339,15 +369,14 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-
     public void SpawnChainProjectile(List<EnemyStats> chainList, Transform target, Transform spawnPos)
     {
         for (int i = 0; i < poolList.Count; i++)
         {
-            //if (i > poolList.Count - 2)
-            //{
-            //    PopulatePool(projectile, prefab, poolParent, poolList);
-            //}
+            if (i > poolList.Count - 2)
+            {
+                PopulatePool(projectile, prefab, poolParent, poolList);
+            }
             if (!poolList[i].isActiveAndEnabled)
             {
                 direction = target.position - spawnPos.position; 

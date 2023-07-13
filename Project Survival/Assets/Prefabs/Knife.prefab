@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: -6595649996783161566}
   - component: {fileID: 2398783455814874361}
   - component: {fileID: 2398783455814874362}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Knife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,8 +152,9 @@ MonoBehaviour:
   target: {fileID: 0}
   rb: {fileID: 2398783455814874361}
   enemyChainList: []
-  isOrbitObject: 0
+  isOrbitSkill: 0
   rotateSkill: 0
+  returnSkill: 0
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4

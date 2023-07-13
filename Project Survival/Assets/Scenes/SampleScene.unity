@@ -2951,7 +2951,7 @@ MonoBehaviour:
   projectileDamageMultiplier: 0
   meleeDamageMultiplier: 0
   damageTypeMultiplier:
-  - 100
+  - 0
   - 0
   - 0
   - 0
@@ -10655,7 +10655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1836794112
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10696,7 +10696,7 @@ MonoBehaviour:
   gameplayManager: {fileID: 944733854}
   level: 0
   baseDamages:
-  - 1
+  - 35
   - 0
   - 0
   - 0
@@ -10710,7 +10710,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseSpeed: 0
+  baseSpeed: 4
   baseAttackRange: 3
   baseChainRange: 0
   baseCooldown: 0.5
@@ -10718,8 +10718,8 @@ MonoBehaviour:
   baseCriticalChance: 0
   baseCriticalDamage: 0
   currentCooldown: 0
-  despawnTime: 0.2
-  strike: 6
+  despawnTime: 1
+  strike: 3
   projectile: 0
   pierce: 0
   chain: 0
@@ -10743,12 +10743,15 @@ MonoBehaviour:
   highestDamageType: 0
   autoUseSkill: 0
   isMelee: 1
-  useBarrage: 0
+  useCloseCombat: 0
+  useBarrage: 1
   useSpread: 0
   useOrbit: 0
+  useCircular: 0
   useRandomDirection: 0
-  useCircleDirection: 1
-  useCloseCombat: 1
+  useBackwardsDirection: 1
+  useReturnDirection: 0
+  targetless: 0
 --- !u!1 &1888395308
 GameObject:
   m_ObjectHideFlags: 0
@@ -11221,7 +11224,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2096920680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11241,7 +11244,7 @@ MonoBehaviour:
   gameplayManager: {fileID: 944733854}
   level: 0
   baseDamages:
-  - 1
+  - 10
   - 0
   - 0
   - 0
@@ -11258,16 +11261,16 @@ MonoBehaviour:
   baseSpeed: 10
   baseAttackRange: 4
   baseChainRange: 8
-  baseCooldown: 0.2
+  baseCooldown: 1
   baseKnockBack: 5
   baseCriticalChance: 10
   baseCriticalDamage: 0
   currentCooldown: 0
   despawnTime: 1
   strike: 0
-  projectile: 6
+  projectile: 1
   pierce: 0
-  chain: 10
+  chain: 2
   damages: []
   ailmentsChance: []
   ailmentsEffect: []
@@ -11288,12 +11291,15 @@ MonoBehaviour:
   highestDamageType: 0
   autoUseSkill: 0
   isMelee: 0
-  useBarrage: 0
+  useCloseCombat: 0
+  useBarrage: 1
   useSpread: 0
   useOrbit: 0
+  useCircular: 0
   useRandomDirection: 0
-  useCircleDirection: 1
-  useCloseCombat: 0
+  useBackwardsDirection: 0
+  useReturnDirection: 1
+  targetless: 0
 --- !u!224 &2096920681
 RectTransform:
   m_ObjectHideFlags: 0

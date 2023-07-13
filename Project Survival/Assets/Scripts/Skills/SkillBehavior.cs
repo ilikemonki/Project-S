@@ -17,9 +17,11 @@ public class SkillBehavior : MonoBehaviour
     protected EnemyStats nearestEnemy;
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
+    float totalDamage;
+    bool isCrit;
     public Rigidbody2D rb;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
-    public bool isOrbitObject, rotateSkill;
+    public bool isOrbitSkill, rotateSkill, returnSkill;
 
     public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
@@ -41,20 +43,31 @@ public class SkillBehavior : MonoBehaviour
         if (target != null && target.gameObject.activeSelf)     //Have skill keep following target and change its angle.
         {
             SetDirection((target.position - transform.position).normalized);
-            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            if (!rotateSkill)
+                transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
-        if (!isOrbitObject)
+        if (!isOrbitSkill)
         {
-            despawnTime -= Time.deltaTime;
-            if (despawnTime <= 0f)
+            if(!returnSkill)
             {
-                gameObject.SetActive(false);
+                despawnTime -= Time.deltaTime;
+                if (despawnTime <= 0f)
+                {
+                    if (skillController.useReturnDirection)
+                    {
+                        returnSkill = true;
+                        target = skillController.player.transform;
+                        speed = skillController.chainSpeed;
+                    }
+                    else
+                        gameObject.SetActive(false);
+                }
             }
         }
     }
     private void FixedUpdate()
     {
-        if (speed > 0 && !isOrbitObject)
+        if (speed > 0 && !isOrbitSkill)
         {
             rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
         }
@@ -65,10 +78,10 @@ public class SkillBehavior : MonoBehaviour
         direction = dir;
     }
 
-    public void DoDamage(EnemyStats enemy)
+    public void DoDamage(EnemyStats enemy, float damagePercent)
     {
-        float totalDamage = damages.Sum();
-        bool isCrit = false;
+        totalDamage = damages.Sum() * (damagePercent / 100);
+        isCrit = false;
         if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
         {
             isCrit = true;
@@ -78,38 +91,38 @@ public class SkillBehavior : MonoBehaviour
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
             textColor = Color.red; 
-            if (Random.Range(1, 101) <= ailmentsChance[1] + skillController.gameplayManager.ailmentsChanceAdditive[1])
+            if (Random.Range(1, 101) <= ailmentsChance[1])
             {
                 if (isCrit)
-                    enemy.ApplyBurn(damages[1] * (skillController.criticalDamage / 100) * ((ailmentsEffect[1] + skillController.gameplayManager.ailmentsEffectAdditive[1]) / 100));
+                    enemy.ApplyBurn(damages[1] * (damagePercent / 100) * (skillController.criticalDamage / 100) * (ailmentsEffect[1] / 100));
                 else
-                    enemy.ApplyBurn(damages[1] * ((ailmentsEffect[1] + skillController.gameplayManager.ailmentsEffectAdditive[1]) / 100));
+                    enemy.ApplyBurn(damages[1] * (damagePercent / 100) * (ailmentsEffect[1] / 100));
             }
         }
         else if (skillController.highestDamageType.Equals(2))   //cold, chill
         {
             textColor = Color.cyan;
-            if (Random.Range(1, 101) <= ailmentsChance[2] + skillController.gameplayManager.ailmentsChanceAdditive[2])
+            if (Random.Range(1, 101) <= ailmentsChance[2])
             {
-                enemy.ApplyChill(ailmentsEffect[2] + skillController.gameplayManager.ailmentsEffectAdditive[2]);
+                enemy.ApplyChill(ailmentsEffect[2]);
             }
         }
         else if (skillController.highestDamageType.Equals(3))   //lightning, shock
         {
             textColor = Color.yellow;
-            if (Random.Range(1, 101) <= ailmentsChance[3] + skillController.gameplayManager.ailmentsChanceAdditive[3])
+            if (Random.Range(1, 101) <= ailmentsChance[3])
             {
-                enemy.ApplyShock(ailmentsEffect[3] + skillController.gameplayManager.ailmentsEffectAdditive[3]);
+                enemy.ApplyShock(ailmentsEffect[3]);
             }
         }
         else //physical, bleed
         {
-            if (Random.Range(1, 101) <= ailmentsChance[0] + skillController.gameplayManager.ailmentsChanceAdditive[0])
+            if (Random.Range(1, 101) <= ailmentsChance[0])
             {
                 if (isCrit)
-                    enemy.ApplyBleed(damages[0] * (skillController.criticalDamage / 100) * ((ailmentsEffect[0] + skillController.gameplayManager.ailmentsEffectAdditive[0]) / 100));
+                    enemy.ApplyBleed(damages[0] * (damagePercent / 100) * (skillController.criticalDamage / 100) * (ailmentsEffect[0] / 100));
                 else
-                    enemy.ApplyBleed(damages[0] * ((ailmentsEffect[0] + skillController.gameplayManager.ailmentsEffectAdditive[0]) / 100));
+                    enemy.ApplyBleed(damages[0] * (damagePercent / 100) * (ailmentsEffect[0] / 100));
             }
         }
         enemy.TakeDamage(totalDamage, isCrit, textColor);
@@ -121,7 +134,12 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            if (skillController.useOrbit && isOrbitObject && gameObject.activeSelf)   //Object is a weapon and using orbit behavior
+            if (returnSkill)
+            {
+                DoDamage(enemy, 50);
+                return;
+            }
+            if (skillController.useOrbit && isOrbitSkill && gameObject.activeSelf)   //Object is a weapon and using orbit behavior
             {
                 despawnTime = skillController.cooldown;
                 if (skillController.isMelee)
@@ -139,7 +157,7 @@ public class SkillBehavior : MonoBehaviour
             {
                 return;
             }
-            DoDamage(enemy);
+            DoDamage(enemy, 100);
             if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
             {
                 enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
@@ -155,7 +173,10 @@ public class SkillBehavior : MonoBehaviour
             {
                 ProjectileBehavior();
             }
-
+        }
+        if (col.CompareTag("Player") && returnSkill)
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -164,7 +185,14 @@ public class SkillBehavior : MonoBehaviour
     {
         if (pierce <= 0 && chain <= 0)
         {
-            gameObject.SetActive(false);
+            if (skillController.useReturnDirection)
+            {
+                returnSkill = true;
+                target = skillController.player.transform;
+                speed = skillController.chainSpeed;
+            }
+            else
+                gameObject.SetActive(false);
             return;
         }
         if (pierce > 0)  //behavior for pierce
@@ -173,7 +201,7 @@ public class SkillBehavior : MonoBehaviour
         }
         else if (chain > 0)   //behavior for chain
         {
-            if (isOrbitObject) //if projectile is an orbit object, despawn it and spawn in skill from poolList
+            if (isOrbitSkill) //if projectile is an orbit object, despawn it and spawn in skill from poolList
             {
                 target = FindTarget(true);
                 if (target != null)
@@ -200,7 +228,14 @@ public class SkillBehavior : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);    //despawn if no targets found
+            if (skillController.useReturnDirection)
+            {
+                returnSkill = true;
+                target = skillController.player.transform;
+                speed = skillController.chainSpeed;
+            }
+            else
+                gameObject.SetActive(false);    //despawn if no targets found
         }
     }
 
@@ -284,6 +319,7 @@ public class SkillBehavior : MonoBehaviour
     {
         enemyChainList.Clear();
         target = null;
+        returnSkill = false;
     }
 
 }
