@@ -27,6 +27,7 @@ public class EnemyManager : MonoBehaviour
         public float moveSpeed;
         public int exp;
         public float attackCooldown;
+        public float projectileSpeed;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -117,13 +118,13 @@ public class EnemyManager : MonoBehaviour
                     {
                         for (int i = 0; i < rareEnemyList.Count; i++)   //Find an inactive enemy to spawn
                         {
-                            if (i > rareEnemyList.Count - 5)    //Check pool, add more if neccessary
+                            if (i > rareEnemyList.Count - 2)    //Check pool, add more if neccessary
                             {
                                 PopulateRarePool(5);
                             }
                             if (!rareEnemyList[i].isActiveAndEnabled && !rareEnemyList[i].isSpawning)
                             {
-                                Timing.RunCoroutine(SpawnRareMarkAndEnemy(i, eGroup));
+                                Timing.RunCoroutine(SpawnMarkAndEnemy(i, eGroup, rareEnemyList, true));
                                 eGroup.currentSpawned++;
                                 rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
                                 break;
@@ -134,13 +135,13 @@ public class EnemyManager : MonoBehaviour
                     {
                         for (int i = 0; i < enemyList.Count; i++)   //Find an inactive enemy to spawn
                         {
-                            if (i > enemyList.Count - 5)    //Check pool, add more if neccessary
+                            if (i > enemyList.Count - 2)    //Check pool, add more if neccessary
                             {
                                 PopulatePool(5);
                             }
                             if (!enemyList[i].isActiveAndEnabled && !enemyList[i].isSpawning)
                             {
-                                Timing.RunCoroutine(SpawnMarkAndEnemy(i, eGroup));
+                                Timing.RunCoroutine(SpawnMarkAndEnemy(i, eGroup, enemyList, false));
                                 eGroup.currentSpawned++;
                                 rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
                                 break;
@@ -156,7 +157,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
     //Spawns the mark, waits a sec, then spawns the enemy on top of it.
-    IEnumerator<float> SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyGroup enemyGroup )
+    IEnumerator<float> SpawnMarkAndEnemy(int indexEnemyToSpawn, EnemyGroup enemyGroup, List<EnemyStats> enemyList, bool isRare)
     {
         enemyList[indexEnemyToSpawn].isSpawning = true;
         spawnPosX = Random.Range(-1000f, 1001f);
@@ -182,73 +183,29 @@ public class EnemyManager : MonoBehaviour
         else
             spawnPosY = player.transform.localPosition.y + spawnPosY;
         spawnPos = new Vector2(spawnPosX, spawnPosY);
-        //if (Random.Range(1, 15) <= 10)
-        //{
-        //    enemyList[indexEnemyToSpawn].canAttack = true;
-        //}
         enemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
         enemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
         enemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         enemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         enemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
         enemyList[indexEnemyToSpawn].knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
-        enemyList[indexEnemyToSpawn].canAttack = enemyGroup.enemyPrefab.canAttack;
-        enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.enemyPrefab.attackRange);   //Set new stats to enemy
+        enemyList[indexEnemyToSpawn].SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.projectiles, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.projectileDuration);
+        if (isRare)
+        {
+            enemyList[indexEnemyToSpawn].SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.rareMoveSpeedMultiplier / 100),
+                Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.rareHealthMultiplier / 100)),
+                Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayMananger.rareDamageMultiplier / 100)),
+                (int)Mathf.Round(enemyGroup.enemyPrefab.exp * (1 + gameplayMananger.rareExpMultiplier / 100)),
+                Mathf.Round(enemyGroup.enemyPrefab.attackCooldown * (1 + gameplayMananger.rareAttackCooldownMultiplier / 100)),
+                enemyGroup.projectileSpeed);
+        }
+        else
+            enemyList[indexEnemyToSpawn].SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectileSpeed);   //Set new stats to enemy
         int indexToDespawn = spawnMarks.Spawn(spawnPos);
         yield return Timing.WaitForSeconds(1f);
         spawnMarks.Despawn(indexToDespawn);
         enemyList[indexEnemyToSpawn].gameObject.SetActive(true);
         enemyList[indexEnemyToSpawn].isSpawning = false;
-        enemiesAlive++;
-    }
-    IEnumerator<float> SpawnRareMarkAndEnemy(int indexEnemyToSpawn, EnemyGroup enemyGroup)
-    {
-        rareEnemyList[indexEnemyToSpawn].isSpawning = true;
-        spawnPosX = Random.Range(-1000f, 1001f);
-        spawnPosY = Random.Range(-1000f, 1001f);
-        if (spawnPosX > -100 && spawnPosX < 100)
-        {
-            if (spawnPosX > 0)
-                spawnPosX += 100;
-            else spawnPosX -= 100;
-        }
-        if (spawnPosY > -100 && spawnPosY < 100)
-        {
-            if (spawnPosY > 0)
-                spawnPosY += 100;
-            else spawnPosY -= 100;
-        }
-        if (player.transform.localPosition.x + spawnPosX > 1950 || player.transform.localPosition.x + spawnPosX < -1950)
-            spawnPosX = player.transform.localPosition.x + (-1 * spawnPosX);
-        else
-            spawnPosX = player.transform.localPosition.x + spawnPosX;
-        if (player.transform.localPosition.y + spawnPosY > 1400 || player.transform.localPosition.y + spawnPosY < -1400)
-            spawnPosY = player.transform.localPosition.y + (-1 * spawnPosY);
-        else
-            spawnPosY = player.transform.localPosition.y + spawnPosY;
-        spawnPos = new Vector2(spawnPosX, spawnPosY);
-        //if (Random.Range(1, 15) <= 10)
-        //{
-        //    rareEnemyList[indexEnemyToSpawn].canAttack = true;
-        //}
-        rareEnemyList[indexEnemyToSpawn].transform.localPosition = spawnPos;    //set starting position when spawn
-        rareEnemyList[indexEnemyToSpawn].spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
-        rareEnemyList[indexEnemyToSpawn].spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
-        rareEnemyList[indexEnemyToSpawn].boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
-        rareEnemyList[indexEnemyToSpawn].boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
-        rareEnemyList[indexEnemyToSpawn].knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
-        rareEnemyList[indexEnemyToSpawn].canAttack = enemyGroup.enemyPrefab.canAttack;
-        rareEnemyList[indexEnemyToSpawn].SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.rareMoveSpeedMultiplier / 100),
-            Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.rareHealthMultiplier / 100)),
-            Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayMananger.rareDamageMultiplier / 100)),
-            (int)Mathf.Round(enemyGroup.enemyPrefab.exp * (1 + gameplayMananger.rareExpMultiplier / 100)),
-            Mathf.Round(enemyGroup.enemyPrefab.attackCooldown * (1 + gameplayMananger.rareAttackCooldownMultiplier / 100)), 
-            enemyGroup.enemyPrefab.attackRange);   //Set new stats to enemy
-        int indexToDespawn = spawnMarks.Spawn(spawnPos);
-        yield return Timing.WaitForSeconds(1f);
-        spawnMarks.Despawn(indexToDespawn);
-        rareEnemyList[indexEnemyToSpawn].gameObject.SetActive(true);
-        rareEnemyList[indexEnemyToSpawn].isSpawning = false;
         enemiesAlive++;
     }
     public void UpdateAllEnemyStats()
@@ -262,6 +219,7 @@ public class EnemyManager : MonoBehaviour
                 eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.enemyMaxHealthMultiplier / 100);
                 eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayMananger.enemyExpMultiplier / 100);
                 eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayMananger.enemyAttackCooldownMultiplier / 100);
+                eGroup.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayMananger.enemyProjectileSpeedMultiplier / 100);
             }
         }
     }

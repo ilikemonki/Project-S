@@ -61,6 +61,10 @@ public class PlayerStats : MonoBehaviour
         {
             return;
         }
+        if(collision.gameObject.CompareTag("Player Skill"))
+        {
+            return;
+        }
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();

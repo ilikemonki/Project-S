@@ -14,6 +14,7 @@ TagManager:
   - Rare Enemy
   - Enemy Projectile
   - Class Star
+  - Player Skill
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - Wall Collider
   - Collectibles
   - Skill Object
-  - 
+  - Enemy Projectile
   - 
   - 
   - 

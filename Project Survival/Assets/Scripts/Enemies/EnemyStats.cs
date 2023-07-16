@@ -29,14 +29,19 @@ public class EnemyStats : MonoBehaviour
     public bool knockedBack, knockBackImmune;
     public bool isSpawning; //check if enemy is beginning to spawn
     bool isDead;
-    public bool canAttack;
+    public bool canAttack; //initialize in awake
+    public bool spreadAttack, circleAttack;
     public float attackCooldown, attackTimer, attackRange;
+    public float projectiles;
+    public float projectileSpeed;
+    public float projectileDuration;
 
     private void Awake()
     {
         defaultMaterial = spriteRenderer.material;
+        CheckAttack();
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float attackRange)
+    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float projectileSpeed)
     {
         this.baseMoveSpeed = baseMoveSpeed;
         moveSpeed = baseMoveSpeed;
@@ -45,7 +50,16 @@ public class EnemyStats : MonoBehaviour
         this.damage = damage;
         this.exp = exp;
         this.attackCooldown = attackCooldown;
+        this.projectileSpeed = projectileSpeed;
+    }
+    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, float projectileDuration)
+    {
         this.attackRange = attackRange;
+        this.projectiles = projectiles;
+        this.spreadAttack = spreadAttack;
+        this.circleAttack = circleAttack;
+        this.projectileDuration = projectileDuration;
+        CheckAttack();
     }
     public float CalculateDamage(float damage)
     {
@@ -72,7 +86,6 @@ public class EnemyStats : MonoBehaviour
         {
             Die();
         }
-
     }
     public virtual void TakeDotDamage(float damage)
     {
@@ -88,6 +101,14 @@ public class EnemyStats : MonoBehaviour
         {
             Die();
         }
+    }
+    public void CheckAttack()
+    {
+        if (spreadAttack || circleAttack)
+        {
+            canAttack = true;
+        }
+        else canAttack = false;
     }
     public void Die()
     {

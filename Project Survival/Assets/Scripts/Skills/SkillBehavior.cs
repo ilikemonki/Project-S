@@ -7,7 +7,7 @@ using UnityEngine;
 public class SkillBehavior : MonoBehaviour
 {
     public SkillController skillController;
-    protected Vector3 direction;
+    public Vector3 direction;
     public List<float> damages;
     public float speed;
     public int pierce, chain;
@@ -20,6 +20,7 @@ public class SkillBehavior : MonoBehaviour
     float totalDamage;
     bool isCrit;
     public Rigidbody2D rb;
+    public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     public bool isOrbitSkill, rotateSkill, returnSkill;
 
@@ -31,7 +32,7 @@ public class SkillBehavior : MonoBehaviour
         this.chain = chain;
         this.despawnTime = despawnTime;
         this.ailmentsChance = ailmentsChance;
-        this.ailmentsEffect = ailmentsEffect;
+        this.ailmentsEffect = ailmentsEffect; 
     }
 
     protected virtual void Update()
@@ -42,7 +43,7 @@ public class SkillBehavior : MonoBehaviour
         }
         if (target != null && target.gameObject.activeSelf)     //Have skill keep following target and change its angle.
         {
-            SetDirection((target.position - transform.position).normalized);
+            direction = (target.position - transform.position).normalized;
             if (!rotateSkill)
                 transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
@@ -76,6 +77,11 @@ public class SkillBehavior : MonoBehaviour
     public void SetDirection(Vector3 dir)
     {
         direction = dir;
+        if (direction.normalized.x < 0)
+        {
+            spriteRend.flipY = true;
+        }
+        else spriteRend.flipY = false;
     }
 
     public void DoDamage(EnemyStats enemy, float damagePercent)

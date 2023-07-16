@@ -98,9 +98,14 @@ MonoBehaviour:
   knockBackImmune: 0
   isSpawning: 0
   canAttack: 0
+  spreadAttack: 0
+  circleAttack: 1
   attackCooldown: 1
   attackTimer: 0
   attackRange: 6
+  projectiles: 4
+  projectileSpeed: 5
+  projectileDuration: 1.5
 --- !u!50 &2944870918720930972
 Rigidbody2D:
   serializedVersion: 4
