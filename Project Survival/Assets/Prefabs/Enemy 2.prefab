@@ -99,7 +99,8 @@ MonoBehaviour:
   isSpawning: 0
   canAttack: 0
   spreadAttack: 0
-  circleAttack: 1
+  circleAttack: 0
+  burstAttack: 1
   attackCooldown: 1
   attackTimer: 0
   attackRange: 6

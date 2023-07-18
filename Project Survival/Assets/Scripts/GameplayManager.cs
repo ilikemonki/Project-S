@@ -27,19 +27,20 @@ public class GameplayManager : MonoBehaviour
     //Player/Skill Global Multipliers
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> damageTypeMultiplier;
-    public float speedMultiplier;
-    public float attackRangeMultiplier;
+    public int strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive;
+    public float projectileSpeedMultiplier;
+    public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
     public float chainRangeMultiplier;
-    public float cooldownMultiplier;
+    public float cooldownMultiplier, projectileCooldownMultiplier, meleeCooldownMultiplier;
     public float moveSpeedMultiplier;
     public float maxHealthMultiplier;
-    public float defenseAdditive;
-    public float criticalChanceAdditive, criticalDamageAdditive;
-    public float regenAdditive;
+    public float defenseMultiplier;
+    public float criticalChanceAdditive, projectileCriticalChanceAdditive, meleeCriticalChanceAdditive, criticalDamageAdditive, projectileCriticalDamageAdditive, meleeCriticalDamageAdditive;
+    public float sizeMultiplier, projectileSizeMultiplier, meleeSizeMultiplier;
+    public float regenAdditive, lifeStealChanceAdditive, lifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
     public List<float> ailmentsEffectAdditive;
-    //public float knockBackMultiplier;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
 
@@ -51,7 +52,7 @@ public class GameplayManager : MonoBehaviour
     public float enemyAttackCooldownMultiplier;
     public float enemyProjectileSpeedMultiplier;
     public List<float> resistances;//[0]physical,[1]fire,[2]cold,[3]lightning
-    public float rareMoveSpeedMultiplier, rareHealthMultiplier, rareDamageMultiplier, rareExpMultiplier, rareAttackCooldownMultiplier;
+    public float rareMoveSpeedMultiplier, rareHealthMultiplier, rareDamageMultiplier, rareExpMultiplier;
     public float dropChanceMultiplier;
 
     private void Start()

@@ -30,7 +30,7 @@ public class EnemyStats : MonoBehaviour
     public bool isSpawning; //check if enemy is beginning to spawn
     bool isDead;
     public bool canAttack; //initialize in awake
-    public bool spreadAttack, circleAttack;
+    public bool spreadAttack, circleAttack, burstAttack;
     public float attackCooldown, attackTimer, attackRange;
     public float projectiles;
     public float projectileSpeed;
@@ -52,14 +52,23 @@ public class EnemyStats : MonoBehaviour
         this.attackCooldown = attackCooldown;
         this.projectileSpeed = projectileSpeed;
     }
-    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, float projectileDuration)
+    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, bool burstAttack, float projectileDuration)
     {
         this.attackRange = attackRange;
         this.projectiles = projectiles;
         this.spreadAttack = spreadAttack;
         this.circleAttack = circleAttack;
+        this.burstAttack = burstAttack;
         this.projectileDuration = projectileDuration;
         CheckAttack();
+    }
+    public void CheckAttack()
+    {
+        if (spreadAttack || circleAttack || burstAttack)
+        {
+            canAttack = true;
+        }
+        else canAttack = false;
     }
     public float CalculateDamage(float damage)
     {
@@ -101,14 +110,6 @@ public class EnemyStats : MonoBehaviour
         {
             Die();
         }
-    }
-    public void CheckAttack()
-    {
-        if (spreadAttack || circleAttack)
-        {
-            canAttack = true;
-        }
-        else canAttack = false;
     }
     public void Die()
     {

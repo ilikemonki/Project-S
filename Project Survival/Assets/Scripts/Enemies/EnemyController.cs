@@ -46,6 +46,10 @@ public class EnemyController : MonoBehaviour
                             {
                                 enemyProjectilePool.CircleBehavior(enemyList[i]);
                             }
+                            else if (enemyList[i].burstAttack)
+                            {
+                                enemyProjectilePool.BurstBehavior(enemyList[i], enemyManager.player.transform);
+                            }
                             enemyList[i].attackTimer = enemyList[i].attackCooldown;
                         }
                     }

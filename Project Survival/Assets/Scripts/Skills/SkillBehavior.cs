@@ -32,7 +32,7 @@ public class SkillBehavior : MonoBehaviour
         this.chain = chain;
         this.despawnTime = despawnTime;
         this.ailmentsChance = ailmentsChance;
-        this.ailmentsEffect = ailmentsEffect; 
+        this.ailmentsEffect = ailmentsEffect;
     }
 
     protected virtual void Update()
@@ -49,7 +49,7 @@ public class SkillBehavior : MonoBehaviour
         }
         if (!isOrbitSkill)
         {
-            if(!returnSkill)
+            if (!returnSkill)
             {
                 despawnTime -= Time.deltaTime;
                 if (despawnTime <= 0f)
@@ -68,7 +68,7 @@ public class SkillBehavior : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (speed > 0 && !isOrbitSkill)
+        if (speed > 0 && !isOrbitSkill || !skillController.useCloseCombat)
         {
             rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
         }
@@ -92,6 +92,10 @@ public class SkillBehavior : MonoBehaviour
         {
             isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
+        }
+        if (Random.Range(1, 101) <= skillController.lifeStealChance)  //Life Steal
+        {
+            skillController.player.Heal(skillController.lifeSteal);
         }
         Color textColor = Color.white;
         if (skillController.highestDamageType.Equals(1))    //fire, burn

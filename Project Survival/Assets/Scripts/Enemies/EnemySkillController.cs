@@ -91,6 +91,30 @@ public class EnemySkillController : MonoBehaviour
             }
         }
     }
+    public void BurstBehavior(EnemyStats enemy, Transform playerPos)
+    {
+        direction = playerPos.position - enemy.transform.position;
+        for (int p = 0; p < enemy.projectiles; p++)    //number of projectiles
+        {
+            for (int i = 0; i < projectileList.Count; i++)
+            {
+                if (i > projectileList.Count - 2)
+                {
+                    PopulatePool(10);
+                }
+                if (!projectileList[i].isActiveAndEnabled)
+                {
+                    projectileList[i].transform.position = enemy.transform.position;    //set starting position on player
+                    projectileList[i].direction = (Quaternion.AngleAxis(Random.Range(-30, 30), Vector3.forward) * direction).normalized;
+                    projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                    projectileList[i].enemyStats = enemy;
+                    projectileList[i].duration = enemy.projectileDuration;
+                    projectileList[i].gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+    }
 
     public void PopulatePool(int spawnAmount)
     {

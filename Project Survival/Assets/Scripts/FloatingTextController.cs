@@ -10,6 +10,7 @@ public class FloatingTextController : MonoBehaviour
     public List<TextMeshProUGUI> damageTextList;
     public float textSize, textCritSize;
     public float rand;
+
     private void Start()
     {
         DOTween.SetTweensCapacity(400, 50);
@@ -34,7 +35,7 @@ public class FloatingTextController : MonoBehaviour
             if (i >= 400) return;
             if (!damageTextList[i].isActiveAndEnabled)
             {
-                if (i > damageTextList.Count - 5)
+                if (i > damageTextList.Count - 2)
                 {
                     PopulatePool(10);
                 }

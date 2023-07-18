@@ -7,22 +7,24 @@ using System.Linq;
 public class SkillController : MonoBehaviour
 {
     public SkillBehavior prefab;
-    public SkillBehavior weaponPrefab;
+    public SkillBehavior meleeWeaponPrefab;
     public GameObject poolParent, orbitParent;
     public GameplayManager gameplayManager;
     public int level;
     public List<float> baseDamages; //[0]physical,[1]fire,[2]cold,[3]lightning
-    public List<float> baseAilmentsChance;
-    public List<float> baseAilmentsEffect;
+    public List<float> addedAilmentsChance;
+    public List<float> addedAilmentsEffect;
     public float baseSpeed;
     public float baseAttackRange;
     public float baseChainRange;
     public float baseCooldown;
     public float baseKnockBack;
     public float baseCriticalChance, baseCriticalDamage;
+    public float baseSize;
+    public float baseLifeStealChance, baseLifeSteal;
+    public int baseStrike, baseProjectile, basePierce, baseChain;
     public float currentCooldown;
     public float despawnTime;
-    public int strike, projectile, pierce, chain;
     public List<float> damages;
     public List<float> ailmentsChance;
     public List<float> ailmentsEffect;
@@ -32,6 +34,9 @@ public class SkillController : MonoBehaviour
     public float cooldown;
     public float knockBack;
     public float criticalChance, criticalDamage;
+    public float size;
+    public float lifeStealChance, lifeSteal;
+    public int strike, projectile, pierce, chain;
     public float chainSpeed;
     public List<SkillBehavior> poolList = new();
     public List<SkillBehavior> orbitPoolList = new();
@@ -52,23 +57,16 @@ public class SkillController : MonoBehaviour
     public bool useCircular; //targetless
     public bool useScatter;
     public bool useLateral;
+    public bool useBurst;
     public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
     public bool useBackwardsDirection; //Shoots from behind
     public bool useReturnDirection; //projectiles only.
     public bool targetless; //Keeps using it's skill regardless of enemies.
     private void Awake()
     {
-        damages = baseDamages;
-        ailmentsChance = baseAilmentsChance;
-        ailmentsEffect = baseAilmentsEffect;
-        speed = baseSpeed;
-        attackRange = baseAttackRange;
-        chainRange = baseChainRange;
-        cooldown = baseCooldown;
-        currentCooldown = cooldown;
-        knockBack = baseKnockBack;
-        criticalChance = baseCriticalChance;
-        criticalDamage = baseCriticalDamage;
+        damages.AddRange(baseDamages);
+        ailmentsChance.AddRange(addedAilmentsChance);
+        ailmentsEffect.AddRange(addedAilmentsEffect);
         if (useOrbit || useRandomDirection || useCircular || !autoUseSkill)
             targetless = true;
     }
@@ -78,15 +76,16 @@ public class SkillController : MonoBehaviour
         UpdateSkillStats();
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
-            PopulatePool(strike, weaponPrefab, orbitParent, orbitPoolList);
-            OrbitBehavior(strike, orbitParent.transform, orbitPoolList);
+            PopulatePool(baseStrike + gameplayManager.strikeAdditive, meleeWeaponPrefab, orbitParent, orbitPoolList);
+            OrbitBehavior(baseStrike + gameplayManager.strikeAdditive, orbitParent.transform, orbitPoolList);
         } 
         else if (!isMelee && useOrbit) //orbiting projectile
         {
-            PopulatePool(projectile, prefab, orbitParent, orbitPoolList);
-            OrbitBehavior(projectile, orbitParent.transform, orbitPoolList);
+            PopulatePool(baseProjectile + gameplayManager.projectileAdditive, prefab, orbitParent, orbitPoolList);
+            OrbitBehavior(baseProjectile + gameplayManager.projectileAdditive, orbitParent.transform, orbitPoolList);
         }
-        PopulatePool(projectile + strike, prefab, poolParent, poolList);
+        PopulatePool(baseProjectile + gameplayManager.projectileAdditive + baseStrike + gameplayManager.strikeAdditive, prefab, poolParent, poolList);
+        UpdateSize();
     }
 
     // Update is called once per frame
@@ -113,17 +112,24 @@ public class SkillController : MonoBehaviour
                 currentCooldown = cooldown; 
                 if (useBarrage)
                 {
-                    if (useRandomDirection || targetless)
+                    if (targetless)
                         Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform));
                     else
                         Timing.RunCoroutine(BarrageBehavior(strike + projectile, enemyDistances.closestEnemyList[0].transform, transform));
                 }
                 else if (useScatter)
                 {
-                    if (useRandomDirection || targetless)
+                    if (targetless)
                         Timing.RunCoroutine(ScatterBehavior(strike + projectile, null, transform));
                     else
                         Timing.RunCoroutine(ScatterBehavior(strike + projectile, enemyDistances.closestEnemyList[0].transform, transform));
+                }
+                else if (useBurst)
+                {
+                    if (targetless)
+                        BurstBehavior(strike + projectile, null, transform);
+                    else
+                        BurstBehavior(strike + projectile, enemyDistances.closestEnemyList[0].transform, transform);
                 }
                 else if (useSpread)
                 {
@@ -255,6 +261,36 @@ public class SkillController : MonoBehaviour
             }
             else
                 yield return Timing.WaitForSeconds(0.05f);
+        }
+        stopFiring = false;
+    }
+    public void BurstBehavior(int numOfAttacks, Transform target, Transform spawnPos)
+    {
+        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles
+        {
+            for (int i = 0; i < poolList.Count; i++)
+            {
+                if (i > poolList.Count - 2)
+                {
+                    PopulatePool(numOfAttacks, prefab, poolParent, poolList);
+                }
+                if (!poolList[i].isActiveAndEnabled)
+                {
+                    if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+                    else if (autoUseSkill) direction = target.position - spawnPos.position;
+                    else direction = gameplayManager.mousePos - spawnPos.position;
+                    poolList[i].transform.position = spawnPos.position;    //set starting position on player
+                    poolList[i].SetStats(damages, speed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 30), Vector3.forward) * direction).normalized);
+                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                    if (useBackwardsDirection && p % 2 == 1)
+                    {
+                        poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
+                    }
+                    poolList[i].gameObject.SetActive(true);
+                    break;
+                }
+            }
         }
         stopFiring = false;
     }
@@ -500,7 +536,6 @@ public class SkillController : MonoBehaviour
             }
         }
     }
-
     public virtual void PopulatePool(int spawnAmount, SkillBehavior prefab, GameObject parent, List<SkillBehavior> poolList)
     {
         for (int i = 0; i < spawnAmount; i++)
@@ -512,7 +547,6 @@ public class SkillController : MonoBehaviour
             poolList.Add(skill);
         }
     }
-
     public void UpdateSkillStats()
     {
         for (int i = 0; i < damages.Count; i++)
@@ -520,27 +554,59 @@ public class SkillController : MonoBehaviour
             if (baseDamages[i] > 0)
             {
                 if (isMelee)
-                    damages[i] = baseDamages[i] * (1 + gameplayManager.damageMultiplier / 100) * (1 + gameplayManager.damageTypeMultiplier[i] / 100) * (1 - gameplayManager.resistances[i] / 100) * (1 + gameplayManager.meleeDamageMultiplier / 100);
+                    damages[i] = (baseDamages[i] * (1 + (gameplayManager.damageMultiplier + gameplayManager.damageTypeMultiplier[i] + gameplayManager.meleeDamageMultiplier) / 100)) * (1 - gameplayManager.resistances[i] / 100);
                 else
-                    damages[i] = baseDamages[i] * (1 + gameplayManager.damageMultiplier / 100) * (1 + gameplayManager.damageTypeMultiplier[i] / 100) * (1 - gameplayManager.resistances[i] / 100) * (1 + gameplayManager.projectileDamageMultiplier / 100);
+                    damages[i] = (baseDamages[i] * (1 + (gameplayManager.damageMultiplier + gameplayManager.damageTypeMultiplier[i] + gameplayManager.projectileDamageMultiplier) / 100)) * (1 - gameplayManager.resistances[i] / 100);
             }
         }
 
         for (int i = 0; i < ailmentsChance.Count; i++)
         {
-            ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i];
+            ailmentsChance[i] = addedAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i];
         }
         for (int i = 0; i < ailmentsEffect.Count; i++)
         {
-            ailmentsEffect[i] = baseAilmentsEffect[i] + gameplayManager.ailmentsEffectAdditive[i];
+            ailmentsEffect[i] = addedAilmentsEffect[i] + gameplayManager.ailmentsEffectAdditive[i];
         }
-        speed = baseSpeed * (1 + gameplayManager.speedMultiplier / 100);
-        attackRange = baseAttackRange * (1 + gameplayManager.attackRangeMultiplier / 100);
-        chainRange = baseChainRange * (1 + gameplayManager.chainRangeMultiplier / 100);
-        cooldown = baseCooldown * (1 + gameplayManager.cooldownMultiplier / 100);
-        //knockBack = baseKnockBack * (1 + gameplayManager.knockBackMultiplier / 100);
-        criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive;
-        criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive;
+        if (isMelee)   //is melee
+        {
+            speed = baseSpeed;
+            strike = baseStrike + gameplayManager.strikeAdditive;
+            attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier) / 100);
+            cooldown = baseCooldown * (1 + (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier) / 100);
+            criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive;
+            criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive;
+            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier) / 100);
+        }
+        else //is projectile
+        {
+            speed = baseSpeed * (1 + gameplayManager.projectileSpeedMultiplier / 100);
+            projectile = baseProjectile + gameplayManager.projectileAdditive;
+            chain = baseChain + gameplayManager.chainAdditive;
+            pierce = basePierce + gameplayManager.pierceAdditive;
+            chainRange = baseChainRange * (1 + gameplayManager.chainRangeMultiplier / 100);
+            attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier) / 100);
+            cooldown = baseCooldown * (1 + (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier) / 100);
+            criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive;
+            criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive;
+            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier) / 100);
+        }
+        lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive;
+        lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive;
+        currentCooldown = cooldown;
+        knockBack = baseKnockBack;
         highestDamageType = damages.IndexOf(Mathf.Max(damages.ToArray()));  //Find highest damage type.
+        UpdateSize();
+    }
+    public void UpdateSize()
+    {
+        for (int i = 0; i < poolList.Count; i++)
+        {
+            poolList[i].transform.localScale = new Vector3(poolList[i].transform.localScale.x * size, poolList[i].transform.localScale.y * size, 1);
+        }
+        for (int i = 0; i < orbitPoolList.Count; i++)
+        {
+            orbitPoolList[i].transform.localScale = new Vector3(orbitPoolList[i].transform.localScale.x * size, orbitPoolList[i].transform.localScale.y * size, 1);
+        }
     }
 }

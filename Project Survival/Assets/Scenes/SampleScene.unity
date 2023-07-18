@@ -209,9 +209,9 @@ RectTransform:
   m_Father: {fileID: 1613466594}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 415, y: -220}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -47, y: 40}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &57613605
@@ -396,7 +396,7 @@ MonoBehaviour:
   floatingTextController: {fileID: 2140166867}
   baseMoveSpeed: 5
   baseMaxHealth: 100
-  baseDefense: 0
+  baseDefense: 3
   baseRegen: 0
   baseMagnetRange: 8
   healthBar: {fileID: 1650751183}
@@ -2964,16 +2964,33 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  speedMultiplier: 0
+  strikeAdditive: 0
+  projectileAdditive: 0
+  pierceAdditive: 0
+  chainAdditive: 0
+  projectileSpeedMultiplier: 0
   attackRangeMultiplier: 0
+  projectileAttackRangeMultiplier: 0
+  meleeAttackRangeMultiplier: 0
   chainRangeMultiplier: 0
   cooldownMultiplier: 0
+  projectileCooldownMultiplier: 0
+  meleeCooldownMultiplier: 0
   moveSpeedMultiplier: 0
   maxHealthMultiplier: 0
-  defenseAdditive: 0
+  defenseMultiplier: 100
   criticalChanceAdditive: 0
+  projectileCriticalChanceAdditive: 0
+  meleeCriticalChanceAdditive: 0
   criticalDamageAdditive: 150
+  projectileCriticalDamageAdditive: 0
+  meleeCriticalDamageAdditive: 0
+  sizeMultiplier: 0
+  projectileSizeMultiplier: 0
+  meleeSizeMultiplier: 0
   regenAdditive: 0
+  lifeStealChanceAdditive: 0
+  lifeStealAdditive: 0
   magnetRangeMultiplier: 0
   ailmentsChanceAdditive:
   - 0
@@ -2981,10 +2998,10 @@ MonoBehaviour:
   - 0
   - 0
   ailmentsEffectAdditive:
-  - 0
-  - 0
-  - 0
-  - 0
+  - 40
+  - 25
+  - 15
+  - 20
   dashChargesAdditive: 0
   dashCooldownMultiplier: 0
   dashPowerMultiplier: 0
@@ -3003,7 +3020,6 @@ MonoBehaviour:
   rareHealthMultiplier: 150
   rareDamageMultiplier: 100
   rareExpMultiplier: 150
-  rareAttackCooldownMultiplier: 0
   dropChanceMultiplier: 0
 --- !u!4 &944733855
 Transform:
@@ -4377,6 +4393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 3850408464954826238, guid: 7c7ed94a0b4e43648b986fabae84dfe3, type: 3}
   spawnMarkList: []
+  enemyManager: {fileID: 230398754}
 --- !u!4 &1306391349
 Transform:
   m_ObjectHideFlags: 0
@@ -10800,7 +10817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1836794112
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10835,22 +10852,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 4206719122683353907, guid: 0c5b84863b1368c46a32ea7c2200ae8f, type: 3}
-  weaponPrefab: {fileID: -6595649996783161566, guid: 825b72de0a508864a8fc361043aed917, type: 3}
+  meleeWeaponPrefab: {fileID: -6595649996783161566, guid: 825b72de0a508864a8fc361043aed917, type: 3}
   poolParent: {fileID: 2066841258}
   orbitParent: {fileID: 1474287465}
   gameplayManager: {fileID: 944733854}
   level: 0
   baseDamages:
-  - 35
+  - 10
   - 0
   - 0
   - 0
-  baseAilmentsChance:
+  addedAilmentsChance:
+  - 0
+  - 100
   - 0
   - 0
-  - 0
-  - 0
-  baseAilmentsEffect:
+  addedAilmentsEffect:
   - 0
   - 0
   - 0
@@ -10862,12 +10879,15 @@ MonoBehaviour:
   baseKnockBack: 1
   baseCriticalChance: 0
   baseCriticalDamage: 0
+  baseSize: 1
+  baseLifeStealChance: 0
+  baseLifeSteal: 0
+  baseStrike: 3
+  baseProjectile: 0
+  basePierce: 0
+  baseChain: 0
   currentCooldown: 0
   despawnTime: 0.2
-  strike: 3
-  projectile: 0
-  pierce: 0
-  chain: 0
   damages: []
   ailmentsChance: []
   ailmentsEffect: []
@@ -10878,6 +10898,13 @@ MonoBehaviour:
   knockBack: 0
   criticalChance: 0
   criticalDamage: 0
+  size: 0
+  lifeStealChance: 0
+  lifeSteal: 0
+  strike: 0
+  projectile: 0
+  pierce: 0
+  chain: 0
   chainSpeed: 0
   poolList: []
   orbitPoolList: []
@@ -10891,10 +10918,11 @@ MonoBehaviour:
   useCloseCombat: 1
   useBarrage: 0
   useSpread: 0
-  useOrbit: 0
+  useOrbit: 1
   useCircular: 0
   useScatter: 0
   useLateral: 0
+  useBurst: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
@@ -11329,7 +11357,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2066841259}
   m_Layer: 5
-  m_Name: Slash Pool
+  m_Name: O-Slash Pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11371,7 +11399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2096920680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11385,39 +11413,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: -6595649996783161566, guid: 213c7f03c092cd640a098be94ba1aea6, type: 3}
-  weaponPrefab: {fileID: 0}
+  meleeWeaponPrefab: {fileID: 0}
   poolParent: {fileID: 1913619780}
   orbitParent: {fileID: 1129951026}
   gameplayManager: {fileID: 944733854}
   level: 0
   baseDamages:
+  - 0
   - 10
   - 0
   - 0
-  - 0
-  baseAilmentsChance:
-  - 0
+  addedAilmentsChance:
   - 0
   - 100
-  - 100
-  baseAilmentsEffect:
-  - 45
-  - 30
-  - 15
-  - 20
-  baseSpeed: 10
+  - 0
+  - 0
+  addedAilmentsEffect:
+  - 0
+  - 0
+  - 0
+  - 0
+  baseSpeed: 20
   baseAttackRange: 4
   baseChainRange: 8
   baseCooldown: 1
   baseKnockBack: 0
   baseCriticalChance: 10
   baseCriticalDamage: 0
+  baseSize: 1
+  baseLifeStealChance: 0
+  baseLifeSteal: 0
+  baseStrike: 0
+  baseProjectile: 5
+  basePierce: 0
+  baseChain: 4
   currentCooldown: 0
-  despawnTime: 1
-  strike: 0
-  projectile: 5
-  pierce: 0
-  chain: 2
+  despawnTime: 0.3
   damages: []
   ailmentsChance: []
   ailmentsEffect: []
@@ -11428,6 +11459,13 @@ MonoBehaviour:
   knockBack: 0
   criticalChance: 0
   criticalDamage: 0
+  size: 0
+  lifeStealChance: 0
+  lifeSteal: 0
+  strike: 0
+  projectile: 0
+  pierce: 0
+  chain: 0
   chainSpeed: 20
   poolList: []
   orbitPoolList: []
@@ -11436,15 +11474,16 @@ MonoBehaviour:
   enemyDistances: {fileID: 230398756}
   stopFiring: 0
   highestDamageType: 0
-  autoUseSkill: 0
+  autoUseSkill: 1
   isMelee: 0
   useCloseCombat: 0
   useBarrage: 0
   useSpread: 0
-  useOrbit: 0
+  useOrbit: 1
   useCircular: 0
   useScatter: 0
-  useLateral: 1
+  useLateral: 0
+  useBurst: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0

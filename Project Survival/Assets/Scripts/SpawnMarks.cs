@@ -1,34 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class SpawnMarks : MonoBehaviour
 {
     public GameObject prefab;
-    int inactive;
     public List<GameObject> spawnMarkList;
+    public EnemyManager enemyManager;
     // Start is called before the first frame update
     void Start()
     {
         PopulatePool(20);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    public void CheckPoolAmount()
-    {
-        inactive = 0;
-        for (int i = 0; i < spawnMarkList.Count; i++)
-        {
-            if (!spawnMarkList[i].activeSelf) inactive++;    //Calculate how many inactives there are
-        }
-        if (inactive <= 10) //if inactives are close to the number of prefabs needed, spawn more.
-        {
-            PopulatePool(10);
-        }
     }
 
     public void PopulatePool(int spawnAmount)
@@ -42,24 +25,28 @@ public class SpawnMarks : MonoBehaviour
     }
 
     //spawn mark
-    public int Spawn(Vector2 spawnPos)
+    public void Spawn(Vector2 spawnPos, EnemyStats enemy)
     {
-        CheckPoolAmount();
         for (int i = 0; i < spawnMarkList.Count; i++)
         {
+            if (i > spawnMarkList.Count - 2)    //Check pool, add more if neccessary
+            {
+                PopulatePool(5);
+            }
             if (!spawnMarkList[i].activeSelf)   //find inactive mark to spawn
             {
+                spawnMarkList[i].transform.localScale = Vector3.one;
                 spawnMarkList[i].transform.localPosition = spawnPos;
                 spawnMarkList[i].SetActive(true);
-                return i;
+                spawnMarkList[i].transform.DOScale(Vector3.one * 0.5f, 2f).SetEase(Ease.InBounce).OnComplete(() =>
+                {
+                    spawnMarkList[i].SetActive(false);
+                    enemy.gameObject.SetActive(true);
+                    enemy.isSpawning = false;
+                    enemyManager.enemiesAlive++;
+                });
+                return;
             }
         }
-        return 0;
-        
-    }
-
-    public void Despawn(int indexToDespawn)
-    {
-        spawnMarkList[indexToDespawn].SetActive(false);
     }
 }

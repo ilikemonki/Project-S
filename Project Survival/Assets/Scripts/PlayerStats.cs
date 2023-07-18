@@ -103,9 +103,11 @@ public class PlayerStats : MonoBehaviour
     }
     public void TakeDamage(float dmg, bool isProjectileDamage)
     {
-        if (dmg <= 0) dmg = 1;
-        dmg = Mathf.Round(dmg);
-        if (isProjectileDamage)
+        if (dmg <= 0 || defense >= dmg) 
+            dmg = 1;
+        else
+            dmg = Mathf.Round(dmg - defense);
+        if (isProjectileDamage) //hit w/ projectile will not trigger IFrame
         {
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
@@ -215,8 +217,8 @@ public class PlayerStats : MonoBehaviour
     {
         moveSpeed = baseMoveSpeed * (1 + gameplayManager.moveSpeedMultiplier / 100);
         maxHealth = baseMaxHealth * (1 + gameplayManager.maxHealthMultiplier / 100);
-        defense = gameplayManager.defenseAdditive;
-        regen = gameplayManager.regenAdditive;
+        defense = baseDefense * (1 + gameplayManager.defenseMultiplier / 100);
+        regen = baseRegen + gameplayManager.regenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
         playerCollector.SetMagnetRange(magnetRange);
     }
