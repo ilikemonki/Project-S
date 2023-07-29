@@ -15,11 +15,11 @@ public class RareEnemyStats : EnemyStats
         hpBar.maxValue = maxHealth;
         hpBar.value = maxHealth;
     }
-    public override void TakeDamage(float damage, bool isCrit, Color textColor)
+    public override void TakeDamage(float damage, bool isCrit)
     {
         damage = CalculateDamage(damage);
         hpBar.value -= damage;
-        base.TakeDamage(damage, isCrit, textColor);
+        base.TakeDamage(damage, isCrit);
     }
     public override void TakeDotDamage(float damage)
     {

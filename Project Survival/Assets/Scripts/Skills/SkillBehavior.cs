@@ -18,11 +18,11 @@ public class SkillBehavior : MonoBehaviour
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
     float totalDamage;
-    bool isCrit;
+    bool isCrit, hitOnceOnly;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
-    public bool isOrbitSkill, rotateSkill, returnSkill;
+    public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon;
 
     public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
@@ -33,6 +33,11 @@ public class SkillBehavior : MonoBehaviour
         this.despawnTime = despawnTime;
         this.ailmentsChance = ailmentsChance;
         this.ailmentsEffect = ailmentsEffect;
+        if (isThrowWeapon)
+        {
+            this.speed = 8;
+            this.despawnTime = 1;
+        }
     }
 
     protected virtual void Update()
@@ -97,10 +102,8 @@ public class SkillBehavior : MonoBehaviour
         {
             skillController.player.Heal(skillController.lifeSteal);
         }
-        Color textColor = Color.white;
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
-            textColor = Color.red; 
             if (Random.Range(1, 101) <= ailmentsChance[1])
             {
                 if (isCrit)
@@ -111,7 +114,6 @@ public class SkillBehavior : MonoBehaviour
         }
         else if (skillController.highestDamageType.Equals(2))   //cold, chill
         {
-            textColor = Color.cyan;
             if (Random.Range(1, 101) <= ailmentsChance[2])
             {
                 enemy.ApplyChill(ailmentsEffect[2]);
@@ -119,7 +121,6 @@ public class SkillBehavior : MonoBehaviour
         }
         else if (skillController.highestDamageType.Equals(3))   //lightning, shock
         {
-            textColor = Color.yellow;
             if (Random.Range(1, 101) <= ailmentsChance[3])
             {
                 enemy.ApplyShock(ailmentsEffect[3]);
@@ -135,15 +136,79 @@ public class SkillBehavior : MonoBehaviour
                     enemy.ApplyBleed(damages[0] * (damagePercent / 100) * (ailmentsEffect[0] / 100));
             }
         }
-        enemy.TakeDamage(totalDamage, isCrit, textColor);
+        enemy.TakeDamage(totalDamage, isCrit);
     }
 
     //Do damage when in contact w/ enemy
     protected virtual void OnTriggerEnter2D(Collider2D col)
     {
+        if (hitOnceOnly) return;
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
+            if (isThrowWeapon) //The skills used here cannot be manual.
+            {
+                if (skillController.useBarrage)
+                {
+                    hitOnceOnly = true;
+                    speed = 0;
+                    despawnTime = 10;
+                    Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this));    //spawn skill on enemy.
+                }
+                else if (skillController.useScatter)
+                {
+                    hitOnceOnly = true;
+                    speed = 0;
+                    despawnTime = 10;
+                    Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this));
+                }
+                else if (skillController.useBurst)
+                {
+                    gameObject.SetActive(false);
+                    skillController.BurstBehavior(skillController.strike, enemy.transform, transform);
+                }
+                else if (skillController.useSpread)
+                {
+                    gameObject.SetActive(false); 
+                    if (skillController.useRandomDirection)
+                        skillController.SpreadBehavior(skillController.strike, 90, null, skillController.player.transform, false);
+                    else if (skillController.useBackwardsDirection)
+                    {
+                        skillController.SpreadBehavior(skillController.strike - (skillController.strike / 2), 90, enemy.transform, transform, false);
+                        skillController.SpreadBehavior(skillController.strike / 2, 90, enemy.transform, transform, true);
+                    }
+                    else
+                    {
+                        skillController.SpreadBehavior(skillController.strike, 90, enemy.transform, skillController.player.transform, false);
+                    }
+                }
+                else if (skillController.useLateral)
+                {
+                    gameObject.SetActive(false);
+                    if (skillController.useRandomDirection)
+                        skillController.LateralBehavior(skillController.strike, skillController.prefab.transform.localScale.x - 0.5f, null, skillController.player.transform, false);
+                    else if (skillController.useBackwardsDirection)
+                    {
+                        skillController.LateralBehavior(skillController.strike - (skillController.strike / 2), skillController.prefab.transform.localScale.x - 0.5f, enemy.transform, transform, false);
+                        skillController.LateralBehavior(skillController.strike / 2, skillController.prefab.transform.localScale.x - 0.5f, enemy.transform, transform, true);
+                    }
+                    else
+                    {
+                        skillController.LateralBehavior(skillController.strike, skillController.prefab.transform.localScale.x - 0.5f, enemy.transform, skillController.player.transform, false);
+                    }
+                }
+                else if (skillController.useCircular)
+                {
+                    gameObject.SetActive(false);
+                    skillController.CircularBehavior(skillController.strike, transform);
+                }
+                else if (skillController.useCloseCombat)
+                {
+                    gameObject.SetActive(false);
+                    skillController.CloseCombatMelee(skillController.strike, transform, null);
+                }
+                return;
+            }
             if (returnSkill)
             {
                 DoDamage(enemy, 50);
@@ -156,9 +221,11 @@ public class SkillBehavior : MonoBehaviour
                 {
                     gameObject.SetActive(false);
                     if (skillController.useCloseCombat)
-                        Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, enemy.transform));    //spawn skill on enemy.
+                        skillController.SpreadBehavior(1, 0, enemy.transform, transform, false);
+                        //Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, enemy.transform, null));    //spawn skill on enemy.
                     else
-                        Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, transform));    //spawn skill on weapon.
+                        skillController.SpreadBehavior(1, 0, enemy.transform, transform, false);
+                        //Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, transform, null));    //spawn skill on weapon.
                     return;
                 }
             }
@@ -330,6 +397,7 @@ public class SkillBehavior : MonoBehaviour
         enemyChainList.Clear();
         target = null;
         returnSkill = false;
+        hitOnceOnly = false;
     }
 
 }

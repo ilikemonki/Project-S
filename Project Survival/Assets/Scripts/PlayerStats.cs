@@ -111,7 +111,6 @@ public class PlayerStats : MonoBehaviour
         {
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
-            floatingTextController.DisplayFloatingText(transform, dmg, Color.red);
         }
         else
         {
@@ -119,11 +118,11 @@ public class PlayerStats : MonoBehaviour
             {
                 currentHealth -= dmg;
                 UpdateHealthBar(-dmg);
-                floatingTextController.DisplayFloatingText(transform, dmg, Color.red);
                 iFrameTimer = iFrameDuration;
                 isInvincible = true;
             }
         }
+        floatingTextController.DisplayPlayerText(transform, (dmg).ToString(), Color.red);
         if (currentHealth <= 0)
         {
             //Die();
@@ -164,12 +163,12 @@ public class PlayerStats : MonoBehaviour
         if (currentHealth == maxHealth) return;
         if (currentHealth + amt > maxHealth)
         {
-            floatingTextController.DisplayFloatingText(transform, maxHealth - currentHealth, Color.green);
+            floatingTextController.DisplayPlayerText(transform, (maxHealth - currentHealth).ToString(), Color.green);
             currentHealth = maxHealth;
         }
         else
         {
-            floatingTextController.DisplayFloatingText(transform, amt, Color.green);
+            floatingTextController.DisplayPlayerText(transform, (amt).ToString(), Color.green);
             currentHealth += amt;
         }
         UpdateHealthBar(amt);

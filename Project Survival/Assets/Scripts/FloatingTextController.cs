@@ -28,7 +28,7 @@ public class FloatingTextController : MonoBehaviour
         }
     }
 
-    public void DisplayFloatingText(Transform transform, float dmg, Color color)
+    public void DisplayFloatingText(Transform transform, string text)
     {
         for (int i = 0; i < damageTextList.Count; i++)
         {
@@ -40,16 +40,16 @@ public class FloatingTextController : MonoBehaviour
                     PopulatePool(10);
                 }
                 damageTextList[i].fontSize = textSize;
-                damageTextList[i].text = (dmg).ToString();
-                damageTextList[i].color = color;
+                damageTextList[i].text = text;
+                damageTextList[i].color = Color.white;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + 1f, 0.60f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.60f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
     }
-    public void DisplayFloatingCritText(Transform transform, float dmg, Color color)
+    public void DisplayFloatingCritText(Transform transform, string text)
     {
         for (int i = 0; i < damageTextList.Count; i++)
         {
@@ -61,11 +61,31 @@ public class FloatingTextController : MonoBehaviour
                     PopulatePool(10);
                 }
                 damageTextList[i].fontSize = textCritSize;
-                damageTextList[i].text = "*" + (dmg).ToString() + "*";
+                damageTextList[i].text = "*" + text + "*";
+                damageTextList[i].color = Color.yellow;
+                damageTextList[i].transform.position = transform.position;
+                damageTextList[i].gameObject.SetActive(true);
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.70f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                return;
+            }
+        }
+    }
+    public void DisplayPlayerText(Transform transform, string text, Color color)
+    {
+        for (int i = 0; i < damageTextList.Count; i++)
+        {
+            if (!damageTextList[i].isActiveAndEnabled)
+            {
+                if (i > damageTextList.Count - 5)
+                {
+                    PopulatePool(10);
+                }
+                damageTextList[i].fontSize = textSize;
+                damageTextList[i].text = text;
                 damageTextList[i].color = color;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + 1f, 0.60f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.80f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }

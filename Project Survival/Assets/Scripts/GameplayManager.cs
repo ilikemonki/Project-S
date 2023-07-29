@@ -70,6 +70,7 @@ public class GameplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         if(timer > 0)

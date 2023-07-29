@@ -4996,6 +4996,7 @@ MonoBehaviour:
   isOrbitSkill: 0
   rotateSkill: 0
   returnSkill: 0
+  isThrowWeapon: 0
 --- !u!50 &5043445816700823471
 Rigidbody2D:
   serializedVersion: 4

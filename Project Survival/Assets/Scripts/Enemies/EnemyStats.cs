@@ -78,7 +78,7 @@ public class EnemyStats : MonoBehaviour
         else
             return Mathf.Round(damage);
     }
-    public virtual void TakeDamage(float damage, bool isCrit, Color textColor)
+    public virtual void TakeDamage(float damage, bool isCrit)
     {
         damage = CalculateDamage(damage);
         if (gameObject.activeSelf)
@@ -87,9 +87,9 @@ public class EnemyStats : MonoBehaviour
         }
 
         if (isCrit)
-            enemyManager.floatingTextController.DisplayFloatingCritText(transform, damage, textColor);
+            enemyManager.floatingTextController.DisplayFloatingCritText(transform, (damage).ToString());
         else
-            enemyManager.floatingTextController.DisplayFloatingText(transform, damage, textColor);
+            enemyManager.floatingTextController.DisplayFloatingText(transform, (damage).ToString());
         currentHealth -= damage;
         if (currentHealth <= 0f && !isDead)
         {

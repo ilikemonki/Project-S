@@ -73,8 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerMove() 
     {
-        rb.MovePosition(transform.position + (playerStats.moveSpeed * Time.fixedDeltaTime * moveDirection));
-        //rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
+        rb.MovePosition(transform.position + (playerStats.moveSpeed * Time.fixedDeltaTime * moveDirection));        //rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
     }
 
     public IEnumerator<float> Dash()
