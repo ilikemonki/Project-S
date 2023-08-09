@@ -65,7 +65,7 @@ public class PlayerStats : MonoBehaviour
         {
             return;
         }
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage, false); //Do damage to player

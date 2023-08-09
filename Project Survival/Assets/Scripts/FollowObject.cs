@@ -13,5 +13,6 @@ public class FollowObject : MonoBehaviour
     private void LateUpdate()
     {
         transform.position = followObject.transform.position;
+        //transform.position = new Vector3(followObject.transform.position.x, followObject.transform.position.y, transform.position.z);
     }
 }

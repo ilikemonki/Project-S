@@ -126,7 +126,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.2666974, y: 1.3605523}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &-6595649996783161566
@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillController: {fileID: 0}
+  direction: {x: 0, y: 0, z: 0}
   damages: []
   speed: 0
   pierce: 0
@@ -156,6 +157,7 @@ MonoBehaviour:
   isOrbitSkill: 0
   rotateSkill: 0
   returnSkill: 0
+  isThrowWeapon: 0
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4

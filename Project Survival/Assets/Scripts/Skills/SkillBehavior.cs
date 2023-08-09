@@ -42,7 +42,7 @@ public class SkillBehavior : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (rotateSkill)
+        if (rotateSkill && speed > 0)
         {
             transform.Rotate(new Vector3(0, 0, 160 + (speed * 8)) * Time.deltaTime);
         }
@@ -73,7 +73,7 @@ public class SkillBehavior : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (speed > 0 && !isOrbitSkill || !skillController.useCloseCombat)
+        if (speed > 0 && !isOrbitSkill || !skillController.useCloseCombat && !isOrbitSkill)
         {
             rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
         }
@@ -82,11 +82,10 @@ public class SkillBehavior : MonoBehaviour
     public void SetDirection(Vector3 dir)
     {
         direction = dir;
-        if (direction.normalized.x < 0)
+        if ((direction.normalized.x < 0 && transform.localScale.y > 0) || (direction.normalized.x > 0 && transform.localScale.y < 0))
         {
-            spriteRend.flipY = true;
+            transform.localScale = new Vector3(transform.localScale.x, -transform.localScale.y, 1);
         }
-        else spriteRend.flipY = false;
     }
 
     public void DoDamage(EnemyStats enemy, float damagePercent)
@@ -139,10 +138,10 @@ public class SkillBehavior : MonoBehaviour
         enemy.TakeDamage(totalDamage, isCrit);
     }
 
-    //Do damage when in contact w/ enemy
     protected virtual void OnTriggerEnter2D(Collider2D col)
     {
         if (hitOnceOnly) return;
+        hitOnceOnly = true;
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
@@ -150,14 +149,12 @@ public class SkillBehavior : MonoBehaviour
             {
                 if (skillController.useBarrage)
                 {
-                    hitOnceOnly = true;
                     speed = 0;
                     despawnTime = 10;
                     Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this));    //spawn skill on enemy.
                 }
                 else if (skillController.useScatter)
                 {
-                    hitOnceOnly = true;
                     speed = 0;
                     despawnTime = 10;
                     Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this));
@@ -171,30 +168,30 @@ public class SkillBehavior : MonoBehaviour
                 {
                     gameObject.SetActive(false); 
                     if (skillController.useRandomDirection)
-                        skillController.SpreadBehavior(skillController.strike, 90, null, skillController.player.transform, false);
+                        skillController.SpreadBehavior(skillController.strike, skillController.maxSpreadAngle, null, transform, false);
                     else if (skillController.useBackwardsDirection)
                     {
-                        skillController.SpreadBehavior(skillController.strike - (skillController.strike / 2), 90, enemy.transform, transform, false);
-                        skillController.SpreadBehavior(skillController.strike / 2, 90, enemy.transform, transform, true);
+                        skillController.SpreadBehavior(skillController.strike - (skillController.strike / 2), skillController.maxSpreadAngle, enemy.transform, transform, false);
+                        skillController.SpreadBehavior(skillController.strike / 2, skillController.maxSpreadAngle, enemy.transform, transform, true);
                     }
                     else
                     {
-                        skillController.SpreadBehavior(skillController.strike, 90, enemy.transform, skillController.player.transform, false);
+                        skillController.SpreadBehavior(skillController.strike, skillController.maxSpreadAngle, enemy.transform, transform, false);
                     }
                 }
                 else if (skillController.useLateral)
                 {
                     gameObject.SetActive(false);
                     if (skillController.useRandomDirection)
-                        skillController.LateralBehavior(skillController.strike, skillController.prefab.transform.localScale.x - 0.5f, null, skillController.player.transform, false);
+                        skillController.LateralBehavior(skillController.strike, transform.localScale.x - skillController.lateralOffset, null, transform, false);
                     else if (skillController.useBackwardsDirection)
                     {
-                        skillController.LateralBehavior(skillController.strike - (skillController.strike / 2), skillController.prefab.transform.localScale.x - 0.5f, enemy.transform, transform, false);
-                        skillController.LateralBehavior(skillController.strike / 2, skillController.prefab.transform.localScale.x - 0.5f, enemy.transform, transform, true);
+                        skillController.LateralBehavior(skillController.strike - (skillController.strike / 2), transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
+                        skillController.LateralBehavior(skillController.strike / 2, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, true);
                     }
                     else
                     {
-                        skillController.LateralBehavior(skillController.strike, skillController.prefab.transform.localScale.x - 0.5f, enemy.transform, skillController.player.transform, false);
+                        skillController.LateralBehavior(skillController.strike, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
                     }
                 }
                 else if (skillController.useCircular)
@@ -255,6 +252,7 @@ public class SkillBehavior : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+        hitOnceOnly = false;
     }
 
     //How projectile act after hitting enemy

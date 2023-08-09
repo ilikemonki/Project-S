@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isDashing;
     float moveX, moveY;
     public float timer;
+    private Vector3 smoothInput, smoothVelocity;
 
     private void Start()
     {
@@ -73,7 +74,9 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerMove() 
     {
-        rb.MovePosition(transform.position + (playerStats.moveSpeed * Time.fixedDeltaTime * moveDirection));        //rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
+        smoothInput = Vector3.SmoothDamp(smoothInput, new Vector2(moveX, moveY), ref smoothVelocity, 0.1f);
+        rb.MovePosition(transform.position + (playerStats.moveSpeed * Time.fixedDeltaTime * smoothInput));        
+        //rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
     }
 
     public IEnumerator<float> Dash()

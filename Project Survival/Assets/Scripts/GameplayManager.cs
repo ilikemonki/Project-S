@@ -23,7 +23,8 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI coinText, classStarText, hpText, dashText, dashTimerText;
     public Vector3 mousePos;
     public Camera cam;
-
+    public float maxAttackRange;    //Gets max range between all skills, used in EnemyDistances to find targets within the range.
+    [Header("Player Multipliers")]
     //Player/Skill Global Multipliers
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> damageTypeMultiplier;
@@ -36,14 +37,14 @@ public class GameplayManager : MonoBehaviour
     public float maxHealthMultiplier;
     public float defenseMultiplier;
     public float criticalChanceAdditive, projectileCriticalChanceAdditive, meleeCriticalChanceAdditive, criticalDamageAdditive, projectileCriticalDamageAdditive, meleeCriticalDamageAdditive;
-    public float sizeMultiplier, projectileSizeMultiplier, meleeSizeMultiplier;
+    public float sizeAdditive, projectileSizeAdditive, meleeSizeAdditive;
     public float regenAdditive, lifeStealChanceAdditive, lifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
     public List<float> ailmentsEffectAdditive;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
-
+    [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;
     public float enemyMaxHealthMultiplier;

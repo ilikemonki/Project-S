@@ -12,14 +12,14 @@ public class EnemyDistances : MonoBehaviour
     public bool updatingInProgress;
     void Start()
     {
-        InvokeRepeating(nameof(UpdateClosestEnemyList), 0, 0.2f);    //Repeat looking for closest targets
+        InvokeRepeating(nameof(UpdateClosestEnemyList), 0f, 0.2f);    //Repeat looking for closest targets
     }
 
     public void UpdateClosestEnemyList()
     {
         updatingInProgress = true;
         tempClosestEnemyList.Clear();
-        for (int s = 0; s < maxAmountToCheck; s++)
+        for (int x = 0; x < enemyManager.enemyList.Count; x++)
         {
             shortestDistance = Mathf.Infinity;
             nearestEnemy = null;
@@ -28,7 +28,7 @@ public class EnemyDistances : MonoBehaviour
                 if (enemyManager.enemyList[i].isActiveAndEnabled && !tempClosestEnemyList.Contains(enemyManager.enemyList[i]))
                 {
                     distanceToEnemy = Vector3.Distance(enemyManager.player.transform.position, enemyManager.enemyList[i].transform.position);
-                    if (distanceToEnemy < shortestDistance)
+                    if (distanceToEnemy < shortestDistance && enemyManager.gameplayMananger.maxAttackRange >= distanceToEnemy)
                     {
                         shortestDistance = distanceToEnemy;
                         nearestEnemy = enemyManager.enemyList[i];
@@ -39,7 +39,7 @@ public class EnemyDistances : MonoBehaviour
                     if (enemyManager.rareEnemyList[i].isActiveAndEnabled && !tempClosestEnemyList.Contains(enemyManager.rareEnemyList[i]))
                     {
                         distanceToEnemy = Vector3.Distance(enemyManager.player.transform.position, enemyManager.rareEnemyList[i].transform.position);
-                        if (distanceToEnemy < shortestDistance)
+                        if (distanceToEnemy < shortestDistance && enemyManager.gameplayMananger.maxAttackRange >= distanceToEnemy)
                         {
                             shortestDistance = distanceToEnemy;
                             nearestEnemy = enemyManager.rareEnemyList[i];
@@ -50,6 +50,10 @@ public class EnemyDistances : MonoBehaviour
             if (nearestEnemy != null)
             {
                 tempClosestEnemyList.Add(nearestEnemy);
+            }
+            else 
+            {
+                break;
             }
         }
         closestEnemyList = tempClosestEnemyList;

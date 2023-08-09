@@ -14,7 +14,7 @@ public class FloatingTextController : MonoBehaviour
     private void Start()
     {
         DOTween.SetTweensCapacity(400, 50);
-        PopulatePool(30);
+        PopulatePool(50);
     }
 
     public void PopulatePool(int spawnAmount)
@@ -44,7 +44,7 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].color = Color.white;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.60f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
@@ -56,16 +56,16 @@ public class FloatingTextController : MonoBehaviour
             if (i >= 400) return;
             if (!damageTextList[i].isActiveAndEnabled)
             {
-                if (i > damageTextList.Count - 5)
+                if (i > damageTextList.Count - 2)
                 {
                     PopulatePool(10);
                 }
                 damageTextList[i].fontSize = textCritSize;
-                damageTextList[i].text = "*" + text + "*";
+                damageTextList[i].text = text;
                 damageTextList[i].color = Color.yellow;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.70f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
@@ -76,7 +76,7 @@ public class FloatingTextController : MonoBehaviour
         {
             if (!damageTextList[i].isActiveAndEnabled)
             {
-                if (i > damageTextList.Count - 5)
+                if (i > damageTextList.Count - 2)
                 {
                     PopulatePool(10);
                 }
@@ -85,7 +85,7 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].color = color;
                 damageTextList[i].transform.position = transform.position;
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.80f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
