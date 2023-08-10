@@ -26,7 +26,7 @@ public class SkillController : MonoBehaviour
     public List<float> addedAilmentsEffect;
     public float baseSpeed;
     public float baseAttackRange;
-    public float baseChainRange;
+    public float baseTravelRange;
     public float baseCooldown;
     public float baseKnockBack;
     public float baseCriticalChance, baseCriticalDamage;
@@ -38,7 +38,7 @@ public class SkillController : MonoBehaviour
     public List<float> ailmentsEffect;
     public float speed;
     public float attackRange;
-    public float chainRange;
+    public float travelRange;
     public float cooldown;
     public float knockBack;
     public float criticalChance, criticalDamage;
@@ -46,7 +46,6 @@ public class SkillController : MonoBehaviour
     public float lifeStealChance, lifeSteal;
     public int strike, projectile, pierce, chain;
     [Header("Other Stats")]
-    public float chainSpeed;
     public float currentCooldown;
     public float despawnTime;
     int counter;    //Used in spread skill
@@ -54,12 +53,13 @@ public class SkillController : MonoBehaviour
     float spreadAngle;
     public bool stopFiring;
     public int highestDamageType;
-    public float maxSpreadAngle, lateralOffset; 
+    public float maxSpreadAngle, lateralOffset;
+    public bool targetless; //Keeps using it's skill regardless of enemies.
     //Behaviors 
     [Header("Behaviors")]
     public bool autoUseSkill;
     public bool isMelee;
-    public bool useCloseCombat;    //close Combat spawns on enemies, is always automatic unless behavior is changed.
+    public bool useOnTarget;    //On Target spawns on enemies.
     public bool useBarrage, useSpread;
     public bool useOrbit; //targetless
     public bool useCircular; //targetless
@@ -71,7 +71,12 @@ public class SkillController : MonoBehaviour
     public bool useBackwardsDirection; //Shoots from behind
     public bool useReturnDirection; //projectiles only.
     public bool useRandomTargeting;
-    public bool targetless; //Keeps using it's skill regardless of enemies.
+    [Header("Triggers")]
+    public SkillController triggerSkill;
+    public bool isTriggerSkill;
+    public float triggerCooldown, currentTriggerCooldown;
+    public bool useCritTrigger;
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, attackRange);
@@ -106,7 +111,6 @@ public class SkillController : MonoBehaviour
         }
         PopulatePool(baseProjectile + gameplayManager.projectileAdditive + baseStrike + gameplayManager.strikeAdditive, prefab, poolParent, poolList);
         UpdateSize();
-
     }
     // Update is called once per frame
     protected virtual void Update()
@@ -118,115 +122,123 @@ public class SkillController : MonoBehaviour
         else if (!stopFiring && !useOrbit)
         {
             currentCooldown -= Time.deltaTime;
-            if (currentCooldown <= 0f)
+            if (currentCooldown <= 0f && !isTriggerSkill)
             {
-                if ((enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) && !targetless) return; //if no enemies alive, return.
-                if (!targetless)   //Use skill when in attackRange.
+                UseSkill();
+            }
+        }
+        if (triggerSkill != null)
+        {
+            currentTriggerCooldown -= Time.deltaTime;
+        }
+    }
+    public void UseSkill()
+    {
+        if ((enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) && !targetless) return; //if no enemies alive, return.
+        if (!targetless)   //Use skill when in attackRange.
+        {
+            if (Vector3.Distance(transform.position, enemyDistances.closestEnemyList[0].transform.position) > attackRange)
+            {
+                return;
+            }
+        }
+        if (useRandomTargeting)
+        {
+            GetEnemiesInRangeUnsorted(transform);
+            nearestEnemy = enemiesInRange[Random.Range(0, enemiesInRange.Count)];
+        }
+        else
+        {
+            nearestEnemy = enemyDistances.closestEnemyList[0];
+        }
+        stopFiring = true;
+        currentCooldown = cooldown;
+        //use skills
+        if (useThrowWeapon)
+        {
+            if (targetless)
+                ThrowWeaponBehavior(null, transform);
+            else
+                ThrowWeaponBehavior(nearestEnemy.transform, transform);
+        }
+        else if (useBarrage)
+        {
+            if (targetless)
+                Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform, null));
+            else
+                Timing.RunCoroutine(BarrageBehavior(strike + projectile, nearestEnemy.transform, transform, null));
+        }
+        else if (useScatter)
+        {
+            if (targetless)
+                Timing.RunCoroutine(ScatterBehavior(strike + projectile, null, transform, null));
+            else
+                Timing.RunCoroutine(ScatterBehavior(strike + projectile, nearestEnemy.transform, transform, null));
+        }
+        else if (useBurst)
+        {
+            if (targetless)
+                BurstBehavior(strike + projectile, null, transform);
+            else
+                BurstBehavior(strike + projectile, nearestEnemy.transform, transform);
+        }
+        else if (useSpread)
+        {
+            if (useRandomDirection)
+                SpreadBehavior(strike + projectile, maxSpreadAngle, null, transform, false);
+            else if (useBackwardsDirection)
+            {
+                if (targetless)
                 {
-                    if (Vector3.Distance(transform.position, enemyDistances.closestEnemyList[0].transform.position) > attackRange)
-                    {
-                        return;
-                    }
-                }
-                if (useRandomTargeting)
-                {
-                    GetEnemiesInRangeUnsorted(transform);
-                    nearestEnemy = enemiesInRange[Random.Range(0, enemiesInRange.Count)];
+                    SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), maxSpreadAngle, null, transform, false);
+                    SpreadBehavior((strike + projectile) / 2, maxSpreadAngle, null, transform, true);
                 }
                 else
                 {
-                    nearestEnemy = enemyDistances.closestEnemyList[0];
-                }
-                stopFiring = true;
-                currentCooldown = cooldown;
-                //use skills
-                if (useThrowWeapon)
-                {
-                    if (targetless)
-                        ThrowWeaponBehavior(null, transform);
-                    else
-                        ThrowWeaponBehavior(nearestEnemy.transform, transform);
-                }
-                else if (useBarrage)
-                {
-                    if (targetless)
-                        Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform, null));
-                    else
-                        Timing.RunCoroutine(BarrageBehavior(strike + projectile, nearestEnemy.transform, transform, null));
-                }
-                else if (useScatter)
-                {
-                    if (targetless)
-                        Timing.RunCoroutine(ScatterBehavior(strike + projectile, null, transform, null));
-                    else
-                        Timing.RunCoroutine(ScatterBehavior(strike + projectile, nearestEnemy.transform, transform, null));
-                }
-                else if (useBurst)
-                {
-                    if (targetless)
-                        BurstBehavior(strike + projectile, null, transform);
-                    else
-                        BurstBehavior(strike + projectile, nearestEnemy.transform, transform);
-                }
-                else if (useSpread)
-                {
-                    if (useRandomDirection)
-                        SpreadBehavior(strike + projectile, maxSpreadAngle, null, transform, false);
-                    else if (useBackwardsDirection)
-                    {
-                        if (targetless)
-                        {
-                            SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), maxSpreadAngle, null, transform, false);
-                            SpreadBehavior((strike + projectile) / 2, maxSpreadAngle, null, transform, true);
-                        }
-                        else
-                        {
-                            SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), maxSpreadAngle, nearestEnemy.transform, transform, false);
-                            SpreadBehavior((strike + projectile) / 2, maxSpreadAngle, nearestEnemy.transform, transform, true);
-                        }
-                    }
-                    else
-                    {
-                        if (targetless)
-                            SpreadBehavior(strike + projectile, maxSpreadAngle, null, transform, false);
-                        else
-                            SpreadBehavior(strike + projectile, maxSpreadAngle, nearestEnemy.transform, transform, false);
-                    }
-                }
-                else if (useLateral)
-                {
-                    if (useRandomDirection)
-                        LateralBehavior(strike + projectile, poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
-                    else if (useBackwardsDirection)
-                    {
-                        if (targetless)
-                        {
-                            LateralBehavior((strike + projectile) - ((strike + projectile) / 2), poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
-                            LateralBehavior((strike + projectile) / 2, poolList[0].transform.localScale.x - lateralOffset, null, transform, true);
-                        }
-                        else
-                        {
-                            LateralBehavior((strike + projectile) - ((strike + projectile) / 2), poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, false);
-                            LateralBehavior((strike + projectile) / 2, poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, true);
-                        }
-                    }
-                    else
-                    {
-                        if (targetless)
-                            LateralBehavior(strike + projectile, poolList[0].transform.localScale.x * (1 - lateralOffset), null, transform, false);
-                        else
-                            LateralBehavior(strike + projectile, poolList[0].transform.localScale.x * (1 - lateralOffset), nearestEnemy.transform, transform, false);
-                    }
-                }
-                else if (useCircular)
-                {
-                    CircularBehavior(strike + projectile, transform);
-                }
-                else if (useCloseCombat)
-                {
-                    CloseCombatMelee(strike, transform, enemyDistances.closestEnemyList);
+                    SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), maxSpreadAngle, nearestEnemy.transform, transform, false);
+                    SpreadBehavior((strike + projectile) / 2, maxSpreadAngle, nearestEnemy.transform, transform, true);
                 }
             }
+            else
+            {
+                if (targetless)
+                    SpreadBehavior(strike + projectile, maxSpreadAngle, null, transform, false);
+                else
+                    SpreadBehavior(strike + projectile, maxSpreadAngle, nearestEnemy.transform, transform, false);
+            }
+        }
+        else if (useLateral)
+        {
+            if (useRandomDirection)
+                LateralBehavior(strike + projectile, poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
+            else if (useBackwardsDirection)
+            {
+                if (targetless)
+                {
+                    LateralBehavior((strike + projectile) - ((strike + projectile) / 2), poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
+                    LateralBehavior((strike + projectile) / 2, poolList[0].transform.localScale.x - lateralOffset, null, transform, true);
+                }
+                else
+                {
+                    LateralBehavior((strike + projectile) - ((strike + projectile) / 2), poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, false);
+                    LateralBehavior((strike + projectile) / 2, poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, true);
+                }
+            }
+            else
+            {
+                if (targetless)
+                    LateralBehavior(strike + projectile, poolList[0].transform.localScale.x * (1 - lateralOffset), null, transform, false);
+                else
+                    LateralBehavior(strike + projectile, poolList[0].transform.localScale.x * (1 - lateralOffset), nearestEnemy.transform, transform, false);
+            }
+        }
+        else if (useCircular)
+        {
+            CircularBehavior(strike + projectile, transform);
+        }
+        else if (useOnTarget)
+        {
+            OnTargetBehavior(strike, transform, enemyDistances.closestEnemyList);
         }
     }
     public IEnumerator<float> BarrageBehavior(int numOfAttacks, Transform target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
@@ -245,7 +257,7 @@ public class SkillController : MonoBehaviour
                     if (useRandomDirection) dir = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
                     else if (autoUseSkill || useThrowWeapon) dir = target.position - spawnPos.position;
                     else dir = gameplayManager.mousePos - spawnPos.position;
-                    if (useCloseCombat)
+                    if (useOnTarget)
                     {
                         if (autoUseSkill || useThrowWeapon)
                             poolList[i].transform.position = target.position;    //set starting position on target
@@ -295,7 +307,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useCloseCombat)
+                    if (useOnTarget)
                     {
                         if (autoUseSkill || useThrowWeapon)
                             poolList[i].transform.position = target.position + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);    //set starting position on target
@@ -344,7 +356,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useCloseCombat)
+                    if (useOnTarget)
                     {
                         if (autoUseSkill || useThrowWeapon)
                             poolList[i].transform.position = target.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);    //set starting position on target
@@ -429,7 +441,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useCloseCombat) 
+                    if (useOnTarget) 
                     {
                         if (autoUseSkill || useThrowWeapon)
                         {
@@ -490,7 +502,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useCloseCombat && !useOrbit)
+                    if (useOnTarget && !useOrbit)
                     {
                         if (autoUseSkill || useThrowWeapon)
                         {
@@ -542,7 +554,7 @@ public class SkillController : MonoBehaviour
                     }
                     else
                     {
-                        if (useCloseCombat && useOrbit)
+                        if (useOnTarget && useOrbit)
                         {
                             direction = target.position - spawnPos.position;
                             poolList[i].transform.position = target.position;    //set starting position on player
@@ -595,7 +607,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useCloseCombat)
+                    if (useOnTarget)
                     {
                         if (autoUseSkill || useThrowWeapon)
                         {
@@ -673,7 +685,7 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void CloseCombatMelee(int numOfAttacks, Transform spawnPos, List<EnemyStats> closestEnemyList)       //Spawn on closest enemies. Melee. Null closestEnemyList == doesn't spawn from player
+    public void OnTargetBehavior(int numOfAttacks, Transform spawnPos, List<EnemyStats> closestEnemyList)       //Spawn on closest enemies. Melee. Null closestEnemyList == doesn't spawn from player
     {
         rememberEnemiesList.Clear();
         if (useRandomTargeting) GetEnemiesInRangeUnsorted(spawnPos);
@@ -795,7 +807,7 @@ public class SkillController : MonoBehaviour
                 poolList[i].transform.position = spawnPos.position;
                 poolList[i].enemyChainList.AddRange(chainList);
                 poolList[i].target = target;
-                poolList[i].SetStats(damages, chainSpeed, 0, chain - 1, despawnTime, ailmentsChance, ailmentsEffect);
+                poolList[i].SetStats(damages, speed, 0, chain - 1, despawnTime, ailmentsChance, ailmentsEffect);
                 poolList[i].SetDirection((direction).normalized);   //Set direction
                 poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                 poolList[i].gameObject.SetActive(true);
@@ -903,11 +915,9 @@ public class SkillController : MonoBehaviour
         }
         else //is projectile
         {
-            speed = baseSpeed * (1 + gameplayManager.projectileSpeedMultiplier / 100);
             projectile = baseProjectile + gameplayManager.projectileAdditive;
             chain = baseChain + gameplayManager.chainAdditive;
             pierce = basePierce + gameplayManager.pierceAdditive;
-            chainRange = baseChainRange * (1 + gameplayManager.chainRangeMultiplier / 100);
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier) / 100);
             cooldown = baseCooldown * (1 + (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive;
@@ -918,9 +928,12 @@ public class SkillController : MonoBehaviour
         {
             gameplayManager.maxAttackRange = attackRange;
         }
+        speed = baseSpeed * (1 + gameplayManager.speedMultiplier / 100);
+        travelRange = baseTravelRange * (1 + gameplayManager.travelRangeMultiplier / 100);
         lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive;
         lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive;
         currentCooldown = cooldown;
+        currentTriggerCooldown = triggerCooldown;
         knockBack = baseKnockBack;
         highestDamageType = damages.IndexOf(Mathf.Max(damages.ToArray()));  //Find highest damage type.
         UpdateSize();
@@ -934,6 +947,17 @@ public class SkillController : MonoBehaviour
         for (int i = 0; i < orbitPoolList.Count; i++)
         {
             orbitPoolList[i].transform.localScale = new Vector3(orbitPoolList[i].transform.localScale.x * (1 + size / 100), orbitPoolList[i].transform.localScale.y * (1 + size / 100), 1);
+        }
+    }
+    public void UseTriggerSkill()
+    {
+        if (currentTriggerCooldown <= 0)
+        {
+            if (triggerSkill.currentCooldown <= 0)
+            {
+                triggerSkill.UseSkill();
+                currentTriggerCooldown = triggerCooldown;
+            }
         }
     }
 }

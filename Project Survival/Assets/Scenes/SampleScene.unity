@@ -2205,7 +2205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &775911829
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2268,14 +2268,14 @@ MonoBehaviour:
   - 0
   baseSpeed: 10
   baseAttackRange: 4.5
-  baseChainRange: 0
+  baseTravelRange: 5
   baseCooldown: 1
   baseKnockBack: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseStrike: 5
+  baseStrike: 3
   baseProjectile: 0
   basePierce: 20
   baseChain: 0
@@ -2284,7 +2284,7 @@ MonoBehaviour:
   ailmentsEffect: []
   speed: 0
   attackRange: 0
-  chainRange: 0
+  travelRange: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -2296,19 +2296,19 @@ MonoBehaviour:
   projectile: 0
   pierce: 0
   chain: 0
-  chainSpeed: 0
   currentCooldown: 0
-  despawnTime: 0.6
+  despawnTime: 0
   stopFiring: 0
   highestDamageType: 0
   maxSpreadAngle: 90
   lateralOffset: 0
-  autoUseSkill: 0
+  targetless: 0
+  autoUseSkill: 1
   isMelee: 1
-  useCloseCombat: 0
-  useBarrage: 1
-  useSpread: 0
-  useOrbit: 1
+  useOnTarget: 0
+  useBarrage: 0
+  useSpread: 1
+  useOrbit: 0
   useCircular: 0
   useScatter: 0
   useLateral: 0
@@ -2318,7 +2318,11 @@ MonoBehaviour:
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
-  targetless: 0
+  triggerSkill: {fileID: 0}
+  isTriggerSkill: 1
+  triggerCooldown: 0
+  currentTriggerCooldown: 0
+  useCritTrigger: 0
 --- !u!1 &799299291
 GameObject:
   m_ObjectHideFlags: 0
@@ -3154,11 +3158,11 @@ MonoBehaviour:
   projectileAdditive: 0
   pierceAdditive: 0
   chainAdditive: 0
-  projectileSpeedMultiplier: 0
+  speedMultiplier: 0
   attackRangeMultiplier: 0
   projectileAttackRangeMultiplier: 0
   meleeAttackRangeMultiplier: 0
-  chainRangeMultiplier: 0
+  travelRangeMultiplier: 0
   cooldownMultiplier: 0
   projectileCooldownMultiplier: 0
   meleeCooldownMultiplier: 0
@@ -10915,7 +10919,7 @@ MonoBehaviour:
   - 0
   baseSpeed: 0
   baseAttackRange: 10
-  baseChainRange: 0
+  baseTravelRange: 0
   baseCooldown: 1
   baseKnockBack: 0
   baseCriticalChance: 0
@@ -10931,7 +10935,7 @@ MonoBehaviour:
   ailmentsEffect: []
   speed: 0
   attackRange: 0
-  chainRange: 0
+  travelRange: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -10943,16 +10947,16 @@ MonoBehaviour:
   projectile: 0
   pierce: 0
   chain: 0
-  chainSpeed: 0
   currentCooldown: 0
   despawnTime: 0.2
   stopFiring: 0
   highestDamageType: 0
   maxSpreadAngle: 90
   lateralOffset: 0
+  targetless: 0
   autoUseSkill: 1
   isMelee: 1
-  useCloseCombat: 1
+  useOnTarget: 0
   useBarrage: 0
   useSpread: 0
   useOrbit: 0
@@ -10965,7 +10969,11 @@ MonoBehaviour:
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 1
-  targetless: 0
+  triggerSkill: {fileID: 0}
+  isTriggerSkill: 0
+  triggerCooldown: 0
+  currentTriggerCooldown: 0
+  useCritTrigger: 0
 --- !u!1 &1888395308
 GameObject:
   m_ObjectHideFlags: 0
@@ -11516,15 +11524,15 @@ MonoBehaviour:
   - 0
   baseSpeed: 20
   baseAttackRange: 6
-  baseChainRange: 8
+  baseTravelRange: 10
   baseCooldown: 1
   baseKnockBack: 0
-  baseCriticalChance: 10
+  baseCriticalChance: 20
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 0
-  baseProjectile: 5
+  baseProjectile: 2
   basePierce: 0
   baseChain: 4
   damages: []
@@ -11532,7 +11540,7 @@ MonoBehaviour:
   ailmentsEffect: []
   speed: 0
   attackRange: 0
-  chainRange: 0
+  travelRange: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -11544,16 +11552,16 @@ MonoBehaviour:
   projectile: 0
   pierce: 0
   chain: 0
-  chainSpeed: 20
   currentCooldown: 0
-  despawnTime: 0.3
+  despawnTime: 0
   stopFiring: 0
   highestDamageType: 0
   maxSpreadAngle: 90
   lateralOffset: 0.6
+  targetless: 0
   autoUseSkill: 1
   isMelee: 0
-  useCloseCombat: 0
+  useOnTarget: 0
   useBarrage: 1
   useSpread: 0
   useOrbit: 0
@@ -11565,8 +11573,12 @@ MonoBehaviour:
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
-  useRandomTargeting: 1
-  targetless: 0
+  useRandomTargeting: 0
+  triggerSkill: {fileID: 775911830}
+  isTriggerSkill: 0
+  triggerCooldown: 0.5
+  currentTriggerCooldown: 0
+  useCritTrigger: 1
 --- !u!224 &2096920681
 RectTransform:
   m_ObjectHideFlags: 0

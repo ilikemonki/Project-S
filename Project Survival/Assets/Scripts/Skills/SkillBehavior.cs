@@ -23,6 +23,8 @@ public class SkillBehavior : MonoBehaviour
     public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon;
+    public Vector3 startingPos;
+    public float currentRange;
 
     public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
@@ -36,7 +38,6 @@ public class SkillBehavior : MonoBehaviour
         if (isThrowWeapon)
         {
             this.speed = 8;
-            this.despawnTime = 1;
         }
     }
 
@@ -56,24 +57,34 @@ public class SkillBehavior : MonoBehaviour
         {
             if (!returnSkill)
             {
-                despawnTime -= Time.deltaTime;
-                if (despawnTime <= 0f)
+                if (speed <= 0) //skills that doesn't travel will despawn
                 {
-                    if (skillController.useReturnDirection)
+                    despawnTime -= Time.deltaTime;
+                    if (despawnTime <= 0f)
                     {
-                        returnSkill = true;
-                        target = skillController.player.transform;
-                        speed = skillController.chainSpeed;
-                    }
-                    else
                         gameObject.SetActive(false);
+                    }
+                }
+                else //skills that travel will check the distance traveled.
+                {
+                    currentRange = Vector3.Distance(transform.position, startingPos);
+                    if (currentRange >= skillController.travelRange)
+                    {
+                        if (skillController.useReturnDirection && !skillController.isMelee) //At end of travel, return projectile.
+                        {
+                            returnSkill = true;
+                            target = skillController.player.transform;
+                        }
+                        else
+                            gameObject.SetActive(false);
+                    }
                 }
             }
         }
     }
     private void FixedUpdate()
     {
-        if (speed > 0 && !isOrbitSkill || !skillController.useCloseCombat && !isOrbitSkill)
+        if (speed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
         {
             rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
         }
@@ -136,12 +147,15 @@ public class SkillBehavior : MonoBehaviour
             }
         }
         enemy.TakeDamage(totalDamage, isCrit);
+        if (isCrit && skillController.useCritTrigger)
+        {
+            skillController.UseTriggerSkill();
+        }
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D col)
     {
         if (hitOnceOnly) return;
-        hitOnceOnly = true;
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
@@ -149,12 +163,14 @@ public class SkillBehavior : MonoBehaviour
             {
                 if (skillController.useBarrage)
                 {
+                    hitOnceOnly = true;
                     speed = 0;
                     despawnTime = 10;
                     Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this));    //spawn skill on enemy.
                 }
                 else if (skillController.useScatter)
                 {
+                    hitOnceOnly = true;
                     speed = 0;
                     despawnTime = 10;
                     Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this));
@@ -199,10 +215,10 @@ public class SkillBehavior : MonoBehaviour
                     gameObject.SetActive(false);
                     skillController.CircularBehavior(skillController.strike, transform);
                 }
-                else if (skillController.useCloseCombat)
+                else if (skillController.useOnTarget)
                 {
                     gameObject.SetActive(false);
-                    skillController.CloseCombatMelee(skillController.strike, transform, null);
+                    skillController.OnTargetBehavior(skillController.strike, transform, null);
                 }
                 return;
             }
@@ -217,12 +233,10 @@ public class SkillBehavior : MonoBehaviour
                 if (skillController.isMelee)
                 {
                     gameObject.SetActive(false);
-                    if (skillController.useCloseCombat)
+                    if (skillController.useOnTarget)
                         skillController.SpreadBehavior(1, 0, enemy.transform, transform, false);
-                        //Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, enemy.transform, null));    //spawn skill on enemy.
                     else
                         skillController.SpreadBehavior(1, 0, enemy.transform, transform, false);
-                        //Timing.RunCoroutine(skillController.BarrageBehavior(1, enemy.transform, transform, null));    //spawn skill on weapon.
                     return;
                 }
             }
@@ -252,7 +266,6 @@ public class SkillBehavior : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-        hitOnceOnly = false;
     }
 
     //How projectile act after hitting enemy
@@ -264,7 +277,6 @@ public class SkillBehavior : MonoBehaviour
             {
                 returnSkill = true;
                 target = skillController.player.transform;
-                speed = skillController.chainSpeed;
             }
             else
                 gameObject.SetActive(false);
@@ -293,11 +305,10 @@ public class SkillBehavior : MonoBehaviour
     //Find new enemy to target.
     void  ChainToEnemy()
     {
-        speed = skillController.chainSpeed;
         target = FindTarget(true);
         if (target != null)
         {
-            despawnTime = skillController.despawnTime;
+            startingPos = transform.position;
             SetDirection((target.position - transform.position).normalized); //if target is found, set direction
             transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
@@ -307,7 +318,6 @@ public class SkillBehavior : MonoBehaviour
             {
                 returnSkill = true;
                 target = skillController.player.transform;
-                speed = skillController.chainSpeed;
             }
             else
                 gameObject.SetActive(false);    //despawn if no targets found
@@ -337,13 +347,13 @@ public class SkillBehavior : MonoBehaviour
                     distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
                     if (!closest)
                     {
-                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.chainRange)
+                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange)
                         {
                             shortestDistance = distanceToEnemy;
                             nearestEnemy = skillController.enemyManager.enemyList[i];
                         }
                     }
-                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.chainRange)
+                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange)
                     {
                         shortestDistance = distanceToEnemy;
                         nearestEnemy = skillController.enemyManager.enemyList[i];
@@ -369,13 +379,13 @@ public class SkillBehavior : MonoBehaviour
                     distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.rareEnemyList[i].transform.position); 
                     if (!closest)
                     {
-                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.chainRange)
+                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange)
                         {
                             shortestDistance = distanceToEnemy;
                             nearestEnemy = skillController.enemyManager.rareEnemyList[i];
                         }
                     }
-                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.chainRange)
+                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange)
                     {
                         shortestDistance = distanceToEnemy;
                         nearestEnemy = skillController.enemyManager.rareEnemyList[i];
@@ -396,6 +406,10 @@ public class SkillBehavior : MonoBehaviour
         target = null;
         returnSkill = false;
         hitOnceOnly = false;
+    }
+    private void OnEnable()
+    {
+        startingPos = transform.position;
     }
 
 }

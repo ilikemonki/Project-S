@@ -42,9 +42,9 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].fontSize = textSize;
                 damageTextList[i].text = text;
                 damageTextList[i].color = Color.white;
-                damageTextList[i].transform.position = transform.position;
+                damageTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.8f, 1.2f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
@@ -63,9 +63,9 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].fontSize = textCritSize;
                 damageTextList[i].text = text;
                 damageTextList[i].color = Color.yellow;
-                damageTextList[i].transform.position = transform.position;
+                damageTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.8f, 1.2f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
@@ -83,9 +83,9 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].fontSize = textSize;
                 damageTextList[i].text = text;
                 damageTextList[i].color = color;
-                damageTextList[i].transform.position = transform.position;
+                damageTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.9f, 1.1f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.8f, 1.2f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }
