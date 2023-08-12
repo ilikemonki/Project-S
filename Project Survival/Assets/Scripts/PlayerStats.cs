@@ -10,28 +10,29 @@ public class PlayerStats : MonoBehaviour
     public GameplayManager gameplayManager;
     public PlayerCollector playerCollector;
     public FloatingTextController floatingTextController;
+    public Slider healthBar;
+    public Image healthBarImage;
+    public bool isDead;
+    [Header("Base Stats")]
     public float baseMoveSpeed;
     public float baseMaxHealth;
     public float baseDefense;
     public float baseRegen;
     public float baseMagnetRange;
-    public Slider healthBar;
-    public Image healthBarImage; 
+    [Header("Current Stats")]
     public float moveSpeed;
     public float currentHealth;
     public float maxHealth;
     public float defense;
-    public float regen;
+    public float regen, degen;
     public float magnetRange;
-    public bool onRegen;
-    float regenTemp;
-
     //I-Frames
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
     private void Start()
     {
+        InvokeRepeating(nameof(Regenerate), 0f, 1f);
         UpdatePlayerStats();
         currentHealth = maxHealth;
         healthBar.maxValue = maxHealth;
@@ -40,11 +41,6 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        if(currentHealth < maxHealth && !onRegen && regen > 0)  //Start regen if health below 100%
-        {
-            onRegen = true;
-            Timing.RunCoroutine(Regenerate(regen));
-        }
         if(iFrameTimer > 0)
         {
             iFrameTimer -= Time.deltaTime;
@@ -68,13 +64,13 @@ public class PlayerStats : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
-            TakeDamage(enemy.damage, false); //Do damage to player
+            TakeDamage(enemy.damage, true, false); //Do damage to player
             return;
         }
         if (collision.gameObject.CompareTag("Enemy Projectile"))
         {
             EnemyProjectile enemyProj = collision.GetComponent<EnemyProjectile>();
-            TakeDamage(enemyProj.enemyStats.damage, true); //Do damage to player
+            TakeDamage(enemyProj.enemyStats.damage, false, false); //Do damage to player
             enemyProj.gameObject.SetActive(false);
             return;
         }
@@ -101,13 +97,22 @@ public class PlayerStats : MonoBehaviour
         }
         playerCollector.collectibles.Remove(collectible);
     }
-    public void TakeDamage(float dmg, bool isProjectileDamage)
+    public void TakeDamage(float dmg, bool triggerIframe, bool isDotDamage)
     {
-        if (dmg <= 0 || defense >= dmg) 
-            dmg = 1;
+        if (isDead) return;
+        if (isDotDamage) //Dot damage doesn't calculate defense
+        {
+            if (dmg <= 0) dmg = 1;
+            else dmg = Mathf.Round(dmg);
+        }
         else
-            dmg = Mathf.Round(dmg - defense);
-        if (isProjectileDamage) //hit w/ projectile will not trigger IFrame
+        {
+            if (dmg <= 0 || defense >= dmg)
+                dmg = 1;
+            else
+                dmg = Mathf.Round(dmg - defense);
+        }
+        if (!triggerIframe) //hit w/ projectile will not trigger IFrame
         {
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
@@ -122,10 +127,22 @@ public class PlayerStats : MonoBehaviour
                 isInvincible = true;
             }
         }
-        floatingTextController.DisplayPlayerText(transform, (dmg).ToString(), Color.red);
+        floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red);
+        foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useDamageTakenTrigger)
+                {
+                    sc.skillTrigger.currentCounter += dmg;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
+        }
         if (currentHealth <= 0)
         {
-            //Die();
+            Die();
         }
     }
     public void CheckHealthBarVisibility()  //Show health if life is below max, else dont show
@@ -154,36 +171,62 @@ public class PlayerStats : MonoBehaviour
 
     void Die()
     {
-        healthBarImage.gameObject.SetActive(false);
-        gameObject.SetActive(false);
+        isDead = true;
+        //healthBarImage.gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     public void Heal(float amt)
     {
-        if (currentHealth == maxHealth) return;
+        if (currentHealth == maxHealth || isDead) return;
         if (currentHealth + amt > maxHealth)
         {
-            floatingTextController.DisplayPlayerText(transform, (maxHealth - currentHealth).ToString(), Color.green);
+            floatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green);
             currentHealth = maxHealth;
         }
         else
         {
-            floatingTextController.DisplayPlayerText(transform, (amt).ToString(), Color.green);
+            floatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green);
             currentHealth += amt;
         }
         UpdateHealthBar(amt);
+        foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useHealTrigger)
+                {
+                    sc.skillTrigger.currentCounter += amt;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
+        }
     }
 
-    IEnumerator<float> Regenerate(float amt)
+    public void Regenerate()
     {
-        regenTemp += amt;
-        if (regenTemp >= 1)
+        if (isDead) return;
+        foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
         {
-            Heal(Mathf.Floor(regenTemp));
-            regenTemp -= Mathf.Floor(regenTemp);
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useBloodTrigger)
+                {
+                    sc.skillTrigger.currentCounter += degen;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
         }
-        yield return Timing.WaitForSeconds(1);
-        onRegen = false;
+        float amt = regen - degen;
+        if (amt > 0) Heal(amt);
+        else if (amt < 0 && currentHealth != 1) 
+        {
+            amt *= -1; //make it positive
+            if (amt > currentHealth) TakeDamage(currentHealth - 1, false, true);
+            else TakeDamage(amt, false, true); 
+        }
     }
 
     public void CheckHPBarColor()
@@ -218,6 +261,7 @@ public class PlayerStats : MonoBehaviour
         maxHealth = baseMaxHealth * (1 + gameplayManager.maxHealthMultiplier / 100);
         defense = baseDefense * (1 + gameplayManager.defenseMultiplier / 100);
         regen = baseRegen + gameplayManager.regenAdditive;
+        degen += gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
         playerCollector.SetMagnetRange(magnetRange);
     }

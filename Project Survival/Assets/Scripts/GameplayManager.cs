@@ -7,12 +7,8 @@ using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
-    public int totalKills;
-    public int roundCounter;
+    public List<SkillController> skillList;
     public TextMeshProUGUI timerText;
-    public float timer, maxTimer;
-    public int level, exp, expCap, expCapIncrease;
-    public int coins, classStars;
     public PlayerStats player;
     public EnemyManager enemyManager;
     public GameObject roundUI;
@@ -24,6 +20,11 @@ public class GameplayManager : MonoBehaviour
     public Vector3 mousePos;
     public Camera cam;
     public float maxAttackRange;    //Gets max range between all skills, used in EnemyDistances to find targets within the range.
+    [Header("Game Stats")]
+    public int roundCounter;
+    public float timer, maxTimer;
+    public int level, exp, expCap, expCapIncrease;
+    public int coins, classStars;
     [Header("Player Multipliers")]
     //Player/Skill Global Multipliers
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
@@ -38,7 +39,7 @@ public class GameplayManager : MonoBehaviour
     public float defenseMultiplier;
     public float criticalChanceAdditive, projectileCriticalChanceAdditive, meleeCriticalChanceAdditive, criticalDamageAdditive, projectileCriticalDamageAdditive, meleeCriticalDamageAdditive;
     public float sizeAdditive, projectileSizeAdditive, meleeSizeAdditive;
-    public float regenAdditive, lifeStealChanceAdditive, lifeStealAdditive;
+    public float regenAdditive, degenAdditive, lifeStealChanceAdditive, lifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
     public List<float> ailmentsEffectAdditive;
@@ -71,7 +72,7 @@ public class GameplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GameManager.totalTime += Time.deltaTime;
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         if(timer > 0)
@@ -98,10 +99,6 @@ public class GameplayManager : MonoBehaviour
             expSlider.maxValue = expCap;
         }
         UpdateExpBar();
-    }
-    public void CalculateKillCounter()
-    {
-        totalKills++;
     }
     public void GainCoins(int amt)
     {

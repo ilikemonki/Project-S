@@ -29,12 +29,13 @@ public class EnemyStats : MonoBehaviour
     public bool knockedBack, knockBackImmune;
     public bool isSpawning; //check if enemy is beginning to spawn
     bool isDead;
+    [Header("Attack")]
     public bool canAttack; //initialize in awake
     public bool spreadAttack, circleAttack, burstAttack;
     public float attackCooldown, attackTimer, attackRange;
     public float projectiles;
     public float projectileSpeed;
-    public float projectileDuration;
+    public float projectileRange;
 
     private void Awake()
     {
@@ -52,14 +53,14 @@ public class EnemyStats : MonoBehaviour
         this.attackCooldown = attackCooldown;
         this.projectileSpeed = projectileSpeed;
     }
-    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, bool burstAttack, float projectileDuration)
+    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, bool burstAttack, float projectileRange)
     {
         this.attackRange = attackRange;
         this.projectiles = projectiles;
         this.spreadAttack = spreadAttack;
         this.circleAttack = circleAttack;
         this.burstAttack = burstAttack;
-        this.projectileDuration = projectileDuration;
+        this.projectileRange = projectileRange;
         CheckAttack();
     }
     public void CheckAttack()
@@ -87,10 +88,14 @@ public class EnemyStats : MonoBehaviour
         }
 
         if (isCrit)
+        {
             enemyManager.floatingTextController.DisplayFloatingCritText(transform, (damage).ToString());
+            GameManager.totalCrits++;
+        }
         else
             enemyManager.floatingTextController.DisplayFloatingText(transform, (damage).ToString());
         currentHealth -= damage;
+        GameManager.totalDamageDealt += damage;
         if (currentHealth <= 0f && !isDead)
         {
             Die();
@@ -106,6 +111,7 @@ public class EnemyStats : MonoBehaviour
         else if (burned)
             dotTextDamage.text = "<color=red>" + totalBurnDamage.ToString();
         currentHealth -= damage;
+        GameManager.totalDamageDealt += damage;
         if (currentHealth <= 0f && !isDead)
         {
             Die();
@@ -123,8 +129,8 @@ public class EnemyStats : MonoBehaviour
         spriteRenderer.material = defaultMaterial;
         if (enemyManager != null)
         {
-            enemyManager.gameplayMananger.GainExp(exp);
-            enemyManager.gameplayMananger.CalculateKillCounter();
+            enemyManager.gameplayManager.GainExp(exp);
+            GameManager.totalKills++;
             enemyManager.enemiesAlive--;
         }
         knockedBack = false;
@@ -185,6 +191,19 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[2] = chillEffect;
             moveSpeed = baseMoveSpeed * (1 - chillEffect / 100);
         }
+        GameManager.totalChill++;
+        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useUsageTrigger)
+                {
+                    sc.skillTrigger.currentCounter++;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
+        }
     }
     public void ApplyBurn(float burnDamage)
     {
@@ -204,6 +223,19 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[1] = burnDamage;
         }
+        GameManager.totalBurn++;
+        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useUsageTrigger)
+                {
+                    sc.skillTrigger.currentCounter++;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
+        }
     }
     public void ApplyShock(float shockEffect)
     {
@@ -220,6 +252,19 @@ public class EnemyStats : MonoBehaviour
         if (topAilmentsEffect[3] < shockEffect && shocked)   //if burn damage is higher and mob is already burned, reburn.
         {
             topAilmentsEffect[3] = shockEffect;
+        }
+        GameManager.totalShock++;
+        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useUsageTrigger)
+                {
+                    sc.skillTrigger.currentCounter++;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
         }
     }
     public void ApplyBleed(float bleedDamage)
@@ -239,6 +284,19 @@ public class EnemyStats : MonoBehaviour
         if (topAilmentsEffect[0] < bleedDamage && bleeding)   //if burn damage is higher and mob is already burned, reburn.
         {
             topAilmentsEffect[0] = bleedDamage;
+        }
+        GameManager.totalBleed++;
+        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useUsageTrigger)
+                {
+                    sc.skillTrigger.currentCounter++;
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
         }
     }
     IEnumerator<float> SlowMovement()
@@ -260,6 +318,7 @@ public class EnemyStats : MonoBehaviour
         {
             totalBurnDamage += Mathf.Round(topAilmentsEffect[1]);
             TakeDotDamage(topAilmentsEffect[1]);
+            GameManager.totalBurnDamage += topAilmentsEffect[1];
             yield return Timing.WaitForSeconds(1f);
             ailmentsCounter[1]--;
         }
@@ -278,6 +337,7 @@ public class EnemyStats : MonoBehaviour
         {
             totalBleedDamage += Mathf.Round(topAilmentsEffect[0]);
             TakeDotDamage(topAilmentsEffect[0]);
+            GameManager.totalBleedDamage += topAilmentsEffect[0];
             yield return Timing.WaitForSeconds(1f);
             ailmentsCounter[0]--;
         }

@@ -33,7 +33,7 @@ public class EnemyManager : MonoBehaviour
     public List<Round> rounds;
     public PlayerStats player;
     public EnemyController enemyController;
-    public GameplayManager gameplayMananger;
+    public GameplayManager gameplayManager;
     public FloatingTextController floatingTextController;
     public EnemyStats basePrefab;
     public SpawnMarks spawnMarks;
@@ -59,7 +59,7 @@ public class EnemyManager : MonoBehaviour
     private void Update()
     {
         spawnTimer += Time.deltaTime;
-        if(spawnTimer >= rounds[gameplayMananger.roundCounter].spawnInterval)
+        if(spawnTimer >= rounds[gameplayManager.roundCounter].spawnInterval)
         {
             spawnTimer = 0f;
             SpawnEnemies();
@@ -103,11 +103,11 @@ public class EnemyManager : MonoBehaviour
     }
     public void SpawnEnemies()
     {
-        if (rounds[gameplayMananger.roundCounter].currentTotalSpawned < rounds[gameplayMananger.roundCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
+        if (rounds[gameplayManager.roundCounter].currentTotalSpawned < rounds[gameplayManager.roundCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
         {
-            foreach(var eGroup in rounds[gameplayMananger.roundCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
+            foreach(var eGroup in rounds[gameplayManager.roundCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
             {
-                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[gameplayMananger.roundCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
+                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[gameplayManager.roundCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
                 {
                     if(enemiesAlive >= enemiesAliveCap) //Stop spawning if cap is reached
                     {
@@ -126,7 +126,7 @@ public class EnemyManager : MonoBehaviour
                             {
                                 SpawnMarkAndEnemy(rareEnemyList[i], eGroup, true);
                                 eGroup.currentSpawned++;
-                                rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
+                                rounds[gameplayManager.roundCounter].currentTotalSpawned++;
                                 break;
                             }
                         }
@@ -143,7 +143,7 @@ public class EnemyManager : MonoBehaviour
                             {
                                 SpawnMarkAndEnemy(enemyList[i], eGroup, false);
                                 eGroup.currentSpawned++;
-                                rounds[gameplayMananger.roundCounter].currentTotalSpawned++;
+                                rounds[gameplayManager.roundCounter].currentTotalSpawned++;
                                 break;
                             }
                         }
@@ -192,13 +192,13 @@ public class EnemyManager : MonoBehaviour
         enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange,
             enemyGroup.enemyPrefab.projectiles, enemyGroup.enemyPrefab.spreadAttack,
             enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack,
-            enemyGroup.enemyPrefab.projectileDuration);
+            enemyGroup.enemyPrefab.projectileRange);
         if (isRare)
         {
-            enemy.SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.rareMoveSpeedMultiplier / 100),
-                Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.rareHealthMultiplier / 100)),
-                Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayMananger.rareDamageMultiplier / 100)),
-                (int)Mathf.Round(enemyGroup.enemyPrefab.exp * (1 + gameplayMananger.rareExpMultiplier / 100)),
+            enemy.SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.rareMoveSpeedMultiplier / 100),
+                Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayManager.rareHealthMultiplier / 100)),
+                Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayManager.rareDamageMultiplier / 100)),
+                (int)Mathf.Round(enemyGroup.enemyPrefab.exp * (1 + gameplayManager.rareExpMultiplier / 100)),
                 Mathf.Round(enemyGroup.enemyPrefab.attackCooldown),
                 enemyGroup.projectileSpeed);
         }
@@ -212,12 +212,12 @@ public class EnemyManager : MonoBehaviour
         {
             foreach (var eGroup in rounds[i].enemyGroups)
             {
-                eGroup.damage = eGroup.enemyPrefab.damage * (1 + gameplayMananger.enemyDamageMultiplier / 100);
-                eGroup.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayMananger.enemyMoveSpeedMultiplier / 100);
-                eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayMananger.enemyMaxHealthMultiplier / 100);
-                eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayMananger.enemyExpMultiplier / 100);
-                eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayMananger.enemyAttackCooldownMultiplier / 100);
-                eGroup.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayMananger.enemyProjectileSpeedMultiplier / 100);
+                eGroup.damage = eGroup.enemyPrefab.damage * (1 + gameplayManager.enemyDamageMultiplier / 100);
+                eGroup.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
+                eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
+                eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.enemyExpMultiplier / 100);
+                eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
+                eGroup.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileSpeedMultiplier / 100);
             }
         }
     }

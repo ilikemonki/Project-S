@@ -104,9 +104,9 @@ MonoBehaviour:
   attackCooldown: 1
   attackTimer: 0
   attackRange: 6
-  projectiles: 4
+  projectiles: 1
   projectileSpeed: 5
-  projectileDuration: 1.5
+  projectileRange: 6
 --- !u!50 &2944870918720930972
 Rigidbody2D:
   serializedVersion: 4

@@ -8,10 +8,12 @@ public class EnemyProjectile : MonoBehaviour
     public EnemyStats enemyStats;
     public TrailRenderer trailRend;
     public Vector3 direction;
-    public float duration;
+    public Vector3 startingPos;
+    public float currentRange;
     public void OnEnable()
     {
         trailRend.Clear();
+        startingPos = transform.position;
     }
     private void OnDisable()
     {

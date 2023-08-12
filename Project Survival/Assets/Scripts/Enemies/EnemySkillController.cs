@@ -19,8 +19,8 @@ public class EnemySkillController : MonoBehaviour
         {
             if (projectileList[i].isActiveAndEnabled)
             {
-                projectileList[i].duration -= Time.fixedDeltaTime;
-                if (projectileList[i].duration <= 0)
+                projectileList[i].currentRange = Vector3.Distance(projectileList[i].transform.position, projectileList[i].startingPos);
+                if (projectileList[i].currentRange >= projectileList[i].enemyStats.projectileRange)
                 {
                     projectileList[i].gameObject.SetActive(false);
                 }
@@ -60,7 +60,6 @@ public class EnemySkillController : MonoBehaviour
                     }
                     projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg);
                     projectileList[i].enemyStats = enemy;
-                    projectileList[i].duration = enemy.projectileDuration;
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -84,7 +83,6 @@ public class EnemySkillController : MonoBehaviour
                     projectileList[i].direction = (Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right).normalized;   //Set direction
                     projectileList[i].transform.eulerAngles = new Vector3(0, 0, spreadAngle * p);
                     projectileList[i].enemyStats = enemy;
-                    projectileList[i].duration = enemy.projectileDuration;
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -108,7 +106,6 @@ public class EnemySkillController : MonoBehaviour
                     projectileList[i].direction = (Quaternion.AngleAxis(Random.Range(-30, 30), Vector3.forward) * direction).normalized;
                     projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg); //set angle
                     projectileList[i].enemyStats = enemy;
-                    projectileList[i].duration = enemy.projectileDuration;
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }

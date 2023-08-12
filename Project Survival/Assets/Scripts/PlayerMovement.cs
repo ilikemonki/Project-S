@@ -4,7 +4,7 @@ using UnityEngine;
 using MEC;
 public class PlayerMovement : MonoBehaviour
 {
-    public PlayerStats playerStats;
+    public PlayerStats player;
     public Rigidbody2D rb;
     public TrailRenderer trailRend;
     public SpriteRenderer spriteRenderer;
@@ -28,15 +28,15 @@ public class PlayerMovement : MonoBehaviour
         if (currentCharges < maxCharges)
         {
             timer -= Time.deltaTime;
-            playerStats.gameplayManager.UpdateDashTime(timer);
+            player.gameplayManager.UpdateDashTime(timer);
             if (timer <= 0)
             {
                 currentCharges++;
-                playerStats.gameplayManager.UpdateDashText();
+                player.gameplayManager.UpdateDashText();
                 timer = dashCooldown;
                 if (currentCharges == maxCharges)
                 {
-                    playerStats.gameplayManager.dashTimerText.text = "";
+                    player.gameplayManager.dashTimerText.text = "";
                 }
             }
         }
@@ -69,33 +69,44 @@ public class PlayerMovement : MonoBehaviour
                 else Timing.RunCoroutine(Dash());
             }
         }
-        moveDirection = new Vector2(moveX, moveY).normalized;
+        moveDirection = new Vector2(moveX, moveY).normalized; 
     }
 
     void PlayerMove() 
     {
         smoothInput = Vector3.SmoothDamp(smoothInput, new Vector2(moveX, moveY), ref smoothVelocity, 0.1f);
-        rb.MovePosition(transform.position + (playerStats.moveSpeed * Time.fixedDeltaTime * smoothInput));        
-        //rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed, moveDirection.y * playerStats.moveSpeed);
+        rb.MovePosition(transform.position + (player.moveSpeed * Time.fixedDeltaTime * smoothInput));        
+        //rb.velocity = new Vector2(moveDirection.x * playertats.moveSpeed, moveDirection.y * playertats.moveSpeed);
     }
 
     public IEnumerator<float> Dash()
     {
+        GameManager.totalDashes++;
+        foreach (SkillController sc in player.gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useDashTrigger)
+                {
+                    sc.UseSkill();
+                }
+            }
+        }
         currentCharges--;
-        playerStats.gameplayManager.UpdateDashText();
+        player.gameplayManager.UpdateDashText();
         isDashing = true;
         trailRend.emitting = true;
-        rb.velocity = new Vector2(moveDirection.x * playerStats.moveSpeed * dashPower, moveDirection.y * playerStats.moveSpeed * dashPower);
+        rb.velocity = new Vector2(moveDirection.x * player.moveSpeed * dashPower, moveDirection.y * player.moveSpeed * dashPower);
         yield return Timing.WaitForSeconds(dashIFrameSeconds);
         isDashing = false;
         trailRend.emitting = false;
     }
     public void UpdateDashStats()
     {
-        dashPower = baseDashPower * (1 + (playerStats.gameplayManager.dashPowerMultiplier / 100)); ;
-        maxCharges = baseCharges + playerStats.gameplayManager.dashChargesAdditive;
+        dashPower = baseDashPower * (1 + (player.gameplayManager.dashPowerMultiplier / 100)); ;
+        maxCharges = baseCharges + player.gameplayManager.dashChargesAdditive;
         currentCharges = maxCharges;
-        dashCooldown = baseDashCooldown * (1 + (playerStats.gameplayManager.dashCooldownMultiplier / 100));
+        dashCooldown = baseDashCooldown * (1 + (player.gameplayManager.dashCooldownMultiplier / 100));
         timer = dashCooldown;
     }
 }

@@ -146,10 +146,21 @@ public class SkillBehavior : MonoBehaviour
                     enemy.ApplyBleed(damages[0] * (damagePercent / 100) * (ailmentsEffect[0] / 100));
             }
         }
-        enemy.TakeDamage(totalDamage, isCrit);
-        if (isCrit && skillController.useCritTrigger)
+        enemy.TakeDamage(totalDamage, isCrit); 
+        if (isCrit)
         {
-            skillController.UseTriggerSkill();
+            foreach (SkillController sc in skillController.player.gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
+                {
+                    if (sc.skillTrigger.useCritTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++; 
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
+                }
+            }
         }
     }
 

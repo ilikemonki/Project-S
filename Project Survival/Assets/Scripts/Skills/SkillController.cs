@@ -71,16 +71,13 @@ public class SkillController : MonoBehaviour
     public bool useBackwardsDirection; //Shoots from behind
     public bool useReturnDirection; //projectiles only.
     public bool useRandomTargeting;
-    [Header("Triggers")]
-    public SkillController triggerSkill;
-    public bool isTriggerSkill;
-    public float triggerCooldown, currentTriggerCooldown;
-    public bool useCritTrigger;
+    [Header("Trigger")]
+    public SkillTrigger skillTrigger;
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
-        Gizmos.color = Color.white;
     }
     private void Awake()
     {
@@ -122,14 +119,13 @@ public class SkillController : MonoBehaviour
         else if (!stopFiring && !useOrbit)
         {
             currentCooldown -= Time.deltaTime;
-            if (currentCooldown <= 0f && !isTriggerSkill)
+            if (currentCooldown <= 0f)
             {
-                UseSkill();
+                if (skillTrigger == null)   //Use skill if it is not a skill trigger
+                {
+                    UseSkill();
+                }
             }
-        }
-        if (triggerSkill != null)
-        {
-            currentTriggerCooldown -= Time.deltaTime;
         }
     }
     public void UseSkill()
@@ -141,6 +137,10 @@ public class SkillController : MonoBehaviour
             {
                 return;
             }
+        }
+        if (skillTrigger != null) //Check trigger condition.
+        {
+            if (!skillTrigger.CheckTriggerCondition()) return;
         }
         if (useRandomTargeting)
         {
@@ -240,6 +240,19 @@ public class SkillController : MonoBehaviour
         {
             OnTargetBehavior(strike, transform, enemyDistances.closestEnemyList);
         }
+        foreach (SkillController sc in player.gameplayManager.skillList) //Check trigger skill condition
+        {
+            if (sc.skillTrigger != null)
+            {
+                if (sc.skillTrigger.useUsageTrigger)
+                {
+                    sc.skillTrigger.currentCounter++; 
+                    if (sc.currentCooldown <= 0f)
+                        sc.UseSkill();
+                }
+            }
+        }
+        GameManager.totalSkillsUsed++;
     }
     public IEnumerator<float> BarrageBehavior(int numOfAttacks, Transform target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
     {
@@ -933,7 +946,6 @@ public class SkillController : MonoBehaviour
         lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive;
         lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive;
         currentCooldown = cooldown;
-        currentTriggerCooldown = triggerCooldown;
         knockBack = baseKnockBack;
         highestDamageType = damages.IndexOf(Mathf.Max(damages.ToArray()));  //Find highest damage type.
         UpdateSize();
@@ -947,17 +959,6 @@ public class SkillController : MonoBehaviour
         for (int i = 0; i < orbitPoolList.Count; i++)
         {
             orbitPoolList[i].transform.localScale = new Vector3(orbitPoolList[i].transform.localScale.x * (1 + size / 100), orbitPoolList[i].transform.localScale.y * (1 + size / 100), 1);
-        }
-    }
-    public void UseTriggerSkill()
-    {
-        if (currentTriggerCooldown <= 0)
-        {
-            if (triggerSkill.currentCooldown <= 0)
-            {
-                triggerSkill.UseSkill();
-                currentTriggerCooldown = triggerCooldown;
-            }
         }
     }
 }
