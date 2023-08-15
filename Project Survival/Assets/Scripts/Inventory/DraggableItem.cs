@@ -6,11 +6,22 @@ using UnityEngine.EventSystems;
 
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public enum SlotType
+    {
+        SkillOrb,
+        SkillGem,
+    }
+    public SlotType slotType;
+    public SkillController skillController;
+    public InventoryManager inventory;
+    public SkillSlotUI slotUI;
+    public int amount;
     public Image image;
-    public Transform parentAfterDrag;
+    public Transform currentParent;
+    public bool isInInventory;
     public void OnBeginDrag(PointerEventData eventData)
     {
-        parentAfterDrag = transform.parent;
+        currentParent = transform.parent;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
@@ -21,9 +32,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.position = Input.mousePosition;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData) //Calls after Drop
     {
-        transform.SetParent(parentAfterDrag);
+        transform.SetParent(currentParent);    //Set parent back to where it came from if it didn't move
         image.raycastTarget = true;
     }
 }

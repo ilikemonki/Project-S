@@ -233,7 +233,9 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
-            gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
+            if (regen - degen == 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
+            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
+            else gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
             healthBarImage.gameObject.SetActive(false);
             return;
         }
@@ -241,17 +243,23 @@ public class PlayerStats : MonoBehaviour
         if (hpPercent <= 30)
         {
             healthBarImage.color = Color.red;
-            gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
+            if (regen - degen == 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
+            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
+            else gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
         }
         else if (hpPercent <= 60)
         {
             healthBarImage.color = Color.yellow;
-            gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString();
+            if (regen - degen == 0) gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString();
+            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
+            else gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
         }
         else
         {
             healthBarImage.color = Color.green;
-            gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString();
+            if (regen - degen == 0) gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString();
+            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
+            else gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
         }
     }
 
