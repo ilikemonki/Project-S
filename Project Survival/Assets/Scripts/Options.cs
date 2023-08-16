@@ -4,25 +4,60 @@ using UnityEngine;
 
 public class Options : MonoBehaviour
 {
-    public GameObject inventoryObject;
+    public GameObject skillsUI, statsUI, craftingUI;
+    public GameObject menuUI;
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            OpenCloseUI(inventoryObject);
+            OpenCloseUI();
         }
     }
-    public void OpenCloseUI(GameObject ui)
+    public void OpenCloseUI()
     {
-        if (ui.activeSelf == false)
+        if (menuUI.activeSelf == false)
         {
             GameManager.PauseGame();
-            ui.SetActive(true);
+            menuUI.SetActive(true);
         }
         else
         {
             GameManager.UnpauseGame();
-            ui.SetActive(false);
+            menuUI.SetActive(false);
         }
+    }
+    public void SkillsUIButton()
+    {
+        if (statsUI.activeSelf) statsUI.SetActive(false);
+        if (craftingUI.activeSelf) craftingUI.SetActive(false);
+        skillsUI.SetActive(true);
+    }
+    public void StatsUIButton()
+    {
+        if (skillsUI.activeSelf) skillsUI.SetActive(false);
+        if (craftingUI.activeSelf) craftingUI.SetActive(false);
+        statsUI.SetActive(true);
+    }
+    public void CraftingUIButton()
+    {
+        if (statsUI.activeSelf) statsUI.SetActive(false);
+        if (skillsUI.activeSelf) skillsUI.SetActive(false);
+        craftingUI.SetActive(true);
+    }
+    public void RestartButton()
+    {
+
+    }
+    public void MainMenuButton()
+    {
+
+    }
+    public void QuitButton()
+    {
+
+    }
+    public void SettingsButton()
+    {
+
     }
 }

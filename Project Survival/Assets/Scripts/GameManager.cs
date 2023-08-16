@@ -5,8 +5,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static int totalCoins, totalClassStars;
-    public static int totalKills, totalSkillsUsed, totalCrits, totalDashes, totalBleed, totalBurn, totalChill, totalShock;
-    public static float totalDamageDealt, totalDamageTaken, totalHealing, totalBleedDamage, totalBurnDamage, totalTime;
+    public static int totalKills, totalSkillsUsed, totalCrits, totalDashes, totalBleed, totalBurn, totalChill, totalShock, totalCoinsCollected, totalClassStarsCollected, totalSkillGemsCollected;
+    public static int totalExp, totalPassiveItems;
+    public static float totalDamageDealt, totalPhysicalDamage, totalFireDamage, totalColdDamage, totalLightningDamage, totalBleedDamage, totalBurnDamage, TotalDotDamage;
+    public static float totalDamageTaken, totalHealing, totalRegen, totalDegen, totalLifeStealProc, totalLifeSteal;
+    public static float totalTime; //add Player Level and Wave to Statistics.
     public static void PauseGame()
     {
         Time.timeScale = 0;

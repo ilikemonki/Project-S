@@ -11,8 +11,8 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public PlayerStats player;
     public EnemyManager enemyManager;
-    public GameObject roundUI;
-    public TextMeshProUGUI roundText;
+    public GameObject waveUI;
+    public TextMeshProUGUI waveText;
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
@@ -21,7 +21,7 @@ public class GameplayManager : MonoBehaviour
     public Camera cam;
     public float maxAttackRange;    //Gets max range between all skills, used in EnemyDistances to find targets within the range.
     [Header("Game Stats")]
-    public int roundCounter;
+    public int waveCounter;
     public float timer, maxTimer;
     public int level, exp, expCap, expCapIncrease;
     public int coins, classStars;
@@ -128,7 +128,7 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdateRoundText()
     {
-        roundText.text = "Round " + (roundCounter + 1);
+        waveText.text = "Round " + (waveCounter + 1);
     }
     public void UpdateLevelText()
     {
@@ -148,9 +148,9 @@ public class GameplayManager : MonoBehaviour
     }
     public void GoToNextRound()
     {
-        if (roundCounter < enemyManager.rounds.Count - 1)
+        if (waveCounter < enemyManager.rounds.Count - 1)
         {
-            roundCounter++;
+            waveCounter++;
             UpdateRoundText();
         }
     }

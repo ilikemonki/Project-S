@@ -59,7 +59,7 @@ public class EnemyManager : MonoBehaviour
     private void Update()
     {
         spawnTimer += Time.deltaTime;
-        if(spawnTimer >= rounds[gameplayManager.roundCounter].spawnInterval)
+        if(spawnTimer >= rounds[gameplayManager.waveCounter].spawnInterval)
         {
             spawnTimer = 0f;
             SpawnEnemies();
@@ -103,11 +103,11 @@ public class EnemyManager : MonoBehaviour
     }
     public void SpawnEnemies()
     {
-        if (rounds[gameplayManager.roundCounter].currentTotalSpawned < rounds[gameplayManager.roundCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
+        if (rounds[gameplayManager.waveCounter].currentTotalSpawned < rounds[gameplayManager.waveCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
         {
-            foreach(var eGroup in rounds[gameplayManager.roundCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
+            foreach(var eGroup in rounds[gameplayManager.waveCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
             {
-                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[gameplayManager.roundCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
+                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[gameplayManager.waveCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
                 {
                     if(enemiesAlive >= enemiesAliveCap) //Stop spawning if cap is reached
                     {
@@ -126,7 +126,7 @@ public class EnemyManager : MonoBehaviour
                             {
                                 SpawnMarkAndEnemy(rareEnemyList[i], eGroup, true);
                                 eGroup.currentSpawned++;
-                                rounds[gameplayManager.roundCounter].currentTotalSpawned++;
+                                rounds[gameplayManager.waveCounter].currentTotalSpawned++;
                                 break;
                             }
                         }
@@ -143,7 +143,7 @@ public class EnemyManager : MonoBehaviour
                             {
                                 SpawnMarkAndEnemy(enemyList[i], eGroup, false);
                                 eGroup.currentSpawned++;
-                                rounds[gameplayManager.roundCounter].currentTotalSpawned++;
+                                rounds[gameplayManager.waveCounter].currentTotalSpawned++;
                                 break;
                             }
                         }

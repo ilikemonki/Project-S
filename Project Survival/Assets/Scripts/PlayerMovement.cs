@@ -24,19 +24,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InputManagement();
-        if (currentCharges < maxCharges)
+        if (Time.timeScale >= 1)
         {
-            timer -= Time.deltaTime;
-            player.gameplayManager.UpdateDashTime(timer);
-            if (timer <= 0)
+            InputManagement();
+            if (currentCharges < maxCharges)
             {
-                currentCharges++;
-                player.gameplayManager.UpdateDashText();
-                timer = dashCooldown;
-                if (currentCharges == maxCharges)
+                timer -= Time.deltaTime;
+                player.gameplayManager.UpdateDashTime(timer);
+                if (timer <= 0)
                 {
-                    player.gameplayManager.dashTimerText.text = "";
+                    currentCharges++;
+                    player.gameplayManager.UpdateDashText();
+                    timer = dashCooldown;
+                    if (currentCharges == maxCharges)
+                    {
+                        player.gameplayManager.dashTimerText.text = "";
+                    }
                 }
             }
         }

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
     public List<SkillController> skillControllerPrefabList = new();
     public List<DraggableItem> skillOrbList = new();
     public List<DraggableItem> skillGemList = new();
+    public List<TextMeshProUGUI> generalStats = new(); //List must be in order of the GameManager.totalIntStats and totalFloatStats list.
     public SkillSlotUI uiPrefab;
     public DraggableItem newItemPrefab;
     public GameObject skillParent;
@@ -108,8 +110,47 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-    public void ReturnButton()
+    public void UpdateGeneralStats()
     {
-        gameObject.SetActive(false);
+        for (int i = 0; i < generalStats.Count; i++)
+        {
+            switch (i)
+            {
+                case 0: generalStats[i].text = GameManager.totalTime.ToString(); break;
+                case 1: generalStats[i].text = GameManager.totalKills.ToString(); break;
+                case 2: generalStats[i].text = GameManager.totalExp.ToString(); break;
+                case 3: generalStats[i].text = gameplayManager.level.ToString(); break;
+                case 4: generalStats[i].text = (gameplayManager.waveCounter + 1).ToString(); break;
+                case 5: generalStats[i].text = GameManager.totalCoinsCollected.ToString(); break;
+                case 6: generalStats[i].text = GameManager.totalClassStarsCollected.ToString(); break;
+                case 7: generalStats[i].text = GameManager.totalPassiveItems.ToString(); break;
+                case 8: generalStats[i].text = GameManager.totalSkillGemsCollected.ToString(); break;
+                case 9: generalStats[i].text = GameManager.totalDashes.ToString(); break;
+                case 10: generalStats[i].text = GameManager.totalDamageDealt.ToString(); break;
+                case 11: generalStats[i].text = GameManager.totalPhysicalDamage.ToString(); break;
+                case 12: generalStats[i].text = GameManager.totalFireDamage.ToString(); break;
+                case 13: generalStats[i].text = GameManager.totalColdDamage.ToString(); break;
+                case 14: generalStats[i].text = GameManager.totalLightningDamage.ToString(); break;
+                case 15: generalStats[i].text = GameManager.TotalDotDamage.ToString(); break;
+                case 16: generalStats[i].text = GameManager.totalBleedDamage.ToString(); break;
+                case 17: generalStats[i].text = GameManager.totalBurnDamage.ToString(); break;
+                case 18: generalStats[i].text = GameManager.totalCrits.ToString(); break;
+                case 19: generalStats[i].text = GameManager.totalSkillsUsed.ToString(); break;
+                case 20: generalStats[i].text = GameManager.totalDamageTaken.ToString(); break;
+                case 21: generalStats[i].text = GameManager.totalHealing.ToString(); break;
+                case 22: generalStats[i].text = GameManager.totalRegen.ToString(); break;
+                case 23: generalStats[i].text = GameManager.totalDegen.ToString(); break;
+                case 24: generalStats[i].text = GameManager.totalLifeStealProc.ToString(); break;
+                case 25: generalStats[i].text = GameManager.totalLifeSteal.ToString(); break;
+                case 26: generalStats[i].text = GameManager.totalBleed.ToString(); break;
+                case 27: generalStats[i].text = GameManager.totalBurn.ToString(); break;
+                case 28: generalStats[i].text = GameManager.totalChill.ToString(); break;
+                case 29: generalStats[i].text = GameManager.totalShock.ToString(); break;
+            }
+        }
+    }
+    public void OnEnable()
+    {
+        UpdateGeneralStats();
     }
 }
