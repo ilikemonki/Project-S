@@ -42,16 +42,12 @@ public class EnemyManager : MonoBehaviour
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
     public List<EnemyStats> enemyList = new();
-    public List<EnemyStats> rareEnemyList = new();
     public EnemyStats baseRarePrefab;
-    public GameObject rareEnemyParent;
-    public int rareSpawnChance, rareSpawnChanceRange;
     float spawnPosX, spawnPosY;
     Vector2 spawnPos;
     private void Start()
     {
         PopulatePool(40);
-        PopulateRarePool(10);
         CalculateTotalEnemiesInRound();
         UpdateAllEnemyStats();
     }
@@ -90,17 +86,6 @@ public class EnemyManager : MonoBehaviour
             enemyList.Add(es);
         }
     }
-    public void PopulateRarePool(int spawnAmount)
-    {
-        for (int i = 0; i < spawnAmount; i++)
-        {
-            EnemyStats es = Instantiate(baseRarePrefab, rareEnemyParent.transform);    //Spawn, add to list, and initialize prefabs
-            es.gameObject.SetActive(false);
-            es.enemyManager = this;
-            es.dropRate = dropRate;
-            rareEnemyList.Add(es);
-        }
-    }
     public void SpawnEnemies()
     {
         if (rounds[gameplayManager.waveCounter].currentTotalSpawned < rounds[gameplayManager.waveCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
@@ -114,38 +99,18 @@ public class EnemyManager : MonoBehaviour
                         maxEnemiesReached = true;
                         return;
                     }
-                    if (Random.Range(1, rareSpawnChanceRange + 1) <= rareSpawnChance)   //Chance to spawn rare mob
+                    for (int i = 0; i < enemyList.Count; i++)   //Find an inactive enemy to spawn
                     {
-                        for (int i = 0; i < rareEnemyList.Count; i++)   //Find an inactive enemy to spawn
+                        if (i > enemyList.Count - 2)    //Check pool, add more if neccessary
                         {
-                            if (i > rareEnemyList.Count - 2)    //Check pool, add more if neccessary
-                            {
-                                PopulateRarePool(5);
-                            }
-                            if (!rareEnemyList[i].isActiveAndEnabled && !rareEnemyList[i].isSpawning)
-                            {
-                                SpawnMarkAndEnemy(rareEnemyList[i], eGroup, true);
-                                eGroup.currentSpawned++;
-                                rounds[gameplayManager.waveCounter].currentTotalSpawned++;
-                                break;
-                            }
+                            PopulatePool(5);
                         }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < enemyList.Count; i++)   //Find an inactive enemy to spawn
+                        if (!enemyList[i].isActiveAndEnabled && !enemyList[i].isSpawning)
                         {
-                            if (i > enemyList.Count - 2)    //Check pool, add more if neccessary
-                            {
-                                PopulatePool(5);
-                            }
-                            if (!enemyList[i].isActiveAndEnabled && !enemyList[i].isSpawning)
-                            {
-                                SpawnMarkAndEnemy(enemyList[i], eGroup, false);
-                                eGroup.currentSpawned++;
-                                rounds[gameplayManager.waveCounter].currentTotalSpawned++;
-                                break;
-                            }
+                            SpawnMarkAndEnemy(enemyList[i], eGroup, false);
+                            eGroup.currentSpawned++;
+                            rounds[gameplayManager.waveCounter].currentTotalSpawned++;
+                            break;
                         }
                     }
                 }
@@ -193,17 +158,7 @@ public class EnemyManager : MonoBehaviour
             enemyGroup.enemyPrefab.projectiles, enemyGroup.enemyPrefab.spreadAttack,
             enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack,
             enemyGroup.enemyPrefab.projectileRange);
-        if (isRare)
-        {
-            enemy.SetStats(enemyGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.rareMoveSpeedMultiplier / 100),
-                Mathf.Round(enemyGroup.enemyPrefab.maxHealth * (1 + gameplayManager.rareHealthMultiplier / 100)),
-                Mathf.Round(enemyGroup.enemyPrefab.damage * (1 + gameplayManager.rareDamageMultiplier / 100)),
-                (int)Mathf.Round(enemyGroup.enemyPrefab.exp * (1 + gameplayManager.rareExpMultiplier / 100)),
-                Mathf.Round(enemyGroup.enemyPrefab.attackCooldown),
-                enemyGroup.projectileSpeed);
-        }
-        else
-            enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectileSpeed);   //Set new stats to enemy
+        enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectileSpeed);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
     }
     public void UpdateAllEnemyStats()

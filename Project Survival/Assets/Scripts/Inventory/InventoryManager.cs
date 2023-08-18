@@ -9,6 +9,7 @@ public class InventoryManager : MonoBehaviour
     public List<DraggableItem> skillOrbList = new();
     public List<DraggableItem> skillGemList = new();
     public List<TextMeshProUGUI> generalStats = new(); //List must be in order of the GameManager.totalIntStats and totalFloatStats list.
+    public List<ActiveSkillDrop> activeSkillDropList;
     public SkillSlotUI uiPrefab;
     public DraggableItem newItemPrefab;
     public GameObject skillParent;
@@ -17,6 +18,16 @@ public class InventoryManager : MonoBehaviour
     public EnemyManager enemyManager;
     public EnemyDistances enemyDistances;
     public GameplayManager gameplayManager;
+    private void Start()
+    {
+        foreach(ActiveSkillDrop skillDrop in activeSkillDropList) //Set skills in start.
+        {
+            if (skillDrop.draggableItem != null)
+            {
+                InstantiateSkill(skillDrop.draggableItem);
+            }
+        }
+    }
     public void DropInInventory(DraggableItem draggableItem, Transform parent)
     {
         if(draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
@@ -96,17 +107,21 @@ public class InventoryManager : MonoBehaviour
                 Destroy(draggableItem.slotUI.gameObject, 0);
                 draggableItem.slotUI = null;
             }
-            foreach (SkillController sc in skillControllerPrefabList) //Add skill controller into game.
+            InstantiateSkill(draggableItem);
+        }
+    }
+    public void InstantiateSkill(DraggableItem dragItem)
+    {
+        foreach (SkillController sc in skillControllerPrefabList) //Add skill controller into game.
+        {
+            if (sc.name.Contains(dragItem.name)) //Name on drag item and controller must contain same name
             {
-                if (sc.name.Contains(draggableItem.name)) //Name on drag item and controller must contain same name
-                {
-                    SkillController skill = Instantiate(sc, skillParent.transform);
-                    skill.player = player;
-                    skill.enemyManager = enemyManager;
-                    skill.enemyDistances = enemyDistances;
-                    skill.gameplayManager = gameplayManager;
-                    skill.poolParent.transform.SetParent(skillPoolParent.transform);
-                }
+                SkillController skill = Instantiate(sc, skillParent.transform);
+                skill.player = player;
+                skill.enemyManager = enemyManager;
+                skill.enemyDistances = enemyDistances;
+                skill.gameplayManager = gameplayManager;
+                skill.poolParent.transform.SetParent(skillPoolParent.transform);
             }
         }
     }

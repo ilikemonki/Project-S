@@ -111,6 +111,11 @@ public class SkillBehavior : MonoBehaviour
         if (Random.Range(1, 101) <= skillController.lifeStealChance)  //Life Steal
         {
             skillController.player.Heal(skillController.lifeSteal);
+            GameManager.totalLifeStealProc++;
+            if (skillController.lifeSteal + skillController.player.currentHealth > skillController.player.maxHealth)
+                GameManager.totalLifeSteal += skillController.player.maxHealth - skillController.player.currentHealth;
+            else
+                GameManager.totalLifeSteal += skillController.lifeSteal;
         }
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
@@ -368,38 +373,6 @@ public class SkillBehavior : MonoBehaviour
                     {
                         shortestDistance = distanceToEnemy;
                         nearestEnemy = skillController.enemyManager.enemyList[i];
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < skillController.enemyManager.rareEnemyList.Count; i++)  //find target in rare enemy list
-        {
-            bool dontChain = false;
-            if (skillController.enemyManager.rareEnemyList[i].isActiveAndEnabled)
-            {
-                for (int j = 0; j < enemyChainList.Count; j++)
-                {
-                    if (enemyChainList.Contains(skillController.enemyManager.rareEnemyList[i]))
-                    {
-                        dontChain = true;
-                        break;
-                    }
-                }
-                if (!dontChain)
-                {
-                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.rareEnemyList[i].transform.position); 
-                    if (!closest)
-                    {
-                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange)
-                        {
-                            shortestDistance = distanceToEnemy;
-                            nearestEnemy = skillController.enemyManager.rareEnemyList[i];
-                        }
-                    }
-                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange)
-                    {
-                        shortestDistance = distanceToEnemy;
-                        nearestEnemy = skillController.enemyManager.rareEnemyList[i];
                     }
                 }
             }

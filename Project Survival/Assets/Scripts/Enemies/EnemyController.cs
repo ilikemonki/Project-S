@@ -10,7 +10,6 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         MoveAndAttack(enemyManager.enemyList);
-        MoveAndAttack(enemyManager.rareEnemyList);
     }
 
     public void MoveAndAttack(List<EnemyStats> enemyList)

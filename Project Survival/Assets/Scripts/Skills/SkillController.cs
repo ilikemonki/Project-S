@@ -844,18 +844,6 @@ public class SkillController : MonoBehaviour
                 }
             }
         }
-        for (int e = 0; e < enemyManager.rareEnemyList.Count; e++)
-        {
-            if (enemyManager.rareEnemyList[e].isActiveAndEnabled && !rememberEnemiesList.Contains(enemyManager.rareEnemyList[e]))
-            {
-                distanceToEnemy = Vector3.Distance(spawnPos.position, enemyManager.rareEnemyList[e].transform.position);
-                if (distanceToEnemy < shortestDistance && distanceToEnemy <= attackRange)
-                {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemyManager.rareEnemyList[e];
-                }
-            }
-        }
         return nearestEnemy;
     }
     public void GetEnemiesInRangeUnsorted(Transform spawnPos)
@@ -869,17 +857,6 @@ public class SkillController : MonoBehaviour
                 if (distanceToEnemy <= attackRange)
                 {
                     enemiesInRange.Add(enemyManager.enemyList[e]);
-                }
-            }
-        }
-        for (int e = 0; e < enemyManager.rareEnemyList.Count; e++)
-        {
-            if (enemyManager.rareEnemyList[e].isActiveAndEnabled && !enemiesInRange.Contains(enemyManager.rareEnemyList[e]))
-            {
-                distanceToEnemy = Vector3.Distance(spawnPos.position, enemyManager.rareEnemyList[e].transform.position);
-                if (distanceToEnemy <= attackRange)
-                {
-                    enemiesInRange.Add(enemyManager.rareEnemyList[e]);
                 }
             }
         }

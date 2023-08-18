@@ -105,13 +105,16 @@ public class EnemyStats : MonoBehaviour
     {
         damage = CalculateDamage(damage);
         if (bleeding && burned)
+        {
             dotTextDamage.text = totalBleedDamage.ToString() + " " + "<color=red>" + totalBurnDamage.ToString();
+        }
         else if (bleeding)
             dotTextDamage.text = totalBleedDamage.ToString();
         else if (burned)
             dotTextDamage.text = "<color=red>" + totalBurnDamage.ToString();
         currentHealth -= damage;
         GameManager.totalDamageDealt += damage;
+        GameManager.TotalDotDamage += damage;
         if (currentHealth <= 0f && !isDead)
         {
             Die();
@@ -120,6 +123,9 @@ public class EnemyStats : MonoBehaviour
     public void Die()
     {
         isDead = true;
+        enemyManager.gameplayManager.GainExp(exp);
+        GameManager.totalKills++;
+        enemyManager.enemiesAlive--;
         dropRate.DropLoot(transform);
         gameObject.SetActive(false);
     }
@@ -127,12 +133,6 @@ public class EnemyStats : MonoBehaviour
     private void OnDisable()
     {
         spriteRenderer.material = defaultMaterial;
-        if (enemyManager != null)
-        {
-            enemyManager.gameplayManager.GainExp(exp);
-            GameManager.totalKills++;
-            enemyManager.enemiesAlive--;
-        }
         knockedBack = false;
         isSpawning = false;
         chilled = false; burned = false; shocked = false; bleeding = false;
@@ -154,7 +154,6 @@ public class EnemyStats : MonoBehaviour
         rb.velocity = Vector2.zero;
         knockedBack = false;
     }
-
     public void KnockBack(Vector2 power)
     {
         if (gameObject.activeSelf)
@@ -164,15 +163,12 @@ public class EnemyStats : MonoBehaviour
             Timing.RunCoroutine(ResetVelocity());
         }
     }
-
     public IEnumerator<float> DamageFlash()
     {
         spriteRenderer.material = damageFlashMaterial;
         yield return Timing.WaitForSeconds(0.1f);
         spriteRenderer.material = defaultMaterial;
     }
-
-    
     public void ApplyChill(float chillEffect)
     {
         if (!chilled)
@@ -181,6 +177,19 @@ public class EnemyStats : MonoBehaviour
             ailmentsCounter[2] = 3;
             topAilmentsEffect[2] = chillEffect;
             Timing.RunCoroutine(SlowMovement());
+            GameManager.totalChill++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
+                {
+                    if (sc.skillTrigger.useChillTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
+                }
+            }
         }
         else
         {
@@ -190,17 +199,17 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[2] = chillEffect;
             moveSpeed = baseMoveSpeed * (1 - chillEffect / 100);
-        }
-        GameManager.totalChill++;
-        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
-        {
-            if (sc.skillTrigger != null)
+            GameManager.totalChill++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger.useUsageTrigger)
+                if (sc.skillTrigger != null)
                 {
-                    sc.skillTrigger.currentCounter++;
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    if (sc.skillTrigger.useChillTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
                 }
             }
         }
@@ -214,6 +223,19 @@ public class EnemyStats : MonoBehaviour
             ailmentsCounter[1] = 5; 
             topAilmentsEffect[1] = burnDamage;
             Timing.RunCoroutine(TakeBurnDamage());
+            GameManager.totalBurn++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
+                {
+                    if (sc.skillTrigger.useBurnTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
+                }
+            }
         }
         else
         {
@@ -222,17 +244,17 @@ public class EnemyStats : MonoBehaviour
         if (topAilmentsEffect[1] < burnDamage && burned)   //if burn damage is higher and mob is already burned, reburn.
         {
             topAilmentsEffect[1] = burnDamage;
-        }
-        GameManager.totalBurn++;
-        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
-        {
-            if (sc.skillTrigger != null)
+            GameManager.totalBurn++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger.useUsageTrigger)
+                if (sc.skillTrigger != null)
                 {
-                    sc.skillTrigger.currentCounter++;
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    if (sc.skillTrigger.useBurnTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
                 }
             }
         }
@@ -244,6 +266,19 @@ public class EnemyStats : MonoBehaviour
             ailmentsCounter[3] = 4;
             topAilmentsEffect[3] = shockEffect;
             Timing.RunCoroutine(TakeShockEffect());
+            GameManager.totalShock++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
+                {
+                    if (sc.skillTrigger.useShockTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
+                }
+            }
         }
         else
         {
@@ -252,17 +287,17 @@ public class EnemyStats : MonoBehaviour
         if (topAilmentsEffect[3] < shockEffect && shocked)   //if burn damage is higher and mob is already burned, reburn.
         {
             topAilmentsEffect[3] = shockEffect;
-        }
-        GameManager.totalShock++;
-        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
-        {
-            if (sc.skillTrigger != null)
+            GameManager.totalShock++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger.useUsageTrigger)
+                if (sc.skillTrigger != null)
                 {
-                    sc.skillTrigger.currentCounter++;
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    if (sc.skillTrigger.useShockTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
                 }
             }
         }
@@ -276,6 +311,19 @@ public class EnemyStats : MonoBehaviour
             ailmentsCounter[0] = 2;
             topAilmentsEffect[0] = bleedDamage;
             Timing.RunCoroutine(TakeBleedDamage());
+            GameManager.totalBleed++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
+                {
+                    if (sc.skillTrigger.useBleedTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
+                }
+            }
         }
         else
         {
@@ -284,17 +332,17 @@ public class EnemyStats : MonoBehaviour
         if (topAilmentsEffect[0] < bleedDamage && bleeding)   //if burn damage is higher and mob is already burned, reburn.
         {
             topAilmentsEffect[0] = bleedDamage;
-        }
-        GameManager.totalBleed++;
-        foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
-        {
-            if (sc.skillTrigger != null)
+            GameManager.totalBleed++;
+            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger.useUsageTrigger)
+                if (sc.skillTrigger != null)
                 {
-                    sc.skillTrigger.currentCounter++;
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    if (sc.skillTrigger.useBleedTrigger)
+                    {
+                        sc.skillTrigger.currentCounter++;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
                 }
             }
         }

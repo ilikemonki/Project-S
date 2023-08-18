@@ -54,7 +54,6 @@ public class GameplayManager : MonoBehaviour
     public float enemyAttackCooldownMultiplier;
     public float enemyProjectileSpeedMultiplier;
     public List<float> resistances;//[0]physical,[1]fire,[2]cold,[3]lightning
-    public float rareMoveSpeedMultiplier, rareHealthMultiplier, rareDamageMultiplier, rareExpMultiplier;
     public float dropChanceMultiplier;
 
     private void Start()
@@ -89,6 +88,7 @@ public class GameplayManager : MonoBehaviour
     public void GainExp(int amt)
     {
         exp += amt;
+        GameManager.totalExp += amt;
         if (exp >= expCap)  //Level UP
         {
             if (expSliderParticle != null) expSliderParticle.Play();
@@ -103,11 +103,13 @@ public class GameplayManager : MonoBehaviour
     public void GainCoins(int amt)
     {
         coins += amt;
+        GameManager.totalCoinsCollected += amt;
         UpdateCoinText();
     }
     public void GainClassStars(int amt)
     {
         classStars += amt;
+        GameManager.totalClassStarsCollected += amt;
         UpdateClassStarText();
     }
     public void UpdateTime(float timer)

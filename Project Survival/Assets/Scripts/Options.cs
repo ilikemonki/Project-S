@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Options : MonoBehaviour
 {
-    public GameObject skillsUI, statsUI, craftingUI;
+    public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI;
     public GameObject menuUI;
     public void Update()
     {
@@ -19,6 +19,7 @@ public class Options : MonoBehaviour
         {
             GameManager.PauseGame();
             menuUI.SetActive(true);
+            SkillsUIButton();
         }
         else
         {
@@ -29,20 +30,23 @@ public class Options : MonoBehaviour
     public void SkillsUIButton()
     {
         if (statsUI.activeSelf) statsUI.SetActive(false);
-        if (craftingUI.activeSelf) craftingUI.SetActive(false);
+        if (passiveItemsUI.activeSelf) passiveItemsUI.SetActive(false);
+        playerEnemyStatsUI.SetActive(true);
         skillsUI.SetActive(true);
     }
     public void StatsUIButton()
     {
         if (skillsUI.activeSelf) skillsUI.SetActive(false);
-        if (craftingUI.activeSelf) craftingUI.SetActive(false);
+        if (passiveItemsUI.activeSelf) passiveItemsUI.SetActive(false);
+        playerEnemyStatsUI.SetActive(false);
         statsUI.SetActive(true);
     }
-    public void CraftingUIButton()
+    public void PassiveItemsUIButton()
     {
         if (statsUI.activeSelf) statsUI.SetActive(false);
         if (skillsUI.activeSelf) skillsUI.SetActive(false);
-        craftingUI.SetActive(true);
+        playerEnemyStatsUI.SetActive(true);
+        passiveItemsUI.SetActive(true);
     }
     public void RestartButton()
     {

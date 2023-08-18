@@ -128,6 +128,7 @@ public class PlayerStats : MonoBehaviour
             }
         }
         floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red);
+        GameManager.totalDamageTaken += dmg;
         foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
         {
             if (sc.skillTrigger != null)
@@ -183,49 +184,108 @@ public class PlayerStats : MonoBehaviour
         {
             floatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green);
             currentHealth = maxHealth;
+            GameManager.totalHealing += maxHealth - currentHealth;
+            foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
+                {
+                    if (sc.skillTrigger.useHealTrigger)
+                    {
+                        sc.skillTrigger.currentCounter += maxHealth - currentHealth;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
+                }
+            }
         }
         else
         {
             floatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green);
             currentHealth += amt;
-        }
-        UpdateHealthBar(amt);
-        foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
-        {
-            if (sc.skillTrigger != null)
+            GameManager.totalHealing += amt;
+            foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger.useHealTrigger)
+                if (sc.skillTrigger != null)
                 {
-                    sc.skillTrigger.currentCounter += amt;
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    if (sc.skillTrigger.useHealTrigger)
+                    {
+                        sc.skillTrigger.currentCounter += amt;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
                 }
             }
         }
+        UpdateHealthBar(amt);
     }
 
     public void Regenerate()
     {
         if (isDead) return;
-        foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+        float amt = regen - degen;
+        if (amt > 0) 
         {
-            if (sc.skillTrigger != null)
+            if (amt + currentHealth > maxHealth)
             {
-                if (sc.skillTrigger.useBloodTrigger)
+                Heal(maxHealth - currentHealth);
+                GameManager.totalRegen += maxHealth - currentHealth;
+            }
+            else
+            {
+                Heal(amt);
+                GameManager.totalRegen += amt;
+            }
+            GameManager.totalDegen += degen;
+            foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+            {
+                if (sc.skillTrigger != null)
                 {
-                    sc.skillTrigger.currentCounter += degen;
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    if (sc.skillTrigger.useBloodTrigger)
+                    {
+                        sc.skillTrigger.currentCounter += degen;
+                        if (sc.currentCooldown <= 0f)
+                            sc.UseSkill();
+                    }
                 }
             }
         }
-        float amt = regen - degen;
-        if (amt > 0) Heal(amt);
-        else if (amt < 0 && currentHealth != 1) 
+        else if (amt < 0 && currentHealth != 1) //Do not degen after 1 hp
         {
             amt *= -1; //make it positive
-            if (amt > currentHealth) TakeDamage(currentHealth - 1, false, true);
-            else TakeDamage(amt, false, true); 
+            if (amt > currentHealth)
+            {
+                TakeDamage(currentHealth - 1, false, true);
+                GameManager.totalDegen += currentHealth - 1;
+                foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+                {
+                    if (sc.skillTrigger != null)
+                    {
+                        if (sc.skillTrigger.useBloodTrigger)
+                        {
+                            sc.skillTrigger.currentCounter += currentHealth - 1;
+                            if (sc.currentCooldown <= 0f)
+                                sc.UseSkill();
+                        }
+                    }
+                }
+            }
+            else 
+            { 
+                TakeDamage(amt, false, true);
+                GameManager.totalDegen += amt;
+                foreach (SkillController sc in gameplayManager.skillList) //Check trigger skill condition
+                {
+                    if (sc.skillTrigger != null)
+                    {
+                        if (sc.skillTrigger.useBloodTrigger)
+                        {
+                            sc.skillTrigger.currentCounter += amt;
+                            if (sc.currentCooldown <= 0f)
+                                sc.UseSkill();
+                        }
+                    }
+                }
+            }
         }
     }
 

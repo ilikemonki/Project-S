@@ -34,18 +34,6 @@ public class EnemyDistances : MonoBehaviour
                         nearestEnemy = enemyManager.enemyList[i];
                     }
                 }
-                if (i < enemyManager.rareEnemyList.Count)
-                {
-                    if (enemyManager.rareEnemyList[i].isActiveAndEnabled && !tempClosestEnemyList.Contains(enemyManager.rareEnemyList[i]))
-                    {
-                        distanceToEnemy = Vector3.Distance(enemyManager.player.transform.position, enemyManager.rareEnemyList[i].transform.position);
-                        if (distanceToEnemy < shortestDistance && enemyManager.gameplayManager.maxAttackRange >= distanceToEnemy)
-                        {
-                            shortestDistance = distanceToEnemy;
-                            nearestEnemy = enemyManager.rareEnemyList[i];
-                        }
-                    }
-                }
             }
             if (nearestEnemy != null)
             {
