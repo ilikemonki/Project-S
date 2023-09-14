@@ -125,6 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -6595649996783161566, guid: 213c7f03c092cd640a098be94ba1aea6, type: 3}
   meleeWeaponPrefab: {fileID: 0}
+  skillOrbName: Dagger Orb
   poolParent: {fileID: 1735531887519041077}
   orbitParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
@@ -137,7 +138,7 @@ MonoBehaviour:
   level: 0
   baseDamages:
   - 0
-  - 10
+  - 1
   - 0
   - 0
   addedAilmentsChance:
@@ -157,8 +158,8 @@ MonoBehaviour:
   baseKnockBack: 0
   baseCriticalChance: 20
   baseCriticalDamage: 0
-  baseLifeStealChance: 35
-  baseLifeSteal: 2
+  baseLifeStealChance: 0
+  baseLifeSteal: 0
   baseStrike: 0
   baseProjectile: 2
   basePierce: 0

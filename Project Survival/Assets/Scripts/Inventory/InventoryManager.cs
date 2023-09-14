@@ -8,7 +8,7 @@ public class InventoryManager : MonoBehaviour
     public List<SkillController> skillControllerPrefabList = new();
     public List<DraggableItem> skillOrbList = new();
     public List<DraggableItem> skillGemList = new();
-    public List<TextMeshProUGUI> generalStats = new(); //List must be in order of the GameManager.totalIntStats and totalFloatStats list.
+    public List<TextMeshProUGUI> generalStats = new(); //Statistics. List must be in order of the GameManager.totalIntStats and totalFloatStats list.
     public List<ActiveSkillDrop> activeSkillDropList;
     public SkillSlotUI uiPrefab;
     public DraggableItem newItemPrefab;
@@ -48,9 +48,16 @@ public class InventoryManager : MonoBehaviour
             draggableItem.amount = 1;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
-            slotUI.nameText.text = draggableItem.name;
+            slotUI.nameText.text = draggableItem.itemName;
+            slotUI.levelText.text = "Lv. " + draggableItem.level.ToString();
             slotUI.fadedImage.sprite = draggableItem.image.sprite;
             skillOrbList.Add(draggableItem);
+            draggableItem.activeSkillDrop.nameText.text = "";
+            //Destroy Skill Controller when moving orb to inventory.
+            draggableItem.skillController.enabled = false;
+            Destroy(draggableItem.skillController.poolParent);
+            Destroy(draggableItem.skillController.orbitParent);
+            Destroy(draggableItem.skillController.gameObject);
         }
         else
         {
@@ -70,7 +77,8 @@ public class InventoryManager : MonoBehaviour
             draggableItem.amount = 1;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
-            slotUI.nameText.text = draggableItem.name;
+            slotUI.nameText.text = draggableItem.itemName;
+            slotUI.levelText.text = "Lv. " + draggableItem.level.ToString();
             slotUI.fadedImage.sprite = draggableItem.image.sprite;
             skillGemList.Add(draggableItem);
         }
@@ -93,6 +101,7 @@ public class InventoryManager : MonoBehaviour
                 else newItem.slotUI.amountText.text = "";
                 newItem.isInInventory = true;
                 newItem.currentParent = draggableItem.currentParent;   //set new parent
+                //draggableItem gets dropped in active skill slot
                 draggableItem.slotUI = null;
                 draggableItem.amount = 1;
                 draggableItem.isInInventory = false;
@@ -114,7 +123,7 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (SkillController sc in skillControllerPrefabList) //Add skill controller into game.
         {
-            if (sc.name.Contains(dragItem.name)) //Name on drag item and controller must contain same name
+            if (sc.skillOrbName.Contains(dragItem.itemName)) //Get orb name from controller to compare with dragItem's itemName
             {
                 SkillController skill = Instantiate(sc, skillParent.transform);
                 skill.player = player;
@@ -122,6 +131,7 @@ public class InventoryManager : MonoBehaviour
                 skill.enemyDistances = enemyDistances;
                 skill.gameplayManager = gameplayManager;
                 skill.poolParent.transform.SetParent(skillPoolParent.transform);
+                dragItem.skillController = skill;
             }
         }
     }

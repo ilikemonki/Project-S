@@ -8,6 +8,7 @@ public class SkillController : MonoBehaviour
 {
     public SkillBehavior prefab;
     public SkillBehavior meleeWeaponPrefab;
+    public string skillOrbName;
     public GameObject poolParent, orbitParent;
     public GameplayManager gameplayManager;
     public List<SkillBehavior> poolList = new();

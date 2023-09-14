@@ -90,9 +90,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 0
+  skillController: {fileID: 0}
   inventory: {fileID: 0}
   slotUI: {fileID: 0}
+  itemName: Dagger Orb
   amount: 1
+  level: 1
   image: {fileID: 4389791036438826782}
   currentParent: {fileID: 0}
   isInInventory: 0

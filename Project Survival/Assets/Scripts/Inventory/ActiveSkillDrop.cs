@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class ActiveSkillDrop : MonoBehaviour, IDropHandler
 {
@@ -14,6 +15,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler
     public SlotType slotType;
     public InventoryManager inventory;
     public DraggableItem draggableItem;
+    public TextMeshProUGUI nameText;
     public void OnDrop(PointerEventData eventData)
     {
         if(transform.childCount == 0)
@@ -27,10 +29,13 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler
                 {
                     inventory.DropInActiveSkill(draggableItem, transform);
                 }
-                else
+                else //From active slot to active slot
                 {
+                    draggableItem.activeSkillDrop.nameText.text = "";
                     draggableItem.currentParent = transform;
                 }
+                draggable.activeSkillDrop = this;
+                nameText.text = "Lv. " + draggable.level.ToString() + " " + draggable.itemName;
             }
         }
     }

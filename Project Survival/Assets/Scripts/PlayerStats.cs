@@ -17,7 +17,7 @@ public class PlayerStats : MonoBehaviour
     public float baseMoveSpeed;
     public float baseMaxHealth;
     public float baseDefense;
-    public float baseRegen;
+    public float baseRegen, baseDegen;
     public float baseMagnetRange;
     [Header("Current Stats")]
     public float moveSpeed;
@@ -32,7 +32,7 @@ public class PlayerStats : MonoBehaviour
     public bool isInvincible;
     private void Start()
     {
-        InvokeRepeating(nameof(Regenerate), 0f, 1f);
+        InvokeRepeating(nameof(Regenerate), 1f, 1f);
         UpdatePlayerStats();
         currentHealth = maxHealth;
         healthBar.maxValue = maxHealth;
@@ -223,7 +223,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (isDead) return;
         float amt = regen - degen;
-        if (amt > 0) 
+        if (amt > 0) //regen
         {
             if (amt + currentHealth > maxHealth)
             {
@@ -249,10 +249,10 @@ public class PlayerStats : MonoBehaviour
                 }
             }
         }
-        else if (amt < 0 && currentHealth != 1) //Do not degen after 1 hp
+        else if (amt < 0 && currentHealth != 1) //Degen. Do not degen after 1 hp
         {
             amt *= -1; //make it positive
-            if (amt > currentHealth)
+            if (amt >= currentHealth)
             {
                 TakeDamage(currentHealth - 1, false, true);
                 GameManager.totalDegen += currentHealth - 1;
@@ -269,7 +269,7 @@ public class PlayerStats : MonoBehaviour
                     }
                 }
             }
-            else 
+            else
             { 
                 TakeDamage(amt, false, true);
                 GameManager.totalDegen += amt;
@@ -329,7 +329,7 @@ public class PlayerStats : MonoBehaviour
         maxHealth = baseMaxHealth * (1 + gameplayManager.maxHealthMultiplier / 100);
         defense = baseDefense * (1 + gameplayManager.defenseMultiplier / 100);
         regen = baseRegen + gameplayManager.regenAdditive;
-        degen += gameplayManager.degenAdditive;
+        degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
         playerCollector.SetMagnetRange(magnetRange);
     }
