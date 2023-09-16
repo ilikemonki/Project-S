@@ -939,4 +939,5 @@ public class SkillController : MonoBehaviour
             orbitPoolList[i].transform.localScale = new Vector3(orbitPoolList[i].transform.localScale.x * (1 + size / 100), orbitPoolList[i].transform.localScale.y * (1 + size / 100), 1);
         }
     }
+
 }

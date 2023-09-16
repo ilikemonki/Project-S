@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class InventoryManager : MonoBehaviour
     public EnemyManager enemyManager;
     public EnemyDistances enemyDistances;
     public GameplayManager gameplayManager;
+    public InventorySkillDrop inventoryOrbDrop;
+    public Button xButton;
+    public ActiveSkillDrop xButtonOnDrop;
     private void Start()
     {
         foreach(ActiveSkillDrop skillDrop in activeSkillDropList) //Set skills in start.
@@ -32,12 +36,13 @@ public class InventoryManager : MonoBehaviour
     {
         if(draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
         {
-            foreach (DraggableItem dItem in skillOrbList)  //if there are already an newItem in inventory, add to that instead.
+            foreach (DraggableItem dItem in skillOrbList)  //if there are already the same item in inventory, add to that instead and destroy dragItem.
             {
-                if (dItem.name.Equals(draggableItem.name))
+                if (dItem.itemName.Equals(draggableItem.itemName))
                 {
                     dItem.amount++;
                     dItem.slotUI.amountText.text = dItem.amount.ToString();
+                    draggableItem.activeSkillDrop.draggableItem = null;
                     Destroy(draggableItem.gameObject, 0);   //Destroy the dragged newItem.
                     return;
                 }
@@ -48,25 +53,28 @@ public class InventoryManager : MonoBehaviour
             draggableItem.amount = 1;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
+            draggableItem.transform.SetParent(draggableItem.currentParent);
             slotUI.nameText.text = draggableItem.itemName;
             slotUI.levelText.text = "Lv. " + draggableItem.level.ToString();
             slotUI.fadedImage.sprite = draggableItem.image.sprite;
             skillOrbList.Add(draggableItem);
-            draggableItem.activeSkillDrop.nameText.text = "";
+            draggableItem.activeSkillDrop.nameText.text = "Active Skill " + draggableItem.activeSkillDrop.num.ToString();
             //Destroy Skill Controller when moving orb to inventory.
             draggableItem.skillController.enabled = false;
             Destroy(draggableItem.skillController.poolParent);
             Destroy(draggableItem.skillController.orbitParent);
             Destroy(draggableItem.skillController.gameObject);
+            draggableItem.skillController = null;
         }
         else
         {
             foreach (DraggableItem dItem in skillGemList)  //if there are already an newItem in inventory, add to that instead.
             {
-                if (dItem.name.Equals(draggableItem.name))
+                if (dItem.itemName.Equals(draggableItem.itemName))
                 {
                     dItem.amount++;
                     dItem.slotUI.amountText.text = dItem.amount.ToString();
+                    draggableItem.activeSkillDrop.draggableItem = null;
                     Destroy(draggableItem.gameObject, 0);   //Destroy the dragged newItem.
                     return;
                 }
@@ -82,6 +90,7 @@ public class InventoryManager : MonoBehaviour
             slotUI.fadedImage.sprite = draggableItem.image.sprite;
             skillGemList.Add(draggableItem);
         }
+        xButton.gameObject.SetActive(false);
     }
     public void DropInActiveSkill(DraggableItem draggableItem, Transform parent)
     {
@@ -118,12 +127,13 @@ public class InventoryManager : MonoBehaviour
             }
             InstantiateSkill(draggableItem);
         }
+        xButton.gameObject.SetActive(false);
     }
     public void InstantiateSkill(DraggableItem dragItem)
     {
         foreach (SkillController sc in skillControllerPrefabList) //Add skill controller into game.
         {
-            if (sc.skillOrbName.Contains(dragItem.itemName)) //Get orb name from controller to compare with dragItem's itemName
+            if (sc.skillOrbName.Equals(dragItem.itemName)) //Get orb name from controller to compare with dragItem's itemName
             {
                 SkillController skill = Instantiate(sc, skillParent.transform);
                 skill.player = player;
@@ -134,6 +144,12 @@ public class InventoryManager : MonoBehaviour
                 dragItem.skillController = skill;
             }
         }
+    }
+    public void XButtonClick()
+    {
+        xButton.gameObject.SetActive(false);
+        DropInInventory(xButtonOnDrop.draggableItem, inventoryOrbDrop.transform);
+        xButtonOnDrop.draggableItem = null;
     }
     public void UpdateGeneralStats()
     {

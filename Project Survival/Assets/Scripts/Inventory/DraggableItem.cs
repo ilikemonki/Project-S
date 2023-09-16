@@ -21,6 +21,13 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Image image;
     public Transform currentParent;
     public bool isInInventory;
+    void Awake()
+    {
+        if (activeSkillDrop != null)
+        {
+            activeSkillDrop.nameText.text = "Lv. " + level.ToString() + " " + itemName;
+        }
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
         currentParent = transform.parent;
@@ -39,4 +46,5 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.SetParent(currentParent);    //Set parent back to where it came from if it didn't move
         image.raycastTarget = true;
     }
+
 }
