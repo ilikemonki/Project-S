@@ -31,6 +31,7 @@ public class InventoryManager : MonoBehaviour
                 InstantiateSkill(skillDrop.draggableItem);
             }
         }
+        gameObject.SetActive(false);
     }
     public void DropInInventory(DraggableItem draggableItem, Transform parent)
     {
@@ -142,6 +143,7 @@ public class InventoryManager : MonoBehaviour
                 skill.gameplayManager = gameplayManager;
                 skill.poolParent.transform.SetParent(skillPoolParent.transform);
                 dragItem.skillController = skill;
+                gameplayManager.skillList.Add(skill);
             }
         }
     }

@@ -89,7 +89,7 @@ MonoBehaviour:
   - 0
   - 0
   spriteRenderer: {fileID: 844990432030414420}
-  dotTextDamage: {fileID: 7680988618302925625}
+  dotText: {fileID: 7680988618302925625}
   rb: {fileID: 3532865930147841948}
   boxCollider: {fileID: 9141154206070049219}
   damageFlashMaterial: {fileID: 2100000, guid: 500d9a9f0a337474899d23a092db3fde, type: 2}
@@ -98,9 +98,15 @@ MonoBehaviour:
   knockBackImmune: 0
   isSpawning: 0
   canAttack: 0
+  spreadAttack: 0
+  circleAttack: 0
+  burstAttack: 0
   attackCooldown: 2
   attackTimer: 0
   attackRange: 6
+  projectiles: 0
+  projectileSpeed: 0
+  projectileRange: 0
 --- !u!50 &3532865930147841948
 Rigidbody2D:
   serializedVersion: 4
@@ -160,7 +166,7 @@ GameObject:
   - component: {fileID: 4410129603856218566}
   - component: {fileID: 7680988618302925625}
   m_Layer: 7
-  m_Name: Text (TMP)
+  m_Name: Dot Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -183,8 +189,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 0, y: 10.025696}
+  m_SizeDelta: {x: 200, y: 20.0514}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4410129603856218566
 CanvasRenderer:
@@ -241,12 +247,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
+  m_fontSize: 10
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 8
-  m_fontSizeMax: 15
+  m_fontSizeMax: 10
   m_fontStyle: 3
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 1024

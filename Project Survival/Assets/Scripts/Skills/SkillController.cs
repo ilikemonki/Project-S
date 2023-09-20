@@ -122,7 +122,7 @@ public class SkillController : MonoBehaviour
             currentCooldown -= Time.deltaTime;
             if (currentCooldown <= 0f)
             {
-                if (skillTrigger == null)   //Use skill if it is not a skill trigger
+                if (skillTrigger.isTriggerSkill == false)   //Use skill if it is not a skill trigger
                 {
                     UseSkill();
                 }
@@ -132,14 +132,14 @@ public class SkillController : MonoBehaviour
     public void UseSkill()
     {
         if ((enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) && !targetless) return; //if no enemies alive, return.
-        if (!targetless)   //Use skill when in attackRange.
+        if (!targetless)   //Return if auto and not in attack range.
         {
             if (Vector3.Distance(transform.position, enemyDistances.closestEnemyList[0].transform.position) > attackRange)
             {
                 return;
             }
         }
-        if (skillTrigger != null) //Check trigger condition.
+        if (skillTrigger.isTriggerSkill == true) //Check trigger condition.
         {
             if (!skillTrigger.CheckTriggerCondition()) return;
         }
@@ -148,7 +148,7 @@ public class SkillController : MonoBehaviour
             GetEnemiesInRangeUnsorted(transform);
             nearestEnemy = enemiesInRange[Random.Range(0, enemiesInRange.Count)];
         }
-        else
+        else if (!targetless)
         {
             nearestEnemy = enemyDistances.closestEnemyList[0];
         }
@@ -243,7 +243,7 @@ public class SkillController : MonoBehaviour
         }
         foreach (SkillController sc in player.gameplayManager.skillList) //Check trigger skill condition
         {
-            if (sc.skillTrigger != null)
+            if (skillTrigger.isTriggerSkill == true)
             {
                 if (sc.skillTrigger.useUsageTrigger)
                 {

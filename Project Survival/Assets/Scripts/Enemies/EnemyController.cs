@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public EnemyManager enemyManager;
     public EnemySkillController enemyProjectilePool;
     float distanceToPlayer;
+    public float stopDistance;
     private void FixedUpdate()
     {
         MoveAndAttack(enemyManager.enemyList);
@@ -27,7 +28,10 @@ public class EnemyController : MonoBehaviour
                     }
                     else
                     {
-                        enemyList[i].enemyMovement.MoveEnemy();    //Move
+                        if (Vector3.Distance(enemyList[i].transform.position, enemyManager.player.transform.position) >= stopDistance)
+                        {
+                            enemyList[i].enemyMovement.MoveEnemy();    //Move
+                        }
                     }
                 }
                 if (enemyList[i].canAttack)    //Attack

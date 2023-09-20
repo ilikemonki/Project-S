@@ -42,7 +42,6 @@ public class EnemyManager : MonoBehaviour
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
     public List<EnemyStats> enemyList = new();
-    public EnemyStats baseRarePrefab;
     float spawnPosX, spawnPosY;
     Vector2 spawnPos;
     private void Start()

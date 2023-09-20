@@ -82,6 +82,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735531887672982296}
   - component: {fileID: 1735531887672982297}
+  - component: {fileID: 6986161325550505959}
   m_Layer: 0
   m_Name: Dagger Controller
   m_TagString: Untagged
@@ -96,7 +97,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735531887672982295}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -203,4 +204,29 @@ MonoBehaviour:
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
-  skillTrigger: {fileID: 0}
+  skillTrigger: {fileID: 6986161325550505959}
+--- !u!114 &6986161325550505959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887672982295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faff3d6ba3d55f045a423973b972149f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  counterGoal: 0
+  currentCounter: 0
+  isTriggerSkill: 0
+  useCritTrigger: 0
+  useDamageTakenTrigger: 0
+  useHealTrigger: 0
+  useDashTrigger: 0
+  useUsageTrigger: 0
+  useBleedTrigger: 0
+  useBurnTrigger: 0
+  useChillTrigger: 0
+  useShockTrigger: 0
+  useBloodTrigger: 0

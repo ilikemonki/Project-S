@@ -22,7 +22,7 @@ public class SkillBehavior : MonoBehaviour
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
-    public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon;
+    public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon, isHoming;
     public Vector3 startingPos;
     public float currentRange;
 
@@ -47,7 +47,7 @@ public class SkillBehavior : MonoBehaviour
         {
             transform.Rotate(new Vector3(0, 0, 160 + (speed * 8)) * Time.deltaTime);
         }
-        if (target != null && target.gameObject.activeSelf)     //Have skill keep following target and change its angle.
+        if (target != null && target.gameObject.activeSelf && isHoming)     //Home on enemy.
         {
             direction = (target.position - transform.position).normalized;
             if (!rotateSkill)

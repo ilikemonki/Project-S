@@ -19,7 +19,7 @@ public class EnemyStats : MonoBehaviour
     public List<float> topAilmentsEffect;
     public List<float> ailmentsCounter;
     public SpriteRenderer spriteRenderer;
-    public TextMeshProUGUI dotTextDamage;
+    public TextMeshProUGUI dotText;
     float totalBurnDamage, totalBleedDamage;
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
@@ -106,12 +106,12 @@ public class EnemyStats : MonoBehaviour
         damage = CalculateDamage(damage);
         if (bleeding && burned)
         {
-            dotTextDamage.text = totalBleedDamage.ToString() + " " + "<color=red>" + totalBurnDamage.ToString();
+            dotText.text = totalBleedDamage.ToString() + " " + "<color=red>" + totalBurnDamage.ToString();
         }
         else if (bleeding)
-            dotTextDamage.text = totalBleedDamage.ToString();
+            dotText.text = totalBleedDamage.ToString();
         else if (burned)
-            dotTextDamage.text = "<color=red>" + totalBurnDamage.ToString();
+            dotText.text = "<color=red>" + totalBurnDamage.ToString();
         currentHealth -= damage;
         GameManager.totalDamageDealt += damage;
         GameManager.TotalDotDamage += damage;
@@ -138,7 +138,7 @@ public class EnemyStats : MonoBehaviour
         chilled = false; burned = false; shocked = false; bleeding = false;
         totalBurnDamage = 0; totalBleedDamage = 0;
         attackTimer = attackCooldown;
-        dotTextDamage.text = "";
+        dotText.text = "";
         for(int i = 0; i > topAilmentsEffect.Count; i++)
         {
             topAilmentsEffect[i] = 0;
@@ -374,9 +374,9 @@ public class EnemyStats : MonoBehaviour
         topAilmentsEffect[1] = 0;
         totalBurnDamage = 0;
         if (bleeding)
-            dotTextDamage.text = totalBleedDamage.ToString();
+            dotText.text = totalBleedDamage.ToString();
         else
-            dotTextDamage.text = "";
+            dotText.text = "";
     }
     IEnumerator<float> TakeBleedDamage()
     {
@@ -393,9 +393,9 @@ public class EnemyStats : MonoBehaviour
         topAilmentsEffect[0] = 0;
         totalBleedDamage = 0; 
         if (burned)
-            dotTextDamage.text = "<color=red>" + totalBurnDamage.ToString();
+            dotText.text = "<color=red>" + totalBurnDamage.ToString();
         else
-            dotTextDamage.text = "";
+            dotText.text = "";
     }
     IEnumerator<float> TakeShockEffect()
     {

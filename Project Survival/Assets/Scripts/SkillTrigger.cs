@@ -8,6 +8,7 @@ public class SkillTrigger : MonoBehaviour
     public float counterGoal;
     public float currentCounter;  //variable can be reused for multiple triggers that needs a counter.
     [Header("Trigger Skills")]
+    public bool isTriggerSkill;
     public bool useCritTrigger;
     public bool useDamageTakenTrigger;
     public bool useHealTrigger;
