@@ -178,15 +178,15 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[2] = chillEffect;
             Timing.RunCoroutine(SlowMovement());
             GameManager.totalChill++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useChillTrigger)
+                    if (sc.skillController.skillTrigger.useChillTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -200,15 +200,15 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[2] = chillEffect;
             moveSpeed = baseMoveSpeed * (1 - chillEffect / 100);
             GameManager.totalChill++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useChillTrigger)
+                    if (sc.skillController.skillTrigger.useChillTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -224,15 +224,15 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[1] = burnDamage;
             Timing.RunCoroutine(TakeBurnDamage());
             GameManager.totalBurn++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useBurnTrigger)
+                    if (sc.skillController.skillTrigger.useBurnTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -245,15 +245,15 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[1] = burnDamage;
             GameManager.totalBurn++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useBurnTrigger)
+                    if (sc.skillController.skillTrigger.useBurnTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -267,15 +267,15 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[3] = shockEffect;
             Timing.RunCoroutine(TakeShockEffect());
             GameManager.totalShock++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useShockTrigger)
+                    if (sc.skillController.skillTrigger.useShockTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -288,15 +288,15 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[3] = shockEffect;
             GameManager.totalShock++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useShockTrigger)
+                    if (sc.skillController.skillTrigger.useShockTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -312,15 +312,15 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[0] = bleedDamage;
             Timing.RunCoroutine(TakeBleedDamage());
             GameManager.totalBleed++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useBleedTrigger)
+                    if (sc.skillController.skillTrigger.useBleedTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }
@@ -333,15 +333,15 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[0] = bleedDamage;
             GameManager.totalBleed++;
-            foreach (SkillController sc in enemyManager.gameplayManager.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
             {
-                if (sc.skillTrigger != null)
+                if (sc.skillController != null)
                 {
-                    if (sc.skillTrigger.useBleedTrigger)
+                    if (sc.skillController.skillTrigger.useBleedTrigger)
                     {
-                        sc.skillTrigger.currentCounter++;
-                        if (sc.currentCooldown <= 0f)
-                            sc.UseSkill();
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
                     }
                 }
             }

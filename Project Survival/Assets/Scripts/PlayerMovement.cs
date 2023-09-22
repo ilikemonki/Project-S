@@ -85,13 +85,13 @@ public class PlayerMovement : MonoBehaviour
     public IEnumerator<float> Dash()
     {
         GameManager.totalDashes++;
-        foreach (SkillController sc in player.gameplayManager.skillList) //Check trigger skill condition
+        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.skillList) //Check trigger skill condition
         {
-            if (sc.skillTrigger != null)
+            if (sc.skillController != null)
             {
-                if (sc.skillTrigger.useDashTrigger)
+                if (sc.skillController.skillTrigger.useDashTrigger)
                 {
-                    sc.UseSkill();
+                    sc.skillController.UseSkill();
                 }
             }
         }

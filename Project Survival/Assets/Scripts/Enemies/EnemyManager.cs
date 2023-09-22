@@ -5,7 +5,6 @@ using MEC;
 
 public class EnemyManager : MonoBehaviour
 {
-     
     [System.Serializable]
     public class Round
     {

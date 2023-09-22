@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
-    public List<SkillController> skillList;
     public TextMeshProUGUI timerText;
     public PlayerStats player;
     public EnemyManager enemyManager;
+    public InventoryManager inventory;
     public GameObject waveUI;
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI levelText;

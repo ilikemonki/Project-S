@@ -19,7 +19,8 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
     public TextMeshProUGUI nameText;
     void Awake()
     {
-        nameText.text = "Active Skill " + num.ToString();
+        if (nameText != null)
+            nameText.text = "Active Skill " + (num + 1).ToString();
     }
     public void OnDrop(PointerEventData eventData)
     {
@@ -32,27 +33,36 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             {
                 if (draggableItem.isInInventory) //Moving from inventory to active skill
                 {
+                    draggable.activeSkillDrop = this;
                     inventory.DropInActiveSkill(draggableItem, transform);
                 }
                 else //From active slot to active slot
                 {
-                    draggableItem.activeSkillDrop.nameText.text = "Active Skill " + draggableItem.activeSkillDrop.num.ToString();
+                    inventory.skillList[draggable.activeSkillDrop.num].skillController = null; //old activeskilldrop
+                    if (draggableItem.activeSkillDrop.nameText != null) draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
                     draggableItem.currentParent = transform;
+                    draggable.activeSkillDrop = this; // New activeskilldrop
+                    inventory.skillList[draggable.activeSkillDrop.num].skillController = draggable.skillController;
                 }
-                draggable.activeSkillDrop = this;
-                nameText.text = "Lv. " + draggable.level.ToString() + " " + draggable.itemName;
+                if (nameText != null) nameText.text = "Lv. " + draggable.level.ToString() + " " + draggable.itemName;
             }
         }
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (draggableItem != null)
+        if (draggableItem != null && eventData.clickCount == 2)
         {
-            inventory.xButton.transform.SetParent(transform.parent);
-            inventory.xButtonOnDrop = this;
-            RectTransform rt = GetComponent<RectTransform>();
-            inventory.xButton.transform.localPosition = new Vector3(rt.sizeDelta.x / 2, -rt.sizeDelta.x / 2, 0);
-            inventory.xButton.gameObject.SetActive(true);
+            Debug.Log("Remove " + draggableItem.itemName);
+            if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+            {
+                inventory.DropInInventory(draggableItem);
+            }
+            else
+            {
+                inventory.DropInInventory(draggableItem);
+            }
+            draggableItem = null;
+            inventory.skillList[num].skillController = null;
         }
     }
 }

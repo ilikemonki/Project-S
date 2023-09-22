@@ -241,15 +241,15 @@ public class SkillController : MonoBehaviour
         {
             OnTargetBehavior(strike, transform, enemyDistances.closestEnemyList);
         }
-        foreach (SkillController sc in player.gameplayManager.skillList) //Check trigger skill condition
+        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.skillList) //Check use trigger skill condition
         {
-            if (skillTrigger.isTriggerSkill == true)
+            if (sc.skillController != null)
             {
-                if (sc.skillTrigger.useUsageTrigger)
+                if (sc.skillController.skillTrigger.useUsageTrigger)
                 {
-                    sc.skillTrigger.currentCounter++; 
-                    if (sc.currentCooldown <= 0f)
-                        sc.UseSkill();
+                    sc.skillController.skillTrigger.currentCounter++; 
+                    if (sc.skillController.currentCooldown <= 0f)
+                        sc.skillController.UseSkill();
                 }
             }
         }

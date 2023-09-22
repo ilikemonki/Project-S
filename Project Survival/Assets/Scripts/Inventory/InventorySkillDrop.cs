@@ -22,7 +22,7 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
         {
             if (draggableItem.isInInventory) return; //If dropped from inventory to inventory, do nothing.
 
-            inventory.DropInInventory(draggableItem, transform);
+            inventory.DropInInventory(draggableItem);
         }
     }
 }

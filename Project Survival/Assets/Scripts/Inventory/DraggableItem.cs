@@ -23,7 +23,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool isInInventory;
     void Awake()
     {
-        if (activeSkillDrop != null)
+        if (activeSkillDrop.nameText != null)
         {
             activeSkillDrop.nameText.text = "Lv. " + level.ToString() + " " + itemName;
         }
