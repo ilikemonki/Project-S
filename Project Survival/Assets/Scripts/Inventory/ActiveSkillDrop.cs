@@ -29,40 +29,48 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             GameObject dropped = eventData.pointerDrag;
             DraggableItem draggable = dropped.GetComponent<DraggableItem>();
             draggableItem = draggable;
-            if ((draggableItem.slotType == DraggableItem.SlotType.SkillOrb && slotType == SlotType.SkillOrb) || (draggableItem.slotType == DraggableItem.SlotType.SkillGem && slotType == SlotType.SkillGem))
+            if (draggableItem.isInInventory) //Moving from inventory to active skill
             {
-                if (draggableItem.isInInventory) //Moving from inventory to active skill
+                draggableItem.activeSkillDrop = this; // New activeskilldrop
+                inventory.DropInActiveSkill(draggableItem, transform);
+
+                if (draggableItem.slotType == DraggableItem.SlotType.SkillGem)
                 {
-                    draggable.activeSkillDrop = this;
-                    inventory.DropInActiveSkill(draggableItem, transform);
+                    if (inventory.skillList[num].skillController != null)
+                    {
+                        inventory.ApplyGemModifier(draggableItem.skillGem.gemModifierList, num);
+                    }
                 }
-                else //From active slot to active slot
-                {
-                    inventory.skillList[draggable.activeSkillDrop.num].skillController = null; //old activeskilldrop
-                    if (draggableItem.activeSkillDrop.nameText != null) draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
-                    draggableItem.currentParent = transform;
-                    draggable.activeSkillDrop = this; // New activeskilldrop
-                    inventory.skillList[draggable.activeSkillDrop.num].skillController = draggable.skillController;
-                }
-                if (nameText != null) nameText.text = "Lv. " + draggable.level.ToString() + " " + draggable.itemName;
             }
+            else //From active slot to active slot
+            {
+                if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+                {
+                    inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null; //null the old activeskilldrop
+                    draggableItem.activeSkillDrop = this; // New activeskilldrop
+                    inventory.skillList[draggableItem.activeSkillDrop.num].skillController = draggableItem.skillController;
+                }
+                if (draggableItem.activeSkillDrop.nameText != null) draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
+                draggableItem.currentParent = transform;
+            }
+            if (nameText != null) nameText.text = "Lv. " + draggableItem.level.ToString() + " " + draggableItem.itemName;
         }
     }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (draggableItem != null && eventData.clickCount == 2)
         {
-            Debug.Log("Remove " + draggableItem.itemName);
+            GameManager.DebugLog("Remove " + draggableItem.itemName);
             if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
             {
                 inventory.DropInInventory(draggableItem);
+                inventory.skillList[num].skillController = null;
             }
             else
             {
                 inventory.DropInInventory(draggableItem);
             }
-            draggableItem = null;
-            inventory.skillList[num].skillController = null;
+            draggableItem = null; 
         }
     }
 }

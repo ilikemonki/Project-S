@@ -16,6 +16,7 @@ public class SkillTrigger : MonoBehaviour
     public bool useUsageTrigger;
     public bool useBleedTrigger, useBurnTrigger, useChillTrigger, useShockTrigger;
     public bool useBloodTrigger; //Give degen to player, amount of degen accumulated is the condition
+    public bool useContactTrigger;
 
     public bool CheckTriggerCondition() //Used for DamageTaken, Heal
     {

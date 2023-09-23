@@ -36,7 +36,6 @@ public class InventoryManager : MonoBehaviour
                 InstantiateSkill(skill.activeSkillDrop.draggableItem);
             }
         }
-        gameObject.SetActive(false);
     }
     public void DropInInventory(DraggableItem draggableItem)
     {
@@ -150,18 +149,21 @@ public class InventoryManager : MonoBehaviour
     }
     public void InstantiateSkill(DraggableItem dragItem) //Add skill to gameplay
     {
-        foreach (SkillController sc in skillControllerPrefabList) //Add skill controller into game.
+        if (dragItem.slotType == DraggableItem.SlotType.SkillOrb)
         {
-            if (sc.skillOrbName.Equals(dragItem.itemName)) //Get orb name from controller to compare with dragItem's itemName
+            foreach (SkillController sc in skillControllerPrefabList) //Add skill controller into game.
             {
-                SkillController skill = Instantiate(sc, skillParent.transform);
-                skill.player = player;
-                skill.enemyManager = enemyManager;
-                skill.enemyDistances = enemyDistances;
-                skill.gameplayManager = gameplayManager;
-                skill.poolParent.transform.SetParent(skillPoolParent.transform);
-                dragItem.skillController = skill;
-                skillList[dragItem.activeSkillDrop.num].skillController = skill;
+                if (sc.skillOrbName.Equals(dragItem.itemName)) //Get orb name from controller to compare with dragItem's itemName
+                {
+                    SkillController skill = Instantiate(sc, skillParent.transform);
+                    skill.player = player;
+                    skill.enemyManager = enemyManager;
+                    skill.enemyDistances = enemyDistances;
+                    skill.gameplayManager = gameplayManager;
+                    skill.poolParent.transform.SetParent(skillPoolParent.transform);
+                    dragItem.skillController = skill;
+                    skillList[dragItem.activeSkillDrop.num].skillController = skill;
+                }
             }
         }
     }
@@ -204,6 +206,19 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
+    public void ApplyGemModifier(List<SkillGem.GemModifier> modList, int skillIndex)
+    {
+        for (int i = 0; i < modList.Count; i++)
+        {
+            switch (modList[i].modifier)
+            {
+                case SkillGem.GemModifier.Modifier.Damage: skillList[skillIndex].skillController.damage += modList[i].amt; break;
+                case SkillGem.GemModifier.Modifier.Projectile: skillList[skillIndex].skillController.projectile += ((int)modList[i].amt); break;
+            }
+            GameManager.DebugLog("apply mod: " + modList[i].modifier + " " + modList[i].amt);
+        }
+    }
+
     public void OnEnable()
     {
         UpdateGeneralStats();

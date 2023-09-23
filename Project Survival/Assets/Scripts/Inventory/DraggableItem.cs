@@ -12,6 +12,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         SkillGem,
     }
     public SlotType slotType;
+    public SkillGem skillGem;
     public SkillController skillController;
     public ActiveSkillDrop activeSkillDrop;
     public InventoryManager inventory;

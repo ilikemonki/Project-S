@@ -9590,7 +9590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 0
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 1912033830}
   nameText: {fileID: 0}
 --- !u!114 &667297611
@@ -10876,7 +10876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 0
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 891702394}
   nameText: {fileID: 0}
 --- !u!114 &729220266
@@ -11399,8 +11399,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  num: 0
-  inventory: {fileID: 1145976287}
+  num: 1
+  inventory: {fileID: 0}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &749056172
@@ -12465,11 +12465,7 @@ MonoBehaviour:
   enemyManager: {fileID: 230398754}
   enemyDistances: {fileID: 230398756}
   level: 0
-  baseDamages:
-  - 1
-  - 0
-  - 0
-  - 0
+  baseDamageTypes: []
   addedAilmentsChance:
   - 0
   - 100
@@ -12480,6 +12476,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  baseDamage: 0
   baseSpeed: 10
   baseAttackRange: 4.5
   baseTravelRange: 5
@@ -12493,9 +12490,10 @@ MonoBehaviour:
   baseProjectile: 0
   basePierce: 20
   baseChain: 0
-  damages: []
+  damageTypes: []
   ailmentsChance: []
   ailmentsEffect: []
+  damage: 0
   speed: 0
   attackRange: 0
   travelRange: 0
@@ -12545,7 +12543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faff3d6ba3d55f045a423973b972149f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  counterGoal: 0
+  counterGoal: 1
   currentCounter: 0
   isTriggerSkill: 0
   useCritTrigger: 0
@@ -12558,6 +12556,7 @@ MonoBehaviour:
   useChillTrigger: 0
   useShockTrigger: 0
   useBloodTrigger: 0
+  useContactTrigger: 0
 --- !u!1 &776146169
 GameObject:
   m_ObjectHideFlags: 0
@@ -12983,7 +12982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 0
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 1912033830}
   nameText: {fileID: 0}
 --- !u!114 &791328968
@@ -13639,13 +13638,17 @@ PrefabInstance:
       value: Projectile Gem
       objectReference: {fileID: 0}
     - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: skillGem
+      value: 
+      objectReference: {fileID: 2065880159}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
       propertyPath: slotType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
       propertyPath: inventory
       value: 
-      objectReference: {fileID: 1145976287}
+      objectReference: {fileID: 1322437152}
     - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
       propertyPath: currentParent
       value: 
@@ -13703,7 +13706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 0
   num: 0
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 1912033830}
   nameText: {fileID: 366499425}
 --- !u!114 &824078375
@@ -14721,7 +14724,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
   m_PrefabInstance: {fileID: 817735956}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2065880156}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d287221379a9f354892eda68563949aa, type: 3}
@@ -15905,7 +15908,7 @@ MonoBehaviour:
   timerText: {fileID: 1399070983}
   player: {fileID: 177331393}
   enemyManager: {fileID: 230398754}
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   waveUI: {fileID: 296005712}
   waveText: {fileID: 968833126}
   levelText: {fileID: 1003984327}
@@ -16750,7 +16753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 0
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 1912033830}
   nameText: {fileID: 0}
 --- !u!114 &1002671085
@@ -17349,8 +17352,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  num: 0
-  inventory: {fileID: 1145976287}
+  num: 1
+  inventory: {fileID: 0}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1013682739
@@ -18140,11 +18143,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1071, y: -20}
   m_SizeDelta: {x: 102, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!224 &1061034813 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-  m_PrefabInstance: {fileID: 4113627724220897183}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1063119617
 GameObject:
   m_ObjectHideFlags: 0
@@ -19049,8 +19047,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1061034813}
+  m_Children: []
   m_Father: {fileID: 1352155499}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19134,7 +19131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 0
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
 --- !u!1 &1126763882
 GameObject:
   m_ObjectHideFlags: 0
@@ -19625,7 +19622,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1145976285}
   - component: {fileID: 1145976286}
-  - component: {fileID: 1145976287}
   m_Layer: 5
   m_Name: Inventory UI's
   m_TagString: Untagged
@@ -19662,80 +19658,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145976284}
   m_CullTransparentMesh: 1
---- !u!114 &1145976287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1145976284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7017574485d217f4c9ee4c39b59b21fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillList:
-  - skillController: {fileID: 0}
-    activeSkillDrop: {fileID: 824078374}
-    skillGemDropList:
-    - {fileID: 729220265}
-    - {fileID: 791328967}
-    - {fileID: 1002671084}
-    - {fileID: 1726708524}
-    - {fileID: 667297610}
-  - skillController: {fileID: 0}
-    activeSkillDrop: {fileID: 1694556554}
-    skillGemDropList:
-    - {fileID: 1863690009}
-    - {fileID: 1848933003}
-    - {fileID: 1013682738}
-    - {fileID: 1238660652}
-    - {fileID: 749056171}
-  skillControllerPrefabList:
-  - {fileID: 1735531887672982297, guid: 330e4c7f07bc9424a912e5edb4208326, type: 3}
-  skillOrbList: []
-  skillGemList: []
-  generalStats:
-  - {fileID: 1751609826}
-  - {fileID: 902969121}
-  - {fileID: 707738560}
-  - {fileID: 547059442}
-  - {fileID: 471626888}
-  - {fileID: 1377777926}
-  - {fileID: 777956749}
-  - {fileID: 365733118}
-  - {fileID: 1872101389}
-  - {fileID: 1936274667}
-  - {fileID: 262781018}
-  - {fileID: 723062070}
-  - {fileID: 696446556}
-  - {fileID: 566099985}
-  - {fileID: 227562027}
-  - {fileID: 22130797}
-  - {fileID: 1368124618}
-  - {fileID: 1958758154}
-  - {fileID: 1309426422}
-  - {fileID: 673796835}
-  - {fileID: 123946516}
-  - {fileID: 1322709292}
-  - {fileID: 1309654139}
-  - {fileID: 872619287}
-  - {fileID: 78577630}
-  - {fileID: 77044753}
-  - {fileID: 2082912850}
-  - {fileID: 332326625}
-  - {fileID: 2029401914}
-  - {fileID: 1960079726}
-  uiPrefab: {fileID: 8385227349529456538, guid: 87833728bec7aa843964854035056862, type: 3}
-  newItemPrefab: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
-  skillParent: {fileID: 1257135657}
-  skillPoolParent: {fileID: 1485570788}
-  player: {fileID: 177331393}
-  enemyManager: {fileID: 230398754}
-  enemyDistances: {fileID: 230398756}
-  gameplayManager: {fileID: 944733854}
-  inventoryOrbDrop: {fileID: 1123061091}
-  inventoryGemDrop: {fileID: 1498209163}
 --- !u!1 &1149666520
 GameObject:
   m_ObjectHideFlags: 0
@@ -20942,8 +20864,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  num: 0
-  inventory: {fileID: 1145976287}
+  num: 1
+  inventory: {fileID: 0}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1238660653
@@ -22129,21 +22051,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7017574485d217f4c9ee4c39b59b21fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillList: []
-  skillControllerPrefabList: []
+  skillList:
+  - skillController: {fileID: 0}
+    activeSkillDrop: {fileID: 824078374}
+    skillGemDropList:
+    - {fileID: 729220265}
+    - {fileID: 791328967}
+    - {fileID: 1002671084}
+    - {fileID: 1726708524}
+    - {fileID: 667297610}
+  - skillController: {fileID: 0}
+    activeSkillDrop: {fileID: 1694556554}
+    skillGemDropList:
+    - {fileID: 1863690009}
+    - {fileID: 1848933003}
+    - {fileID: 1013682738}
+    - {fileID: 1238660652}
+    - {fileID: 749056171}
+  skillControllerPrefabList:
+  - {fileID: 1735531887672982297, guid: 330e4c7f07bc9424a912e5edb4208326, type: 3}
   skillOrbList: []
   skillGemList: []
-  generalStats: []
-  uiPrefab: {fileID: 0}
-  newItemPrefab: {fileID: 0}
-  skillParent: {fileID: 0}
-  skillPoolParent: {fileID: 0}
-  player: {fileID: 0}
-  enemyManager: {fileID: 0}
-  enemyDistances: {fileID: 0}
-  gameplayManager: {fileID: 0}
-  inventoryOrbDrop: {fileID: 0}
-  inventoryGemDrop: {fileID: 0}
+  generalStats:
+  - {fileID: 1751609826}
+  - {fileID: 902969121}
+  - {fileID: 707738560}
+  - {fileID: 547059442}
+  - {fileID: 471626888}
+  - {fileID: 1377777926}
+  - {fileID: 777956749}
+  - {fileID: 365733118}
+  - {fileID: 1872101389}
+  - {fileID: 1936274667}
+  - {fileID: 262781018}
+  - {fileID: 723062070}
+  - {fileID: 696446556}
+  - {fileID: 566099985}
+  - {fileID: 227562027}
+  - {fileID: 22130797}
+  - {fileID: 1368124618}
+  - {fileID: 1958758154}
+  - {fileID: 1309426422}
+  - {fileID: 673796835}
+  - {fileID: 123946516}
+  - {fileID: 1322709292}
+  - {fileID: 1309654139}
+  - {fileID: 872619287}
+  - {fileID: 78577630}
+  - {fileID: 77044753}
+  - {fileID: 2082912850}
+  - {fileID: 332326625}
+  - {fileID: 2029401914}
+  - {fileID: 1960079726}
+  uiPrefab: {fileID: 8385227349529456538, guid: 87833728bec7aa843964854035056862, type: 3}
+  newItemPrefab: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+  skillParent: {fileID: 1257135657}
+  skillPoolParent: {fileID: 1485570788}
+  player: {fileID: 177331393}
+  enemyManager: {fileID: 230398754}
+  enemyDistances: {fileID: 230398756}
+  gameplayManager: {fileID: 944733854}
+  inventoryOrbDrop: {fileID: 1123061091}
+  inventoryGemDrop: {fileID: 1498209163}
 --- !u!4 &1322437153
 Transform:
   m_ObjectHideFlags: 0
@@ -25072,7 +25041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
 --- !u!1 &1507572980
 GameObject:
   m_ObjectHideFlags: 0
@@ -33013,7 +32982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 0
   num: 1
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 0}
   draggableItem: {fileID: 0}
   nameText: {fileID: 674047896}
 --- !u!1 &1709894583
@@ -33364,7 +33333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 0
-  inventory: {fileID: 1145976287}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 1912033830}
   nameText: {fileID: 0}
 --- !u!114 &1726708525
@@ -34680,11 +34649,7 @@ MonoBehaviour:
   enemyManager: {fileID: 230398754}
   enemyDistances: {fileID: 230398756}
   level: 0
-  baseDamages:
-  - 1
-  - 0
-  - 0
-  - 0
+  baseDamageTypes: []
   addedAilmentsChance:
   - 0
   - 100
@@ -34695,6 +34660,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  baseDamage: 0
   baseSpeed: 0
   baseAttackRange: 10
   baseTravelRange: 0
@@ -34708,9 +34674,10 @@ MonoBehaviour:
   baseProjectile: 0
   basePierce: 0
   baseChain: 0
-  damages: []
+  damageTypes: []
   ailmentsChance: []
   ailmentsEffect: []
+  damage: 0
   speed: 0
   attackRange: 0
   travelRange: 0
@@ -35038,8 +35005,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  num: 0
-  inventory: {fileID: 1145976287}
+  num: 1
+  inventory: {fileID: 0}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1848933004
@@ -35233,8 +35200,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  num: 0
-  inventory: {fileID: 1145976287}
+  num: 1
+  inventory: {fileID: 0}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1863690010
@@ -38545,6 +38512,26 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!1 &2065880156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4389791036438826771, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+  m_PrefabInstance: {fileID: 817735956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2065880159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065880156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682f1305534868240b37bebfab53e12e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gemModifierList:
+  - modifier: 1
+    amt: 1
 --- !u!1 &2066841258
 GameObject:
   m_ObjectHideFlags: 0
@@ -39771,124 +39758,6 @@ PrefabInstance:
       objectReference: {fileID: 944733854}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 330e4c7f07bc9424a912e5edb4208326, type: 3}
---- !u!1001 &4113627724220897183
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1123061086}
-    m_Modifications:
-    - target: {fileID: 4113627723121124329, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627723121124329, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627723461680097, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627723461680099, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Name
-      value: Slot
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 160
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -32
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030306, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030307, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_Name
-      value: Skill Slot UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113627725009030307, guid: 87833728bec7aa843964854035056862, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4113627723461680097, guid: 87833728bec7aa843964854035056862, type: 3}
-  m_SourcePrefab: {fileID: 100100000, guid: 87833728bec7aa843964854035056862, type: 3}
 --- !u!1001 &4389791038126478086
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39983,7 +39852,7 @@ PrefabInstance:
     - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
       propertyPath: inventory
       value: 
-      objectReference: {fileID: 1145976287}
+      objectReference: {fileID: 1322437152}
     - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
       propertyPath: currentParent
       value: 

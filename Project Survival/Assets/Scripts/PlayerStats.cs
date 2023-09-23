@@ -65,6 +65,18 @@ public class PlayerStats : MonoBehaviour
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage, true, false); //Do damage to player
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check damageTaken trigger skill condition
+            {
+                if (sc.skillController != null)
+                {
+                    if (sc.skillController.skillTrigger.useContactTrigger)
+                    {
+                        sc.skillController.skillTrigger.currentCounter++;
+                        if (sc.skillController.currentCooldown <= 0f)
+                            sc.skillController.UseSkill();
+                    }
+                }
+            }
             return;
         }
         if (collision.gameObject.CompareTag("Enemy Projectile"))
@@ -129,7 +141,7 @@ public class PlayerStats : MonoBehaviour
         }
         floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red);
         GameManager.totalDamageTaken += dmg;
-        foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check trigger skill condition
+        foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check damageTaken trigger skill condition
         {
             if (sc.skillController != null)
             {
