@@ -875,7 +875,7 @@ public class SkillController : MonoBehaviour
             poolList.Add(skill);
         }
     }
-    public void UpdateSkillStats()
+    public void UpdateSkillStats() //Uses base stats and global multipliers to create stats
     {
         for (int i = 0; i < ailmentsChance.Count; i++)
         {

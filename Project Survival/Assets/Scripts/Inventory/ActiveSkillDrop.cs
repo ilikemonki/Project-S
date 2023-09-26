@@ -46,11 +46,45 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             {
                 if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
                 {
-                    inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null; //null the old activeskilldrop
-                    draggableItem.activeSkillDrop = this; // New activeskilldrop
-                    inventory.skillList[draggableItem.activeSkillDrop.num].skillController = draggableItem.skillController;
+                    inventory.skillList[draggableItem.activeSkillDrop.num].skillController.UpdateSkillStats(); //Reset stats
+                    draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
+                    inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null; //null the skillController in skill list
+                    draggableItem.activeSkillDrop = this; // Set New activeskilldrop
+                    inventory.skillList[num].skillController = draggableItem.skillController; //Set new skill Controller in skill list
+                    foreach (ActiveSkillDrop asd in inventory.skillList[num].skillGemDropList) //Apply Gem Modifiers from new skill group
+                    {
+                        if (asd.draggableItem != null)
+                        {
+                            inventory.ApplyGemModifier(asd.draggableItem.skillGem.gemModifierList, num);
+                        }
+                    }
                 }
-                if (draggableItem.activeSkillDrop.nameText != null) draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
+                else
+                {
+                    if (draggableItem.activeSkillDrop.num != num) //if gem is moved to a new active skill group, apply to new skillController.
+                    {
+                        if (inventory.skillList[num].skillController != null) //if moved to new slot with a skill controller
+                        {
+                            if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                            {
+                                inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
+                            }
+                            inventory.ApplyGemModifier(draggableItem.skillGem.gemModifierList, num); //apply to new skill controller
+                        }
+                        else // Moved to slot with no skill controller
+                        {
+                            if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                            {
+                                inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
+                            }
+                        }
+                    }
+                    else //if moved to same skill group, do nothing.
+                    {
+
+                    }
+                    draggableItem.activeSkillDrop = this; // New activeskilldrop
+                }
                 draggableItem.currentParent = transform;
             }
             if (nameText != null) nameText.text = "Lv. " + draggableItem.level.ToString() + " " + draggableItem.itemName;
@@ -68,7 +102,11 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             }
             else
             {
-                inventory.DropInInventory(draggableItem);
+                if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                {
+                    inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
+                }
+                inventory.DropInInventory(draggableItem); 
             }
             draggableItem = null; 
         }

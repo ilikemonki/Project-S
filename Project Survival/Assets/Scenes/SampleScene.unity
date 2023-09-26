@@ -9591,7 +9591,7 @@ MonoBehaviour:
   slotType: 1
   num: 0
   inventory: {fileID: 1322437152}
-  draggableItem: {fileID: 1912033830}
+  draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &667297611
 MonoBehaviour:
@@ -11400,7 +11400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 1
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &749056172
@@ -12983,7 +12983,7 @@ MonoBehaviour:
   slotType: 1
   num: 0
   inventory: {fileID: 1322437152}
-  draggableItem: {fileID: 1912033830}
+  draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &791328968
 MonoBehaviour:
@@ -16754,7 +16754,7 @@ MonoBehaviour:
   slotType: 1
   num: 0
   inventory: {fileID: 1322437152}
-  draggableItem: {fileID: 1912033830}
+  draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1002671085
 MonoBehaviour:
@@ -17353,7 +17353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 1
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1013682739
@@ -20865,7 +20865,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 1
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1238660653
@@ -32982,7 +32982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 0
   num: 1
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 674047896}
 --- !u!1 &1709894583
@@ -33334,7 +33334,7 @@ MonoBehaviour:
   slotType: 1
   num: 0
   inventory: {fileID: 1322437152}
-  draggableItem: {fileID: 1912033830}
+  draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1726708525
 MonoBehaviour:
@@ -35006,7 +35006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 1
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1848933004
@@ -35201,7 +35201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   num: 1
-  inventory: {fileID: 0}
+  inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 0}
 --- !u!114 &1863690010

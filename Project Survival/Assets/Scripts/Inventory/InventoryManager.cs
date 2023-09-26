@@ -47,6 +47,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     dItem.amount++;
                     dItem.slotUI.amountText.text = dItem.amount.ToString();
+                    skillList[draggableItem.activeSkillDrop.num].skillController = null;
                     draggableItem.activeSkillDrop.draggableItem = null;
                     Destroy(draggableItem.gameObject, 0);   //Destroy the dragged newItem.
                     return;
@@ -63,6 +64,7 @@ public class InventoryManager : MonoBehaviour
             slotUI.levelText.text = "Lv. " + draggableItem.level.ToString();
             slotUI.fadedImage.sprite = draggableItem.image.sprite;
             skillOrbList.Add(draggableItem);
+            skillList[draggableItem.activeSkillDrop.num].skillController = null;
             draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
             draggableItem.activeSkillDrop = null;
             //Destroy Skill Controller when moving orb to inventory.
@@ -203,6 +205,7 @@ public class InventoryManager : MonoBehaviour
                 case 27: generalStats[i].text = GameManager.totalBurn.ToString(); break;
                 case 28: generalStats[i].text = GameManager.totalChill.ToString(); break;
                 case 29: generalStats[i].text = GameManager.totalShock.ToString(); break;
+                default: GameManager.DebugLog("General Stats has no switch case for " + i); break;
             }
         }
     }
@@ -214,8 +217,22 @@ public class InventoryManager : MonoBehaviour
             {
                 case SkillGem.GemModifier.Modifier.Damage: skillList[skillIndex].skillController.damage += modList[i].amt; break;
                 case SkillGem.GemModifier.Modifier.Projectile: skillList[skillIndex].skillController.projectile += ((int)modList[i].amt); break;
+                default: GameManager.DebugLog("ApplyGemMod has no switch case for " + modList[i].modifier); break;
             }
             GameManager.DebugLog("apply mod: " + modList[i].modifier + " " + modList[i].amt);
+        }
+    }
+    public void UnapplyGemModifier(List<SkillGem.GemModifier> modList, int skillIndex)
+    {
+        for (int i = 0; i < modList.Count; i++)
+        {
+            switch (modList[i].modifier)
+            {
+                case SkillGem.GemModifier.Modifier.Damage: skillList[skillIndex].skillController.damage -= modList[i].amt; break;
+                case SkillGem.GemModifier.Modifier.Projectile: skillList[skillIndex].skillController.projectile -= ((int)modList[i].amt); break;
+                default: GameManager.DebugLog("UnapplyGemMod has no switch case for " + modList[i].modifier); break;
+            }
+            GameManager.DebugLog("Unapply mod: " + modList[i].modifier + " " + modList[i].amt);
         }
     }
 
