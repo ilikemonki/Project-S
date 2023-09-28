@@ -28,13 +28,24 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
         {
             GameObject dropped = eventData.pointerDrag;
             DraggableItem draggable = dropped.GetComponent<DraggableItem>();
+            if (!draggable.slotType.ToString().Equals(slotType.ToString())) return; //if dragItem is not the same slotType, return;
             draggableItem = draggable;
             if (draggableItem.isInInventory) //Moving from inventory to active skill
             {
                 draggableItem.activeSkillDrop = this; // New activeskilldrop
                 inventory.DropInActiveSkill(draggableItem, transform);
 
-                if (draggableItem.slotType == DraggableItem.SlotType.SkillGem)
+                if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+                {
+                    foreach (ActiveSkillDrop asd in inventory.skillList[num].skillGemDropList) //Apply Gem Modifiers from new skill group
+                    {
+                        if (asd.draggableItem != null && inventory.skillList[num].skillController != null)
+                        {
+                            inventory.ApplyGemModifier(asd.draggableItem.skillGem.gemModifierList, num);
+                        }
+                    }
+                }
+                else
                 {
                     if (inventory.skillList[num].skillController != null)
                     {
@@ -59,7 +70,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                         }
                     }
                 }
-                else
+                else //skill gem
                 {
                     if (draggableItem.activeSkillDrop.num != num) //if gem is moved to a new active skill group, apply to new skillController.
                     {
@@ -83,6 +94,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     {
 
                     }
+                    draggableItem.activeSkillDrop.draggableItem = null;
                     draggableItem.activeSkillDrop = this; // New activeskilldrop
                 }
                 draggableItem.currentParent = transform;

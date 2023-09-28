@@ -18,15 +18,18 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public InventoryManager inventory;
     public SkillSlotUI slotUI;
     public string itemName;
-    public int amount, level;
+    public int level;
     public Image image;
     public Transform currentParent;
     public bool isInInventory;
     void Awake()
     {
-        if (activeSkillDrop.nameText != null)
+        if (activeSkillDrop != null)
         {
-            activeSkillDrop.nameText.text = "Lv. " + level.ToString() + " " + itemName;
+            if (activeSkillDrop.nameText != null)
+            {
+                activeSkillDrop.nameText.text = "Lv. " + level.ToString() + " " + itemName;
+            }
         }
     }
     public void OnBeginDrag(PointerEventData eventData)

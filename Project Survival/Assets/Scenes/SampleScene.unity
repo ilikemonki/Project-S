@@ -2798,6 +2798,8 @@ MonoBehaviour:
   floatingTextController: {fileID: 2140166867}
   healthBar: {fileID: 1650751183}
   healthBarImage: {fileID: 1130241373}
+  spriteRenderer: {fileID: 1024639458}
+  damageFlashMaterial: {fileID: 2100000, guid: 2794776eaed512f4aa5c6ae8adc47295, type: 2}
   isDead: 0
   baseMoveSpeed: 5
   baseMaxHealth: 100
@@ -12531,6 +12533,7 @@ MonoBehaviour:
   useReturnDirection: 0
   useRandomTargeting: 0
   skillTrigger: {fileID: 775911831}
+  devOnlyCheckThis: 0
 --- !u!114 &775911831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12935,7 +12938,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1709285938}
   m_Father: {fileID: 2094041316}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12983,7 +12987,7 @@ MonoBehaviour:
   slotType: 1
   num: 0
   inventory: {fileID: 1322437152}
-  draggableItem: {fileID: 0}
+  draggableItem: {fileID: 1709285940}
   nameText: {fileID: 0}
 --- !u!114 &791328968
 MonoBehaviour:
@@ -32985,6 +32989,167 @@ MonoBehaviour:
   inventory: {fileID: 1322437152}
   draggableItem: {fileID: 0}
   nameText: {fileID: 674047896}
+--- !u!1001 &1709285937
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 791328965}
+    m_Modifications:
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: itemName
+      value: Projectile Gem
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: skillGem
+      value: 
+      objectReference: {fileID: 1709285941}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: slotType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: inventory
+      value: 
+      objectReference: {fileID: 1322437152}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: currentParent
+      value: 
+      objectReference: {fileID: 729220262}
+    - target: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: activeSkillDrop
+      value: 
+      objectReference: {fileID: 791328967}
+    - target: {fileID: 4389791036438826771, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_Name
+      value: Projectile Gem
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389791036438826782, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 77934458497654b4a88f0ee23b9e75df, type: 3}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+--- !u!224 &1709285938 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4389791036438826768, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+  m_PrefabInstance: {fileID: 1709285937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1709285939 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4389791036438826771, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+  m_PrefabInstance: {fileID: 1709285937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1709285940 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4389791036438826769, guid: 744e5c2302ad74c46afb2c0664d11a2f, type: 3}
+  m_PrefabInstance: {fileID: 1709285937}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709285939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d287221379a9f354892eda68563949aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1709285941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709285939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682f1305534868240b37bebfab53e12e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gemModifierList:
+  - modifier: 1
+    amt: 1
 --- !u!1 &1709894583
 GameObject:
   m_ObjectHideFlags: 0
@@ -34715,6 +34880,7 @@ MonoBehaviour:
   useReturnDirection: 0
   useRandomTargeting: 1
   skillTrigger: {fileID: 0}
+  devOnlyCheckThis: 0
 --- !u!1 &1841710267
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,9 @@ public class PlayerStats : MonoBehaviour
     public FloatingTextController floatingTextController;
     public Slider healthBar;
     public Image healthBarImage;
+    public SpriteRenderer spriteRenderer;
+    Material defaultMaterial;
+    public Material damageFlashMaterial;
     public bool isDead;
     [Header("Base Stats")]
     public float baseMoveSpeed;
@@ -30,6 +33,10 @@ public class PlayerStats : MonoBehaviour
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
+    private void Awake()
+    {
+        defaultMaterial = spriteRenderer.material;
+    }
     private void Start()
     {
         InvokeRepeating(nameof(Regenerate), 1f, 1f);
@@ -126,6 +133,10 @@ public class PlayerStats : MonoBehaviour
         }
         if (!triggerIframe) //hit w/ projectile will not trigger IFrame
         {
+            if (gameObject.activeSelf)
+            {
+                Timing.RunCoroutine(DamageFlash());
+            }
             currentHealth -= dmg;
             UpdateHealthBar(-dmg);
         }
@@ -133,6 +144,10 @@ public class PlayerStats : MonoBehaviour
         {
             if (!isInvincible)
             {
+                if (gameObject.activeSelf)
+                {
+                    Timing.RunCoroutine(DamageFlash());
+                }
                 currentHealth -= dmg;
                 UpdateHealthBar(-dmg);
                 iFrameTimer = iFrameDuration;
@@ -344,5 +359,11 @@ public class PlayerStats : MonoBehaviour
         degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
         playerCollector.SetMagnetRange(magnetRange);
+    }
+    public IEnumerator<float> DamageFlash()
+    {
+        spriteRenderer.material = damageFlashMaterial;
+        yield return Timing.WaitForSeconds(0.1f);
+        spriteRenderer.material = defaultMaterial;
     }
 }

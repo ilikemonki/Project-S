@@ -76,6 +76,7 @@ public class SkillController : MonoBehaviour
     public bool useRandomTargeting;
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
+    public bool devOnlyCheckThis;
 
     private void OnDrawGizmos()
     {
@@ -93,7 +94,11 @@ public class SkillController : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        UpdateSkillStats();
+        if (devOnlyCheckThis)
+        {
+            UpdateSkillStats();
+            UpdateSize();
+        }
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
             PopulatePool(baseStrike + gameplayManager.strikeAdditive, meleeWeaponPrefab, orbitParent, orbitPoolList);
@@ -110,14 +115,13 @@ public class SkillController : MonoBehaviour
             PopulatePool(baseStrike + gameplayManager.strikeAdditive, meleeWeaponPrefab, orbitParent, orbitPoolList);
         }
         PopulatePool(baseProjectile + gameplayManager.projectileAdditive + baseStrike + gameplayManager.strikeAdditive, prefab, poolParent, poolList);
-        UpdateSize();
     }
     // Update is called once per frame
     protected virtual void Update()
     {
         if (useOrbit)
         {
-            UpdateOrbit();
+            RunOrbit();
         }
         else if (!stopFiring && !useOrbit)
         {
@@ -399,7 +403,7 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void UpdateOrbit()
+    public void RunOrbit()
     {
         if (autoUseSkill)
         {
