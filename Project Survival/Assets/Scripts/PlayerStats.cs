@@ -114,6 +114,16 @@ public class PlayerStats : MonoBehaviour
             collision.gameObject.SetActive(false);
             gameplayManager.GainClassStars(1);
         }
+        else if (collision.CompareTag("Skill Orb"))
+        {
+            collision.gameObject.SetActive(false);
+            gameplayManager.inventory.AddCollectibleIntoInventory(collision.name);
+        }
+        else if (collision.CompareTag("Skill Gem"))
+        {
+            collision.gameObject.SetActive(false);
+
+        }
         playerCollector.collectibles.Remove(collectible);
     }
     public void TakeDamage(float dmg, bool triggerIframe, bool isDotDamage)

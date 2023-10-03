@@ -5,24 +5,20 @@ using UnityEngine;
 public class DropRate : MonoBehaviour
 {
     public GameplayManager gameplayManager;
-    public List<CoinsToDrop> collectiblesList;  //Coin
-    private float rand;
-    public GameObject magnetParent;
+    public InventoryManager inventoryManager;
+    public List<CurrenciesToDrop> collectiblesList;  //Coin
+    public GameObject collectiblesParent;   //parent for collectibles except coins
     public List<ICollectibles> itemList;    //pool list
     public List<ICollectibles> magnetList;    //magnet pool list
+    [Header("Orbs")]
+    public List<ICollectibles> orbPrefabs;  //skill orb prefabs
+    public List<ICollectibles> orbList;  //skill orb list
+    public List<string> normalOrbNames, rareOrbNames;
+    public float baseOrbChanceRange, orbChanceRange;
     [System.Serializable]
-    public class CoinsToDrop    //plus magnet
+    public class CurrenciesToDrop    //plus magnet
     {
         public ICollectibles prefab;
-        public float chance;
-        public float baseChanceRange;
-        public float chanceRange;
-    }
-    [System.Serializable]
-    public class SkillsToDrop
-    {
-        public ICollectibles prefab;
-        public float chance;
         public float baseChanceRange;
         public float chanceRange;
     }
@@ -30,26 +26,35 @@ public class DropRate : MonoBehaviour
     {
         InvokeRepeating(nameof(DeleteInactives), 10, 30f);
         PopulatePool(collectiblesList[0].prefab, 100, transform, itemList);
-        PopulatePool(collectiblesList[5].prefab, 5, magnetParent.transform, magnetList);
+        PopulatePool(collectiblesList[5].prefab, 5, collectiblesParent.transform, magnetList);
+        PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, orbList);
         UpdateDropChance(); 
     }
 
     public void DropLoot(Transform pos)
     {
-        foreach (CoinsToDrop item in collectiblesList)  //coin drop chance only
+        float rand;
+        foreach (CurrenciesToDrop item in collectiblesList)  //coin drop chance only. 1 changeRange means 100% chance to drop.
         {
-            rand = Random.Range(1, item.chanceRange + 1);
-            if (rand <= item.chance)
+            rand = Random.Range(0, item.chanceRange);
+            if (rand <= 1)
             {
                 SpawnItem(item.prefab, pos);
                 break;
             }
         }
-        rand = Random.Range(1, collectiblesList[5].chanceRange + 1);
-        if (rand <= collectiblesList[5].chance) //magnet drop chance only
+        rand = Random.Range(0, collectiblesList[5].chanceRange);
+        if (rand <= 1) //magnet drop chance only
         {
             SpawnItem(collectiblesList[5].prefab, pos);
         }
+        //drop orb/gem
+        rand = Random.Range(0, orbChanceRange);
+        if (rand <= 1)
+        {
+            SpawnItem(orbPrefabs[Random.Range(0, orbPrefabs.Count)], pos); //random base orb
+        }
+
     }
 
     public void SpawnItem(ICollectibles prefab, Transform pos)
@@ -60,13 +65,32 @@ public class DropRate : MonoBehaviour
             {
                 if (i > magnetList.Count - 2)
                 {
-                    PopulatePool(collectiblesList[5].prefab, 5, magnetParent.transform, magnetList);
+                    PopulatePool(collectiblesList[5].prefab, 5, collectiblesParent.transform, magnetList);
                 }
                 if (!magnetList[i].isActiveAndEnabled)
                 {
-                    magnetList[i].transform.position = pos.position;
+                    magnetList[i].transform.position = new Vector3((float)(pos.position.x - 0.4), pos.position.y, pos.position.z);
                     magnetList[i].gameObject.SetActive(true);
                     magnetList[i].MagnetDuration();
+                    return;
+                }
+            }
+        }
+        if (prefab.CompareTag("Skill Orb"))
+        {
+            for (int i = 0; i < orbList.Count; i++)
+            {
+                if (i > orbList.Count - 2)
+                {
+                    PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, orbList);
+                }
+                if (!orbList[i].isActiveAndEnabled)
+                {
+                    orbList[i].transform.position = new Vector3((float)(pos.position.x + 0.4), pos.position.y, pos.position.z);
+                    orbList[i].tag = prefab.tag;
+                    orbList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
+                    RandomizeOrb(orbList[i]);
+                    orbList[i].gameObject.SetActive(true);
                     return;
                 }
             }
@@ -127,9 +151,24 @@ public class DropRate : MonoBehaviour
 
     public void UpdateDropChance()
     {
-        foreach (CoinsToDrop item in collectiblesList)
+        foreach (CurrenciesToDrop item in collectiblesList)
         {
             item.chanceRange = Mathf.Round(item.baseChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
+        }
+        orbChanceRange = Mathf.Round(baseOrbChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
+    }
+    public void RandomizeOrb(ICollectibles orb)
+    {
+        int r = Random.Range(0, 100);
+        if (r < 90) //Chance for normal orbs
+        {
+            r = Random.Range(0, normalOrbNames.Count);
+            orb.name = normalOrbNames[r];
+        }
+        else //rare orbs
+        {
+            //r = Random.Range(0, rareOrbNames.Count);
+            //orb.name = rareOrbNames[r];
         }
     }
 }

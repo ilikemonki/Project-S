@@ -22,7 +22,19 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
         {
             if (draggableItem.isInInventory) return; //If dropped from inventory to inventory, do nothing.
 
-            inventory.DropInInventory(draggableItem);
+            if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+            {
+                inventory.DropInInventory(draggableItem);
+                inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null;
+            }
+            else
+            {
+                if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                {
+                    inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
+                }
+                inventory.DropInInventory(draggableItem);
+            }
         }
     }
 }

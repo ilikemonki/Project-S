@@ -19,7 +19,7 @@ public class InventoryManager : MonoBehaviour
     public Dictionary<DraggableItem, int> skillGemList = new();
     public List<TextMeshProUGUI> generalStats = new(); //Statistics. List must be in order of the GameManager.totalIntStats and totalFloatStats list.
     public SkillSlotUI uiPrefab;
-    public DraggableItem newItemPrefab;
+    public DraggableItem draggableItemPrefab;
     public GameObject skillParent;
     public GameObject skillPoolParent;
     public PlayerStats player;
@@ -130,13 +130,14 @@ public class InventoryManager : MonoBehaviour
         }
         if (moreThanOne) //if there is more than 1 amount in inventory, spawn new dragItem and put it back in inventory
         {
-            DraggableItem newItem = Instantiate(newItemPrefab, draggableItem.slotUI.fadedImage.transform); //Create new item back into inventory
-            newItem.name = newItemPrefab.name;
+            DraggableItem newItem = Instantiate(draggableItemPrefab, draggableItem.slotUI.fadedImage.transform); //Create new item back into inventory
             newItem.inventory = this;
             newItem.slotUI = draggableItem.slotUI;
             newItem.name = draggableItem.name;
+            newItem.itemName = draggableItem.itemName;
             newItem.image.sprite = draggableItem.image.sprite;
             newItem.skillGem = draggableItem.skillGem;
+            newItem.slotType = draggableItem.slotType;
             skillGemList[draggableItem]--;
             skillGemList.Add(newItem, skillGemList[draggableItem]);
             skillGemList.Remove(draggableItem);
@@ -187,6 +188,60 @@ public class InventoryManager : MonoBehaviour
                     skillList[dragItem.activeSkillDrop.num].skillController = skill;
                 }
             }
+        }
+    }
+    public void AddCollectibleIntoInventory(string name)
+    {
+        if (name.Contains("Orb"))
+        {
+            //Create DraggbleItem for orb.
+            DraggableItem draggableItem = Instantiate(draggableItemPrefab, inventoryOrbDrop.transform);
+            draggableItem.inventory = this;
+            draggableItem.name = name;
+            draggableItem.itemName = name;
+            //draggableItem.image.sprite = ;
+            draggableItem.slotType = DraggableItem.SlotType.SkillOrb;
+            //Create new slotUI
+            SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.transform);
+            draggableItem.slotUI = slotUI;
+            draggableItem.isInInventory = true;
+            draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
+            draggableItem.transform.SetParent(draggableItem.currentParent);
+            slotUI.name = uiPrefab.name;
+            slotUI.nameText.text = draggableItem.itemName;
+            slotUI.levelText.text = "Lv. " + draggableItem.level.ToString();
+            slotUI.fadedImage.sprite = draggableItem.image.sprite;
+            skillOrbList.Add(draggableItem, 1);
+        }
+        else
+        {
+            foreach (DraggableItem dItem in skillGemList.Keys) //if theres 1+ skill gem in inventory, add to dictionary value
+            {
+                if (dItem.itemName.Equals(name))
+                {
+                    skillGemList[dItem]++;
+                    dItem.slotUI.amountText.text = skillGemList[dItem].ToString();
+                    return;
+                }
+            }
+            //Create DraggbleItem for orb.
+            DraggableItem draggableItem = Instantiate(draggableItemPrefab, inventoryGemDrop.transform);
+            draggableItem.inventory = this;
+            draggableItem.name = name;
+            draggableItem.itemName = name;
+            //draggableItem.image.sprite = ;
+            draggableItem.slotType = DraggableItem.SlotType.SkillGem;
+            //Create new slotUI
+            SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryGemDrop.transform);
+            draggableItem.slotUI = slotUI;
+            draggableItem.isInInventory = true;
+            draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
+            draggableItem.transform.SetParent(draggableItem.currentParent);
+            slotUI.name = uiPrefab.name;
+            slotUI.nameText.text = draggableItem.itemName;
+            slotUI.levelText.text = "Lv. " + draggableItem.level.ToString();
+            slotUI.fadedImage.sprite = draggableItem.image.sprite;
+            skillGemList.Add(draggableItem, 1);
         }
     }
     public void UpdateGeneralStats()
