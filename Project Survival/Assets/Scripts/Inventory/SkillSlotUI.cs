@@ -7,5 +7,5 @@ using TMPro;
 public class SkillSlotUI : MonoBehaviour
 {
     public Image fadedImage;
-    public TextMeshProUGUI nameText, amountText, levelText;
+    public TextMeshProUGUI nameText, amountText, levelText, inUseText;
 }

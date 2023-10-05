@@ -25,7 +25,6 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
             if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
             {
                 inventory.DropInInventory(draggableItem);
-                inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null;
             }
             else
             {

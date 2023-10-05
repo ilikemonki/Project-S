@@ -16,7 +16,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
-    public TextMeshProUGUI coinText, classStarText, hpText, dashText, dashTimerText;
+    public TextMeshProUGUI coinText, classStarText, hpText, regenText, expText, expCapText, dashText, dashTimerText;
     public Vector3 mousePos;
     public Camera cam;
     public float maxAttackRange;    //Gets max range between all skills, used in EnemyDistances to find targets within the range.
@@ -65,7 +65,8 @@ public class GameplayManager : MonoBehaviour
         UpdateClassStarText();
         UpdateDashText();
         expSlider.maxValue = expCap;
-        hpText.text = "<color=green>" + player.currentHealth.ToString();
+        expCapText.text = expCap.ToString();
+        hpText.text = player.currentHealth.ToString();
     }
 
     // Update is called once per frame
@@ -97,6 +98,7 @@ public class GameplayManager : MonoBehaviour
             exp -= expCap;
             expCap += expCapIncrease;
             expSlider.maxValue = expCap;
+            expCapText.text = expCap.ToString();
         }
         UpdateExpBar();
     }
@@ -147,6 +149,7 @@ public class GameplayManager : MonoBehaviour
     public void UpdateExpBar()
     {
         expSlider.value = exp;
+        expText.text = exp.ToString();
     }
     public void GoToNextRound()
     {

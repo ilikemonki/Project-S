@@ -19,7 +19,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
     public TextMeshProUGUI nameText;
     void Awake()
     {
-        if (nameText != null)
+        if (nameText != null && draggableItem == null)
             nameText.text = "Active Skill " + (num + 1).ToString();
     }
     public void OnDrop(PointerEventData eventData)
@@ -57,6 +57,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             {
                 if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
                 {
+                    if (draggableItem.activeSkillDrop.num == num) return;
                     inventory.skillList[draggableItem.activeSkillDrop.num].skillController.UpdateSkillStats(); //Reset stats
                     draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
                     inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null; //null the skillController in skill list
@@ -94,7 +95,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     {
 
                     }
-                    draggableItem.activeSkillDrop.draggableItem = null;
+                    draggableItem.activeSkillDrop.draggableItem = null; //set old activeskilldrop's dragItem to null
                     draggableItem.activeSkillDrop = this; // New activeskilldrop
                 }
                 draggableItem.currentParent = transform;
@@ -110,7 +111,6 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
             {
                 inventory.DropInInventory(draggableItem);
-                inventory.skillList[num].skillController = null;
             }
             else
             {

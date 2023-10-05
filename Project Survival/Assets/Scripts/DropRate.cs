@@ -13,8 +13,13 @@ public class DropRate : MonoBehaviour
     [Header("Orbs")]
     public List<ICollectibles> orbPrefabs;  //skill orb prefabs
     public List<ICollectibles> orbList;  //skill orb list
-    public List<string> normalOrbNames, rareOrbNames;
+    public List<string> greenOrbNames, redOrbNames, blueOrbNames, yellowOrbNames;
     public float baseOrbChanceRange, orbChanceRange;
+    [Header("Gems")]
+    public List<ICollectibles> gemPrefabs;  //skill orb prefabs
+    public List<ICollectibles> gemList;  //skill orb list
+    public List<string> redGemNames, blueGemNames, yellowGemNames;
+    public float baseGemChanceRange, gemChanceRange;
     [System.Serializable]
     public class CurrenciesToDrop    //plus magnet
     {
@@ -28,6 +33,7 @@ public class DropRate : MonoBehaviour
         PopulatePool(collectiblesList[0].prefab, 100, transform, itemList);
         PopulatePool(collectiblesList[5].prefab, 5, collectiblesParent.transform, magnetList);
         PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, orbList);
+        PopulatePool(gemPrefabs[0], 5, collectiblesParent.transform, gemList);
         UpdateDropChance(); 
     }
 
@@ -53,6 +59,11 @@ public class DropRate : MonoBehaviour
         if (rand <= 1)
         {
             SpawnItem(orbPrefabs[Random.Range(0, orbPrefabs.Count)], pos); //random base orb
+        }
+        rand = Random.Range(0, gemChanceRange);
+        if (rand <= 1)
+        {
+            SpawnItem(gemPrefabs[Random.Range(0, gemPrefabs.Count)], pos); //random base orb
         }
 
     }
@@ -86,8 +97,9 @@ public class DropRate : MonoBehaviour
                 }
                 if (!orbList[i].isActiveAndEnabled)
                 {
-                    orbList[i].transform.position = new Vector3((float)(pos.position.x + 0.4), pos.position.y, pos.position.z);
+                    orbList[i].transform.position = new Vector3(pos.position.x, (float)(pos.position.y + 0.4), pos.position.z);
                     orbList[i].tag = prefab.tag;
+                    orbList[i].name = prefab.name;
                     orbList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
                     RandomizeOrb(orbList[i]);
                     orbList[i].gameObject.SetActive(true);
@@ -95,7 +107,27 @@ public class DropRate : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < itemList.Count; i++)
+        if (prefab.CompareTag("Skill Gem"))
+        {
+            for (int i = 0; i < gemList.Count; i++)
+            {
+                if (i > gemList.Count - 2)
+                {
+                    PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, gemList);
+                }
+                if (!gemList[i].isActiveAndEnabled)
+                {
+                    gemList[i].transform.position = new Vector3((float)(pos.position.x + 0.4), pos.position.y, pos.position.z);
+                    gemList[i].tag = prefab.tag;
+                    gemList[i].name = prefab.name;
+                    gemList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
+                    RandomizeGem(gemList[i]);
+                    gemList[i].gameObject.SetActive(true);
+                    return;
+                }
+            }
+        }
+        for (int i = 0; i < itemList.Count; i++) //Spawn Coin
         {
             if (i > itemList.Count - 5)
             {
@@ -159,16 +191,45 @@ public class DropRate : MonoBehaviour
     }
     public void RandomizeOrb(ICollectibles orb)
     {
-        int r = Random.Range(0, 100);
-        if (r < 90) //Chance for normal orbs
+        int r;
+        if (orb.name.Contains("Green"))
         {
-            r = Random.Range(0, normalOrbNames.Count);
-            orb.name = normalOrbNames[r];
+            r = Random.Range(0, greenOrbNames.Count);
+            orb.name = greenOrbNames[r];
         }
-        else //rare orbs
+        else if (orb.name.Contains("Red"))
         {
-            //r = Random.Range(0, rareOrbNames.Count);
-            //orb.name = rareOrbNames[r];
+            r = Random.Range(0, redOrbNames.Count);
+            orb.name = redOrbNames[r];
+        }
+        else if (orb.name.Contains("Blue"))
+        {
+            r = Random.Range(0, blueOrbNames.Count);
+            orb.name = blueOrbNames[r];
+        }
+        else
+        {
+            r = Random.Range(0, yellowOrbNames.Count);
+            orb.name = yellowOrbNames[r];
+        }
+    }
+    public void RandomizeGem(ICollectibles gem)
+    {
+        int r;
+        if (gem.name.Contains("Red"))
+        {
+            r = Random.Range(0, redGemNames.Count);
+            gem.name = redGemNames[r];
+        }
+        else if (gem.name.Contains("Blue"))
+        {
+            r = Random.Range(0, blueGemNames.Count);
+            gem.name = blueGemNames[r];
+        }
+        else
+        {
+            r = Random.Range(0, yellowGemNames.Count);
+            gem.name = yellowGemNames[r];
         }
     }
 }

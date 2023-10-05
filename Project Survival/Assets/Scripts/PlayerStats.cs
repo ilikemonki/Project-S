@@ -122,7 +122,7 @@ public class PlayerStats : MonoBehaviour
         else if (collision.CompareTag("Skill Gem"))
         {
             collision.gameObject.SetActive(false);
-
+            gameplayManager.inventory.AddCollectibleIntoInventory(collision.name);
         }
         playerCollector.collectibles.Remove(collectible);
     }
@@ -183,17 +183,6 @@ public class PlayerStats : MonoBehaviour
             Die();
         }
     }
-    public void CheckHealthBarVisibility()  //Show health if life is below max, else dont show
-    {
-        if (currentHealth >= maxHealth)
-        {
-            healthBar.gameObject.SetActive(false);
-        }
-        else
-        {
-            healthBar.gameObject.SetActive(true);
-        }
-    }
     public void UpdateMaxHealthBar(float maxAmt)   //set health bar to current max
     {
         healthBar.maxValue = maxAmt;
@@ -204,7 +193,6 @@ public class PlayerStats : MonoBehaviour
     {
         healthBar.value += amt;
         CheckHPBarColor();
-        CheckHealthBarVisibility();
     }
 
     void Die()
@@ -328,11 +316,9 @@ public class PlayerStats : MonoBehaviour
 
     public void CheckHPBarColor()
     {
+        gameplayManager.hpText.text = currentHealth.ToString();
         if (currentHealth <= 0)
         {
-            if (regen - degen == 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
-            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
-            else gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
             healthBarImage.gameObject.SetActive(false);
             return;
         }
@@ -340,23 +326,14 @@ public class PlayerStats : MonoBehaviour
         if (hpPercent <= 30)
         {
             healthBarImage.color = Color.red;
-            if (regen - degen == 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString();
-            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
-            else gameplayManager.hpText.text = "<color=red>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
         }
         else if (hpPercent <= 60)
         {
             healthBarImage.color = Color.yellow;
-            if (regen - degen == 0) gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString();
-            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
-            else gameplayManager.hpText.text = "<color=yellow>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
         }
         else
         {
             healthBarImage.color = Color.green;
-            if (regen - degen == 0) gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString();
-            else if (regen - degen < 0) gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString() + "<color=white> (" + (regen - degen).ToString() + "/s)";
-            else gameplayManager.hpText.text = "<color=green>" + currentHealth.ToString() + "<color=white> (+" + (regen - degen).ToString() + "/s)";
         }
     }
 
@@ -369,6 +346,10 @@ public class PlayerStats : MonoBehaviour
         degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
         playerCollector.SetMagnetRange(magnetRange);
+
+        if (regen - degen == 0) gameplayManager.regenText.text = "";
+        else if (regen - degen < 0) gameplayManager.regenText.text = "<color=red> -" + (regen - degen).ToString() + "<color=white> HP/s";
+        else gameplayManager.regenText.text = "<color=green> +" + (regen - degen).ToString() + "<color=white> HP/s";
     }
     public IEnumerator<float> DamageFlash()
     {

@@ -22,16 +22,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Image image;
     public Transform currentParent;
     public bool isInInventory;
-    void Awake()
-    {
-        if (activeSkillDrop != null)
-        {
-            if (activeSkillDrop.nameText != null)
-            {
-                activeSkillDrop.nameText.text = "Lv. " + level.ToString() + " " + itemName;
-            }
-        }
-    }
     public void OnBeginDrag(PointerEventData eventData)
     {
         currentParent = transform.parent;
