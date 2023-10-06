@@ -14,25 +14,28 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
     }
     public SlotType slotType;
     public InventoryManager inventory;
+    public GameObject contentParent;
     public void OnDrop(PointerEventData eventData)
     {
-        GameObject droppedItem = eventData.pointerDrag;
-        DraggableItem draggableItem = droppedItem.GetComponent<DraggableItem>();
-        if ((draggableItem.slotType == DraggableItem.SlotType.SkillOrb && slotType == SlotType.SkillOrb) || (draggableItem.slotType == DraggableItem.SlotType.SkillGem && slotType == SlotType.SkillGem)) //Make sure the item is dropped in the right inventory.
+        GameObject dropped = eventData.pointerDrag;
+        if (dropped.TryGetComponent(out DraggableItem draggableItem))
         {
-            if (draggableItem.isInInventory) return; //If dropped from inventory to inventory, do nothing.
+            if ((draggableItem.slotType == DraggableItem.SlotType.SkillOrb && slotType == SlotType.SkillOrb) || (draggableItem.slotType == DraggableItem.SlotType.SkillGem && slotType == SlotType.SkillGem)) //Make sure the item is dropped in the right inventory.
+            {
+                if (draggableItem.isInInventory) return; //If dropped from inventory to inventory, do nothing.
 
-            if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
-            {
-                inventory.DropInInventory(draggableItem);
-            }
-            else
-            {
-                if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
                 {
-                    inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
+                    inventory.DropInInventory(draggableItem);
                 }
-                inventory.DropInInventory(draggableItem);
+                else
+                {
+                    if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                    {
+                        inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
+                    }
+                    inventory.DropInInventory(draggableItem);
+                }
             }
         }
     }

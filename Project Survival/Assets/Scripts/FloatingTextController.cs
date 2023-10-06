@@ -85,7 +85,7 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].color = color;
                 damageTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
                 damageTextList[i].gameObject.SetActive(true);
-                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.8f, 1.2f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.8f, 1.2f), 1f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }

@@ -36,7 +36,7 @@ public class InventoryManager : MonoBehaviour
             {
                 InstantiateSkill(skill.activeSkillDrop.draggableItem);
                 skill.activeSkillDrop.nameText.text = "Lv. " + skill.activeSkillDrop.draggableItem.level.ToString() + " " + skill.activeSkillDrop.draggableItem.itemName;
-                SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.transform);
+                SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.contentParent.transform);
                 skill.activeSkillDrop.draggableItem.slotUI = slotUI;
                 slotUI.inUseText.gameObject.SetActive(true);
                 slotUI.name = uiPrefab.name;
@@ -91,7 +91,7 @@ public class InventoryManager : MonoBehaviour
                 }
             }
             //Create new slotUI if there isn't one in inventory.
-            SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryGemDrop.transform);
+            SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryGemDrop.contentParent.transform);
             draggableItem.slotUI = slotUI;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
@@ -207,10 +207,10 @@ public class InventoryManager : MonoBehaviour
             {
                 if (prefab.itemName.Equals(itemName))
                 {
-                    DraggableItem draggableItem = Instantiate(prefab, inventoryOrbDrop.transform);
+                    DraggableItem draggableItem = Instantiate(prefab, inventoryOrbDrop.contentParent.transform);
                     draggableItem.inventory = this;
                     //Create new slotUI
-                    SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.transform);
+                    SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.contentParent.transform);
                     draggableItem.slotUI = slotUI;
                     draggableItem.isInInventory = true;
                     draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
@@ -240,10 +240,10 @@ public class InventoryManager : MonoBehaviour
             {
                 if (prefab.itemName.Equals(itemName))
                 {
-                    DraggableItem draggableItem = Instantiate(prefab, inventoryGemDrop.transform);
+                    DraggableItem draggableItem = Instantiate(prefab, inventoryGemDrop.contentParent.transform);
                     draggableItem.inventory = this;
                     //Create new slotUI
-                    SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryGemDrop.transform);
+                    SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryGemDrop.contentParent.transform);
                     draggableItem.slotUI = slotUI;
                     draggableItem.isInInventory = true;
                     draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
