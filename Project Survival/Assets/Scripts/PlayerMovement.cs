@@ -103,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
         yield return Timing.WaitForSeconds(dashIFrameSeconds);
         isDashing = false;
         trailRend.emitting = false;
+        player.dodgeList.Clear();
     }
     public void UpdateDashStats()
     {

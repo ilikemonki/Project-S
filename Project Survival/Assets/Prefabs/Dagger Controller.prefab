@@ -137,11 +137,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyDistances: {fileID: 0}
   level: 0
-  baseDamages:
-  - 0
-  - 1
-  - 0
-  - 0
+  baseDamageTypes: []
   addedAilmentsChance:
   - 0
   - 100
@@ -152,7 +148,8 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseSpeed: 20
+  baseDamage: 0
+  baseTravelSpeed: 10
   baseAttackRange: 6
   baseTravelRange: 10
   baseCooldown: 0.5
@@ -165,10 +162,11 @@ MonoBehaviour:
   baseProjectile: 2
   basePierce: 0
   baseChain: 4
-  damages: []
+  damageTypes: []
   ailmentsChance: []
   ailmentsEffect: []
-  speed: 0
+  damage: 0
+  travelSpeed: 0
   attackRange: 0
   travelRange: 0
   cooldown: 0
@@ -205,6 +203,7 @@ MonoBehaviour:
   useReturnDirection: 0
   useRandomTargeting: 0
   skillTrigger: {fileID: 6986161325550505959}
+  devOnlyCheckThis: 0
 --- !u!114 &6986161325550505959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,3 +229,4 @@ MonoBehaviour:
   useChillTrigger: 0
   useShockTrigger: 0
   useBloodTrigger: 0
+  useContactTrigger: 0

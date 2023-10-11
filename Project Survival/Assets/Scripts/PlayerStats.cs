@@ -33,6 +33,7 @@ public class PlayerStats : MonoBehaviour
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
+    public List<GameObject> dodgeList;
     private void Awake()
     {
         defaultMaterial = spriteRenderer.material;
@@ -60,15 +61,24 @@ public class PlayerStats : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (isInvincible || playerMovement.isDashing)
+        if (playerMovement.isDashing)
         {
+            if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Enemy Projectile"))
+            {
+                if (!dodgeList.Contains(collision.gameObject))
+                {
+                    dodgeList.Add(collision.gameObject);
+                    floatingTextController.DisplayPlayerText(transform, "Dodge", Color.white);
+                }
+            }
             return;
         }
+        if (isInvincible) return;
         if(collision.gameObject.CompareTag("Player Skill"))
         {
             return;
         }
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Rare Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage, true, false); //Do damage to player

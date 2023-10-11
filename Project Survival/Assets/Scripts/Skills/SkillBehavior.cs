@@ -9,7 +9,7 @@ public class SkillBehavior : MonoBehaviour
     public SkillController skillController;
     public Vector3 direction;
     public List<float> damages;
-    public float speed;
+    public float travelSpeed;
     public int pierce, chain;
     public float despawnTime;
     public List<float> ailmentsChance;
@@ -26,10 +26,10 @@ public class SkillBehavior : MonoBehaviour
     public Vector3 startingPos;
     public float currentRange;
 
-    public void SetStats(List<float> damages, float speed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
+    public void SetStats(List<float> damages, float travelSpeed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
         this.damages = damages;
-        this.speed = speed;
+        this.travelSpeed = travelSpeed;
         this.pierce = pierce;
         this.chain = chain;
         this.despawnTime = despawnTime;
@@ -37,15 +37,15 @@ public class SkillBehavior : MonoBehaviour
         this.ailmentsEffect = ailmentsEffect;
         if (isThrowWeapon)
         {
-            this.speed = 8;
+            this.travelSpeed = 8;
         }
     }
 
     protected virtual void Update()
     {
-        if (rotateSkill && speed > 0)
+        if (rotateSkill && travelSpeed > 0)
         {
-            transform.Rotate(new Vector3(0, 0, 160 + (speed * 8)) * Time.deltaTime);
+            transform.Rotate(new Vector3(0, 0, 160 + (travelSpeed * 8)) * Time.deltaTime);
         }
         if (target != null && target.gameObject.activeSelf && isHoming)     //Home on enemy.
         {
@@ -57,7 +57,7 @@ public class SkillBehavior : MonoBehaviour
         {
             if (!returnSkill)
             {
-                if (speed <= 0) //skills that doesn't travel will despawn
+                if (travelSpeed <= 0) //skills that doesn't travel will despawn
                 {
                     despawnTime -= Time.deltaTime;
                     if (despawnTime <= 0f)
@@ -84,9 +84,9 @@ public class SkillBehavior : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (speed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
+        if (travelSpeed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
         {
-            rb.MovePosition(transform.position + (speed * Time.fixedDeltaTime * direction));
+            rb.MovePosition(transform.position + (travelSpeed * Time.fixedDeltaTime * direction));
         }
     }
 
@@ -180,14 +180,14 @@ public class SkillBehavior : MonoBehaviour
                 if (skillController.useBarrage)
                 {
                     hitOnceOnly = true;
-                    speed = 0;
+                    travelSpeed = 0;
                     despawnTime = 10;
                     Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this));    //spawn skill on enemy.
                 }
                 else if (skillController.useScatter)
                 {
                     hitOnceOnly = true;
-                    speed = 0;
+                    travelSpeed = 0;
                     despawnTime = 10;
                     Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this));
                 }

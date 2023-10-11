@@ -10,6 +10,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public PlayerStats player;
     public EnemyManager enemyManager;
+    public LevelUpManager levelUpManager;
     public InventoryManager inventory;
     public GameObject waveUI;
     public TextMeshProUGUI waveText;
@@ -30,7 +31,7 @@ public class GameplayManager : MonoBehaviour
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> damageTypeMultiplier;
     public int strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive;
-    public float speedMultiplier;
+    public float travelSpeedMultiplier;
     public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
     public float travelRangeMultiplier;
     public float cooldownMultiplier, projectileCooldownMultiplier, meleeCooldownMultiplier;
@@ -99,6 +100,7 @@ public class GameplayManager : MonoBehaviour
             expCap += expCapIncrease;
             expSlider.maxValue = expCap;
             expCapText.text = expCap.ToString();
+            levelUpManager.OpenUI();
         }
         UpdateExpBar();
     }
