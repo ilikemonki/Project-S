@@ -30,6 +30,6 @@ public class Levels : MonoBehaviour
     public Sprite sprite;
     public int currentLevel;
     public string description;
-    public bool destroy;
+    public bool destroyed;
     public List<LevelModifiers> levelModifiersList = new();
 }

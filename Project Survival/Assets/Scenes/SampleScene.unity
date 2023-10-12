@@ -25993,7 +25993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelUpUI: {fileID: 319169361}
-  upgradeList:
+  upgradesList:
   - {fileID: 5738141745568775078, guid: ef2c81cbe4680eb49a07b109174509c6, type: 3}
   - {fileID: 5738141745568775078, guid: 9ae6ce5521cca5d4b81e8afa76f4d056, type: 3}
   - {fileID: 5738141745568775078, guid: dbefa3c20d216da4bb5f70f1f0fb07dc, type: 3}
@@ -26001,33 +26001,35 @@ MonoBehaviour:
   - {fileID: 5738141745568775078, guid: 1b75d823ee3cf3742936572d2418b345, type: 3}
   - {fileID: 5738141745568775078, guid: 53dde572d24b8334380cce056f04f51e, type: 3}
   gamePlayManager: {fileID: 944733854}
+  numOfAvailableUpgrades: 0
+  randUpgrades: 
   upgradeUIs:
-  - spriteImage: {fileID: 518785538}
+  - image: {fileID: 518785538}
     nameText: {fileID: 131867885}
     levelText: {fileID: 2072260774}
     descriptionText: {fileID: 1745447160}
     upgradeText: {fileID: 99043236}
-  - spriteImage: {fileID: 1443889667}
+  - image: {fileID: 1443889667}
     nameText: {fileID: 409659373}
     levelText: {fileID: 839412811}
     descriptionText: {fileID: 378528404}
     upgradeText: {fileID: 1172400807}
-  - spriteImage: {fileID: 2010422568}
+  - image: {fileID: 2010422568}
     nameText: {fileID: 985649122}
     levelText: {fileID: 379090632}
     descriptionText: {fileID: 755096854}
     upgradeText: {fileID: 45741044}
-  - spriteImage: {fileID: 1423927578}
+  - image: {fileID: 1423927578}
     nameText: {fileID: 729659905}
     levelText: {fileID: 317216287}
     descriptionText: {fileID: 1492321578}
     upgradeText: {fileID: 857315474}
-  - spriteImage: {fileID: 1469547219}
+  - image: {fileID: 1469547219}
     nameText: {fileID: 1772831952}
     levelText: {fileID: 724579381}
     descriptionText: {fileID: 860477432}
     upgradeText: {fileID: 1946767717}
-  - spriteImage: {fileID: 423348109}
+  - image: {fileID: 423348109}
     nameText: {fileID: 1591024203}
     levelText: {fileID: 1589401490}
     descriptionText: {fileID: 1989818446}
