@@ -188,6 +188,7 @@ public class DropRate : MonoBehaviour
             item.chanceRange = Mathf.Round(item.baseChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
         }
         orbChanceRange = Mathf.Round(baseOrbChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
+        gemChanceRange = Mathf.Round(baseGemChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
     }
     public void RandomizeOrb(ICollectibles orb)
     {

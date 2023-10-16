@@ -100,7 +100,7 @@ public class GameplayManager : MonoBehaviour
             expCap += expCapIncrease;
             expSlider.maxValue = expCap;
             expCapText.text = expCap.ToString();
-            levelUpManager.OpenUI();
+            if (!levelUpManager.stopLevelUp) levelUpManager.OpenUI();
         }
         UpdateExpBar();
     }

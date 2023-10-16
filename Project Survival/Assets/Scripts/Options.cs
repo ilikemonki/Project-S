@@ -6,6 +6,7 @@ public class Options : MonoBehaviour
 {
     public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI;
     public GameObject menuUI;
+    public InventoryManager inventoryManager;
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -20,6 +21,7 @@ public class Options : MonoBehaviour
             GameManager.PauseGame();
             menuUI.SetActive(true);
             SkillsUIButton();
+            inventoryManager.UpdateGeneralStatistics();
         }
         else
         {

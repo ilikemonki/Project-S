@@ -43,8 +43,7 @@ public class PlayerStats : MonoBehaviour
         InvokeRepeating(nameof(Regenerate), 1f, 1f);
         UpdatePlayerStats();
         currentHealth = maxHealth;
-        healthBar.maxValue = maxHealth;
-        UpdateHealthBar(maxHealth);
+        UpdateHealthBar();
     }
 
     private void Update()
@@ -154,7 +153,7 @@ public class PlayerStats : MonoBehaviour
                 Timing.RunCoroutine(DamageFlash());
             }
             currentHealth -= dmg;
-            UpdateHealthBar(-dmg);
+            UpdateHealthBar();
         }
         else
         {
@@ -165,7 +164,7 @@ public class PlayerStats : MonoBehaviour
                     Timing.RunCoroutine(DamageFlash());
                 }
                 currentHealth -= dmg;
-                UpdateHealthBar(-dmg);
+                UpdateHealthBar();
                 iFrameTimer = iFrameDuration;
                 isInvincible = true;
             }
@@ -189,23 +188,21 @@ public class PlayerStats : MonoBehaviour
             Die();
         }
     }
-    public void UpdateMaxHealthBar(float maxAmt)   //set health bar to current max
+    public void UpdateMaxHealthBar()   //set health bar to current max
     {
-        healthBar.maxValue = maxAmt;
+        healthBar.maxValue = maxHealth;
         CheckHPBarColor();
-        UpdateHealthBar(maxAmt - currentHealth);
+        UpdateHealthBar();
     }
-    public void UpdateHealthBar(float amt)
+    public void UpdateHealthBar()
     {
-        healthBar.value += amt;
+        healthBar.value = currentHealth;
         CheckHPBarColor();
     }
 
     void Die()
     {
         isDead = true;
-        //healthBarImage.gameObject.SetActive(false);
-        //gameObject.SetActive(false);
     }
 
     public void Heal(float amt)
@@ -247,7 +244,7 @@ public class PlayerStats : MonoBehaviour
                 }
             }
         }
-        UpdateHealthBar(amt);
+        UpdateHealthBar();
     }
 
     public void Regenerate()
@@ -325,7 +322,6 @@ public class PlayerStats : MonoBehaviour
         gameplayManager.hpText.text = currentHealth.ToString();
         if (currentHealth <= 0)
         {
-            healthBarImage.gameObject.SetActive(false);
             return;
         }
         float hpPercent = currentHealth * 100 / maxHealth;
@@ -352,7 +348,7 @@ public class PlayerStats : MonoBehaviour
         degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
         playerCollector.SetMagnetRange(magnetRange);
-
+        UpdateMaxHealthBar();
         if (regen - degen == 0) gameplayManager.regenText.text = "";
         else if (regen - degen < 0) gameplayManager.regenText.text = "<color=red> -" + (regen - degen).ToString() + "<color=white> HP/s";
         else gameplayManager.regenText.text = "<color=green> +" + (regen - degen).ToString() + "<color=white> HP/s";

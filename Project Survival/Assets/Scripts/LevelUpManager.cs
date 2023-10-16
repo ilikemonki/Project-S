@@ -6,19 +6,14 @@ using UnityEngine.UI;
 
 public class LevelUpManager : MonoBehaviour
 {
+    public bool stopLevelUp;
     public GameObject levelUpUI;
-    public List<Levels> upgradesList;
+    public List<Upgrades> upgradesList;
     public GameplayManager gamePlayManager;
     public int numOfAvailableUpgrades;
     int rand;
     public List<int> randUpgrades = new();
-    [System.Serializable]
-    public class UpgradeUIs
-    {
-        public Image image;
-        public TextMeshProUGUI nameText, levelText, descriptionText, upgradeText;
-    }
-    public List<UpgradeUIs> upgradeUIs;
+    public List<UpgradeUI> upgradeUIList;
     private void Awake()
     {
         numOfAvailableUpgrades = upgradesList.Count;
@@ -35,23 +30,15 @@ public class LevelUpManager : MonoBehaviour
                     randUpgrades.Add(rand);
                     if (randUpgrades.Count == 6)
                     {
-                        GameManager.DebugLog("Random # of rolls for upgrades: " + i.ToString());
+                        GameManager.DebugLog("Rolls for upgrades until 6:  " + i.ToString());
                         break;
                     }
                 }
             }
-        }
-        for (int i = 0; i < randUpgrades.Count; i++) //Set upgrades
-        {
-            upgradeUIs[i].image.sprite = upgradesList[randUpgrades[i]].sprite;
-            upgradeUIs[i].nameText.text = upgradesList[randUpgrades[i]].name;
-            upgradeUIs[i].levelText.text = upgradesList[randUpgrades[i]].currentLevel.ToString() + "/" + upgradesList[randUpgrades[i]].levelModifiersList.Count;
-            upgradeUIs[i].descriptionText.text = upgradesList[randUpgrades[i]].description;
-            upgradeUIs[i].upgradeText.text = "";
-            for (int j = 0; j < upgradesList[randUpgrades[i]].levelModifiersList[upgradesList[randUpgrades[i]].currentLevel].modifier.Count; j++)
+            for (int i = 0; i < upgradeUIList.Count; i++)
             {
-                upgradeUIs[i].upgradeText.text = upgradeUIs[i].upgradeText.text + "" +
-                    "+" + upgradesList[randUpgrades[i]].levelModifiersList[upgradesList[randUpgrades[i]].currentLevel].amt[j] + " " + upgradesList[randUpgrades[i]].levelModifiersList[upgradesList[randUpgrades[i]].currentLevel].modifier[j];
+                upgradeUIList[i].upgrade = upgradesList[i];
+                upgradeUIList[i].SetUI();
             }
         }
     }
