@@ -45,6 +45,11 @@ public class PlayerStats : MonoBehaviour
         currentHealth = maxHealth;
         UpdateHealthBar();
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, magnetRange);
+    }
 
     private void Update()
     {
@@ -106,7 +111,7 @@ public class PlayerStats : MonoBehaviour
         if (collision.tag.Contains("Coin"))
         {
             collision.gameObject.SetActive(false);
-            gameplayManager.GainCoins(int.Parse(collision.tag.Substring(5)));
+            gameplayManager.GainCoins(collectible.coinAmount);
         }
         else if (collision.CompareTag("Health Potion"))
         {
@@ -129,7 +134,7 @@ public class PlayerStats : MonoBehaviour
             gameplayManager.inventory.AddCollectibleIntoInventory(collision.name);
             floatingTextController.DisplayPlayerText(transform, "+1 " + collision.name, Color.white);
         }
-        playerCollector.collectibles.Remove(collectible);
+        playerCollector.collectiblesList.Remove(collectible);
     }
     public void TakeDamage(float dmg, bool triggerIframe, bool isDotDamage)
     {

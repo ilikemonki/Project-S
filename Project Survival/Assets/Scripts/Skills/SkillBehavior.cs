@@ -110,12 +110,15 @@ public class SkillBehavior : MonoBehaviour
         }
         if (Random.Range(1, 101) <= skillController.lifeStealChance)  //Life Steal
         {
-            skillController.player.Heal(skillController.lifeSteal);
-            GameManager.totalLifeStealProc++;
-            if (skillController.lifeSteal + skillController.player.currentHealth > skillController.player.maxHealth)
-                GameManager.totalLifeSteal += skillController.player.maxHealth - skillController.player.currentHealth;
-            else
-                GameManager.totalLifeSteal += skillController.lifeSteal;
+            if (skillController.player.currentHealth < skillController.player.maxHealth)
+            {
+                skillController.player.Heal(skillController.lifeSteal);
+                GameManager.totalLifeStealProc++;
+                if (skillController.lifeSteal + skillController.player.currentHealth > skillController.player.maxHealth)
+                    GameManager.totalLifeSteal += skillController.player.maxHealth - skillController.player.currentHealth;
+                else
+                    GameManager.totalLifeSteal += skillController.lifeSteal;
+            }
         }
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {

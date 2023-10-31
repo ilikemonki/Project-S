@@ -16,6 +16,12 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         updateStats.ApplyUpgradeStats(upgrade);
+        upgrade.currentLevel++;
+        if (upgrade.currentLevel == upgrade.levelModifiersList.Count)
+        {
+            levelupManager.maxedUpgradesList.Add(upgrade);
+            levelupManager.upgradesList.Remove(upgrade);
+        }
         levelupManager.CloseUI();
     }
     public void SetUI()
@@ -29,8 +35,16 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
             upgradeText.text = "";
             for (int i = 0; i < upgrade.levelModifiersList[upgrade.currentLevel].modifier.Count; i++)
             {
-                upgradeText.text = upgradeText.text + "\n" +
-                    "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i];
+                if (upgrade.levelModifiersList[upgrade.currentLevel].amt[i] > 0)
+                {
+                    upgradeText.text = upgradeText.text + "\n" +
+                        "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i];
+                }
+                else
+                {
+                    upgradeText.text = upgradeText.text + "\n" +
+                        "<color=red>" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i];
+                }
             }
         }
     }

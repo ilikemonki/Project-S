@@ -104,6 +104,16 @@ public class GameplayManager : MonoBehaviour
         }
         UpdateExpBar();
     }
+    public void DevOnlyLevelUp()
+    {
+        level++;
+        UpdateLevelText();
+        expCap += expCapIncrease;
+        expSlider.maxValue = expCap;
+        expCapText.text = expCap.ToString();
+        levelUpManager.OpenUI();
+
+    }
     public void GainCoins(int amt)
     {
         coins += amt;

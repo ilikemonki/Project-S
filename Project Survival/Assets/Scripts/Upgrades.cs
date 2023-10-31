@@ -8,7 +8,7 @@ public class Upgrades : MonoBehaviour
     {
         public enum Modifier
         {
-            damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier, physicalMultiplier, fireMultiplier, iceMultiplier, lightningMultiplier,
+            damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier, physicalMultiplier, fireMultiplier, coldMultiplier, lightningMultiplier,
             strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive,
             travelSpeedMultiplier,
             attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier,

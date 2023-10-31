@@ -4,13 +4,19 @@ using UnityEngine;
 using TMPro;
 public class ICollectibles : MonoBehaviour
 {
+    public int coinAmount;
     public Rigidbody2D rb;
     public TextMeshProUGUI text;
     public bool isCollecting;
     public SpriteRenderer spriteRenderer;
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(transform.position, 0.6f);
+    //}
     public void PullCollectible(float pullspeed, Transform moveTo)
     {
-            rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (moveTo.position - transform.position).normalized));
+        rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (moveTo.position - transform.position).normalized));
     }
     public IEnumerator StartDuration()
     {

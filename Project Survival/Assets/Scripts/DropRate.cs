@@ -8,7 +8,7 @@ public class DropRate : MonoBehaviour
     public InventoryManager inventoryManager;
     public List<CurrenciesToDrop> collectiblesList;  //Coin
     public GameObject collectiblesParent;   //parent for collectibles except coins
-    public List<ICollectibles> itemList;    //pool list
+    public List<ICollectibles> coinList;    //pool list
     public List<ICollectibles> magnetList;    //magnet pool list
     [Header("Orbs")]
     public List<ICollectibles> orbPrefabs;  //skill orb prefabs
@@ -30,7 +30,7 @@ public class DropRate : MonoBehaviour
     private void Start()
     {
         InvokeRepeating(nameof(DeleteInactives), 10, 30f);
-        PopulatePool(collectiblesList[0].prefab, 100, transform, itemList);
+        PopulatePool(collectiblesList[1].prefab, 100, transform, coinList);
         PopulatePool(collectiblesList[5].prefab, 5, collectiblesParent.transform, magnetList);
         PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, orbList);
         PopulatePool(gemPrefabs[0], 5, collectiblesParent.transform, gemList);
@@ -63,7 +63,7 @@ public class DropRate : MonoBehaviour
         rand = Random.Range(0, gemChanceRange);
         if (rand <= 1)
         {
-            SpawnItem(gemPrefabs[Random.Range(0, gemPrefabs.Count)], pos); //random base orb
+            SpawnItem(gemPrefabs[Random.Range(0, gemPrefabs.Count)], pos); //random base gem
         }
 
     }
@@ -127,18 +127,33 @@ public class DropRate : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < itemList.Count; i++) //Spawn Coin
+        for (int i = 0; i < coinList.Count; i++)
         {
-            if (i > itemList.Count - 5)
+            if (Vector3.Distance(coinList[i].transform.position, pos.position) < 0.6f)
             {
-                PopulatePool(collectiblesList[0].prefab, 5, transform, itemList);
+                if (prefab.tag.Contains("1")) coinList[i].coinAmount += 1;
+                else if (prefab.tag.Contains("5")) coinList[i].coinAmount += 5;
+                else if (prefab.tag.Contains("10")) coinList[i].coinAmount += 10;
+                else if (prefab.tag.Contains("20")) coinList[i].coinAmount += 20;
+                return;
             }
-            if (!itemList[i].isActiveAndEnabled)
+        }
+        for (int i = 0; i < coinList.Count; i++) //Spawn Coin
+        {
+            if (i > coinList.Count - 5)
             {
-                itemList[i].transform.position = pos.position;
-                itemList[i].tag = prefab.tag;
-                itemList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
-            itemList[i].gameObject.SetActive(true);
+                PopulatePool(collectiblesList[1].prefab, 5, transform, coinList);
+            }
+            if (!coinList[i].isActiveAndEnabled)
+            {
+                if (prefab.tag.Contains("1")) coinList[i].coinAmount = 1;
+                else if (prefab.tag.Contains("5")) coinList[i].coinAmount = 5;
+                else if (prefab.tag.Contains("10")) coinList[i].coinAmount = 10;
+                else if (prefab.tag.Contains("20")) coinList[i].coinAmount = 20;
+                coinList[i].transform.position = pos.position;
+                coinList[i].tag = prefab.tag;
+                coinList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
+                coinList[i].gameObject.SetActive(true);
                 return;
             }
         }
@@ -158,22 +173,22 @@ public class DropRate : MonoBehaviour
     {
         int inactive = 0;
         int destroyed = 0;
-        for (int i = 0; i < itemList.Count; i++)
+        for (int i = 0; i < coinList.Count; i++)
         {
-            if (!itemList[i].isActiveAndEnabled)
+            if (!coinList[i].isActiveAndEnabled)
             {
                 inactive++;
             }
         }
-        if(inactive >= Mathf.Round(itemList.Count * 0.3f) && itemList.Count >= 500)     //if there are at least 30% inactives, destroy them.
+        if(inactive >= Mathf.Round(coinList.Count * 0.3f) && coinList.Count >= 500)     //if there are at least 30% inactives, destroy them.
         {
-            for (int i = 0; i < itemList.Count; i++)
+            for (int i = 0; i < coinList.Count; i++)
             {
                 if (inactive == 0) break;
-                if (!itemList[i].isActiveAndEnabled && inactive >= 0)
+                if (!coinList[i].isActiveAndEnabled && inactive >= 0)
                 {
-                    Destroy(itemList[i].gameObject);
-                    itemList.RemoveAt(i);
+                    Destroy(coinList[i].gameObject);
+                    coinList.RemoveAt(i);
                     inactive--;
                     destroyed++;
                 }

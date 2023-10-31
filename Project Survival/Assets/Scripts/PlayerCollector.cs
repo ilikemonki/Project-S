@@ -7,21 +7,21 @@ public class PlayerCollector : MonoBehaviour
     public PlayerStats player;
     public CircleCollider2D magnet;
     public float pullSpeed;
-    public List<ICollectibles> collectibles= new();
+    public List<ICollectibles> collectiblesList= new();
 
     private void FixedUpdate()
     {
-        if(collectibles.Count > 0)
+        if (collectiblesList.Count > 0)
         {
-            for (int i = 0; i < collectibles.Count; ++i)
+            for (int i = 0; i < collectiblesList.Count; ++i)
             {
-                if (collectibles[i] == null)
-                { 
-                    collectibles.RemoveAt(i); 
+                if (collectiblesList[i] == null)
+                {
+                    collectiblesList.RemoveAt(i);
                 }
                 else
                 {
-                    collectibles[i].PullCollectible(pullSpeed, player.transform);
+                    collectiblesList[i].PullCollectible(pullSpeed, player.transform);
                 }
             }
         }
@@ -35,7 +35,8 @@ public class PlayerCollector : MonoBehaviour
             if (!collectibles.isCollecting && !collision.CompareTag("Magnet") && !collision.CompareTag("Health Potion"))
             {
                 collectibles.isCollecting = true;
-                this.collectibles.Add(collectibles);
+                collectiblesList.Add(collectibles);
+                collectibles.PullCollectible(pullSpeed, player.transform);
             }
 
         }

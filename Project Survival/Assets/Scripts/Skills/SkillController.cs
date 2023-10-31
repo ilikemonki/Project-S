@@ -894,7 +894,7 @@ public class SkillController : MonoBehaviour
             damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier;
             strike = baseStrike + gameplayManager.strikeAdditive;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier) / 100);
-            cooldown = baseCooldown * (1 + (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier) / 100);
+            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive;
             size = gameplayManager.sizeAdditive + gameplayManager.meleeSizeAdditive;
@@ -906,7 +906,7 @@ public class SkillController : MonoBehaviour
             chain = baseChain + gameplayManager.chainAdditive;
             pierce = basePierce + gameplayManager.pierceAdditive;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier) / 100);
-            cooldown = baseCooldown * (1 + (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier) / 100);
+            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive;
             size = gameplayManager.sizeAdditive + gameplayManager.projectileAdditive;
