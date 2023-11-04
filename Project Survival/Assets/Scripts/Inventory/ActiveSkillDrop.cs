@@ -38,17 +38,19 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
 
                     if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
                     {
-                        foreach (ActiveSkillDrop asd in inventory.skillList[num].skillGemDropList) //Apply Gem Modifiers from new skill group
+                        foreach (ActiveSkillDrop asd in inventory.skillSlotList[num].skillGemDropList) //Apply Gem Modifiers from new skill group
                         {
-                            if (asd.draggableItem != null && inventory.skillList[num].skillController != null)
+                            if (asd.draggableItem != null && inventory.skillSlotList[num].skillController != null)
                             {
                                 inventory.ApplyGemModifier(asd.draggableItem.skillGem.gemModifierList, num);
                             }
                         }
+                        inventory.skillSlotList[num].autoToggle.isOn = true;
+                        inventory.skillSlotList[num].autoToggle.gameObject.SetActive(true);
                     }
                     else
                     {
-                        if (inventory.skillList[num].skillController != null)
+                        if (inventory.skillSlotList[num].skillController != null)
                         {
                             inventory.ApplyGemModifier(draggableItem.skillGem.gemModifierList, num);
                         }
@@ -59,12 +61,20 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
                     {
                         if (draggableItem.activeSkillDrop.num == num) return;
-                        inventory.skillList[draggableItem.activeSkillDrop.num].skillController.UpdateSkillStats(); //Reset stats
+                        //old active slot
+                        inventory.skillSlotList[draggableItem.activeSkillDrop.num].skillController.UpdateSkillStats(); //Reset stats
                         draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
-                        inventory.skillList[draggableItem.activeSkillDrop.num].skillController = null; //null the skillController in skill list
+                        inventory.skillSlotList[draggableItem.activeSkillDrop.num].skillController = null; //null the skillController in skill list
+                        inventory.skillSlotList[draggableItem.activeSkillDrop.num].autoToggle.isOn = true;
+                        inventory.skillSlotList[draggableItem.activeSkillDrop.num].autoToggle.gameObject.SetActive(false);
+                        //new active slot
                         draggableItem.activeSkillDrop = this; // Set New activeskilldrop
-                        inventory.skillList[num].skillController = draggableItem.skillController; //Set new skill Controller in skill list
-                        foreach (ActiveSkillDrop asd in inventory.skillList[num].skillGemDropList) //Apply Gem Modifiers from new skill group
+                        inventory.skillSlotList[num].skillController = draggableItem.skillController; //Set new skill Controller in skill list
+                        inventory.skillSlotList[num].skillController.autoUseSkill = true;
+                        inventory.skillSlotList[num].skillController.CheckTargetless();
+                        inventory.skillSlotList[num].autoToggle.isOn = true;
+                        inventory.skillSlotList[num].autoToggle.gameObject.SetActive(true);
+                        foreach (ActiveSkillDrop asd in inventory.skillSlotList[num].skillGemDropList) //Apply Gem Modifiers from new skill group
                         {
                             if (asd.draggableItem != null)
                             {
@@ -76,9 +86,9 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     {
                         if (draggableItem.activeSkillDrop.num != num) //if gem is moved to a new active skill group, apply to new skillController.
                         {
-                            if (inventory.skillList[num].skillController != null) //if moved to new slot with a skill controller
+                            if (inventory.skillSlotList[num].skillController != null) //if moved to new slot with a skill controller
                             {
-                                if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                                if (inventory.skillSlotList[draggableItem.activeSkillDrop.num].skillController != null)
                                 {
                                     inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
                                 }
@@ -86,7 +96,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                             }
                             else // Moved to slot with no skill controller
                             {
-                                if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                                if (inventory.skillSlotList[draggableItem.activeSkillDrop.num].skillController != null)
                                 {
                                     inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
                                 }
@@ -116,7 +126,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             }
             else
             {
-                if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                if (inventory.skillSlotList[draggableItem.activeSkillDrop.num].skillController != null)
                 {
                     inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
                 }

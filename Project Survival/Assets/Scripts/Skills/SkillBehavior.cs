@@ -157,7 +157,7 @@ public class SkillBehavior : MonoBehaviour
         enemy.TakeDamage(totalDamage, isCrit); 
         if (isCrit)
         {
-            foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.skillList) //Check crit trigger skill condition
+            foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.skillSlotList) //Check crit trigger skill condition
             {
                 if (sc.skillController != null)
                 {

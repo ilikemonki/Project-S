@@ -51,16 +51,31 @@ MonoBehaviour:
   levelModifiersList:
   - modifier: 00000000
     amt:
-    - 10
+    - 20
   - modifier: 00000000
     amt:
-    - 10
+    - 20
   - modifier: 00000000
     amt:
-    - 10
+    - 20
   - modifier: 00000000
     amt:
-    - 10
+    - 20
   - modifier: 00000000
     amt:
-    - 10
+    - 20
+  - modifier: 00000000
+    amt:
+    - 20
+  - modifier: 00000000
+    amt:
+    - 20
+  - modifier: 00000000
+    amt:
+    - 20
+  - modifier: 00000000
+    amt:
+    - 20
+  - modifier: 00000000
+    amt:
+    - 20

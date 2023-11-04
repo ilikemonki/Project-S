@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3021294798455253695}
   m_Layer: 12
   m_Name: O-Slash
-  m_TagString: Untagged
+  m_TagString: Player Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damages: []
-  speed: 0
+  travelSpeed: 0
   pierce: 0
   chain: 0
   despawnTime: 0
@@ -123,6 +123,9 @@ MonoBehaviour:
   rotateSkill: 0
   returnSkill: 0
   isThrowWeapon: 0
+  isHoming: 0
+  startingPos: {x: 0, y: 0, z: 0}
+  currentRange: 0
 --- !u!50 &5043445816700823471
 Rigidbody2D:
   serializedVersion: 4

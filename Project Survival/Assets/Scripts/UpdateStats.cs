@@ -61,11 +61,11 @@ public class UpdateStats : MonoBehaviour
             }
         }
         gameplayManager.player.UpdatePlayerStats();
-        for (int i = 0; i < gameplayManager.inventory.skillList.Count; i++)
+        for (int i = 0; i < gameplayManager.inventory.skillSlotList.Count; i++)
         {
-            if (gameplayManager.inventory.skillList[i].skillController != null)
+            if (gameplayManager.inventory.skillSlotList[i].skillController != null)
             {
-                gameplayManager.inventory.skillList[i].skillController.UpdateSkillStats();
+                gameplayManager.inventory.skillSlotList[i].skillController.UpdateSkillStats();
             }
         }
         if (currentMaxHP != gameplayManager.player.maxHealth) //if hp is upgraded, update current hp.

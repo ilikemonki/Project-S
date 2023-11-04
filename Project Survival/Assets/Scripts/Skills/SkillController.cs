@@ -83,13 +83,19 @@ public class SkillController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
+    public void CheckTargetless()
+    {
+        if (useOrbit || useRandomDirection || (useCircular && !useThrowWeapon) || !autoUseSkill)
+            targetless = true;
+        else targetless = false;
+    }
     private void Awake()
     {
         damageTypes.AddRange(baseDamageTypes);
         ailmentsChance.AddRange(addedAilmentsChance);
         ailmentsEffect.AddRange(addedAilmentsEffect);
-        if (useOrbit || useRandomDirection || (useCircular && !useThrowWeapon) || !autoUseSkill)
-            targetless = true;
+        CheckTargetless();
+
     }
     // Start is called before the first frame update
     protected virtual void Start()
@@ -247,7 +253,7 @@ public class SkillController : MonoBehaviour
         {
             OnTargetBehavior(strike, transform, enemyDistances.closestEnemyList);
         }
-        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.skillList) //Check use trigger skill condition
+        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.skillSlotList) //Check use trigger skill condition
         {
             if (sc.skillController != null)
             {

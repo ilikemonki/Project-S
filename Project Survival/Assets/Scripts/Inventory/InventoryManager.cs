@@ -11,9 +11,10 @@ public class InventoryManager : MonoBehaviour
     {
         public SkillController skillController;
         public ActiveSkillDrop activeSkillDrop;
+        public Toggle autoToggle;
         public List<ActiveSkillDrop> skillGemDropList;
     }
-    public List<Skill> skillList = new();
+    public List<Skill> skillSlotList = new();
     public List<SkillController> skillControllerPrefabList = new();
     public Dictionary<DraggableItem, int> skillOrbList = new();
     public Dictionary<DraggableItem, int> skillGemList = new();
@@ -30,7 +31,7 @@ public class InventoryManager : MonoBehaviour
     public InventorySkillDrop inventoryOrbDrop, inventoryGemDrop;
     private void Start()
     {
-        foreach(Skill skill in skillList) //Set skills in start.
+        foreach(Skill skill in skillSlotList) //Set skills in start.
         {
             if (skill.activeSkillDrop.draggableItem != null)
             {
@@ -44,13 +45,18 @@ public class InventoryManager : MonoBehaviour
                 slotUI.levelText.text = "Lv. " + skill.activeSkillDrop.draggableItem.level.ToString();
                 slotUI.fadedImage.sprite = skill.activeSkillDrop.draggableItem.image.sprite;
                 skillOrbList.Add(skill.activeSkillDrop.draggableItem, 1);
+                skill.autoToggle.gameObject.SetActive(true);
+            }
+            else
+            {
+                skill.autoToggle.gameObject.SetActive(false);
             }
         }
-        for (int i = 0; i < skillList.Count; i++) //Apply gem mods to active skills
+        for (int i = 0; i < skillSlotList.Count; i++) //Apply gem mods to active skills
         {
-            foreach (ActiveSkillDrop asd in skillList[i].skillGemDropList)
+            foreach (ActiveSkillDrop asd in skillSlotList[i].skillGemDropList)
             {
-                if (asd.draggableItem != null && skillList[i].skillController != null)
+                if (asd.draggableItem != null && skillSlotList[i].skillController != null)
                 {
                     ApplyGemModifier(asd.draggableItem.skillGem.gemModifierList, i);
                 }
@@ -63,7 +69,7 @@ public class InventoryManager : MonoBehaviour
         {
             //draggableItem.slotUI.amountText.text = skillOrbList[draggableItem].ToString();
             draggableItem.slotUI.inUseText.gameObject.SetActive(false);
-            skillList[draggableItem.activeSkillDrop.num].skillController = null;
+            skillSlotList[draggableItem.activeSkillDrop.num].skillController = null;
             draggableItem.activeSkillDrop.draggableItem = null;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = draggableItem.slotUI.fadedImage.transform;   //set new parent
@@ -184,7 +190,7 @@ public class InventoryManager : MonoBehaviour
                     skill.UpdateSkillStats();
                     skill.UpdateSize();
                     dragItem.skillController = skill;
-                    skillList[dragItem.activeSkillDrop.num].skillController = skill;
+                    skillSlotList[dragItem.activeSkillDrop.num].skillController = skill;
                 }
             }
         }
@@ -304,8 +310,8 @@ public class InventoryManager : MonoBehaviour
         {
             switch (modList[i].modifier)
             {
-                case SkillGem.GemModifier.Modifier.Damage: skillList[skillIndex].skillController.damage += modList[i].amt; break;
-                case SkillGem.GemModifier.Modifier.Projectile: skillList[skillIndex].skillController.projectile += ((int)modList[i].amt); break;
+                case SkillGem.GemModifier.Modifier.Damage: skillSlotList[skillIndex].skillController.damage += modList[i].amt; break;
+                case SkillGem.GemModifier.Modifier.Projectile: skillSlotList[skillIndex].skillController.projectile += ((int)modList[i].amt); break;
                 default: GameManager.DebugLog("ApplyGemMod has no switch case for " + modList[i].modifier); break;
             }
             GameManager.DebugLog("apply mod: " + modList[i].modifier + " " + modList[i].amt);
@@ -317,11 +323,29 @@ public class InventoryManager : MonoBehaviour
         {
             switch (modList[i].modifier)
             {
-                case SkillGem.GemModifier.Modifier.Damage: skillList[skillIndex].skillController.damage -= modList[i].amt; break;
-                case SkillGem.GemModifier.Modifier.Projectile: skillList[skillIndex].skillController.projectile -= ((int)modList[i].amt); break;
+                case SkillGem.GemModifier.Modifier.Damage: skillSlotList[skillIndex].skillController.damage -= modList[i].amt; break;
+                case SkillGem.GemModifier.Modifier.Projectile: skillSlotList[skillIndex].skillController.projectile -= ((int)modList[i].amt); break;
                 default: GameManager.DebugLog("UnapplyGemMod has no switch case for " + modList[i].modifier); break;
             }
             GameManager.DebugLog("Unapply mod: " + modList[i].modifier + " " + modList[i].amt);
+        }
+    }
+    public void AutoToggle()
+    {
+        foreach (Skill skillSlot in skillSlotList) //Set skills in start.
+        {
+            if (skillSlot.skillController != null)
+            {
+                if (skillSlot.autoToggle.isOn)
+                {
+                    skillSlot.skillController.autoUseSkill = true;
+                }
+                else
+                {
+                    skillSlot.skillController.autoUseSkill = false;
+                }
+                skillSlot.skillController.CheckTargetless();
+            }
         }
     }
 }

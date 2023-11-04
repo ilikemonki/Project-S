@@ -86,7 +86,7 @@ public class PlayerStats : MonoBehaviour
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage, true, false); //Do damage to player
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check damageTaken trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check damageTaken trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -176,7 +176,7 @@ public class PlayerStats : MonoBehaviour
         }
         floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red);
         GameManager.totalDamageTaken += dmg;
-        foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check damageTaken trigger skill condition
+        foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check damageTaken trigger skill condition
         {
             if (sc.skillController != null)
             {
@@ -218,7 +218,7 @@ public class PlayerStats : MonoBehaviour
             floatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green);
             currentHealth = maxHealth;
             GameManager.totalHealing += maxHealth - currentHealth;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -236,7 +236,7 @@ public class PlayerStats : MonoBehaviour
             floatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green);
             currentHealth += amt;
             GameManager.totalHealing += amt;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -269,11 +269,11 @@ public class PlayerStats : MonoBehaviour
                 GameManager.totalRegen += amt;
             }
             GameManager.totalDegen += degen;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
-                    if (sc.skillController.skillTrigger.useBloodTrigger)
+                    if (sc.skillController.skillTrigger.useDegenTrigger)
                     {
                         sc.skillController.skillTrigger.currentCounter += degen;
                         if (sc.skillController.currentCooldown <= 0f)
@@ -289,11 +289,11 @@ public class PlayerStats : MonoBehaviour
             {
                 TakeDamage(currentHealth - 1, false, true);
                 GameManager.totalDegen += currentHealth - 1;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check trigger skill condition
+                foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
                 {
                     if (sc.skillController != null)
                     {
-                        if (sc.skillController.skillTrigger.useBloodTrigger)
+                        if (sc.skillController.skillTrigger.useDegenTrigger)
                         {
                             sc.skillController.skillTrigger.currentCounter += currentHealth - 1;
                             if (sc.skillController.currentCooldown <= 0f)
@@ -306,11 +306,11 @@ public class PlayerStats : MonoBehaviour
             { 
                 TakeDamage(amt, false, true);
                 GameManager.totalDegen += amt;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillList) //Check trigger skill condition
+                foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
                 {
                     if (sc.skillController != null)
                     {
-                        if (sc.skillController.skillTrigger.useBloodTrigger)
+                        if (sc.skillController.skillTrigger.useDegenTrigger)
                         {
                             sc.skillController.skillTrigger.currentCounter += amt;
                             if (sc.skillController.currentCooldown <= 0f)
@@ -351,7 +351,7 @@ public class PlayerStats : MonoBehaviour
         defense = baseDefense * (1 + gameplayManager.defenseMultiplier / 100);
         regen = baseRegen + gameplayManager.regenAdditive;
         degen = baseDegen + gameplayManager.degenAdditive;
-        magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100); 
+        magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100);
         playerCollector.SetMagnetRange(magnetRange);
         UpdateMaxHealthBar();
         if (regen - degen == 0) gameplayManager.regenText.text = "";

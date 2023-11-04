@@ -178,7 +178,7 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[2] = chillEffect;
             Timing.RunCoroutine(SlowMovement());
             GameManager.totalChill++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -200,7 +200,7 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[2] = chillEffect;
             moveSpeed = baseMoveSpeed * (1 - chillEffect / 100);
             GameManager.totalChill++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -224,7 +224,7 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[1] = burnDamage;
             Timing.RunCoroutine(TakeBurnDamage());
             GameManager.totalBurn++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -245,7 +245,7 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[1] = burnDamage;
             GameManager.totalBurn++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -267,7 +267,7 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[3] = shockEffect;
             Timing.RunCoroutine(TakeShockEffect());
             GameManager.totalShock++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -288,7 +288,7 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[3] = shockEffect;
             GameManager.totalShock++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -312,7 +312,7 @@ public class EnemyStats : MonoBehaviour
             topAilmentsEffect[0] = bleedDamage;
             Timing.RunCoroutine(TakeBleedDamage());
             GameManager.totalBleed++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -333,7 +333,7 @@ public class EnemyStats : MonoBehaviour
         {
             topAilmentsEffect[0] = bleedDamage;
             GameManager.totalBleed++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.skillSlotList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {

@@ -167,7 +167,8 @@ MonoBehaviour:
   enemyStats: {fileID: 0}
   trailRend: {fileID: 2664521967084729575}
   direction: {x: 0, y: 0, z: 0}
-  duration: 0
+  startingPos: {x: 0, y: 0, z: 0}
+  currentRange: 0
 --- !u!58 &3127882506053086636
 CircleCollider2D:
   m_ObjectHideFlags: 0

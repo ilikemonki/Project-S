@@ -30,7 +30,7 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
                 }
                 else
                 {
-                    if (inventory.skillList[draggableItem.activeSkillDrop.num].skillController != null)
+                    if (inventory.skillSlotList[draggableItem.activeSkillDrop.num].skillController != null)
                     {
                         inventory.UnapplyGemModifier(draggableItem.skillGem.gemModifierList, draggableItem.activeSkillDrop.num); //unapply to old skill controller
                     }

@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 1735531887672982296}
   - component: {fileID: 1735531887672982297}
   - component: {fileID: 6986161325550505959}
+  - component: {fileID: 1510024326687019495}
   m_Layer: 0
   m_Name: Dagger Controller
   m_TagString: Untagged
@@ -137,7 +138,11 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyDistances: {fileID: 0}
   level: 0
-  baseDamageTypes: []
+  baseDamageTypes:
+  - 3
+  - 0
+  - 0
+  - 0
   addedAilmentsChance:
   - 0
   - 100
@@ -228,5 +233,37 @@ MonoBehaviour:
   useBurnTrigger: 0
   useChillTrigger: 0
   useShockTrigger: 0
-  useBloodTrigger: 0
+  useDegenTrigger: 0
   useContactTrigger: 0
+--- !u!114 &1510024326687019495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887672982295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7032f660de52d04392886555dad858d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  currentLevel: 0
+  description: 
+  destroyed: 0
+  levelModifiersList:
+  - modifier: 00000000
+    amt:
+    - 50
+  - modifier: 00000000
+    amt:
+    - 50
+  - modifier: 00000000
+    amt:
+    - 50
+  - modifier: 00000000
+    amt:
+    - 50
+  - modifier: 00000000
+    amt:
+    - 50

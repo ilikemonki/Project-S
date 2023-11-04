@@ -5,10 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
-  - Coin 1
-  - Coin 5
-  - Coin 10
-  - Coin 20
   - Magnet
   - Health Potion
   - Rare Enemy
@@ -17,6 +13,7 @@ TagManager:
   - Player Skill
   - Skill Gem
   - Skill Orb
+  - Coin
   layers:
   - Default
   - TransparentFX

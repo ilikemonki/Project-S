@@ -127,14 +127,15 @@ public class DropRate : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < coinList.Count; i++)
+        for (int i = 0; i < coinList.Count; i++) //Merge coin if distance is close
         {
-            if (Vector3.Distance(coinList[i].transform.position, pos.position) < 0.6f)
+            if (Vector3.Distance(coinList[i].transform.position, pos.position) < 0.7f)
             {
-                if (prefab.tag.Contains("1")) coinList[i].coinAmount += 1;
-                else if (prefab.tag.Contains("5")) coinList[i].coinAmount += 5;
-                else if (prefab.tag.Contains("10")) coinList[i].coinAmount += 10;
-                else if (prefab.tag.Contains("20")) coinList[i].coinAmount += 20;
+                coinList[i].coinAmount += prefab.coinAmount;
+                //Change sprite
+                if (coinList[i].coinAmount >= 5 && coinList[i].coinAmount < 10) coinList[i].spriteRenderer.sprite = collectiblesList[3].prefab.spriteRenderer.sprite;
+                else if (coinList[i].coinAmount >= 10 && coinList[i].coinAmount < 20) coinList[i].spriteRenderer.sprite = collectiblesList[2].prefab.spriteRenderer.sprite;
+                else if (coinList[i].coinAmount >= 20) coinList[i].spriteRenderer.sprite = collectiblesList[1].prefab.spriteRenderer.sprite;
                 return;
             }
         }
@@ -146,10 +147,7 @@ public class DropRate : MonoBehaviour
             }
             if (!coinList[i].isActiveAndEnabled)
             {
-                if (prefab.tag.Contains("1")) coinList[i].coinAmount = 1;
-                else if (prefab.tag.Contains("5")) coinList[i].coinAmount = 5;
-                else if (prefab.tag.Contains("10")) coinList[i].coinAmount = 10;
-                else if (prefab.tag.Contains("20")) coinList[i].coinAmount = 20;
+                coinList[i].coinAmount = prefab.coinAmount;
                 coinList[i].transform.position = pos.position;
                 coinList[i].tag = prefab.tag;
                 coinList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
