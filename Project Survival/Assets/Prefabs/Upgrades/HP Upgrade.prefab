@@ -49,18 +49,33 @@ MonoBehaviour:
   description: Increase max HP.
   destroyed: 0
   levelModifiersList:
-  - modifier: 14000000
+  - modifier: 26000000
     amt:
     - 10
-  - modifier: 14000000
+  - modifier: 26000000
     amt:
     - 10
-  - modifier: 14000000
+  - modifier: 26000000
     amt:
     - 10
-  - modifier: 14000000
+  - modifier: 26000000
     amt:
     - 10
-  - modifier: 14000000
+  - modifier: 26000000
+    amt:
+    - 10
+  - modifier: 26000000
+    amt:
+    - 10
+  - modifier: 26000000
+    amt:
+    - 10
+  - modifier: 26000000
+    amt:
+    - 10
+  - modifier: 26000000
+    amt:
+    - 10
+  - modifier: 26000000
     amt:
     - 10

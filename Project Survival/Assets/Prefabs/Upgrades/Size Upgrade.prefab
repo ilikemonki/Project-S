@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7190107890799936548}
-  - component: {fileID: 5422419459820420460}
+  - component: {fileID: 2947592351167458295}
   m_Layer: 0
-  m_Name: Damage Upgrade
+  m_Name: Size Upgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5422419459820420460
+--- !u!114 &2947592351167458295
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,38 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7032f660de52d04392886555dad858d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 5b7f664b515582d458717c354f6be292, type: 3}
+  sprite: {fileID: 21300000, guid: 0da63bf69e254aa4a83c345c3de497c8, type: 3}
   currentLevel: 0
-  description: Increase damage.
+  description: Increase size.
   destroyed: 0
   levelModifiersList:
-  - modifier: 16000000
+  - modifier: 29000000
     amt:
     - 20
-  - modifier: 16000000
+  - modifier: 29000000
     amt:
     - 20
-  - modifier: 16000000
+  - modifier: 29000000
     amt:
     - 20
-  - modifier: 16000000
+  - modifier: 29000000
     amt:
     - 20
-  - modifier: 16000000
-    amt:
-    - 20
-  - modifier: 16000000
-    amt:
-    - 20
-  - modifier: 16000000
-    amt:
-    - 20
-  - modifier: 16000000
-    amt:
-    - 20
-  - modifier: 16000000
-    amt:
-    - 20
-  - modifier: 16000000
+  - modifier: 29000000
     amt:
     - 20

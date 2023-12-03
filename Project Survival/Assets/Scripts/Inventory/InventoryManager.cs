@@ -14,8 +14,14 @@ public class InventoryManager : MonoBehaviour
         public Toggle autoToggle;
         public List<ActiveSkillDrop> skillGemDropList;
     }
-    public List<Skill> skillSlotList = new();
-    public List<SkillController> skillControllerPrefabList = new();
+    [System.Serializable]
+    public class SkillControllerPrefabs
+    {
+        public SkillController prefab;
+        public int currentLevel;
+    }
+    public List<Skill> activeSkillList = new();
+    public List<SkillControllerPrefabs> skillControllerPrefabsList = new();
     public Dictionary<DraggableItem, int> skillOrbList = new();
     public Dictionary<DraggableItem, int> skillGemList = new();
     public List<DraggableItem> orbPrefabList;
@@ -31,7 +37,7 @@ public class InventoryManager : MonoBehaviour
     public InventorySkillDrop inventoryOrbDrop, inventoryGemDrop;
     private void Start()
     {
-        foreach(Skill skill in skillSlotList) //Set skills in start.
+        foreach(Skill skill in activeSkillList) //Set skills in start.
         {
             if (skill.activeSkillDrop.draggableItem != null)
             {
@@ -52,13 +58,13 @@ public class InventoryManager : MonoBehaviour
                 skill.autoToggle.gameObject.SetActive(false);
             }
         }
-        for (int i = 0; i < skillSlotList.Count; i++) //Apply gem mods to active skills
+        for (int i = 0; i < activeSkillList.Count; i++) //Apply gem mods to active skills
         {
-            foreach (ActiveSkillDrop asd in skillSlotList[i].skillGemDropList)
+            foreach (ActiveSkillDrop asd in activeSkillList[i].skillGemDropList)
             {
-                if (asd.draggableItem != null && skillSlotList[i].skillController != null)
+                if (asd.draggableItem != null && activeSkillList[i].skillController != null)
                 {
-                    ApplyGemModifier(asd.draggableItem.skillGem.gemModifierList, i);
+                    gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.gemUpgrades, activeSkillList[i].skillController);
                 }
             }
         }
@@ -69,7 +75,7 @@ public class InventoryManager : MonoBehaviour
         {
             //draggableItem.slotUI.amountText.text = skillOrbList[draggableItem].ToString();
             draggableItem.slotUI.inUseText.gameObject.SetActive(false);
-            skillSlotList[draggableItem.activeSkillDrop.num].skillController = null;
+            activeSkillList[draggableItem.activeSkillDrop.num].skillController = null;
             draggableItem.activeSkillDrop.draggableItem = null;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = draggableItem.slotUI.fadedImage.transform;   //set new parent
@@ -139,7 +145,7 @@ public class InventoryManager : MonoBehaviour
                     newItem.name = draggableItem.name;
                     newItem.itemName = draggableItem.itemName;
                     newItem.image.sprite = draggableItem.image.sprite;
-                    newItem.skillGem = draggableItem.skillGem;
+                    newItem.gemUpgrades = draggableItem.gemUpgrades;
                     newItem.slotType = draggableItem.slotType;
                     skillGemList[draggableItem]--;
                     skillGemList.Add(newItem, skillGemList[draggableItem]);
@@ -176,21 +182,38 @@ public class InventoryManager : MonoBehaviour
     {
         if (dragItem.slotType == DraggableItem.SlotType.SkillOrb)
         {
-            foreach (SkillController sc in skillControllerPrefabList) //Look for skill controller name.
+            foreach (SkillControllerPrefabs sc in skillControllerPrefabsList) //Look for skill controller name.
             {
-                if (sc.skillOrbName.Equals(dragItem.itemName)) //Get skill controller and set to draggableItem
+                if (sc.prefab.skillOrbName.Equals(dragItem.itemName)) //Get skill controller and set to draggableItem
                 {
-                    SkillController skill = Instantiate(sc, skillParent.transform);
-                    skill.name = sc.name;
+                    SkillController skill = Instantiate(sc.prefab, skillParent.transform);
+                    skill.name = sc.prefab.name;
                     skill.poolParent.transform.SetParent(skillPoolParent.transform);
                     skill.player = player;
                     skill.enemyManager = enemyManager;
                     skill.enemyDistances = enemyDistances;
                     skill.gameplayManager = gameplayManager;
+                    if (!gameplayManager.skillExpDict.ContainsKey(skill.skillOrbName)) //if skill's exp isn't saved to dictionary, add and save it.
+                    {
+                        gameplayManager.skillExpDict.Add(skill.skillOrbName, skill.exp);
+                        gameplayManager.skillLevelDict.Add(skill.skillOrbName, skill.level);
+                    }
+                    else
+                    {
+                        skill.level = gameplayManager.skillLevelDict[skill.skillOrbName];
+                        skill.exp = gameplayManager.skillExpDict[skill.skillOrbName];
+                    }
                     skill.UpdateSkillStats();
-                    skill.UpdateSize();
+                    if (skill.level > 1)
+                    {
+                        for (int i = 0; i < skill.level - 1; i++)
+                        {
+                            gameplayManager.updateStats.ApplySkillUpgrades(skill.upgrade, skill, i);
+                        }
+                    }
                     dragItem.skillController = skill;
-                    skillSlotList[dragItem.activeSkillDrop.num].skillController = skill;
+                    activeSkillList[dragItem.activeSkillDrop.num].skillController = skill;
+                    return;
                 }
             }
         }
@@ -276,7 +299,7 @@ public class InventoryManager : MonoBehaviour
                 case 3: generalStatistics[i].text = gameplayManager.level.ToString(); break;
                 case 4: generalStatistics[i].text = (gameplayManager.waveCounter + 1).ToString(); break;
                 case 5: generalStatistics[i].text = GameManager.totalCoinsCollected.ToString(); break;
-                case 6: generalStatistics[i].text = GameManager.totalClassStarsCollected.ToString(); break;
+                //case 6: generalStatistics[i].text = GameManager.totalClassStarsCollected.ToString(); break;
                 case 7: generalStatistics[i].text = GameManager.totalPassiveItems.ToString(); break;
                 case 8: generalStatistics[i].text = GameManager.totalSkillGemsCollected.ToString(); break;
                 case 9: generalStatistics[i].text = GameManager.totalDashes.ToString(); break;
@@ -304,35 +327,9 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-    public void ApplyGemModifier(List<SkillGem.GemModifier> modList, int skillIndex)
+    public void AutoToggle() //Set to toggle
     {
-        for (int i = 0; i < modList.Count; i++)
-        {
-            switch (modList[i].modifier)
-            {
-                case SkillGem.GemModifier.Modifier.Damage: skillSlotList[skillIndex].skillController.damage += modList[i].amt; break;
-                case SkillGem.GemModifier.Modifier.Projectile: skillSlotList[skillIndex].skillController.projectile += ((int)modList[i].amt); break;
-                default: GameManager.DebugLog("ApplyGemMod has no switch case for " + modList[i].modifier); break;
-            }
-            GameManager.DebugLog("apply mod: " + modList[i].modifier + " " + modList[i].amt);
-        }
-    }
-    public void UnapplyGemModifier(List<SkillGem.GemModifier> modList, int skillIndex)
-    {
-        for (int i = 0; i < modList.Count; i++)
-        {
-            switch (modList[i].modifier)
-            {
-                case SkillGem.GemModifier.Modifier.Damage: skillSlotList[skillIndex].skillController.damage -= modList[i].amt; break;
-                case SkillGem.GemModifier.Modifier.Projectile: skillSlotList[skillIndex].skillController.projectile -= ((int)modList[i].amt); break;
-                default: GameManager.DebugLog("UnapplyGemMod has no switch case for " + modList[i].modifier); break;
-            }
-            GameManager.DebugLog("Unapply mod: " + modList[i].modifier + " " + modList[i].amt);
-        }
-    }
-    public void AutoToggle()
-    {
-        foreach (Skill skillSlot in skillSlotList) //Set skills in start.
+        foreach (Skill skillSlot in activeSkillList) //Set skills in start.
         {
             if (skillSlot.skillController != null)
             {

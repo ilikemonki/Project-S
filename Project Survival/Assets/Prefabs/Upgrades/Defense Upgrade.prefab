@@ -49,18 +49,33 @@ MonoBehaviour:
   description: Increase defense.
   destroyed: 0
   levelModifiersList:
-  - modifier: 15000000
+  - modifier: 27000000
     amt:
     - 10
-  - modifier: 15000000
+  - modifier: 27000000
     amt:
     - 10
-  - modifier: 15000000
+  - modifier: 27000000
     amt:
     - 10
-  - modifier: 15000000
+  - modifier: 27000000
     amt:
     - 10
-  - modifier: 15000000
+  - modifier: 27000000
+    amt:
+    - 10
+  - modifier: 27000000
+    amt:
+    - 10
+  - modifier: 27000000
+    amt:
+    - 10
+  - modifier: 27000000
+    amt:
+    - 10
+  - modifier: 27000000
+    amt:
+    - 10
+  - modifier: 27000000
     amt:
     - 10

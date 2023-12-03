@@ -24,7 +24,7 @@ public class SkillBehavior : MonoBehaviour
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon, isHoming;
     public Vector3 startingPos;
-    public float currentRange;
+    public float currentTravelRange; //travel
 
     public void SetStats(List<float> damages, float travelSpeed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
     {
@@ -65,10 +65,10 @@ public class SkillBehavior : MonoBehaviour
                         gameObject.SetActive(false);
                     }
                 }
-                else //skills that travel will check the distance traveled.
+                else //skills that travel range will check the distance traveled.
                 {
-                    currentRange = Vector3.Distance(transform.position, startingPos);
-                    if (currentRange >= skillController.travelRange)
+                    currentTravelRange = Vector3.Distance(transform.position, startingPos);
+                    if (currentTravelRange >= skillController.travelRange)
                     {
                         if (skillController.useReturnDirection && !skillController.isMelee) //At end of travel, return projectile.
                         {
@@ -157,7 +157,7 @@ public class SkillBehavior : MonoBehaviour
         enemy.TakeDamage(totalDamage, isCrit); 
         if (isCrit)
         {
-            foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.skillSlotList) //Check crit trigger skill condition
+            foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -185,14 +185,14 @@ public class SkillBehavior : MonoBehaviour
                     hitOnceOnly = true;
                     travelSpeed = 0;
                     despawnTime = 10;
-                    Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this));    //spawn skill on enemy.
+                    Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));    //spawn skill on enemy.
                 }
                 else if (skillController.useScatter)
                 {
                     hitOnceOnly = true;
                     travelSpeed = 0;
                     despawnTime = 10;
-                    Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this));
+                    Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));
                 }
                 else if (skillController.useBurst)
                 {

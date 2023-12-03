@@ -49,23 +49,23 @@ MonoBehaviour:
   description: Greatly increase critcal chance but decrease critical damage.
   destroyed: 0
   levelModifiersList:
-  - modifier: 1600000019000000
+  - modifier: 0400000007000000
     amt:
-    - 20
-    - -40
-  - modifier: 1600000019000000
+    - 10
+    - -30
+  - modifier: 0400000007000000
     amt:
-    - 20
-    - -40
-  - modifier: 1600000019000000
+    - 10
+    - -30
+  - modifier: 0400000007000000
     amt:
-    - 20
-    - -40
-  - modifier: 1600000019000000
+    - 10
+    - -30
+  - modifier: 0400000007000000
     amt:
-    - 20
-    - -40
-  - modifier: 1600000019000000
+    - 10
+    - -30
+  - modifier: 0400000007000000
     amt:
-    - 20
-    - -40
+    - 10
+    - -30

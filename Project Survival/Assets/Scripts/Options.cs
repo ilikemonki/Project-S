@@ -22,6 +22,18 @@ public class Options : MonoBehaviour
             menuUI.SetActive(true);
             SkillsUIButton();
             inventoryManager.UpdateGeneralStatistics();
+            for (int i = 0; i < inventoryManager.activeSkillList.Count; i++) //Save exp and level of skill controller.
+            {
+                if (inventoryManager.activeSkillList[i].skillController != null)
+                {
+                    if (inventoryManager.gameplayManager.skillExpDict.ContainsKey(inventoryManager.activeSkillList[i].skillController.skillOrbName))
+                    {
+                        inventoryManager.gameplayManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.exp;
+                        inventoryManager.gameplayManager.skillLevelDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.level;
+                        GameManager.DebugLog("Saved exp/lv for: " + inventoryManager.activeSkillList[i].skillController.skillOrbName);
+                    }
+                }
+            }
         }
         else
         {

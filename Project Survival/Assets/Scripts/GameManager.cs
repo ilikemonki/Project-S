@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static int totalCoins, totalClassStars;
-    public static int totalKills, totalSkillsUsed, totalCrits, totalDashes, totalBleed, totalBurn, totalChill, totalShock, totalCoinsCollected, totalClassStarsCollected, totalSkillGemsCollected;
+    public static int totalCoins;
+    public static int totalKills, totalSkillsUsed, totalCrits, totalDashes, totalBleed, totalBurn, totalChill, totalShock, totalCoinsCollected, totalSkillGemsCollected;
     public static int totalExp, totalPassiveItems;
     public static float totalDamageDealt, totalPhysicalDamage, totalFireDamage, totalColdDamage, totalLightningDamage, totalBleedDamage, totalBurnDamage, TotalDotDamage;
     public static float totalDamageTaken, totalHealing, totalRegen, totalDegen, totalLifeStealProc, totalLifeSteal;

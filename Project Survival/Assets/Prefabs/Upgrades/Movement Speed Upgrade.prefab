@@ -49,18 +49,18 @@ MonoBehaviour:
   description: Increase movement speed.
   destroyed: 0
   levelModifiersList:
-  - modifier: 13000000
+  - modifier: 25000000
     amt:
     - 5
-  - modifier: 13000000
+  - modifier: 25000000
     amt:
     - 5
-  - modifier: 13000000
+  - modifier: 25000000
     amt:
     - 5
-  - modifier: 13000000
+  - modifier: 25000000
     amt:
     - 5
-  - modifier: 13000000
+  - modifier: 25000000
     amt:
     - 5

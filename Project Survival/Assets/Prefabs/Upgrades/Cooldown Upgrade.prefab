@@ -49,18 +49,18 @@ MonoBehaviour:
   description: Increase cooldown reduction.
   destroyed: 0
   levelModifiersList:
-  - modifier: 10000000
+  - modifier: 22000000
     amt:
     - 5
-  - modifier: 10000000
+  - modifier: 22000000
     amt:
     - 5
-  - modifier: 10000000
+  - modifier: 22000000
     amt:
     - 5
-  - modifier: 10000000
+  - modifier: 22000000
     amt:
     - 5
-  - modifier: 10000000
+  - modifier: 22000000
     amt:
     - 5

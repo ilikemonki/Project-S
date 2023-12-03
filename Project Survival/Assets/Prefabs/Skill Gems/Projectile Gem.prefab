@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7689257177180367139}
   - component: {fileID: 7689257177180367138}
   - component: {fileID: 7689257177180367149}
-  - component: {fileID: 6223430534258449271}
+  - component: {fileID: 8632600342396981202}
   m_Layer: 5
   m_Name: Projectile Gem
   m_TagString: Untagged
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 1
-  skillGem: {fileID: 6223430534258449271}
+  gemUpgrades: {fileID: 8632600342396981202}
   skillController: {fileID: 0}
   activeSkillDrop: {fileID: 0}
   inventory: {fileID: 0}
@@ -101,7 +101,7 @@ MonoBehaviour:
   image: {fileID: 7689257177180367138}
   currentParent: {fileID: 0}
   isInInventory: 0
---- !u!114 &6223430534258449271
+--- !u!114 &8632600342396981202
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,9 +110,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7689257177180367151}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 682f1305534868240b37bebfab53e12e, type: 3}
+  m_Script: {fileID: 11500000, guid: d7032f660de52d04392886555dad858d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemModifierList:
-  - modifier: 1
-    amt: 1
+  sprite: {fileID: 0}
+  currentLevel: 0
+  description: 
+  destroyed: 0
+  levelModifiersList:
+  - modifier: 01000000
+    amt:
+    - 1

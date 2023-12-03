@@ -10,16 +10,6 @@ public class DropRate : MonoBehaviour
     public GameObject collectiblesParent;   //parent for collectibles except coins
     public List<ICollectibles> coinList;    //pool list
     public List<ICollectibles> magnetList;    //magnet pool list
-    [Header("Orbs")]
-    public List<ICollectibles> orbPrefabs;  //skill orb prefabs
-    public List<ICollectibles> orbList;  //skill orb list
-    public List<string> greenOrbNames, redOrbNames, blueOrbNames, yellowOrbNames;
-    public float baseOrbChanceRange, orbChanceRange;
-    [Header("Gems")]
-    public List<ICollectibles> gemPrefabs;  //skill orb prefabs
-    public List<ICollectibles> gemList;  //skill orb list
-    public List<string> redGemNames, blueGemNames, yellowGemNames;
-    public float baseGemChanceRange, gemChanceRange;
     [System.Serializable]
     public class CurrenciesToDrop    //plus magnet
     {
@@ -30,10 +20,8 @@ public class DropRate : MonoBehaviour
     private void Start()
     {
         InvokeRepeating(nameof(DeleteInactives), 10, 30f);
-        PopulatePool(collectiblesList[1].prefab, 100, transform, coinList);
-        PopulatePool(collectiblesList[5].prefab, 5, collectiblesParent.transform, magnetList);
-        PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, orbList);
-        PopulatePool(gemPrefabs[0], 5, collectiblesParent.transform, gemList);
+        PopulatePool(collectiblesList[0].prefab, 100, transform, coinList);
+        PopulatePool(collectiblesList[4].prefab, 5, collectiblesParent.transform, magnetList);
         UpdateDropChance(); 
     }
 
@@ -49,23 +37,11 @@ public class DropRate : MonoBehaviour
                 break;
             }
         }
-        rand = Random.Range(0, collectiblesList[5].chanceRange);
+        rand = Random.Range(0, collectiblesList[4].chanceRange);
         if (rand <= 1) //magnet drop chance only
         {
-            SpawnItem(collectiblesList[5].prefab, pos);
+            SpawnItem(collectiblesList[4].prefab, pos);
         }
-        //drop orb/gem
-        rand = Random.Range(0, orbChanceRange);
-        if (rand <= 1)
-        {
-            SpawnItem(orbPrefabs[Random.Range(0, orbPrefabs.Count)], pos); //random base orb
-        }
-        rand = Random.Range(0, gemChanceRange);
-        if (rand <= 1)
-        {
-            SpawnItem(gemPrefabs[Random.Range(0, gemPrefabs.Count)], pos); //random base gem
-        }
-
     }
 
     public void SpawnItem(ICollectibles prefab, Transform pos)
@@ -76,7 +52,7 @@ public class DropRate : MonoBehaviour
             {
                 if (i > magnetList.Count - 2)
                 {
-                    PopulatePool(collectiblesList[5].prefab, 5, collectiblesParent.transform, magnetList);
+                    PopulatePool(collectiblesList[4].prefab, 5, collectiblesParent.transform, magnetList);
                 }
                 if (!magnetList[i].isActiveAndEnabled)
                 {
@@ -87,55 +63,15 @@ public class DropRate : MonoBehaviour
                 }
             }
         }
-        if (prefab.CompareTag("Skill Orb"))
-        {
-            for (int i = 0; i < orbList.Count; i++)
-            {
-                if (i > orbList.Count - 2)
-                {
-                    PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, orbList);
-                }
-                if (!orbList[i].isActiveAndEnabled)
-                {
-                    orbList[i].transform.position = new Vector3(pos.position.x, (float)(pos.position.y + 0.4), pos.position.z);
-                    orbList[i].tag = prefab.tag;
-                    orbList[i].name = prefab.name;
-                    orbList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
-                    RandomizeOrb(orbList[i]);
-                    orbList[i].gameObject.SetActive(true);
-                    return;
-                }
-            }
-        }
-        if (prefab.CompareTag("Skill Gem"))
-        {
-            for (int i = 0; i < gemList.Count; i++)
-            {
-                if (i > gemList.Count - 2)
-                {
-                    PopulatePool(orbPrefabs[0], 5, collectiblesParent.transform, gemList);
-                }
-                if (!gemList[i].isActiveAndEnabled)
-                {
-                    gemList[i].transform.position = new Vector3((float)(pos.position.x + 0.4), pos.position.y, pos.position.z);
-                    gemList[i].tag = prefab.tag;
-                    gemList[i].name = prefab.name;
-                    gemList[i].spriteRenderer.sprite = prefab.spriteRenderer.sprite;
-                    RandomizeGem(gemList[i]);
-                    gemList[i].gameObject.SetActive(true);
-                    return;
-                }
-            }
-        }
         for (int i = 0; i < coinList.Count; i++) //Merge coin if distance is close
         {
             if (Vector3.Distance(coinList[i].transform.position, pos.position) < 0.7f)
             {
                 coinList[i].coinAmount += prefab.coinAmount;
                 //Change sprite
-                if (coinList[i].coinAmount >= 5 && coinList[i].coinAmount < 10) coinList[i].spriteRenderer.sprite = collectiblesList[3].prefab.spriteRenderer.sprite;
-                else if (coinList[i].coinAmount >= 10 && coinList[i].coinAmount < 20) coinList[i].spriteRenderer.sprite = collectiblesList[2].prefab.spriteRenderer.sprite;
-                else if (coinList[i].coinAmount >= 20) coinList[i].spriteRenderer.sprite = collectiblesList[1].prefab.spriteRenderer.sprite;
+                if (coinList[i].coinAmount >= 5 && coinList[i].coinAmount < 10) coinList[i].spriteRenderer.sprite = collectiblesList[2].prefab.spriteRenderer.sprite;
+                else if (coinList[i].coinAmount >= 10 && coinList[i].coinAmount < 20) coinList[i].spriteRenderer.sprite = collectiblesList[1].prefab.spriteRenderer.sprite;
+                else if (coinList[i].coinAmount >= 20) coinList[i].spriteRenderer.sprite = collectiblesList[0].prefab.spriteRenderer.sprite;
                 return;
             }
         }
@@ -143,7 +79,7 @@ public class DropRate : MonoBehaviour
         {
             if (i > coinList.Count - 5)
             {
-                PopulatePool(collectiblesList[1].prefab, 5, transform, coinList);
+                PopulatePool(collectiblesList[0].prefab, 5, transform, coinList);
             }
             if (!coinList[i].isActiveAndEnabled)
             {
@@ -199,51 +135,6 @@ public class DropRate : MonoBehaviour
         foreach (CurrenciesToDrop item in collectiblesList)
         {
             item.chanceRange = Mathf.Round(item.baseChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
-        }
-        orbChanceRange = Mathf.Round(baseOrbChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
-        gemChanceRange = Mathf.Round(baseGemChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
-    }
-    public void RandomizeOrb(ICollectibles orb)
-    {
-        int r;
-        if (orb.name.Contains("Green"))
-        {
-            r = Random.Range(0, greenOrbNames.Count);
-            orb.name = greenOrbNames[r];
-        }
-        else if (orb.name.Contains("Red"))
-        {
-            r = Random.Range(0, redOrbNames.Count);
-            orb.name = redOrbNames[r];
-        }
-        else if (orb.name.Contains("Blue"))
-        {
-            r = Random.Range(0, blueOrbNames.Count);
-            orb.name = blueOrbNames[r];
-        }
-        else
-        {
-            r = Random.Range(0, yellowOrbNames.Count);
-            orb.name = yellowOrbNames[r];
-        }
-    }
-    public void RandomizeGem(ICollectibles gem)
-    {
-        int r;
-        if (gem.name.Contains("Red"))
-        {
-            r = Random.Range(0, redGemNames.Count);
-            gem.name = redGemNames[r];
-        }
-        else if (gem.name.Contains("Blue"))
-        {
-            r = Random.Range(0, blueGemNames.Count);
-            gem.name = blueGemNames[r];
-        }
-        else
-        {
-            r = Random.Range(0, yellowGemNames.Count);
-            gem.name = yellowGemNames[r];
         }
     }
 }

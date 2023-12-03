@@ -11,13 +11,15 @@ public class GameplayManager : MonoBehaviour
     public PlayerStats player;
     public EnemyManager enemyManager;
     public LevelUpManager levelUpManager;
+    public UpdateStats updateStats;
+    public FloatingTextController floatingTextController;
     public InventoryManager inventory;
     public GameObject waveUI;
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
-    public TextMeshProUGUI coinText, classStarText, hpText, regenText, expText, expCapText, dashText, dashTimerText;
+    public TextMeshProUGUI coinText, hpText, regenText, expText, expCapText, dashText, dashTimerText;
     public Vector3 mousePos;
     public Camera cam;
     public float maxAttackRange;    //Gets max range between all skills, used in EnemyDistances to find targets within the range.
@@ -25,7 +27,10 @@ public class GameplayManager : MonoBehaviour
     public int waveCounter;
     public float timer, maxTimer;
     public int level, exp, expCap, expCapIncrease;
-    public int coins, classStars;
+    public int coins; 
+    public Dictionary<string, int> skillLevelDict = new();
+    public Dictionary<string, int> skillExpDict = new(); //Saves the exp of skills here.
+    public List<int> skillExpCapList;
     [Header("Player Multipliers")]
     //Player/Skill Global Multipliers
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
@@ -39,7 +44,7 @@ public class GameplayManager : MonoBehaviour
     public float maxHealthMultiplier;
     public float defenseMultiplier;
     public float criticalChanceAdditive, projectileCriticalChanceAdditive, meleeCriticalChanceAdditive, criticalDamageAdditive, projectileCriticalDamageAdditive, meleeCriticalDamageAdditive;
-    public float sizeAdditive, projectileSizeAdditive, meleeSizeAdditive;
+    public float sizeMultiplier, projectileSizeMultiplier, meleeSizeMultiplier;
     public float regenAdditive, degenAdditive, lifeStealChanceAdditive, lifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
@@ -63,7 +68,6 @@ public class GameplayManager : MonoBehaviour
         cam.transparencySortAxis = new Vector3(0, 1, 1);
         timer = maxTimer;
         UpdateCoinText();
-        UpdateClassStarText();
         UpdateDashText();
         expSlider.maxValue = expCap;
         expCapText.text = expCap.ToString();
@@ -103,6 +107,22 @@ public class GameplayManager : MonoBehaviour
             if (!levelUpManager.stopLevelUp) levelUpManager.OpenUI();
         }
         UpdateExpBar();
+        //Add exp to active skill
+        for (int i = 0; i < inventory.activeSkillList.Count; i++)
+        {
+            if (inventory.activeSkillList[i].skillController != null && inventory.activeSkillList[i].skillController.level < 5)
+            {
+                inventory.activeSkillList[i].skillController.exp += amt;
+                if(inventory.activeSkillList[i].skillController.exp >= skillExpCapList[inventory.activeSkillList[i].skillController.level - 1]) //check if level up
+                {
+                    floatingTextController.DisplayPlayerText(player.transform, inventory.activeSkillList[i].skillController.skillOrbName + " Leveled Up!", Color.white, 3f);
+                    inventory.activeSkillList[i].skillController.level++;
+                    inventory.activeSkillList[i].skillController.exp = 0;
+                    updateStats.ApplySkillUpgrades(inventory.activeSkillList[i].skillController.upgrade, inventory.activeSkillList[i].skillController, inventory.activeSkillList[i].skillController.level - 2);
+
+                }
+            }
+        }
     }
     public void DevOnlyLevelUp()
     {
@@ -120,12 +140,6 @@ public class GameplayManager : MonoBehaviour
         GameManager.totalCoinsCollected += amt;
         UpdateCoinText();
     }
-    public void GainClassStars(int amt)
-    {
-        classStars += amt;
-        GameManager.totalClassStarsCollected += amt;
-        UpdateClassStarText();
-    }
     public void UpdateTime(float timer)
     {
         timer += 1;
@@ -136,10 +150,6 @@ public class GameplayManager : MonoBehaviour
     public void UpdateCoinText()
     {
         coinText.text = coins.ToString();
-    }
-    public void UpdateClassStarText()
-    {
-        classStarText.text = classStars.ToString();
     }
 
     public void UpdateRoundText()

@@ -12,10 +12,11 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
     public Upgrades upgrade;
     public Image image;
     public TextMeshProUGUI nameText, levelText, descriptionText, upgradeText;
+    string modString;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        updateStats.ApplyUpgradeStats(upgrade);
+        updateStats.ApplyGlobalUpgrades(upgrade);
         upgrade.currentLevel++;
         if (upgrade.currentLevel == upgrade.levelModifiersList.Count)
         {
@@ -35,17 +36,48 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
             upgradeText.text = "";
             for (int i = 0; i < upgrade.levelModifiersList[upgrade.currentLevel].modifier.Count; i++)
             {
-                if (upgrade.levelModifiersList[upgrade.currentLevel].amt[i] > 0)
+                //create one with no percentage.
+                modString = upgrade.levelModifiersList[upgrade.currentLevel].modifier[i].ToString();
+                if (modString.Contains("_"))
                 {
-                    upgradeText.text = upgradeText.text + "\n" +
-                        "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i];
+                    modString = modString.Replace('_', ' ');
+                }
+                if (upgrade.levelModifiersList[upgrade.currentLevel].amt[i] > 0) //if positive, green w/ + sign.
+                {
+                    if (IsNotPercentModifier(upgrade.levelModifiersList[upgrade.currentLevel].modifier[i]))
+                    {
+                        upgradeText.text = upgradeText.text + "\n" +
+                            "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "</color> " + modString + ".";
+                    }
+                    else
+                    {
+                        upgradeText.text = upgradeText.text + "\n" +
+                            "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + modString + ".";
+                    }
                 }
                 else
                 {
-                    upgradeText.text = upgradeText.text + "\n" +
-                        "<color=red>" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i];
+                    if (IsNotPercentModifier(upgrade.levelModifiersList[upgrade.currentLevel].modifier[i]))
+                    {
+                        upgradeText.text = upgradeText.text + "\n" +
+                            "<color=red>" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "</color> " + modString + ".";
+                    }
+                    else
+                    {
+                        upgradeText.text = upgradeText.text + "\n" +
+                            "<color=red>" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + modString + ".";
+                    }
                 }
             }
         }
+    }
+    public bool IsNotPercentModifier(Upgrades.LevelModifiers.Modifier mod)
+    {
+        if (mod == Upgrades.LevelModifiers.Modifier.strike || mod == Upgrades.LevelModifiers.Modifier.projectile || mod == Upgrades.LevelModifiers.Modifier.pierce || mod == Upgrades.LevelModifiers.Modifier.chain ||
+            mod == Upgrades.LevelModifiers.Modifier.regen || mod == Upgrades.LevelModifiers.Modifier.degen || mod == Upgrades.LevelModifiers.Modifier.life_steal)
+        {
+            return true;
+        }
+        else return false;
     }
 }

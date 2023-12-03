@@ -49,18 +49,18 @@ MonoBehaviour:
   description: Increase attack range.
   destroyed: 0
   levelModifiersList:
-  - modifier: 0c000000
+  - modifier: 1e000000
     amt:
     - 5
-  - modifier: 0c000000
+  - modifier: 1e000000
     amt:
     - 5
-  - modifier: 0c000000
+  - modifier: 1e000000
     amt:
     - 5
-  - modifier: 0c000000
+  - modifier: 1e000000
     amt:
     - 5
-  - modifier: 0c000000
+  - modifier: 1e000000
     amt:
     - 5

@@ -46,26 +46,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 0167a2d235421ca4f8095daaa1defd4f, type: 3}
   currentLevel: 0
-  description: Increase life steal chance and amount.
+  description: Increase life steal.
   destroyed: 0
   levelModifiersList:
-  - modifier: 2100000022000000
+  - modifier: 0c0000000d000000
     amt:
-    - 5
+    - 2
     - 1
-  - modifier: 2100000022000000
+  - modifier: 0c0000000d000000
     amt:
-    - 5
+    - 2
     - 1
-  - modifier: 2100000022000000
+  - modifier: 0c0000000d000000
     amt:
-    - 5
+    - 2
     - 1
-  - modifier: 2100000022000000
+  - modifier: 0c0000000d000000
     amt:
-    - 5
+    - 2
     - 1
-  - modifier: 2100000022000000
+  - modifier: 0c0000000d000000
     amt:
-    - 5
+    - 2
+    - 1
+  - modifier: 0c0000000d000000
+    amt:
+    - 2
+    - 1
+  - modifier: 0c0000000d000000
+    amt:
+    - 2
+    - 1
+  - modifier: 0c0000000d000000
+    amt:
+    - 2
+    - 1
+  - modifier: 0c0000000d000000
+    amt:
+    - 2
+    - 1
+  - modifier: 0c0000000d000000
+    amt:
+    - 2
     - 1

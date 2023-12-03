@@ -72,8 +72,8 @@ public class LevelUpManager : MonoBehaviour
             if (levelUpUI.activeSelf == false)
             {
                 GameManager.PauseGame();
-                levelUpUI.SetActive(true);
                 SetUpgrades();
+                levelUpUI.SetActive(true);
             }
         }
     }

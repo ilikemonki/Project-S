@@ -9,7 +9,6 @@ public class PlayerStats : MonoBehaviour
     public EnemyManager enemyManager;
     public GameplayManager gameplayManager;
     public PlayerCollector playerCollector;
-    public FloatingTextController floatingTextController;
     public Slider healthBar;
     public Image healthBarImage;
     public SpriteRenderer spriteRenderer;
@@ -72,7 +71,7 @@ public class PlayerStats : MonoBehaviour
                 if (!dodgeList.Contains(collision.gameObject))
                 {
                     dodgeList.Add(collision.gameObject);
-                    floatingTextController.DisplayPlayerText(transform, "Dodge", Color.white);
+                    gameplayManager.floatingTextController.DisplayPlayerText(transform, "Dodge", Color.white, 0.7f);
                 }
             }
             return;
@@ -86,7 +85,7 @@ public class PlayerStats : MonoBehaviour
         {
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage, true, false); //Do damage to player
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check damageTaken trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -123,16 +122,11 @@ public class PlayerStats : MonoBehaviour
             collision.gameObject.SetActive(false);
             playerCollector.MagnetCollectible();
         }
-        else if (collision.CompareTag("Class Star"))
-        {
-            collision.gameObject.SetActive(false);
-            gameplayManager.GainClassStars(1);
-        }
         else if (collision.CompareTag("Skill Orb") || collision.CompareTag("Skill Gem"))
         {
             collision.gameObject.SetActive(false);
             gameplayManager.inventory.AddCollectibleIntoInventory(collision.name);
-            floatingTextController.DisplayPlayerText(transform, "+1 " + collision.name, Color.white);
+            gameplayManager.floatingTextController.DisplayPlayerText(transform, "+1 " + collision.name, Color.white, 0.7f);
         }
         playerCollector.collectiblesList.Remove(collectible);
     }
@@ -174,9 +168,9 @@ public class PlayerStats : MonoBehaviour
                 isInvincible = true;
             }
         }
-        floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red);
+        gameplayManager.floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red, 0.7f);
         GameManager.totalDamageTaken += dmg;
-        foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check damageTaken trigger skill condition
+        foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
         {
             if (sc.skillController != null)
             {
@@ -215,10 +209,10 @@ public class PlayerStats : MonoBehaviour
         if (currentHealth == maxHealth || isDead) return;
         if (currentHealth + amt > maxHealth)
         {
-            floatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green);
+            gameplayManager.floatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green, 0.7f);
             currentHealth = maxHealth;
             GameManager.totalHealing += maxHealth - currentHealth;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -233,10 +227,10 @@ public class PlayerStats : MonoBehaviour
         }
         else
         {
-            floatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green);
+            gameplayManager.floatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green, 0.7f);
             currentHealth += amt;
             GameManager.totalHealing += amt;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -269,7 +263,7 @@ public class PlayerStats : MonoBehaviour
                 GameManager.totalRegen += amt;
             }
             GameManager.totalDegen += degen;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
+            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
             {
                 if (sc.skillController != null)
                 {
@@ -289,7 +283,7 @@ public class PlayerStats : MonoBehaviour
             {
                 TakeDamage(currentHealth - 1, false, true);
                 GameManager.totalDegen += currentHealth - 1;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
+                foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
                 {
                     if (sc.skillController != null)
                     {
@@ -306,7 +300,7 @@ public class PlayerStats : MonoBehaviour
             { 
                 TakeDamage(amt, false, true);
                 GameManager.totalDegen += amt;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.skillSlotList) //Check trigger skill condition
+                foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
                 {
                     if (sc.skillController != null)
                     {

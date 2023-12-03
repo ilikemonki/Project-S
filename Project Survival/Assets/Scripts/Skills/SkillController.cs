@@ -18,13 +18,14 @@ public class SkillController : MonoBehaviour
     public PlayerStats player;
     public EnemyManager enemyManager;
     public EnemyDistances enemyDistances;
-    public int level;
+    public Upgrades levelUpgrades;
+    public int level, exp;
     EnemyStats nearestEnemy;
     float shortestDistance, distanceToEnemy;
     [Header("Base Stats")]
     public List<float> baseDamageTypes; //[0]physical,[1]fire,[2]cold,[3]lightning
-    public List<float> addedAilmentsChance;
-    public List<float> addedAilmentsEffect;
+    public List<float> baseAilmentsChance;
+    public List<float> baseAilmentsEffect;
     public float baseDamage;
     public float baseTravelSpeed;
     public float baseAttackRange;
@@ -32,6 +33,7 @@ public class SkillController : MonoBehaviour
     public float baseCooldown;
     public float baseKnockBack;
     public float baseCriticalChance, baseCriticalDamage;
+    float baseSize; //gets from prefab, do not alter.
     public float baseLifeStealChance, baseLifeSteal;
     public int baseStrike, baseProjectile, basePierce, baseChain;
     [Header("Current Stats")]
@@ -69,7 +71,7 @@ public class SkillController : MonoBehaviour
     public bool useScatter;
     public bool useLateral;
     public bool useBurst;
-    public bool useThrowWeapon;
+    public bool useThrowWeapon; //Whether or not to put this in the game.
     public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
     public bool useBackwardsDirection; //Shoots from behind
     public bool useReturnDirection; //projectiles only.
@@ -77,6 +79,7 @@ public class SkillController : MonoBehaviour
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
+    public Upgrades upgrade;
 
     private void OnDrawGizmos()
     {
@@ -91,9 +94,7 @@ public class SkillController : MonoBehaviour
     }
     private void Awake()
     {
-        damageTypes.AddRange(baseDamageTypes);
-        ailmentsChance.AddRange(addedAilmentsChance);
-        ailmentsEffect.AddRange(addedAilmentsEffect);
+        baseSize = prefab.transform.localScale.x;
         CheckTargetless();
 
     }
@@ -103,7 +104,6 @@ public class SkillController : MonoBehaviour
         if (devOnlyCheckThis)
         {
             UpdateSkillStats();
-            UpdateSize();
         }
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
@@ -177,16 +177,16 @@ public class SkillController : MonoBehaviour
         else if (useBarrage)
         {
             if (targetless)
-                Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform, null));
+                Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform, null).CancelWith(this.gameObject));
             else
-                Timing.RunCoroutine(BarrageBehavior(strike + projectile, nearestEnemy.transform, transform, null));
+                Timing.RunCoroutine(BarrageBehavior(strike + projectile, nearestEnemy.transform, transform, null).CancelWith(this.gameObject));
         }
         else if (useScatter)
         {
             if (targetless)
-                Timing.RunCoroutine(ScatterBehavior(strike + projectile, null, transform, null));
+                Timing.RunCoroutine(ScatterBehavior(strike + projectile, null, transform, null).CancelWith(this.gameObject));
             else
-                Timing.RunCoroutine(ScatterBehavior(strike + projectile, nearestEnemy.transform, transform, null));
+                Timing.RunCoroutine(ScatterBehavior(strike + projectile, nearestEnemy.transform, transform, null).CancelWith(this.gameObject));
         }
         else if (useBurst)
         {
@@ -253,7 +253,7 @@ public class SkillController : MonoBehaviour
         {
             OnTargetBehavior(strike, transform, enemyDistances.closestEnemyList);
         }
-        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.skillSlotList) //Check use trigger skill condition
+        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check use trigger skill condition
         {
             if (sc.skillController != null)
             {
@@ -889,11 +889,11 @@ public class SkillController : MonoBehaviour
     {
         for (int i = 0; i < ailmentsChance.Count; i++)
         {
-            ailmentsChance[i] = addedAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i];
+            ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i];
         }
         for (int i = 0; i < ailmentsEffect.Count; i++)
         {
-            ailmentsEffect[i] = addedAilmentsEffect[i] + gameplayManager.ailmentsEffectAdditive[i];
+            ailmentsEffect[i] = baseAilmentsEffect[i] + gameplayManager.ailmentsEffectAdditive[i];
         }
         if (isMelee)   //is melee
         {
@@ -903,7 +903,7 @@ public class SkillController : MonoBehaviour
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive;
-            size = gameplayManager.sizeAdditive + gameplayManager.meleeSizeAdditive;
+            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier) / 100);
         }
         else //is projectile
         {
@@ -915,7 +915,7 @@ public class SkillController : MonoBehaviour
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive;
-            size = gameplayManager.sizeAdditive + gameplayManager.projectileAdditive;
+            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier) / 100);
         }
         if (gameplayManager.maxAttackRange < attackRange)
         {
@@ -941,11 +941,11 @@ public class SkillController : MonoBehaviour
     {
         for (int i = 0; i < poolList.Count; i++)
         {
-            poolList[i].transform.localScale = new Vector3(poolList[i].transform.localScale.x * (1 + size / 100), poolList[i].transform.localScale.y * (1 + size / 100), 1);
+            poolList[i].transform.localScale = new Vector3(size, size, 1);
         }
         for (int i = 0; i < orbitPoolList.Count; i++)
         {
-            orbitPoolList[i].transform.localScale = new Vector3(orbitPoolList[i].transform.localScale.x * (1 + size / 100), orbitPoolList[i].transform.localScale.y * (1 + size / 100), 1);
+            orbitPoolList[i].transform.localScale = new Vector3(size, size, 1);
         }
     }
 

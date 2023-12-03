@@ -33,7 +33,6 @@ public class EnemyManager : MonoBehaviour
     public PlayerStats player;
     public EnemyController enemyController;
     public GameplayManager gameplayManager;
-    public FloatingTextController floatingTextController;
     public EnemyStats basePrefab;
     public SpawnMarks spawnMarks;
     public DropRate dropRate;
