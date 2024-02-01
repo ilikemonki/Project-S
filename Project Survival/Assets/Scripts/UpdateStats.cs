@@ -55,8 +55,8 @@ public class UpdateStats : MonoBehaviour
                 case Upgrades.LevelModifiers.Modifier.shock_effect: gameplayManager.ailmentsEffectAdditive[3] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
                 case Upgrades.LevelModifiers.Modifier.size: gameplayManager.sizeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
                 case Upgrades.LevelModifiers.Modifier.strike: gameplayManager.strikeAdditive += (int)upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_range: gameplayManager.travelRangeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_speed: gameplayManager.travelSpeedMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_range: gameplayManager.projectileDistanceMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_speed: gameplayManager.projectileSpeedMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
                 default: GameManager.DebugLog("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i]); break;
             }
         }

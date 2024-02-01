@@ -36,9 +36,9 @@ public class GameplayManager : MonoBehaviour
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> damageTypeMultiplier;
     public int strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive;
-    public float travelSpeedMultiplier;
+    public float projectileSpeedMultiplier;
     public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
-    public float travelRangeMultiplier;
+    public float projectileDistanceMultiplier;
     public float cooldownMultiplier, projectileCooldownMultiplier, meleeCooldownMultiplier;
     public float moveSpeedMultiplier;
     public float maxHealthMultiplier;
@@ -51,6 +51,7 @@ public class GameplayManager : MonoBehaviour
     public List<float> ailmentsEffectAdditive;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
+    public float coinDropRateMultipiler;
     [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;

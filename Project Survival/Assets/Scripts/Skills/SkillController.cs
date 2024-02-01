@@ -928,8 +928,8 @@ public class SkillController : MonoBehaviour
                 damageTypes[i] = (baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + damage) / 100)) * (1 - gameplayManager.resistances[i] / 100);
             }
         }
-        travelSpeed = baseTravelSpeed * (1 + gameplayManager.travelSpeedMultiplier / 100);
-        travelRange = baseTravelRange * (1 + gameplayManager.travelRangeMultiplier / 100);
+        travelSpeed = baseTravelSpeed * (1 + gameplayManager.projectileSpeedMultiplier / 100);
+        travelRange = baseTravelRange * (1 + gameplayManager.projectileDistanceMultiplier / 100);
         lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive;
         lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive;
         currentCooldown = cooldown;

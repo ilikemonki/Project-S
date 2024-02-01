@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Options : MonoBehaviour
 {
-    public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI;
-    public GameObject menuUI;
+    public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI, storeUI;
+    public GameObject menuUI, pauseUI, storeBtn;
     public InventoryManager inventoryManager;
     public void Update()
     {
@@ -43,24 +43,40 @@ public class Options : MonoBehaviour
     }
     public void SkillsUIButton()
     {
-        if (statsUI.activeSelf) statsUI.SetActive(false);
-        if (passiveItemsUI.activeSelf) passiveItemsUI.SetActive(false);
+        statsUI.SetActive(false);
+        passiveItemsUI.SetActive(false);
+        storeUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
         skillsUI.SetActive(true);
     }
     public void StatsUIButton()
     {
-        if (skillsUI.activeSelf) skillsUI.SetActive(false);
-        if (passiveItemsUI.activeSelf) passiveItemsUI.SetActive(false);
+        skillsUI.SetActive(false);
+        passiveItemsUI.SetActive(false);
+        storeUI.SetActive(false);
         playerEnemyStatsUI.SetActive(false);
         statsUI.SetActive(true);
     }
     public void PassiveItemsUIButton()
     {
-        if (statsUI.activeSelf) statsUI.SetActive(false);
-        if (skillsUI.activeSelf) skillsUI.SetActive(false);
+        statsUI.SetActive(false);
+        skillsUI.SetActive(false);
+        storeUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
         passiveItemsUI.SetActive(true);
+    }
+    public void StoreUIButton()
+    {
+        statsUI.SetActive(false);
+        skillsUI.SetActive(false);
+        playerEnemyStatsUI.SetActive(true);
+        storeUI.SetActive(true);
+    }
+    public void InventoryButton()
+    {
+        storeBtn.SetActive(false);
+        pauseUI.SetActive(false);
+        OpenCloseUI();
     }
     public void RestartButton()
     {
