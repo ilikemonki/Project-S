@@ -28,8 +28,6 @@ public class GameplayManager : MonoBehaviour
     public float timer, maxTimer;
     public int level, exp, expCap, expCapIncrease;
     public int coins; 
-    public Dictionary<string, int> skillLevelDict = new();
-    public Dictionary<string, int> skillExpDict = new(); //Saves the exp of skills here.
     public List<int> skillExpCapList;
     [Header("Player Multipliers")]
     //Player/Skill Global Multipliers

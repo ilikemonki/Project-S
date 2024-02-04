@@ -7,6 +7,7 @@ public class Options : MonoBehaviour
     public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI, storeUI;
     public GameObject menuUI, pauseUI, storeBtn;
     public InventoryManager inventoryManager;
+    public ItemManager itemManager;
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -14,28 +15,40 @@ public class Options : MonoBehaviour
             OpenCloseUI();
         }
     }
-    public void OpenCloseUI()
+    public void OpenCloseUI() //Opens and close inventory
     {
-        if (menuUI.activeSelf == false)
+        if (menuUI.activeSelf == false) //open
         {
             GameManager.PauseGame();
             menuUI.SetActive(true);
             SkillsUIButton();
             inventoryManager.UpdateGeneralStatistics();
+            //Save data and set text when opening inventory.
             for (int i = 0; i < inventoryManager.activeSkillList.Count; i++) //Save exp and level of skill controller.
             {
                 if (inventoryManager.activeSkillList[i].skillController != null)
                 {
-                    if (inventoryManager.gameplayManager.skillExpDict.ContainsKey(inventoryManager.activeSkillList[i].skillController.skillOrbName))
+                    inventoryManager.activeSkillList[i].activeSkillDrop.nameText.text = "Lv. " + inventoryManager.activeSkillList[i].skillController.level.ToString() + " " + inventoryManager.activeSkillList[i].activeSkillDrop.draggableItem.itemName;
+                    if (itemManager.skillExpDict.ContainsKey(inventoryManager.activeSkillList[i].skillController.skillOrbName))
                     {
-                        inventoryManager.gameplayManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.exp;
-                        inventoryManager.gameplayManager.skillLevelDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.level;
+                        itemManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.exp;
+                        itemManager.skillLevelDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.level;
                         GameManager.DebugLog("Saved exp/lv for: " + inventoryManager.activeSkillList[i].skillController.skillOrbName);
                     }
                 }
             }
+            foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //Set level text
+            {
+                foreach (string orbName in itemManager.skillLevelDict.Keys)
+                {
+                    if (dItem.itemName.Equals(orbName))
+                    {
+                        dItem.slotUI.levelText.text = "Lv. " + itemManager.skillLevelDict[orbName].ToString();
+                    }
+                }
+            }
         }
-        else
+        else //close
         {
             GameManager.UnpauseGame();
             menuUI.SetActive(false);

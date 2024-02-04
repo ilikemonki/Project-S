@@ -18,7 +18,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public InventoryManager inventory;
     public SkillSlotUI slotUI;
     public string itemName;
-    public int level;
+    public int tier;
     public Image image;
     public Transform currentParent;
     public bool isInInventory;

@@ -112,7 +112,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     }
                     draggableItem.currentParent = transform;
                 }
-                if (nameText != null) nameText.text = "Lv. " + draggableItem.level.ToString() + " " + draggableItem.itemName;
+                if (nameText != null) nameText.text = "Lv. " + draggableItem.skillController.level.ToString() + " " + draggableItem.itemName;
             }
         }
     }
