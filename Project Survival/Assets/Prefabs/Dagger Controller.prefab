@@ -166,9 +166,9 @@ MonoBehaviour:
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 0
-  baseProjectile: 2
+  baseProjectile: 1
   basePierce: 0
-  baseChain: 4
+  baseChain: 0
   damageTypes:
   - 0
   - 0
@@ -267,19 +267,23 @@ MonoBehaviour:
   description: 
   destroyed: 0
   levelModifiersList:
-  - modifier: 1600000001000000
+  - modifier: 160000000100000029000000
     amt:
     - 50
     - 1
-  - modifier: 1600000001000000
+    - 30
+  - modifier: 160000000100000029000000
     amt:
     - 50
     - 1
-  - modifier: 1600000001000000
+    - 30
+  - modifier: 160000000100000029000000
     amt:
     - 50
     - 1
-  - modifier: 1600000001000000
+    - 30
+  - modifier: 160000000100000029000000
     amt:
     - 50
     - 1
+    - 30

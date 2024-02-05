@@ -928,13 +928,13 @@ public class SkillController : MonoBehaviour
                 damageTypes[i] = (baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + damage) / 100)) * (1 - gameplayManager.resistances[i] / 100);
             }
         }
+        highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
         travelSpeed = baseTravelSpeed * (1 + gameplayManager.projectileSpeedMultiplier / 100);
         travelRange = baseTravelRange * (1 + gameplayManager.projectileDistanceMultiplier / 100);
         lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive;
         lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive;
         currentCooldown = cooldown;
         knockBack = baseKnockBack;
-        highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
         UpdateSize();
     }
     public void UpdateSize()
