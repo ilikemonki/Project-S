@@ -33,7 +33,6 @@ public class Options : MonoBehaviour
                     {
                         itemManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.exp;
                         itemManager.skillLevelDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.level;
-                        GameManager.DebugLog("Saved exp/lv for: " + inventoryManager.activeSkillList[i].skillController.skillOrbName);
                     }
                 }
             }

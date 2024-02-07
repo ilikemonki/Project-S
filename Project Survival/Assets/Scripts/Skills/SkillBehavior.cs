@@ -185,14 +185,14 @@ public class SkillBehavior : MonoBehaviour
                     hitOnceOnly = true;
                     travelSpeed = 0;
                     despawnTime = 10;
-                    Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));    //spawn skill on enemy.
+                    //Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));    //spawn skill on enemy.
                 }
                 else if (skillController.useScatter)
                 {
                     hitOnceOnly = true;
                     travelSpeed = 0;
                     despawnTime = 10;
-                    Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));
+                    //Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));
                 }
                 else if (skillController.useBurst)
                 {

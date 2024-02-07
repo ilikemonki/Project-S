@@ -60,15 +60,20 @@ public class SkillController : MonoBehaviour
     public int highestDamageType;
     public float maxSpreadAngle, lateralOffset;
     public bool targetless; //Keeps using it's skill regardless of enemies.
+    float barrageCooldown; //For barrage and scatter behaviors
+    int barrageCounter;
+    public Vector3 targetPos; //last known pos of mouse or enemy.
+    public bool activateBarrage;
     //Behaviors 
     [Header("Behaviors")]
     public bool autoUseSkill;
     public bool isMelee;
     public bool useOnTarget;    //On Target spawns on enemies.
-    public bool useBarrage, useSpread;
+    public bool useBarrage;
+    public bool useScatter; 
+    public bool useSpread;
     public bool useOrbit; //targetless
     public bool useCircular; //targetless
-    public bool useScatter;
     public bool useLateral;
     public bool useBurst;
     public bool useThrowWeapon; //Whether or not to put this in the game.
@@ -140,6 +145,28 @@ public class SkillController : MonoBehaviour
                 }
             }
         }
+        else if (activateBarrage) //activates barrage/scatter firing inverval.
+        {
+            if (barrageCounter < strike + projectile) //fires the amount of attacks
+            {
+                barrageCooldown += Time.deltaTime;
+                if (barrageCooldown >= 0.10f) //firing interval here.
+                {
+                    if (useBarrage)
+                        BarrageBehavior(targetPos, transform, null);
+                    else if (useScatter)
+                        ScatterBehavior(targetPos, transform, null);
+                    barrageCounter++;
+                    barrageCooldown = 0;
+                }
+            }
+            else if (barrageCounter >= strike + projectile)
+            {
+                barrageCounter = 0;
+                activateBarrage = false;
+                stopFiring = false;
+            }
+        }
     }
     public void UseSkill()
     {
@@ -176,17 +203,22 @@ public class SkillController : MonoBehaviour
         }
         else if (useBarrage)
         {
+            activateBarrage = true;
             if (targetless)
-                Timing.RunCoroutine(BarrageBehavior(strike + projectile, null, transform, null).CancelWith(this.gameObject));
+                targetPos = gameplayManager.mousePos;
             else
-                Timing.RunCoroutine(BarrageBehavior(strike + projectile, nearestEnemy.transform, transform, null).CancelWith(this.gameObject));
+                targetPos = nearestEnemy.transform.position;
         }
         else if (useScatter)
         {
+            activateBarrage = true;
             if (targetless)
-                Timing.RunCoroutine(ScatterBehavior(strike + projectile, null, transform, null).CancelWith(this.gameObject));
+                targetPos = gameplayManager.mousePos;
             else
-                Timing.RunCoroutine(ScatterBehavior(strike + projectile, nearestEnemy.transform, transform, null).CancelWith(this.gameObject));
+                targetPos = nearestEnemy.transform.position;
+            if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+            else if (autoUseSkill || useThrowWeapon) direction = targetPos - transform.position;
+            else direction = targetPos - transform.position;
         }
         else if (useBurst)
         {
@@ -267,104 +299,79 @@ public class SkillController : MonoBehaviour
         }
         GameManager.totalSkillsUsed++;
     }
-    public IEnumerator<float> BarrageBehavior(int numOfAttacks, Transform target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
+    public void BarrageBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
     {
-        Vector3 dir;
-        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles
+        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        else if (autoUseSkill || useThrowWeapon) direction = target - transform.position;
+        else direction = target - transform.position;
+        for (int i = 0; i < poolList.Count; i++)
         {
-            for (int i = 0; i < poolList.Count; i++)
+            if (i > poolList.Count - 2)
             {
-                if (i > poolList.Count - 2)
+                PopulatePool(strike + projectile, prefab, poolParent, poolList);
+            }
+            if (!poolList[i].isActiveAndEnabled)
+            {
+                if (useOnTarget)
                 {
-                    PopulatePool(numOfAttacks, prefab, poolParent, poolList);
-                }
-                if (!poolList[i].isActiveAndEnabled)
-                {
-                    if (useRandomDirection) dir = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-                    else if (autoUseSkill || useThrowWeapon) dir = target.position - spawnPos.position;
-                    else dir = gameplayManager.mousePos - spawnPos.position;
-                    if (useOnTarget)
-                    {
-                        if (autoUseSkill || useThrowWeapon)
-                            poolList[i].transform.position = target.position;    //set starting position on target
-                        else
-                        {
-                            if (dir.magnitude < attackRange)
-                                poolList[i].transform.position = gameplayManager.mousePos;
-                            else poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange; ;
-                        }
-                    }
+                    if (autoUseSkill || useThrowWeapon)
+                        poolList[i].transform.position = target;    //set starting position on target
                     else
-                        poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
-                    poolList[i].SetDirection((dir).normalized);   //Set direction
-                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg); //set angle
-                    if (useBackwardsDirection && p % 2 == 1)
                     {
-                        poolList[i].SetDirection((-dir).normalized);   //Set direction
+                        if (direction.magnitude < attackRange)
+                            poolList[i].transform.position = gameplayManager.mousePos;
+                        else poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange; ;
                     }
-                    poolList[i].gameObject.SetActive(true);
-                    break;
                 }
+                else
+                    poolList[i].transform.position = spawnPos.position;    //set starting position on player
+                poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                poolList[i].SetDirection((direction).normalized);   //Set direction
+                if (useBackwardsDirection && barrageCounter % 2 == 1) //reverse direction.
+                {
+                    poolList[i].SetDirection((-direction).normalized);   //Set direction
+                }
+                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                poolList[i].gameObject.SetActive(true);
+                break;
             }
-            if (useBackwardsDirection && p % 2 == 0)
-            {
-                yield return Timing.WaitForSeconds(0);
-            }
-            else
-                yield return Timing.WaitForSeconds(0.1f);
         }
-        stopFiring = false;
         if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false);
     }
-    public IEnumerator<float> ScatterBehavior(int numOfAttacks, Transform target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
+    public void ScatterBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
     {
-        Vector3 dir;
-        if (useRandomDirection) dir = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        else if (autoUseSkill || useThrowWeapon) dir = target.position - spawnPos.position;
-        else dir = gameplayManager.mousePos - spawnPos.position;
-        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles
+        for (int i = 0; i < poolList.Count; i++)
         {
-            for (int i = 0; i < poolList.Count; i++)
+            if (i > poolList.Count - 2)
             {
-                if (i > poolList.Count - 2)
+                PopulatePool(strike + projectile, prefab, poolParent, poolList);
+            }
+            if (!poolList[i].isActiveAndEnabled)
+            {
+                if (useOnTarget)
                 {
-                    PopulatePool(numOfAttacks, prefab, poolParent, poolList);
-                }
-                if (!poolList[i].isActiveAndEnabled)
-                {
-                    if (useOnTarget)
-                    {
-                        if (autoUseSkill || useThrowWeapon)
-                            poolList[i].transform.position = target.position + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);    //set starting position on target
-                        else
-                        {
-                            if (dir.magnitude < attackRange)
-                                poolList[i].transform.position = gameplayManager.mousePos + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
-                            else poolList[i].transform.position = (spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange) + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
-                        }
-                    }
+                    if (autoUseSkill || useThrowWeapon)
+                        poolList[i].transform.position = target + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);    //set starting position on target
                     else
-                        poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
-                    poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * dir).normalized);
-                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
-                    if (useBackwardsDirection && p % 2 == 1)
                     {
-                        poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
+                        if (direction.magnitude < attackRange)
+                            poolList[i].transform.position = gameplayManager.mousePos + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
+                        else poolList[i].transform.position = (spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange) + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
                     }
-                    poolList[i].gameObject.SetActive(true);
-                    break;
                 }
+                else
+                    poolList[i].transform.position = spawnPos.position;    //set starting position on player
+                poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
+                if (useBackwardsDirection && barrageCounter % 2 == 1)
+                {
+                    poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
+                }
+                poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                poolList[i].gameObject.SetActive(true);
+                break;
             }
-            if (useBackwardsDirection && p % 2 == 0)
-            {
-                yield return Timing.WaitForSeconds(0);
-            }
-            else
-                yield return Timing.WaitForSeconds(0.05f);
         }
-        stopFiring = false;
         if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false);
     }
     public void BurstBehavior(int numOfAttacks, Transform target, Transform spawnPos)

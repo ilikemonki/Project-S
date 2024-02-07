@@ -118,7 +118,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (draggableItem != null && eventData.clickCount == 2)
+        if (draggableItem != null && eventData.button == PointerEventData.InputButton.Right)
         {
             if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
             {

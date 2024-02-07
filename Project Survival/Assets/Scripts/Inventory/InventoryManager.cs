@@ -312,7 +312,7 @@ public class InventoryManager : MonoBehaviour
                 case 27: generalStatistics[i].text = GameManager.totalBurn.ToString(); break;
                 case 28: generalStatistics[i].text = GameManager.totalChill.ToString(); break;
                 case 29: generalStatistics[i].text = GameManager.totalShock.ToString(); break;
-                default: GameManager.DebugLog("General Stats has no switch case for " + i); break;
+                //default: GameManager.DebugLog("General Stats has no switch case for " + i); break;
             }
         }
     }

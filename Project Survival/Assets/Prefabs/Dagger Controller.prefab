@@ -166,8 +166,8 @@ MonoBehaviour:
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 0
-  baseProjectile: 1
-  basePierce: 0
+  baseProjectile: 4
+  basePierce: 2
   baseChain: 0
   damageTypes:
   - 0
@@ -206,14 +206,16 @@ MonoBehaviour:
   maxSpreadAngle: 90
   lateralOffset: 0.6
   targetless: 0
+  targetPos: {x: 0, y: 0, z: 0}
+  activateBarrage: 0
   autoUseSkill: 1
   isMelee: 0
   useOnTarget: 0
-  useBarrage: 1
+  useBarrage: 0
   useSpread: 0
   useOrbit: 0
   useCircular: 0
-  useScatter: 0
+  useScatter: 1
   useLateral: 0
   useBurst: 0
   useThrowWeapon: 0
