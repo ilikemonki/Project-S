@@ -33,6 +33,5 @@ public class Upgrades : MonoBehaviour
     public Sprite sprite;
     public int currentLevel;
     public string description;
-    public bool destroyed;
     public List<LevelModifiers> levelModifiersList = new();
 }

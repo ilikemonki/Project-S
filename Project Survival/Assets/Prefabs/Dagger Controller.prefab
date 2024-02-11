@@ -212,15 +212,15 @@ MonoBehaviour:
   isMelee: 0
   useOnTarget: 0
   useBarrage: 0
+  useScatter: 1
   useSpread: 0
   useOrbit: 0
   useCircular: 0
-  useScatter: 1
   useLateral: 0
   useBurst: 0
   useThrowWeapon: 0
   useRandomDirection: 0
-  useBackwardsDirection: 0
+  useBackwardsDirection: 1
   useReturnDirection: 0
   useRandomTargeting: 0
   skillTrigger: {fileID: 6986161325550505959}

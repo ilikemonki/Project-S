@@ -101,7 +101,6 @@ public class SkillController : MonoBehaviour
     {
         baseSize = prefab.transform.localScale.x;
         CheckTargetless();
-
     }
     // Start is called before the first frame update
     protected virtual void Start()
@@ -329,14 +328,14 @@ public class SkillController : MonoBehaviour
                 poolList[i].SetDirection((direction).normalized);   //Set direction
                 if (useBackwardsDirection && barrageCounter % 2 == 1) //reverse direction.
                 {
-                    poolList[i].SetDirection((-direction).normalized);   //Set direction
+                    poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                 }
                 poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
                 poolList[i].gameObject.SetActive(true);
                 break;
             }
         }
-        if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false);
+        if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false); //deactivate object that uses this skill ie throwWeapon.
     }
     public void ScatterBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
     {
@@ -379,7 +378,7 @@ public class SkillController : MonoBehaviour
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if (autoUseSkill || useThrowWeapon) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
-        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles
+        for (int p = 0; p < numOfAttacks; p++)
         {
             for (int i = 0; i < poolList.Count; i++)
             {
@@ -404,11 +403,11 @@ public class SkillController : MonoBehaviour
                         poolList[i].transform.position = spawnPos.position;    //set starting position on player
                     poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
                     poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
-                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
                     if (useBackwardsDirection && p % 2 == 1)
                     {
                         poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                     }
+                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
