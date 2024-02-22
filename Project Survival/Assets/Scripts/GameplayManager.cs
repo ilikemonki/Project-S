@@ -117,7 +117,7 @@ public class GameplayManager : MonoBehaviour
                     floatingTextController.DisplayPlayerText(player.transform, inventory.activeSkillList[i].skillController.skillOrbName + " Leveled Up!", Color.white, 3f);
                     inventory.activeSkillList[i].skillController.level++;
                     inventory.activeSkillList[i].skillController.exp = 0;
-                    updateStats.ApplySkillUpgrades(inventory.activeSkillList[i].skillController.upgrade, inventory.activeSkillList[i].skillController, inventory.activeSkillList[i].skillController.level - 2);
+                    updateStats.ApplySkillUpgrades(inventory.activeSkillList[i].skillController.levelUpgrades, inventory.activeSkillList[i].skillController, inventory.activeSkillList[i].skillController.level - 2);
 
                 }
             }

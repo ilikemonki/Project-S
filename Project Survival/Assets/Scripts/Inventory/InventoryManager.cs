@@ -197,7 +197,7 @@ public class InventoryManager : MonoBehaviour
                     {
                         for (int i = 0; i < skill.level - 1; i++)
                         {
-                            gameplayManager.updateStats.ApplySkillUpgrades(skill.upgrade, skill, i);
+                            gameplayManager.updateStats.ApplySkillUpgrades(skill.levelUpgrades, skill, i);
                         }
                     }
                     dragItem.skillController = skill;

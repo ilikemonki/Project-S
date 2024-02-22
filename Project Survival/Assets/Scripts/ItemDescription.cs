@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ItemDescription : MonoBehaviour
 {
-    public string itemName, itemTag, description;
-    public Image itemImage;
-    public int maxQuantity, rarity;
+    public string itemName, itemTags, description;
+    public Sprite itemSprite;
+    public int maxQuantity, rarity, currentLevel;
     public float price;
 }

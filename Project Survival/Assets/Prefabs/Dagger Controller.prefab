@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 1735531887672982296}
   - component: {fileID: 1735531887672982297}
   - component: {fileID: 6986161325550505959}
-  - component: {fileID: 1510024326687019495}
+  - component: {fileID: 7864732532003815873}
   m_Layer: 0
   m_Name: Dagger Controller
   m_TagString: Untagged
@@ -137,7 +137,7 @@ MonoBehaviour:
   player: {fileID: 0}
   enemyManager: {fileID: 0}
   enemyDistances: {fileID: 0}
-  levelUpgrades: {fileID: 1510024326687019495}
+  levelUpgrades: {fileID: 7864732532003815873}
   level: 1
   exp: 0
   baseDamageTypes:
@@ -225,7 +225,7 @@ MonoBehaviour:
   useRandomTargeting: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
-  upgrade: {fileID: 1510024326687019495}
+  upgrade: {fileID: 0}
 --- !u!114 &6986161325550505959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +252,7 @@ MonoBehaviour:
   useShockTrigger: 0
   useDegenTrigger: 0
   useContactTrigger: 0
---- !u!114 &1510024326687019495
+--- !u!114 &7864732532003815873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -261,31 +261,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1735531887672982295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7032f660de52d04392886555dad858d, type: 3}
+  m_Script: {fileID: 11500000, guid: aac80314bb7d8b640a080f630b0fa563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
-  currentLevel: 0
-  description: 
-  destroyed: 0
+  itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 160000000100000029000000
+  - modifier: 01000000
     amt:
-    - 50
     - 1
-    - 30
-  - modifier: 160000000100000029000000
+  - modifier: 01000000
     amt:
-    - 50
     - 1
-    - 30
-  - modifier: 160000000100000029000000
+  - modifier: 01000000
     amt:
-    - 50
     - 1
-    - 30
-  - modifier: 160000000100000029000000
+  - modifier: 01000000
     amt:
-    - 50
     - 1
-    - 30

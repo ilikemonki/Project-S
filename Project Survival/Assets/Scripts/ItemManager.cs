@@ -13,4 +13,8 @@ public class ItemManager : MonoBehaviour
     public List<DraggableItem> orbPrefabList;
     public List<DraggableItem> t1GemPrefabList, t2GemPrefabList, t3GemPrefabList;
 
+    public void Start()
+    {
+        
+    }
 }

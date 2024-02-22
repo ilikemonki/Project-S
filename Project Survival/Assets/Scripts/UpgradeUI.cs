@@ -17,8 +17,8 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         updateStats.ApplyGlobalUpgrades(upgrade);
-        upgrade.currentLevel++;
-        if (upgrade.currentLevel == upgrade.levelModifiersList.Count)
+        upgrade.itemDescription.currentLevel++;
+        if (upgrade.itemDescription.currentLevel == upgrade.levelModifiersList.Count)
         {
             levelupManager.maxedUpgradesList.Add(upgrade);
             levelupManager.upgradesList.Remove(upgrade);
@@ -29,43 +29,43 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
     {
         if (upgrade != null)
         {
-            image.sprite = upgrade.sprite;
+            image.sprite = upgrade.itemDescription.itemSprite;
             nameText.text = upgrade.name;
-            levelText.text = upgrade.currentLevel.ToString() + "/" + upgrade.levelModifiersList.Count;
-            descriptionText.text = upgrade.description;
+            levelText.text = upgrade.itemDescription.currentLevel.ToString() + "/" + upgrade.levelModifiersList.Count;
+            descriptionText.text = upgrade.itemDescription.description;
             upgradeText.text = "";
-            for (int i = 0; i < upgrade.levelModifiersList[upgrade.currentLevel].modifier.Count; i++)
+            for (int i = 0; i < upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier.Count; i++)
             {
                 //create one with no percentage.
-                modString = upgrade.levelModifiersList[upgrade.currentLevel].modifier[i].ToString();
+                modString = upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier[i].ToString();
                 if (modString.Contains("_"))
                 {
                     modString = modString.Replace('_', ' ');
                 }
-                if (upgrade.levelModifiersList[upgrade.currentLevel].amt[i] > 0) //if positive, green w/ + sign.
+                if (upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i] > 0) //if positive, green w/ + sign.
                 {
-                    if (IsNotPercentModifier(upgrade.levelModifiersList[upgrade.currentLevel].modifier[i]))
+                    if (IsNotPercentModifier(upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier[i]))
                     {
                         upgradeText.text = upgradeText.text + "\n" +
-                            "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "</color> " + modString + ".";
+                            "<color=green>+" + upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i] + "</color> " + modString + ".";
                     }
                     else
                     {
                         upgradeText.text = upgradeText.text + "\n" +
-                            "<color=green>+" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + modString + ".";
+                            "<color=green>+" + upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i] + "%</color> " + modString + ".";
                     }
                 }
                 else
                 {
-                    if (IsNotPercentModifier(upgrade.levelModifiersList[upgrade.currentLevel].modifier[i]))
+                    if (IsNotPercentModifier(upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier[i]))
                     {
                         upgradeText.text = upgradeText.text + "\n" +
-                            "<color=red>" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "</color> " + modString + ".";
+                            "<color=red>" + upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i] + "</color> " + modString + ".";
                     }
                     else
                     {
                         upgradeText.text = upgradeText.text + "\n" +
-                            "<color=red>" + upgrade.levelModifiersList[upgrade.currentLevel].amt[i] + "%</color> " + modString + ".";
+                            "<color=red>" + upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i] + "%</color> " + modString + ".";
                     }
                 }
             }

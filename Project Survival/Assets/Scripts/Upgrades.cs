@@ -30,8 +30,18 @@ public class Upgrades : MonoBehaviour
         public List<Modifier> modifier;
         public List<float> amt;
     }
-    public Sprite sprite;
-    public int currentLevel;
-    public string description;
+    public ItemDescription itemDescription;
     public List<LevelModifiers> levelModifiersList = new();
+    public void Start()
+    {
+        //Check if gameobject has itemDescription script, then set it.
+        if (itemDescription == null)
+        {
+            ItemDescription itemDesc = gameObject.GetComponent<ItemDescription>();
+            if (itemDesc != null)
+            {
+                itemDescription = itemDesc;
+            }
+        }
+    }
 }

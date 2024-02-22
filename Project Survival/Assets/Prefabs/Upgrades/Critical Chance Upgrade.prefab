@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &557853929225526700
+--- !u!1 &6554110760294462100
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7190107890799936548}
-  - component: {fileID: 2947592351167458295}
+  - component: {fileID: 6554110760136503545}
+  - component: {fileID: 6554110760136503543}
+  - component: {fileID: 6554110760136503544}
   m_Layer: 0
   m_Name: Critical Chance Upgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7190107890799936548
+  m_IsActive: 0
+--- !u!4 &6554110760136503545
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557853929225526700}
+  m_GameObject: {fileID: 6554110760294462100}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.879333, y: 1.6717048, z: -0.07010141}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,35 +33,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2947592351167458295
+--- !u!114 &6554110760136503543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557853929225526700}
+  m_GameObject: {fileID: 6554110760294462100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7032f660de52d04392886555dad858d, type: 3}
+  m_Script: {fileID: 11500000, guid: aac80314bb7d8b640a080f630b0fa563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 0167a2d235421ca4f8095daaa1defd4f, type: 3}
-  currentLevel: 0
-  description: Increase critical chance.
-  destroyed: 0
+  itemDescription: {fileID: 6554110760136503544}
   levelModifiersList:
   - modifier: 04000000
     amt:
-    - 5
-  - modifier: 04000000
-    amt:
-    - 5
-  - modifier: 04000000
-    amt:
-    - 5
-  - modifier: 04000000
-    amt:
-    - 5
-  - modifier: 04000000
-    amt:
-    - 5
+    - 30
+--- !u!114 &6554110760136503544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6554110760294462100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6912fdd674bbe547bc8776136bd3c4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Critical Chance Upgrade
+  itemTags: 
+  description: 
+  itemSprite: {fileID: 21300000, guid: 62053ed690017d143bd2cfa8e5dc3ff5, type: 3}
+  maxQuantity: 0
+  rarity: 0
+  currentLevel: 0
+  price: 0

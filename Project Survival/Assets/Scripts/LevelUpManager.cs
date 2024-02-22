@@ -9,11 +9,20 @@ public class LevelUpManager : MonoBehaviour
     public bool stopLevelUp;
     public GameObject levelUpUI;
     public List<Upgrades> upgradesList;
-    public List<Upgrades> maxedUpgradesList;
-    public GameplayManager gamePlayManager;
+    public List<Upgrades> maxedUpgradesList; // move upgrade to this list when it is maxed.
+    public GameplayManager gameplayManager;
     int rand;
     public List<int> randUpgrades = new();
     public List<UpgradeUI> upgradeUIList;
+    public Transform upgradeListParent;
+    public void Start()
+    {
+        foreach(Transform child in upgradeListParent)
+        {
+            Upgrades upg = child.GetComponent<Upgrades>();
+            upgradesList.Add(upg);
+        }
+    }
     public void SetUpgrades()
     {
         randUpgrades.Clear();

@@ -84,7 +84,6 @@ public class SkillController : MonoBehaviour
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
-    public Upgrades upgrade;
 
     private void OnDrawGizmos()
     {

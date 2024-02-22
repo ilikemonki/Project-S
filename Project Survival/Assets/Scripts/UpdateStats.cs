@@ -9,55 +9,55 @@ public class UpdateStats : MonoBehaviour
     public void ApplyGlobalUpgrades(Upgrades upgrade)
     {
         currentMaxHP = gameplayManager.player.maxHealth;
-        for (int i = 0; i < upgrade.levelModifiersList[upgrade.currentLevel].modifier.Count; i++)
+        for (int i = 0; i < upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier.Count; i++)
         {
-            switch (upgrade.levelModifiersList[upgrade.currentLevel].modifier[i])
+            switch (upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier[i])
             {
-                case Upgrades.LevelModifiers.Modifier.attack_range: gameplayManager.attackRangeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_chance: gameplayManager.ailmentsChanceAdditive[0] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_effect: gameplayManager.ailmentsEffectAdditive[0] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_chance: gameplayManager.ailmentsChanceAdditive[1] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_effect: gameplayManager.ailmentsEffectAdditive[1] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chain: gameplayManager.chainAdditive += (int)upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_chance: gameplayManager.ailmentsChanceAdditive[2] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_effect: gameplayManager.ailmentsEffectAdditive[2] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cold_damage: gameplayManager.damageTypeMultiplier[2] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cooldown: gameplayManager.cooldownMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_chance: gameplayManager.criticalChanceAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_damage: gameplayManager.criticalDamageAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.damage: gameplayManager.damageMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.defense: gameplayManager.defenseMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.degen: gameplayManager.degenAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.fire_damage: gameplayManager.damageTypeMultiplier[1] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal: gameplayManager.lifeStealAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal_chance: gameplayManager.lifeStealChanceAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.lightning_damage: gameplayManager.damageTypeMultiplier[3] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.magnet_range: gameplayManager.magnetRangeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.max_health: gameplayManager.maxHealthMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.melee_attack_range: gameplayManager.meleeAttackRangeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.melee_cooldown: gameplayManager.meleeCooldownMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.melee_critical_chance: gameplayManager.meleeCriticalChanceAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.melee_critical_damage: gameplayManager.meleeCriticalDamageAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.melee_damage: gameplayManager.meleeDamageMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.melee_size: gameplayManager.meleeSizeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.movement_speed: gameplayManager.moveSpeedMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.physical_damage: gameplayManager.damageTypeMultiplier[0] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.pierce: gameplayManager.pierceAdditive += (int)upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile: gameplayManager.projectileAdditive += (int)upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile_attack_range: gameplayManager.projectileAttackRangeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile_cooldown: gameplayManager.projectileCooldownMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile_critical_chance: gameplayManager.projectileCriticalChanceAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile_critical_damage: gameplayManager.projectileCriticalDamageAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile_damage: gameplayManager.projectileDamageMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile_size: gameplayManager.projectileSizeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.regen: gameplayManager.regenAdditive += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_chance: gameplayManager.ailmentsChanceAdditive[3] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_effect: gameplayManager.ailmentsEffectAdditive[3] += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.size: gameplayManager.sizeMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.strike: gameplayManager.strikeAdditive += (int)upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_range: gameplayManager.projectileDistanceMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_speed: gameplayManager.projectileSpeedMultiplier += upgrade.levelModifiersList[upgrade.currentLevel].amt[i]; break;
-                default: GameManager.DebugLog("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[upgrade.currentLevel].modifier[i]); break;
+                case Upgrades.LevelModifiers.Modifier.attack_range: gameplayManager.attackRangeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_chance: gameplayManager.ailmentsChanceAdditive[0] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_effect: gameplayManager.ailmentsEffectAdditive[0] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_chance: gameplayManager.ailmentsChanceAdditive[1] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_effect: gameplayManager.ailmentsEffectAdditive[1] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chain: gameplayManager.chainAdditive += (int)upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_chance: gameplayManager.ailmentsChanceAdditive[2] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_effect: gameplayManager.ailmentsEffectAdditive[2] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cold_damage: gameplayManager.damageTypeMultiplier[2] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cooldown: gameplayManager.cooldownMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_chance: gameplayManager.criticalChanceAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_damage: gameplayManager.criticalDamageAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.damage: gameplayManager.damageMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.defense: gameplayManager.defenseMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.degen: gameplayManager.degenAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.fire_damage: gameplayManager.damageTypeMultiplier[1] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal: gameplayManager.lifeStealAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal_chance: gameplayManager.lifeStealChanceAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.lightning_damage: gameplayManager.damageTypeMultiplier[3] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.magnet_range: gameplayManager.magnetRangeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.max_health: gameplayManager.maxHealthMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.melee_attack_range: gameplayManager.meleeAttackRangeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.melee_cooldown: gameplayManager.meleeCooldownMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.melee_critical_chance: gameplayManager.meleeCriticalChanceAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.melee_critical_damage: gameplayManager.meleeCriticalDamageAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.melee_damage: gameplayManager.meleeDamageMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.melee_size: gameplayManager.meleeSizeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.movement_speed: gameplayManager.moveSpeedMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.physical_damage: gameplayManager.damageTypeMultiplier[0] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.pierce: gameplayManager.pierceAdditive += (int)upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile: gameplayManager.projectileAdditive += (int)upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile_attack_range: gameplayManager.projectileAttackRangeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile_cooldown: gameplayManager.projectileCooldownMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile_critical_chance: gameplayManager.projectileCriticalChanceAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile_critical_damage: gameplayManager.projectileCriticalDamageAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile_damage: gameplayManager.projectileDamageMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile_size: gameplayManager.projectileSizeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.regen: gameplayManager.regenAdditive += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_chance: gameplayManager.ailmentsChanceAdditive[3] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_effect: gameplayManager.ailmentsEffectAdditive[3] += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.size: gameplayManager.sizeMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.strike: gameplayManager.strikeAdditive += (int)upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_range: gameplayManager.projectileDistanceMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_speed: gameplayManager.projectileSpeedMultiplier += upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].amt[i]; break;
+                default: GameManager.DebugLog("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[upgrade.itemDescription.currentLevel].modifier[i]); break;
             }
         }
         gameplayManager.player.UpdatePlayerStats();
