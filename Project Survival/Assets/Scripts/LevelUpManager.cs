@@ -22,11 +22,12 @@ public class LevelUpManager : MonoBehaviour
             Upgrades upg = child.GetComponent<Upgrades>();
             upgradesList.Add(upg);
         }
+        upgradeListParent.gameObject.SetActive(false);
     }
     public void SetUpgrades()
     {
         randUpgrades.Clear();
-        if (upgradesList.Count >= 6)
+        if (upgradesList.Count >= upgradeUIList.Count)
         {
             for (int i = 0; i < 1000; i++) //Get random upgrades
             {
@@ -34,9 +35,9 @@ public class LevelUpManager : MonoBehaviour
                 if (!randUpgrades.Contains(rand))
                 {
                     randUpgrades.Add(rand);
-                    if (randUpgrades.Count == 6)
+                    if (randUpgrades.Count == upgradeUIList.Count)
                     {
-                        GameManager.DebugLog("Rolls for upgrades until 6:  " + i.ToString());
+                        GameManager.DebugLog("Rolls for upgrades until " + upgradeUIList.Count + ": " + i.ToString());
                         break;
                     }
                 }
@@ -47,7 +48,7 @@ public class LevelUpManager : MonoBehaviour
                 upgradeUIList[i].SetUI();
             }
         }
-        else if (upgradesList.Count < 6 && upgradesList.Count > 0)
+        else if (upgradesList.Count < upgradeUIList.Count && upgradesList.Count > 0)
         {
             for (int i = 0; i < 1000; i++) //Get random upgrades
             {

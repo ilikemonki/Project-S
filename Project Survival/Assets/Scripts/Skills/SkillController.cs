@@ -84,6 +84,20 @@ public class SkillController : MonoBehaviour
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
+    //Stats that are altered are stored in these variables.
+    [HideInInspector] public List<float> addedDamageTypes;
+    [HideInInspector] public List<float> addedAilmentsChance;
+    [HideInInspector] public List<float> addedAilmentsEffect;
+    [HideInInspector] public float addedDamage;
+    [HideInInspector] public float addedTravelSpeed;
+    [HideInInspector] public float addedAttackRange;
+    [HideInInspector] public float addedTravelRange;
+    [HideInInspector] public float addedCooldown;
+    [HideInInspector] public float addedKnockBack;
+    [HideInInspector] public float addedCriticalChance, addedCriticalDamage;
+    [HideInInspector] public float addedSize;
+    [HideInInspector] public float addedLifeStealChance, addedLifeSteal;
+    [HideInInspector] public int addedStrike, addedProjectile, addedPierce, addedChain;
 
     private void OnDrawGizmos()
     {
@@ -902,29 +916,29 @@ public class SkillController : MonoBehaviour
         }
         if (isMelee)   //is melee
         {
-            damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier;
-            strike = baseStrike + gameplayManager.strikeAdditive;
-            attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier) / 100);
-            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier) / 100);
-            criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive;
-            criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive;
-            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier) / 100);
+            damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
+            strike = baseStrike + gameplayManager.strikeAdditive + addedStrike;
+            attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier + addedAttackRange) / 100);
+            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
+            criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive + addedCriticalChance;
+            criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive + addedCriticalDamage;
+            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize) / 100);
         }
         else //is projectile
         {
-            damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.projectileDamageMultiplier;
-            projectile = baseProjectile + gameplayManager.projectileAdditive;
-            chain = baseChain + gameplayManager.chainAdditive;
-            pierce = basePierce + gameplayManager.pierceAdditive;
-            attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier) / 100);
-            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier) / 100);
-            criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive;
-            criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive;
-            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier) / 100);
+            damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.projectileDamageMultiplier + addedDamage;
+            projectile = baseProjectile + gameplayManager.projectileAdditive + addedProjectile;
+            chain = baseChain + gameplayManager.chainAdditive + addedChain;
+            pierce = basePierce + gameplayManager.pierceAdditive + addedPierce;
+            attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier + addedAttackRange) / 100);
+            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier + addedCooldown) / 100);
+            criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive + addedCriticalChance;
+            criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive + addedCriticalDamage;
+            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize) / 100);
         }
-        if (gameplayManager.maxAttackRange < attackRange)
+        if (gameplayManager.furthestAttackRange < attackRange)
         {
-            gameplayManager.maxAttackRange = attackRange;
+            gameplayManager.furthestAttackRange = attackRange;
         }
         for (int i = 0; i < damageTypes.Count; i++)
         {
@@ -934,12 +948,12 @@ public class SkillController : MonoBehaviour
             }
         }
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
-        travelSpeed = baseTravelSpeed * (1 + gameplayManager.projectileSpeedMultiplier / 100);
-        travelRange = baseTravelRange * (1 + gameplayManager.projectileDistanceMultiplier / 100);
-        lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive;
-        lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive;
+        travelSpeed = baseTravelSpeed * (1 + (gameplayManager.projectileSpeedMultiplier + addedTravelSpeed) / 100);
+        travelRange = baseTravelRange * (1 + (gameplayManager.projectileDistanceMultiplier + addedTravelRange) / 100);
+        lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + addedLifeStealChance;
+        lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + addedLifeSteal;
+        knockBack = baseKnockBack + addedKnockBack;
         currentCooldown = cooldown;
-        knockBack = baseKnockBack;
         UpdateSize();
     }
     public void UpdateSize()

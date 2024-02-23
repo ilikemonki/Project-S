@@ -166,8 +166,8 @@ MonoBehaviour:
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 0
-  baseProjectile: 4
-  basePierce: 2
+  baseProjectile: 1
+  basePierce: 0
   baseChain: 0
   damageTypes:
   - 0
@@ -220,12 +220,29 @@ MonoBehaviour:
   useBurst: 0
   useThrowWeapon: 0
   useRandomDirection: 0
-  useBackwardsDirection: 1
+  useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
-  upgrade: {fileID: 0}
+  addedDamageTypes: []
+  addedAilmentsChance: []
+  addedAilmentsEffect: []
+  addedDamage: 0
+  addedTravelSpeed: 0
+  addedAttackRange: 0
+  addedTravelRange: 0
+  addedCooldown: 0
+  addedKnockBack: 0
+  addedCriticalChance: 0
+  addedCriticalDamage: 0
+  addedSize: 0
+  addedLifeStealChance: 0
+  addedLifeSteal: 0
+  addedStrike: 0
+  addedProjectile: 0
+  addedPierce: 0
+  addedChain: 0
 --- !u!114 &6986161325550505959
 MonoBehaviour:
   m_ObjectHideFlags: 0

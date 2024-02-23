@@ -22,7 +22,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI coinText, hpText, regenText, expText, expCapText, dashText, dashTimerText;
     public Vector3 mousePos;
     public Camera cam;
-    public float maxAttackRange;    //Gets max range between all skills, used in EnemyDistances to find targets within the range.
+    public float furthestAttackRange;    //Gets furthest range between all skills, used in EnemyDistances to find targets within the range.
     [Header("Game Stats")]
     public int waveCounter;
     public float timer, maxTimer;

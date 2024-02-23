@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 5087448269701180720}
   levelModifiersList:
-  - modifier: 1e000000
+  - modifier: 1f000000
     amt:
     - 20
 --- !u!114 &5087448269701180720

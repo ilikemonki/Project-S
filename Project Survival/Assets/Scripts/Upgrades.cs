@@ -15,6 +15,7 @@ public class Upgrades : MonoBehaviour
             regen, degen, life_steal_chance, life_steal,
             bleed_chance, burn_chance, chill_chance, shock_chance,
             bleed_effect, burn_effect, chill_effect, shock_effect,
+            knockback,
             //multiplier
             damage, projectile_damage, melee_damage, physical_damage, fire_damage, cold_damage, lightning_damage,
             travel_speed,

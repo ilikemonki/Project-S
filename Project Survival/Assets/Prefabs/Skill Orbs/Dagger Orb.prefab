@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7327212868577625725}
   - component: {fileID: 7327212868577625724}
   - component: {fileID: 7327212868577625715}
+  - component: {fileID: -6162699754021087771}
   m_Layer: 5
   m_Name: Dagger Orb
   m_TagString: Untagged
@@ -90,13 +91,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotType: 0
-  skillGem: {fileID: 0}
+  gemUpgrades: {fileID: 0}
   skillController: {fileID: 0}
   activeSkillDrop: {fileID: 0}
   inventory: {fileID: 0}
   slotUI: {fileID: 0}
   itemName: Dagger Orb
-  level: 1
+  tier: 0
   image: {fileID: 7327212868577625724}
   currentParent: {fileID: 0}
   isInInventory: 0
+--- !u!114 &-6162699754021087771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7327212868577625713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6912fdd674bbe547bc8776136bd3c4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: 
+  itemTags: 
+  description: 
+  itemSprite: {fileID: 0}
+  maxQuantity: 0
+  rarity: 0
+  currentLevel: 0
+  price: 0

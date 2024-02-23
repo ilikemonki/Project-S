@@ -28,7 +28,7 @@ public class EnemyDistances : MonoBehaviour
                 if (enemyManager.enemyList[i].isActiveAndEnabled && !tempClosestEnemyList.Contains(enemyManager.enemyList[i]))
                 {
                     distanceToEnemy = Vector3.Distance(enemyManager.player.transform.position, enemyManager.enemyList[i].transform.position);
-                    if (distanceToEnemy < shortestDistance && enemyManager.gameplayManager.maxAttackRange >= distanceToEnemy)
+                    if (distanceToEnemy < shortestDistance && enemyManager.gameplayManager.furthestAttackRange >= distanceToEnemy)
                     {
                         shortestDistance = distanceToEnemy;
                         nearestEnemy = enemyManager.enemyList[i];

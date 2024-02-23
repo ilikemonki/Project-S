@@ -7,5 +7,6 @@ public class ItemDescription : MonoBehaviour
     public string itemName, itemTags, description;
     public Sprite itemSprite;
     public int maxQuantity, rarity, currentLevel;
-    public float price;
+    public int price;
+    public int quantityInInventory;
 }

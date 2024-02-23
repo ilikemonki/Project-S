@@ -81,44 +81,46 @@ public class UpdateStats : MonoBehaviour
         {
             switch (upgrade.levelModifiersList[level].modifier[i])
             {
-                case Upgrades.LevelModifiers.Modifier.attack_range: skill.attackRange += upgrade.levelModifiersList[level].amt[i] / 100; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_chance: skill.ailmentsChance[0] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_effect: skill.ailmentsEffect[0] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_chance: skill.ailmentsChance[1] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_effect: skill.ailmentsEffect[1] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chain: skill.chain += (int)upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_chance: skill.ailmentsChance[2] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_effect: skill.ailmentsEffect[2] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cold_damage: skill.damageTypes[2] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cooldown: skill.cooldown += upgrade.levelModifiersList[level].amt[i] / 100; break;
-                case Upgrades.LevelModifiers.Modifier.critical_chance: skill.criticalChance += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_damage: skill.criticalDamage += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.damage: skill.damage += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.fire_damage: skill.damageTypes[1] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal: skill.lifeSteal += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal_chance: skill.lifeStealChance += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.lightning_damage: skill.damageTypes[3] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.physical_damage: skill.damageTypes[0] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.pierce: skill.pierce += (int)upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile: skill.projectile += (int)upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_chance: skill.ailmentsChance[3] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_effect: skill.ailmentsEffect[3] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.size: skill.size += upgrade.levelModifiersList[level].amt[i] / 100; break;
-                case Upgrades.LevelModifiers.Modifier.strike: skill.strike += (int)upgrade.levelModifiersList[level].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_range: skill.travelRange += upgrade.levelModifiersList[level].amt[i] / 100; break;
-                case Upgrades.LevelModifiers.Modifier.travel_speed: skill.travelSpeed += upgrade.levelModifiersList[level].amt[i] / 100; break;
+                case Upgrades.LevelModifiers.Modifier.attack_range: skill.addedAttackRange += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_chance: skill.addedAilmentsChance[0] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_effect: skill.addedAilmentsEffect[0] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_chance: skill.addedAilmentsChance[1] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_effect: skill.addedAilmentsEffect[1] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chain: skill.addedChain += (int)upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_chance: skill.addedAilmentsChance[2] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_effect: skill.addedAilmentsEffect[2] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cold_damage: skill.addedDamageTypes[2] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cooldown: skill.addedCooldown += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_chance: skill.addedCriticalChance += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_damage: skill.addedCriticalDamage += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.damage: skill.addedDamage += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.fire_damage: skill.addedDamageTypes[1] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.knockback: skill.addedKnockBack += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal: skill.addedLifeSteal += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal_chance: skill.addedLifeStealChance += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.lightning_damage: skill.addedDamageTypes[3] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.physical_damage: skill.addedDamageTypes[0] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.pierce: skill.addedPierce += (int)upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile: skill.addedProjectile += (int)upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_chance: skill.addedAilmentsChance[3] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_effect: skill.addedAilmentsEffect[3] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.size: skill.addedSize += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.strike: skill.addedStrike += (int)upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_range: skill.addedTravelRange += upgrade.levelModifiersList[level].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_speed: skill.addedTravelSpeed += upgrade.levelModifiersList[level].amt[i]; break;
                 default: GameManager.DebugLog("ApplySkillMod has no switch case for " + upgrade.levelModifiersList[level].modifier[i]); break;
             }
         }
-        for (int i = 0; i < skill.damageTypes.Count; i++) //Update damage
-        {
-            if (skill.baseDamageTypes[i] > 0)
-            {
-                skill.damageTypes[i] = (skill.baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + skill.damage) / 100)) * (1 - gameplayManager.resistances[i] / 100);
-            }
-        }
-        skill.highestDamageType = skill.damageTypes.IndexOf(Mathf.Max(skill.damageTypes.ToArray()));  //Find highest damage type.
-        skill.UpdateSize();
+        skill.UpdateSkillStats();
+        //for (int i = 0; i < skill.damageTypes.Count; i++) //Update damage
+        //{
+        //    if (skill.baseDamageTypes[i] > 0)
+        //    {
+        //        skill.damageTypes[i] = (skill.baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + skill.damage) / 100)) * (1 - gameplayManager.resistances[i] / 100);
+        //    }
+        //}
+        //skill.highestDamageType = skill.damageTypes.IndexOf(Mathf.Max(skill.damageTypes.ToArray()));  //Find highest damage type.
+        //skill.UpdateSize();
     }
     //Apply gem modifiers to skill.
     public void ApplyGemUpgrades(Upgrades upgrade, SkillController skill)
@@ -127,35 +129,37 @@ public class UpdateStats : MonoBehaviour
         {
             switch (upgrade.levelModifiersList[0].modifier[i])
             {
-                case Upgrades.LevelModifiers.Modifier.attack_range: skill.attackRange += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_chance: skill.ailmentsChance[0] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_effect: skill.ailmentsEffect[0] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_chance: skill.ailmentsChance[1] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_effect: skill.ailmentsEffect[1] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chain: skill.chain += (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_chance: skill.ailmentsChance[2] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_effect: skill.ailmentsEffect[2] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cold_damage: skill.damageTypes[2] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cooldown: skill.cooldown += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_chance: skill.criticalChance += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_damage: skill.criticalDamage += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.damage: skill.damage += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.fire_damage: skill.damageTypes[1] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal: skill.lifeSteal += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal_chance: skill.lifeStealChance += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.lightning_damage: skill.damageTypes[3] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.physical_damage: skill.damageTypes[0] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.pierce: skill.pierce += (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile: skill.projectile += (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_chance: skill.ailmentsChance[3] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_effect: skill.ailmentsEffect[3] += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.size: skill.size += upgrade.levelModifiersList[0].amt[i]; break; //doesn't have baseSize
-                case Upgrades.LevelModifiers.Modifier.strike: skill.strike += (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_range: skill.travelRange += upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_speed: skill.travelSpeed += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.attack_range: skill.addedAttackRange += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_chance: skill.addedAilmentsChance[0] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_effect: skill.addedAilmentsEffect[0] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_chance: skill.addedAilmentsChance[1] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_effect: skill.addedAilmentsEffect[1] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chain: skill.addedChain += (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_chance: skill.addedAilmentsChance[2] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_effect: skill.addedAilmentsEffect[2] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cold_damage: skill.addedDamageTypes[2] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cooldown: skill.addedCooldown += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_chance: skill.addedCriticalChance += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_damage: skill.addedCriticalDamage += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.damage: skill.addedDamage += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.fire_damage: skill.addedDamageTypes[1] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.knockback: skill.addedKnockBack += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal: skill.addedLifeSteal += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal_chance: skill.addedLifeStealChance += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.lightning_damage: skill.addedDamageTypes[3] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.physical_damage: skill.addedDamageTypes[0] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.pierce: skill.addedPierce += (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile: skill.addedProjectile += (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_chance: skill.addedAilmentsChance[3] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_effect: skill.addedAilmentsEffect[3] += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.size: skill.addedSize += upgrade.levelModifiersList[0].amt[i]; break; //doesn't have baseSize
+                case Upgrades.LevelModifiers.Modifier.strike: skill.addedStrike += (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_range: skill.addedTravelRange += upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_speed: skill.addedTravelSpeed += upgrade.levelModifiersList[0].amt[i]; break;
                 default: GameManager.DebugLog("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[0].modifier[i]); break;
             }
         }
+        skill.UpdateSkillStats();
     }
     //Unapply gem modifiers to skill.
     public void UnapplyGemUpgrades(Upgrades upgrade, SkillController skill)
@@ -164,34 +168,36 @@ public class UpdateStats : MonoBehaviour
         {
             switch (upgrade.levelModifiersList[0].modifier[i])
             {
-                case Upgrades.LevelModifiers.Modifier.attack_range: skill.attackRange -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_chance: skill.ailmentsChance[0] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.bleed_effect: skill.ailmentsEffect[0] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_chance: skill.ailmentsChance[1] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.burn_effect: skill.ailmentsEffect[1] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chain: skill.chain -= (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_chance: skill.ailmentsChance[2] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.chill_effect: skill.ailmentsEffect[2] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cold_damage: skill.damageTypes[2] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.cooldown: skill.cooldown -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_chance: skill.criticalChance -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.critical_damage: skill.criticalDamage -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.damage: skill.damage -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.fire_damage: skill.damageTypes[1] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal: skill.lifeSteal -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.life_steal_chance: skill.lifeStealChance -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.lightning_damage: skill.damageTypes[3] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.physical_damage: skill.damageTypes[0] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.pierce: skill.pierce -= (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.projectile: skill.projectile -= (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_chance: skill.ailmentsChance[3] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.shock_effect: skill.ailmentsEffect[3] -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.size: skill.size -= upgrade.levelModifiersList[0].amt[i]; break; //doesn't have baseSize
-                case Upgrades.LevelModifiers.Modifier.strike: skill.strike -= (int)upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_range: skill.travelRange -= upgrade.levelModifiersList[0].amt[i]; break;
-                case Upgrades.LevelModifiers.Modifier.travel_speed: skill.travelSpeed -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.attack_range: skill.addedAttackRange -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_chance: skill.addedAilmentsChance[0] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.bleed_effect: skill.addedAilmentsEffect[0] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_chance: skill.addedAilmentsChance[1] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.burn_effect: skill.addedAilmentsEffect[1] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chain: skill.addedChain -= (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_chance: skill.addedAilmentsChance[2] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.chill_effect: skill.addedAilmentsEffect[2] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cold_damage: skill.addedDamageTypes[2] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.cooldown: skill.addedCooldown -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_chance: skill.addedCriticalChance -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.critical_damage: skill.addedCriticalDamage -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.damage: skill.addedDamage -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.fire_damage: skill.addedDamageTypes[1] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.knockback: skill.addedKnockBack -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal: skill.addedLifeSteal -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.life_steal_chance: skill.addedLifeStealChance -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.lightning_damage: skill.addedDamageTypes[3] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.physical_damage: skill.addedDamageTypes[0] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.pierce: skill.addedPierce -= (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.projectile: skill.addedProjectile -= (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_chance: skill.addedAilmentsChance[3] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.shock_effect: skill.addedAilmentsEffect[3] -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.size: skill.addedSize -= upgrade.levelModifiersList[0].amt[i]; break; //doesn't have baseSize
+                case Upgrades.LevelModifiers.Modifier.strike: skill.addedStrike -= (int)upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_range: skill.addedTravelRange -= upgrade.levelModifiersList[0].amt[i]; break;
+                case Upgrades.LevelModifiers.Modifier.travel_speed: skill.addedTravelSpeed -= upgrade.levelModifiersList[0].amt[i]; break;
                 default: GameManager.DebugLog("UnapplyGemMod has no switch case for " + upgrade.levelModifiersList[0].modifier[i]); break;
             }
         }
+        skill.UpdateSkillStats();
     }
 }
