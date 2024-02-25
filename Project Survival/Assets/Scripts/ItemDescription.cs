@@ -9,4 +9,17 @@ public class ItemDescription : MonoBehaviour
     public int maxQuantity, rarity, currentLevel;
     public int price;
     public int quantityInInventory;
+    public Upgrades upgrade;
+
+    public void Start()
+    {
+        if (upgrade == null)
+        {
+            Upgrades upg = gameObject.GetComponent<Upgrades>();
+            if (upg != null)
+            {
+                upgrade = upg;
+            }
+        }
+    }
 }

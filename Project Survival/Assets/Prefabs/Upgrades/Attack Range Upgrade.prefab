@@ -47,9 +47,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 5087448269701180720}
   levelModifiersList:
-  - modifier: 1f000000
+  - modifier: 1f0000000a000000
     amt:
     - 20
+    - 10
 --- !u!114 &5087448269701180720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,3 +71,4 @@ MonoBehaviour:
   rarity: 0
   currentLevel: 0
   price: 0
+  quantityInInventory: 0

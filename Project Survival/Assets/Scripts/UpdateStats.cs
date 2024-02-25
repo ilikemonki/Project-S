@@ -200,4 +200,82 @@ public class UpdateStats : MonoBehaviour
         }
         skill.UpdateSkillStats();
     }
+    public string FormatStatsToString(Upgrades.LevelModifiers stats)
+    {
+        string statNameString = "";
+        string fullString = "";
+        for (int i = 0; i < stats.modifier.Count; i++)
+        {
+            statNameString = stats.modifier[i].ToString();
+            if (statNameString.Contains("_"))
+            {
+                statNameString = statNameString.Replace('_', ' ');
+            }
+            statNameString = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(statNameString.ToLower()); //Capitalizes each word
+            if (stats.amt[i] > 0) //if positive, green w/ + sign.
+            {
+                if (fullString.Equals("")) //For first modifier only
+                {
+                    if (IsNotPercentModifier(stats.modifier[i]))
+                    {
+                        fullString = statNameString + ": " + "<color=green>+" + stats.amt[i] + "</color>";
+                    }
+                    else
+                    {
+                        fullString = statNameString + ": " + "<color=green>+" + stats.amt[i] + "%</color>";
+                    }
+                }
+                else
+                {
+                    if (IsNotPercentModifier(stats.modifier[i]))
+                    {
+                        fullString = fullString + "\n" +
+                            statNameString + ": " + "<color=green>+" + stats.amt[i] + "</color>";
+                    }
+                    else
+                    {
+                        fullString = fullString + "\n" +
+                            statNameString + ": " + "<color=green>+" + stats.amt[i] + "%</color>";
+                    }
+                }
+            }
+            else //red for negative
+            {
+                if (fullString.Equals("")) //For first modifier only
+                {
+                    if (IsNotPercentModifier(stats.modifier[i]))
+                    {
+                        fullString = statNameString + ": " + "<color=red>" + stats.amt[i] + "</color>";
+                    }
+                    else
+                    {
+                        fullString = statNameString + ": " + "<color=red>" + stats.amt[i] + "</color>";
+                    }
+                }
+                else
+                {
+                    if (IsNotPercentModifier(stats.modifier[i]))
+                    {
+                        fullString = fullString + "\n" +
+                            statNameString + ": " + "<color=red>" + stats.amt[i] + "</color>";
+                    }
+                    else
+                    {
+                        fullString = fullString + "\n" +
+                            statNameString + ": " + "<color=red>" + stats.amt[i] + "%</color>";
+                    }
+                }
+            }
+        }
+        return fullString;
+    }
+    public bool IsNotPercentModifier(Upgrades.LevelModifiers.Modifier mod)
+    {
+        if (mod == Upgrades.LevelModifiers.Modifier.strike || mod == Upgrades.LevelModifiers.Modifier.projectile || mod == Upgrades.LevelModifiers.Modifier.pierce || mod == Upgrades.LevelModifiers.Modifier.chain ||
+            mod == Upgrades.LevelModifiers.Modifier.regen || mod == Upgrades.LevelModifiers.Modifier.degen || mod == Upgrades.LevelModifiers.Modifier.life_steal || mod == Upgrades.LevelModifiers.Modifier.knockback)
+        {
+            return true;
+        }
+        else return false;
+    }
 }

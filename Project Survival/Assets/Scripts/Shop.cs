@@ -8,6 +8,7 @@ public class Shop : MonoBehaviour
 {
     public ItemManager itemManager;
     public GameplayManager gameplayManager;
+    public UpdateStats updateStats;
     [System.Serializable]
     public class ItemUI
     {
@@ -72,12 +73,12 @@ public class Shop : MonoBehaviour
             itemUIList[i].quantityText.text = itemShopList[i].quantityInInventory.ToString() + "/" + itemShopList[i].maxQuantity;
             if (string.IsNullOrWhiteSpace(itemShopList[i].description)) //if there is no description. set statOnlyText.text
             {
-                itemUIList[i].statOnlyText.text = "Stats only text here";
+                itemUIList[i].statOnlyText.text = updateStats.FormatStatsToString(itemShopList[i].upgrade.levelModifiersList[itemShopList[i].upgrade.itemDescription.currentLevel]);
             }
             else
             {
                 itemUIList[i].descriptionText.text = itemShopList[i].description;
-                itemUIList[i].statText.text = "Stats here";
+                itemUIList[i].statText.text = updateStats.FormatStatsToString(itemShopList[i].upgrade.levelModifiersList[itemShopList[i].upgrade.itemDescription.currentLevel]);
             }
         }
     }
@@ -96,7 +97,7 @@ public class Shop : MonoBehaviour
     }
     public void BuyButton1()
     {
-        if (itemShopList[0].price <= gameplayManager.coins) //check if you have enough coins
+        if (itemShopList[0].price <= gameplayManager.coins && itemUIList[0].priceText.text != "Sold") //check if you can buy it.
         {
             UpdateTransaction(itemShopList[0].price);
             itemUIList[0].priceText.text = "Sold";
