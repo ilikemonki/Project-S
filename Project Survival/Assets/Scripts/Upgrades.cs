@@ -33,6 +33,7 @@ public class Upgrades : MonoBehaviour
     }
     public ItemDescription itemDescription;
     public List<LevelModifiers> levelModifiersList = new();
+    public bool equiped; //whether player wants the item equiped or not.
     public void Start()
     {
         //Check if gameobject has itemDescription script, then set it.

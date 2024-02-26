@@ -25,6 +25,8 @@ public class InventoryManager : MonoBehaviour
     public GameplayManager gameplayManager;
     public InventorySkillDrop inventoryOrbDrop, inventoryGemDrop;
     public ItemManager itemManager;
+    public PItemSlotUI pItemSlotUIPrefab;
+    public GameObject pItemInventoryParent;
     private void Start()
     {
         foreach(Skill skill in activeSkillList) //Set current skills at start of game.
@@ -333,5 +335,21 @@ public class InventoryManager : MonoBehaviour
                 skillSlot.skillController.CheckTargetless();
             }
         }
+    }
+    public void UpdatePassiveItemsInventory(ItemDescription item) //Create new pItem slotUI and add to inventory
+    {
+        if (item.quantityInInventory > 1) //if there is already the pItem here, update the UI.
+        {
+            item.pItemSlotUI.quanityText.text = item.quantityInInventory.ToString() + "/" + item.maxQuantity.ToString();
+        }
+        else
+        {
+            PItemSlotUI pItemUI = Instantiate(pItemSlotUIPrefab, pItemInventoryParent.transform);
+            pItemUI.itemDescription = item;
+            pItemUI.itemDescription.pItemSlotUI = pItemUI;
+            pItemUI.image.sprite = item.itemSprite;
+            pItemUI.quanityText.text = item.quantityInInventory.ToString() + "/" + item.maxQuantity.ToString();
+        }
+
     }
 }

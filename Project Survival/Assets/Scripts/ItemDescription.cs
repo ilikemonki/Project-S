@@ -10,6 +10,7 @@ public class ItemDescription : MonoBehaviour
     public int price;
     public int quantityInInventory;
     public Upgrades upgrade;
+    public PItemSlotUI pItemSlotUI; //only for passive item
 
     public void Start()
     {

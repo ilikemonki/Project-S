@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Options : MonoBehaviour
 {
-    public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI, storeUI;
-    public GameObject menuUI, pauseUI, storeBtn;
+    public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI, shopUI;
+    public GameObject menuUI, pauseUI, shopBtn;
     public InventoryManager inventoryManager;
     public ItemManager itemManager;
     public void Update()
@@ -57,7 +57,7 @@ public class Options : MonoBehaviour
     {
         statsUI.SetActive(false);
         passiveItemsUI.SetActive(false);
-        storeUI.SetActive(false);
+        shopUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
         skillsUI.SetActive(true);
     }
@@ -65,7 +65,7 @@ public class Options : MonoBehaviour
     {
         skillsUI.SetActive(false);
         passiveItemsUI.SetActive(false);
-        storeUI.SetActive(false);
+        shopUI.SetActive(false);
         playerEnemyStatsUI.SetActive(false);
         statsUI.SetActive(true);
     }
@@ -73,20 +73,21 @@ public class Options : MonoBehaviour
     {
         statsUI.SetActive(false);
         skillsUI.SetActive(false);
-        storeUI.SetActive(false);
+        shopUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
         passiveItemsUI.SetActive(true);
     }
-    public void StoreUIButton()
+    public void ShopUIButton()
     {
         statsUI.SetActive(false);
         skillsUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
-        storeUI.SetActive(true);
+        shopUI.SetActive(true);
+        passiveItemsUI.SetActive(false);
     }
     public void InventoryButton()
     {
-        storeBtn.SetActive(false);
+        shopBtn.SetActive(false);
         pauseUI.SetActive(false);
         OpenCloseUI();
     }
