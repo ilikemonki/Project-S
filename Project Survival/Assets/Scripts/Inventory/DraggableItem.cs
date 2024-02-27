@@ -22,6 +22,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Image image;
     public Transform currentParent;
     public bool isInInventory;
+    public ItemDescription itemDescription;
     public void OnBeginDrag(PointerEventData eventData)
     {
         currentParent = transform.parent;

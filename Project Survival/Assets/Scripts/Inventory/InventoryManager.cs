@@ -82,49 +82,46 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            foreach (DraggableItem dItem in itemManager.skillGemList.Keys) //if theres 1+ skill gem in inventory, add to dictionary value
+            if (draggableItem.slotUI.inUseText.gameObject.activeSelf) //if there are no more gems in inventory, move active dragItem to Inventory slotUI. Else just add to quantity.
             {
-                if (draggableItem.itemName.Equals(dItem.itemName))
+                draggableItem.slotUI.inUseText.gameObject.SetActive(false);
+                draggableItem.activeSkillDrop.draggableItem = null;
+                draggableItem.isInInventory = true;
+                draggableItem.currentParent = draggableItem.slotUI.fadedImage.transform;   //set new parent
+                draggableItem.transform.SetParent(draggableItem.currentParent);
+                draggableItem.activeSkillDrop = null;
+                foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
                 {
-                    itemManager.skillGemList[dItem]++;
-                    dItem.slotUI.amountText.text = itemManager.skillGemList[dItem].ToString();
-                    draggableItem.activeSkillDrop.draggableItem = null;
-                    Destroy(draggableItem.gameObject, 0);   //Destroy the dragged newItem.
-                    return;
-                }
-            }
-            //Create new slotUI if there isn't one in inventory.
-            SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryGemDrop.contentParent.transform);
-            draggableItem.slotUI = slotUI;
-            draggableItem.isInInventory = true;
-            draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
-            draggableItem.transform.SetParent(draggableItem.currentParent);
-            slotUI.name = uiPrefab.name;
-            slotUI.nameText.text = draggableItem.itemName;
-            slotUI.levelText.text = "Tier " + draggableItem.tier.ToString();
-            slotUI.fadedImage.sprite = draggableItem.image.sprite;
-            itemManager.skillGemList.Add(draggableItem, 1);
-            draggableItem.activeSkillDrop = null;
-        }
-    }
-    public void DropInActiveSkill(DraggableItem draggableItem, Transform parent) //From Inventory to Active Skill slot
-    {
-        bool moreThanOne = false;
-        if (draggableItem.slotType == DraggableItem.SlotType.SkillGem) //if theres 1+ skill gem in inventory, set bool to true.
-        {
-            foreach (DraggableItem dItem in itemManager.skillGemList.Keys) 
-            {
-                if (draggableItem.itemName.Equals(dItem.itemName))
-                {
-                    if (itemManager.skillGemList[dItem] > 1)
+                    if (draggableItem.itemName.Equals(dItem.itemName))
                     {
-                        moreThanOne = true;
+                        draggableItem.itemDescription.quantityInInventory = 1;
+                        int numInInventory = itemManager.skillGemList[dItem];
+                        itemManager.skillGemList.Remove(dItem);
+                        itemManager.skillGemList.Add(draggableItem, numInInventory);
+                        break;
+                    }
+                }
+                draggableItem.slotUI.amountText.text = draggableItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[draggableItem].ToString();
+            }
+            else
+            {
+                foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
+                {
+                    if (draggableItem.itemName.Equals(dItem.itemName))
+                    {
+                        dItem.itemDescription.quantityInInventory++;
+                        dItem.slotUI.amountText.text = dItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[dItem].ToString();
+                        draggableItem.activeSkillDrop.draggableItem = null;
+                        Destroy(draggableItem.gameObject, 0);   //Destroy the dragged item.
                         break;
                     }
                 }
             }
         }
-        if (moreThanOne) //if there is more than 1 amount in inventory, spawn new dragItem and put it back in inventory
+    }
+    public void DropInActiveSkill(DraggableItem draggableItem, Transform parent) //From Inventory to Active Skill slot
+    {
+        if (draggableItem.itemDescription.quantityInInventory > 1 && draggableItem.slotType == DraggableItem.SlotType.SkillGem) //if there is more than 1 amount in inventory, spawn new dragItem and put it back in inventory
         {
             foreach (DraggableItem prefab in itemManager.t1GemPrefabList)
             {
@@ -138,34 +135,30 @@ public class InventoryManager : MonoBehaviour
                     newItem.image.sprite = draggableItem.image.sprite;
                     newItem.gemUpgrades = draggableItem.gemUpgrades;
                     newItem.slotType = draggableItem.slotType;
-                    itemManager.skillGemList[draggableItem]--;
+                    newItem.itemDescription.quantityInInventory = draggableItem.itemDescription.quantityInInventory;
+                    newItem.itemDescription.quantityInInventory--;
                     itemManager.skillGemList.Add(newItem, itemManager.skillGemList[draggableItem]);
                     itemManager.skillGemList.Remove(draggableItem);
-                    if (itemManager.skillGemList[newItem] > 1) newItem.slotUI.amountText.text = itemManager.skillGemList[newItem].ToString();
-                    else newItem.slotUI.amountText.text = "";
+                    newItem.slotUI.amountText.text = newItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[newItem].ToString();
                     newItem.isInInventory = true;
                     newItem.currentParent = draggableItem.currentParent;   //set new parent
-                                                                           //draggableItem gets dropped in active skill slot
-                    draggableItem.slotUI = null;
+                    //draggableItem gets dropped in active skill slot
                     draggableItem.isInInventory = false;
                     draggableItem.currentParent = parent;   //set new parent}
+                    break;
                 }
             }
         }
-        else //only 1 amount in inventory, destroy slotUI
+        else //only 1 amount in inventory, move dragItem and set SlotUI to have no dragItem.
         {
             draggableItem.isInInventory = false;
             draggableItem.currentParent = parent;   //set new parent
             if (draggableItem.slotType == DraggableItem.SlotType.SkillGem)
             {
-                itemManager.skillGemList.Remove(draggableItem);
-                Destroy(draggableItem.slotUI.gameObject, 0);
-                draggableItem.slotUI = null;
+                draggableItem.itemDescription.quantityInInventory--;
+                draggableItem.slotUI.amountText.text = draggableItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[draggableItem].ToString();
             }
-            else
-            {
-                draggableItem.slotUI.inUseText.gameObject.SetActive(true);
-            }
+            draggableItem.slotUI.inUseText.gameObject.SetActive(true);
         }
         InstantiateSkill(draggableItem);
     }
@@ -246,12 +239,38 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
+            foreach (DraggableItem dItem in itemManager.skillGemList.Keys) //if gem exist, add to quantity and gem inventory quantity
             {
-                if (dItem.itemName.Equals(itemName))
+                if (dItem.itemName.Equals(itemName)) //If the gem inventory slotUI has no more quantity left, then create and set new dragItem to slotUI. Else, add to inventory.
                 {
-                    itemManager.skillGemList[dItem]++;
-                    dItem.slotUI.amountText.text = itemManager.skillGemList[dItem].ToString();
+                    if (dItem.slotUI.inUseText.gameObject.activeSelf == true)
+                    {
+                        foreach (DraggableItem prefab in itemManager.t1GemPrefabList) //Create new dragItem, set to slotUI
+                        {
+                            if (prefab.itemName.Equals(itemName))
+                            {
+                                dItem.slotUI.inUseText.gameObject.SetActive(false);
+                                DraggableItem draggableItem = Instantiate(prefab, inventoryGemDrop.contentParent.transform);
+                                draggableItem.inventory = this;
+                                draggableItem.slotUI = dItem.slotUI;
+                                draggableItem.isInInventory = true;
+                                draggableItem.currentParent = dItem.slotUI.fadedImage.transform;   //set new parent
+                                draggableItem.transform.SetParent(draggableItem.currentParent);
+                                draggableItem.itemDescription.quantityInInventory++;
+                                int numInInventory = itemManager.skillGemList[dItem];
+                                itemManager.skillGemList.Remove(dItem);
+                                itemManager.skillGemList.Add(draggableItem, numInInventory + 1);
+                                draggableItem.slotUI.amountText.text = draggableItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[draggableItem].ToString();
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        dItem.itemDescription.quantityInInventory++;
+                        itemManager.skillGemList[dItem]++;
+                        dItem.slotUI.amountText.text = dItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[dItem].ToString();
+                    }
                     return;
                 }
             }
@@ -268,11 +287,13 @@ public class InventoryManager : MonoBehaviour
                     draggableItem.isInInventory = true;
                     draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
                     draggableItem.transform.SetParent(draggableItem.currentParent);
+                    draggableItem.itemDescription.quantityInInventory++;
                     slotUI.name = itemName;
                     slotUI.nameText.text = draggableItem.itemName;
                     slotUI.levelText.text = "Tier " + draggableItem.tier.ToString();
                     slotUI.fadedImage.sprite = draggableItem.image.sprite;
                     itemManager.skillGemList.Add(draggableItem, 1);
+                    draggableItem.slotUI.amountText.text = draggableItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[draggableItem].ToString();
                     return;
                 }
             }

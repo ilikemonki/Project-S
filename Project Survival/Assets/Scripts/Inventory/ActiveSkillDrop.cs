@@ -130,7 +130,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                 {
                     inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.gemUpgrades, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
                 }
-                inventory.DropInInventory(draggableItem); 
+                inventory.DropInInventory(draggableItem);
             }
             draggableItem = null; 
         }

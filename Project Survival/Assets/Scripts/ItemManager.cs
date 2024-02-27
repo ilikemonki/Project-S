@@ -7,7 +7,7 @@ public class ItemManager : MonoBehaviour
     public Dictionary<string, int> skillLevelDict = new(); //Saves skill level here to remember.
     public Dictionary<string, int> skillExpDict = new(); //Saves the exp of skills here.
     public Dictionary<DraggableItem, int> skillOrbList = new(); //skill orb inventory
-    public Dictionary<DraggableItem, int> skillGemList = new(); //skill gem inventory
+    public Dictionary<DraggableItem, int> skillGemList = new(); //skill gem inventory. Holds the gem in inventory and the total amount.
     public List<ItemDescription> availablePItemList = new(); //Passive Item shop inventory. Item is removed from list when there is no more quantity left.
     public List<ItemDescription> pItemInventoryList = new(); //Player's Current Passive Item inventory
 

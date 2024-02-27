@@ -101,6 +101,7 @@ MonoBehaviour:
   image: {fileID: 7327212868577625724}
   currentParent: {fileID: 0}
   isInInventory: 0
+  itemDescription: {fileID: -6162699754021087771}
 --- !u!114 &-6162699754021087771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,11 +114,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6912fdd674bbe547bc8776136bd3c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: 
-  itemTags: 
-  description: 
-  itemSprite: {fileID: 0}
+  itemName: Dagger Orb
+  itemTags: Projectile
+  description: Throws daggers at enemies.
+  itemSprite: {fileID: 21300000, guid: 6b03a9613c2165c41afe1c7e499c9428, type: 3}
   maxQuantity: 0
-  rarity: 0
-  currentLevel: 0
-  price: 0
+  rarity: 1
+  currentLevel: 1
+  price: 20
+  quantityInInventory: 0
+  upgrade: {fileID: 0}
+  pItemSlotUI: {fileID: 0}
