@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerMove() 
     {
-        smoothInput = Vector3.SmoothDamp(smoothInput, new Vector2(moveX, moveY), ref smoothVelocity, 0.1f);
+        smoothInput = Vector3.SmoothDamp(smoothInput, new Vector2(moveX, moveY).normalized, ref smoothVelocity, 0.1f);
         rb.MovePosition(transform.position + (player.moveSpeed * Time.fixedDeltaTime * smoothInput));        
         //rb.velocity = new Vector2(moveDirection.x * playertats.moveSpeed, moveDirection.y * playertats.moveSpeed);
     }

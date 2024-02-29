@@ -32,7 +32,9 @@ public class PlayerStats : MonoBehaviour
     public float iFrameDuration;
     float iFrameTimer;
     public bool isInvincible;
-    public List<GameObject> dodgeList;
+    public List<GameObject> dodgeList; 
+    float damageFlashTimer;
+    bool showDamageFlash;
     private void Awake()
     {
         defaultMaterial = spriteRenderer.material;
@@ -60,6 +62,16 @@ public class PlayerStats : MonoBehaviour
         {
             isInvincible = false;
         }
+        if (showDamageFlash) //reset damage flash
+        {
+            damageFlashTimer += Time.deltaTime;
+            if (damageFlashTimer >= 0.1f)
+            {
+                showDamageFlash = false;
+                spriteRenderer.material = defaultMaterial;
+                damageFlashTimer = 0;
+            }
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -76,13 +88,13 @@ public class PlayerStats : MonoBehaviour
             }
             return;
         }
-        if (isInvincible) return;
         if(collision.gameObject.CompareTag("Player Skill"))
         {
             return;
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            if (isInvincible) return;
             EnemyStats enemy = collision.GetComponent<EnemyStats>();
             TakeDamage(enemy.damage, true, false); //Do damage to player
             foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
@@ -101,6 +113,7 @@ public class PlayerStats : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy Projectile"))
         {
+            if (isInvincible) return;
             EnemyProjectile enemyProj = collision.GetComponent<EnemyProjectile>();
             TakeDamage(enemyProj.enemyStats.damage, false, false); //Do damage to player
             enemyProj.gameObject.SetActive(false);
@@ -149,7 +162,7 @@ public class PlayerStats : MonoBehaviour
         {
             if (gameObject.activeSelf)
             {
-                Timing.RunCoroutine(DamageFlash());
+                DamageFlash();
             }
             currentHealth -= dmg;
             UpdateHealthBar();
@@ -160,7 +173,7 @@ public class PlayerStats : MonoBehaviour
             {
                 if (gameObject.activeSelf)
                 {
-                    Timing.RunCoroutine(DamageFlash());
+                    DamageFlash();
                 }
                 currentHealth -= dmg;
                 UpdateHealthBar();
@@ -352,10 +365,10 @@ public class PlayerStats : MonoBehaviour
         else if (regen - degen < 0) gameplayManager.regenText.text = "<color=red> -" + (regen - degen).ToString() + "<color=white> HP/s";
         else gameplayManager.regenText.text = "<color=green> +" + (regen - degen).ToString() + "<color=white> HP/s";
     }
-    public IEnumerator<float> DamageFlash()
+    public void DamageFlash() //Flash color when hit
     {
+        damageFlashTimer = 0;
         spriteRenderer.material = damageFlashMaterial;
-        yield return Timing.WaitForSeconds(0.1f);
-        spriteRenderer.material = defaultMaterial;
+        showDamageFlash = true;
     }
 }

@@ -212,8 +212,8 @@ MonoBehaviour:
   isMelee: 0
   useOnTarget: 0
   useBarrage: 0
-  useScatter: 1
-  useSpread: 0
+  useScatter: 0
+  useSpread: 1
   useOrbit: 0
   useCircular: 0
   useLateral: 0
@@ -295,3 +295,4 @@ MonoBehaviour:
   - modifier: 01000000
     amt:
     - 1
+  equiped: 0

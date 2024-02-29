@@ -2,17 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Controlls all updates for every enemy
 public class EnemyController : MonoBehaviour
 {
     public EnemyManager enemyManager;
     public EnemySkillController enemyProjectilePool;
     float distanceToPlayer;
     public float stopDistance;
+    public void Update()
+    {
+        CheckEnemyStatus(enemyManager.enemyList);
+    }
     private void FixedUpdate()
     {
         MoveAndAttack(enemyManager.enemyList);
     }
-
+    public void CheckEnemyStatus(List<EnemyStats> enemyList)
+    {
+        for (int i = 0; i < enemyList.Count; ++i)
+        {
+            enemyList[i].UpdateStatus();
+        }
+    }
     public void MoveAndAttack(List<EnemyStats> enemyList)
     {
         for (int i = 0; i < enemyList.Count; ++i)   //Move all enemies

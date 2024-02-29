@@ -30,8 +30,9 @@ public class Shop : MonoBehaviour
     public bool isPItemShop, isOrbShop, isGemShop;
     public void Start()
     {
+        rerollText.text = rerollPrice.ToString() + "\n Reroll";
         isPItemShop = true;
-        PopulateShop();
+        PopulateAllShop();
     }
     public void PassiveItemsButton()
     {
@@ -50,13 +51,41 @@ public class Shop : MonoBehaviour
     }
     public void RerollButton()
     {
-
+        if (rerollPrice <= gameplayManager.coins)
+        {
+            gameplayManager.coins -= (int)rerollPrice;
+            rerollPrice += rerollIncrement;
+            rerollText.text = rerollPrice.ToString() + "\n Reroll";
+            coinText.text = gameplayManager.coins.ToString();
+            if (isPItemShop)
+            {
+                PopulatePItemShop();
+                SetUI();
+            }
+            else if (isOrbShop)
+            {
+                PopulateOrbShop();
+                SetUI();
+            }
+            else if (isGemShop)
+            {
+                PopulateGemShop();
+                SetUI();
+            }
+        }
     }
-    public void PopulateShop()
+    public void PopulateAllShop()
     {
         coinText.text = gameplayManager.coins.ToString();
+        PopulatePItemShop();
+        PopulateOrbShop();
+        PopulateGemShop();
+        SetUI();
+    }
+    public void PopulatePItemShop()
+    {
         pItemShopList.Clear();
-        if(itemManager.availablePItemList.Count >= itemUIList.Count)
+        if (itemManager.availablePItemList.Count >= itemUIList.Count)
         {
             for (int i = 0; i < 1000; i++) //Get random pItems
             {
@@ -81,6 +110,9 @@ public class Shop : MonoBehaviour
                 }
             }
         }
+    }
+    public void PopulateOrbShop()
+    {
         orbShopList.Clear();
         for (int i = 0; i < 1000; i++) //Get random orbs
         {
@@ -95,6 +127,9 @@ public class Shop : MonoBehaviour
                 }
             }
         }
+    }
+    public void PopulateGemShop()
+    {
         gemShopList.Clear();
         for (int i = 0; i < 1000; i++) //Get random gems
         {
@@ -109,9 +144,8 @@ public class Shop : MonoBehaviour
                 }
             }
         }
-        SetUI();
     }
-    public void SetUI()
+    public void SetUI() //Show ui of which shop is chosen.
     {
         ClearUI();
         if (isPItemShop) //Set pItem Shop

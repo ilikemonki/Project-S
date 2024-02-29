@@ -9,16 +9,12 @@ public class ICollectibles : MonoBehaviour
     public TextMeshProUGUI text;
     public bool isCollecting;
     public SpriteRenderer spriteRenderer;
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawWireSphere(transform.position, 0.6f);
-    //}
+
     public void PullCollectible(float pullspeed, Transform moveTo)
     {
         rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (moveTo.position - transform.position).normalized));
     }
-    public IEnumerator StartDuration()
+    public IEnumerator StartCountdown()
     {
         int timer = 15;
         while (timer > 0)
@@ -42,6 +38,6 @@ public class ICollectibles : MonoBehaviour
     }
     public void MagnetDuration()
     {
-        StartCoroutine(StartDuration());
+        StartCoroutine(StartCountdown());
     }
 }

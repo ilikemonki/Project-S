@@ -8,6 +8,8 @@ public class PlayerCollector : MonoBehaviour
     public CircleCollider2D magnet;
     public float pullSpeed;
     public List<ICollectibles> collectiblesList= new();
+    float magnetTimer;
+    bool useMagnet;
 
     private void FixedUpdate()
     {
@@ -23,6 +25,16 @@ public class PlayerCollector : MonoBehaviour
                 {
                     collectiblesList[i].PullCollectible(pullSpeed, player.transform);
                 }
+            }
+        }
+        if (useMagnet)
+        {
+            magnetTimer += Time.deltaTime;
+            if (magnetTimer >= 0.5f)
+            {
+                useMagnet = false;
+                magnetTimer = 0;
+                magnet.radius = player.magnetRange;
             }
         }
     }
@@ -47,13 +59,8 @@ public class PlayerCollector : MonoBehaviour
     }
     public void MagnetCollectible()
     {
-        Timing.RunCoroutine(CollectibleDuration());
-    }
-    public IEnumerator<float> CollectibleDuration()
-    {
-        magnet.radius = 300;
-        yield return Timing.WaitForSeconds(0.5f);
-        magnet.radius = player.magnetRange;
-
+        magnet.radius = 400;
+        magnetTimer = 0;
+        useMagnet = true;
     }
 }
