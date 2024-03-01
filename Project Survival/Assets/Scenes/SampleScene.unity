@@ -10245,7 +10245,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1660154755}
         m_TargetAssemblyTypeName: Shop, Assembly-CSharp
-        m_MethodName: PopulateShop
+        m_MethodName: PopulateAllShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21532,6 +21532,7 @@ MonoBehaviour:
   expCapIncrease: 10
   coins: 100
   skillExpCapList: 0a0000000a0000001e00000028000000
+  expOrbBonus: 25
   damageMultiplier: 0
   projectileDamageMultiplier: 0
   meleeDamageMultiplier: 0
@@ -44490,6 +44491,7 @@ GameObject:
   - component: {fileID: 1822006297}
   - component: {fileID: 1822006296}
   - component: {fileID: 1822006295}
+  - component: {fileID: 1822006298}
   m_Layer: 5
   m_Name: Dagger Orb
   m_TagString: Untagged
@@ -44540,7 +44542,7 @@ MonoBehaviour:
   image: {fileID: 1822006296}
   currentParent: {fileID: 824078376}
   isInInventory: 0
-  itemDescription: {fileID: 0}
+  itemDescription: {fileID: 1822006298}
 --- !u!114 &1822006296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44579,6 +44581,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1822006293}
   m_CullTransparentMesh: 1
+--- !u!114 &1822006298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822006293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6912fdd674bbe547bc8776136bd3c4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Dagger Orb
+  itemTags: Projectile
+  description: Throws daggers at enemies.
+  itemSprite: {fileID: 21300000, guid: 6b03a9613c2165c41afe1c7e499c9428, type: 3}
+  maxQuantity: 0
+  rarity: 1
+  currentLevel: 1
+  price: 20
+  quantityInInventory: 0
+  upgrade: {fileID: 0}
+  pItemSlotUI: {fileID: 0}
 --- !u!1 &1824158772
 GameObject:
   m_ObjectHideFlags: 0
@@ -51434,7 +51459,7 @@ MonoBehaviour:
     baseChanceRange: 1
     chanceRange: 0
   - prefab: {fileID: 7634057221192717879, guid: 1767fd3642c491a409496a7c424f0a75, type: 3}
-    baseChanceRange: 5
+    baseChanceRange: 40
     chanceRange: 0
   collectiblesParent: {fileID: 1017147234}
   coinList: []
@@ -51670,6 +51695,7 @@ MonoBehaviour:
   textSize: 20
   textCritSize: 45
   rand: 0
+  maxFloatingText: 400
 --- !u!1001 &1735531885605421937
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,13 +13,12 @@ public class EnemyStats : MonoBehaviour
     public float currentHealth;
     public float maxHealth;
     public float damage;
-    public float moveSpeed, baseMoveSpeed;
+    public float moveSpeed, baseMoveSpeed; //baseMoveSpeed is the current movespeed, use to reset current movespeed back to normal when chilled.
     public int exp;
     public bool chilled, burned, shocked, bleeding;
     public List<float> topAilmentsEffect;
     //public List<float> ailmentsCounter;
     public SpriteRenderer spriteRenderer;
-    public TextMeshProUGUI dotText;
     float totalBurnDamage, totalBleedDamage;
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
@@ -108,14 +107,10 @@ public class EnemyStats : MonoBehaviour
     public virtual void TakeDotDamage(float damage)
     {
         damage = CalculateDamage(damage);
-        if (bleeding && burned)
-        {
-            dotText.text = totalBleedDamage.ToString() + " " + "<color=red>" + totalBurnDamage.ToString();
-        }
-        else if (bleeding)
-            dotText.text = totalBleedDamage.ToString();
+        if (bleeding)
+            enemyManager.gameplayManager.floatingTextController.DisplayDoTText(transform, (damage).ToString(), Color.white);
         else if (burned)
-            dotText.text = "<color=red>" + totalBurnDamage.ToString();
+            enemyManager.gameplayManager.floatingTextController.DisplayDoTText(transform, (damage).ToString(), Color.red);
         currentHealth -= damage;
         GameManager.totalDamageDealt += damage;
         GameManager.TotalDotDamage += damage;
@@ -142,7 +137,6 @@ public class EnemyStats : MonoBehaviour
         chilled = false; burned = false; shocked = false; bleeding = false;
         totalBurnDamage = 0; totalBleedDamage = 0;
         attackTimer = attackCooldown;
-        dotText.text = "";
         burnOneSecCounter = 0; bleedOneSecCounter = 0;
         for (int i = 0; i > topAilmentsEffect.Count; i++)
         {
@@ -324,10 +318,6 @@ public class EnemyStats : MonoBehaviour
                 burnedTimer = 0;
                 burnOneSecCounter = 0;
                 totalBurnDamage = 0; 
-                if (bleeding) 
-                    dotText.text = totalBleedDamage.ToString();
-                else
-                    dotText.text = "";
             }
         }
         if (bleeding) //bleed duration
@@ -348,10 +338,6 @@ public class EnemyStats : MonoBehaviour
                 bleedingTimer = 0;
                 bleedOneSecCounter = 0;
                 totalBleedDamage = 0;
-                if (burned)
-                    dotText.text = "<color=red>" + totalBurnDamage.ToString();
-                else
-                    dotText.text = "";
             }
         }
     }

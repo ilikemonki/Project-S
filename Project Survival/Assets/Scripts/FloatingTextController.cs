@@ -10,6 +10,7 @@ public class FloatingTextController : MonoBehaviour
     public List<TextMeshProUGUI> damageTextList;
     public float textSize, textCritSize;
     public float rand;
+    public int maxFloatingText;
 
     private void Start()
     {
@@ -32,7 +33,7 @@ public class FloatingTextController : MonoBehaviour
     {
         for (int i = 0; i < damageTextList.Count; i++)
         {
-            if (i >= 400) return;
+            if (i >= maxFloatingText) return;
             if (!damageTextList[i].isActiveAndEnabled)
             {
                 if (i > damageTextList.Count - 2)
@@ -53,7 +54,7 @@ public class FloatingTextController : MonoBehaviour
     {
         for (int i = 0; i < damageTextList.Count; i++)
         {
-            if (i >= 400) return;
+            if (i >= maxFloatingText) return;
             if (!damageTextList[i].isActiveAndEnabled)
             {
                 if (i > damageTextList.Count - 2)
@@ -66,6 +67,27 @@ public class FloatingTextController : MonoBehaviour
                 damageTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
                 damageTextList[i].gameObject.SetActive(true);
                 damageTextList[i].transform.DOMoveY(transform.position.y + Random.Range(0.8f, 1.2f), 0.6f).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
+                return;
+            }
+        }
+    }
+    public void DisplayDoTText(Transform transform, string text, Color color)
+    {
+        for (int i = 0; i < damageTextList.Count; i++)
+        {
+            if (i >= maxFloatingText) return;
+            if (!damageTextList[i].isActiveAndEnabled)
+            {
+                if (i > damageTextList.Count - 2)
+                {
+                    PopulatePool(10);
+                }
+                damageTextList[i].fontSize = textSize - 5;
+                damageTextList[i].text = text;
+                damageTextList[i].color = color;
+                damageTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
+                damageTextList[i].gameObject.SetActive(true);
+                damageTextList[i].transform.DOJump(transform.position + new Vector3(0,0.3f,0), 0.3f, 1, 0.5f).SetEase(Ease.InFlash).OnComplete(() => damageTextList[i].gameObject.SetActive(false));
                 return;
             }
         }

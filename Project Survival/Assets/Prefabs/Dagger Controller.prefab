@@ -141,13 +141,13 @@ MonoBehaviour:
   level: 1
   exp: 0
   baseDamageTypes:
-  - 3
   - 0
+  - 3
   - 0
   - 0
   baseAilmentsChance:
   - 0
-  - 0
+  - 100
   - 0
   - 0
   baseAilmentsEffect:

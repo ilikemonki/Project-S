@@ -28,7 +28,8 @@ public class GameplayManager : MonoBehaviour
     public float timer, maxTimer;
     public int level, exp, expCap, expCapIncrease;
     public int coins; 
-    public List<int> skillExpCapList;
+    public List<int> skillExpCapList;   //amount of exp needed for next level. For skills.
+    public int expOrbBonus; //Skill gains this amount of exp if they already have that orb.
     [Header("Player Multipliers")]
     //Player/Skill Global Multipliers
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
@@ -109,17 +110,9 @@ public class GameplayManager : MonoBehaviour
         //Add exp to active skill
         for (int i = 0; i < inventory.activeSkillList.Count; i++)
         {
-            if (inventory.activeSkillList[i].skillController != null && inventory.activeSkillList[i].skillController.level < 5)
+            if (inventory.activeSkillList[i].skillController != null)
             {
-                inventory.activeSkillList[i].skillController.exp += amt;
-                if(inventory.activeSkillList[i].skillController.exp >= skillExpCapList[inventory.activeSkillList[i].skillController.level - 1]) //check if level up
-                {
-                    floatingTextController.DisplayPlayerText(player.transform, inventory.activeSkillList[i].skillController.skillOrbName + " Leveled Up!", Color.white, 3f);
-                    inventory.activeSkillList[i].skillController.level++;
-                    inventory.activeSkillList[i].skillController.exp = 0;
-                    updateStats.ApplySkillUpgrades(inventory.activeSkillList[i].skillController.levelUpgrades, inventory.activeSkillList[i].skillController, inventory.activeSkillList[i].skillController.level - 2);
-
-                }
+                inventory.activeSkillList[i].skillController.GainExp(amt);
             }
         }
     }

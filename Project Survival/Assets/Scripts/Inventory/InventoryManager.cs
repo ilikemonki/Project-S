@@ -182,7 +182,7 @@ public class InventoryManager : MonoBehaviour
                         itemManager.skillExpDict.Add(skill.skillOrbName, skill.exp);
                         itemManager.skillLevelDict.Add(skill.skillOrbName, skill.level);
                     }
-                    else //set skill's exp and level to saved skill's info.
+                    else //set skill's exp and level from skill's saved info.
                     {
                         skill.level = itemManager.skillLevelDict[skill.skillOrbName];
                         skill.exp = itemManager.skillExpDict[skill.skillOrbName];
@@ -206,12 +206,42 @@ public class InventoryManager : MonoBehaviour
     {
         if (itemName.Contains("Orb"))
         {
-            foreach (DraggableItem dItem in itemManager.skillOrbList.Keys)
+            foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //Skill gains exp if there is already exist.
             {
                 if (dItem.itemName.Equals(itemName))
                 {
-                    itemManager.skillOrbList[dItem]++;
-                    dItem.slotUI.amountText.text = (itemManager.skillOrbList[dItem] - 1).ToString();
+                    foreach (Skill skill in activeSkillList) //if skill is in active slot, add exp to skill controller. Else add to skill save data.
+                    {
+                        if (skill.skillController != null)
+                        {
+                            if (skill.skillController.skillOrbName.Equals(itemName))
+                            {
+                                skill.skillController.GainExp(gameplayManager.expOrbBonus);
+                                dItem.slotUI.levelText.text = "Lv. " + skill.skillController.level;
+                                skill.activeSkillDrop.nameText.text = "Lv. " + skill.skillController.level.ToString() + " " + itemName;
+                                return;
+                            }
+                        }
+                    }
+                    //Add exp to skill save data.
+                    if (itemManager.skillLevelDict[itemName] < 5)
+                    {
+                        itemManager.skillExpDict[itemName] += gameplayManager.expOrbBonus;
+                        if (itemManager.skillExpDict[itemName] >= gameplayManager.skillExpCapList[itemManager.skillLevelDict[itemName] - 1]) //check if level up
+                        {
+                            itemManager.skillExpDict[itemName] -= gameplayManager.skillExpCapList[itemManager.skillLevelDict[itemName] - 1];
+                            itemManager.skillLevelDict[itemName]++; 
+                            if (itemManager.skillLevelDict[itemName] < 5)
+                            {
+                                if (itemManager.skillExpDict[itemName] >= gameplayManager.skillExpCapList[itemManager.skillLevelDict[itemName] - 1]) //if skill levels up 2 times on one exp gain. level up again. Should not be able to level more than 2.
+                                {
+                                    itemManager.skillExpDict[itemName] -= gameplayManager.skillExpCapList[itemManager.skillLevelDict[itemName] - 1];
+                                    itemManager.skillLevelDict[itemName]++;
+                                }
+                            }
+                        }
+                    }
+                    dItem.slotUI.levelText.text = "Lv. " + itemManager.skillLevelDict[itemName];
                     return;
                 }
             }

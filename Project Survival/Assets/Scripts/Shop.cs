@@ -187,11 +187,11 @@ public class Shop : MonoBehaviour
                 itemUIList[i].nameText.text = orbShopList[i].itemName;
                 itemUIList[i].tagText.text = orbShopList[i].itemTags;
                 itemUIList[i].priceText.text = orbShopList[i].price.ToString(); 
-                foreach (DraggableItem dItem in itemManager.skillOrbList.Keys)
+                foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //if orb exist, show exp orb gained.
                 {
                     if (dItem.itemName.Equals(orbShopList[i].itemName))
                     {
-                        itemUIList[i].quantityText.text = (itemManager.skillOrbList[dItem]).ToString();
+                        itemUIList[i].quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " Exp";
                         break;
                     }
                 }
@@ -304,7 +304,7 @@ public class Shop : MonoBehaviour
                 }
                 inventoryManager.UpdatePassiveItemsInventory(item); //Adds item to Passive Items Inventory UI or updates it.
             }
-            else if (isOrbShop || isGemShop)
+            else if (isOrbShop || isGemShop) //Send gem and orb to inventory
             {
                 inventoryManager.AddCollectibleIntoInventory(item.itemName);
             }

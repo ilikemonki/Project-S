@@ -904,6 +904,29 @@ public class SkillController : MonoBehaviour
             poolList.Add(skill);
         }
     }
+    public void GainExp(int amt)
+    {
+        if (level < 5)
+        {
+            exp += amt;
+            if (exp >= gameplayManager.skillExpCapList[level - 1]) //check if level up
+            {
+                gameplayManager.floatingTextController.DisplayPlayerText(player.transform, skillOrbName + " Leveled Up!", Color.white, 3f);
+                gameplayManager.updateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
+                exp -= gameplayManager.skillExpCapList[level - 1];
+                level++;
+                if (level < 5)
+                {
+                    if (exp >= gameplayManager.skillExpCapList[level - 1]) //if skill levels up 2 times on one exp gain. level up again. Should not be able to level more than 2.
+                    {
+                        gameplayManager.updateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
+                        exp -= gameplayManager.skillExpCapList[level - 1];
+                        level++;
+                    }
+                }
+            }
+        }
+    }
     public void UpdateSkillStats() //Uses base stats and global multipliers to create stats
     {
         for (int i = 0; i < ailmentsChance.Count; i++)
