@@ -34,14 +34,14 @@ public class InventoryManager : MonoBehaviour
             if (skill.activeSkillDrop.draggableItem != null)
             {
                 InstantiateSkill(skill.activeSkillDrop.draggableItem);
-                skill.activeSkillDrop.nameText.text = "Lv. " + skill.skillController.level.ToString() + " " + skill.activeSkillDrop.draggableItem.itemName;
+                skill.activeSkillDrop.nameText.text = "Lv. " + skill.skillController.level.ToString() + " " + skill.activeSkillDrop.draggableItem.itemDescription.itemName;
                 SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.contentParent.transform);
                 skill.activeSkillDrop.draggableItem.slotUI = slotUI;
                 slotUI.inUseText.gameObject.SetActive(true);
                 slotUI.name = uiPrefab.name;
-                slotUI.nameText.text = skill.activeSkillDrop.draggableItem.itemName;
+                slotUI.nameText.text = skill.activeSkillDrop.draggableItem.itemDescription.itemName;
                 slotUI.levelText.text = "Lv. " + skill.skillController.level.ToString();
-                slotUI.fadedImage.sprite = skill.activeSkillDrop.draggableItem.image.sprite;
+                slotUI.fadedImage.sprite = skill.activeSkillDrop.draggableItem.itemDescription.itemSprite;
                 itemManager.skillOrbList.Add(skill.activeSkillDrop.draggableItem, 1);
                 skill.autoToggle.gameObject.SetActive(true);
             }
@@ -56,14 +56,14 @@ public class InventoryManager : MonoBehaviour
             {
                 if (asd.draggableItem != null && activeSkillList[i].skillController != null)
                 {
-                    gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.gemUpgrades, activeSkillList[i].skillController);
+                    gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, activeSkillList[i].skillController);
                 }
             }
         }
     }
     public void DropInInventory(DraggableItem draggableItem)
     {
-        if(draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+        if(draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
         {
             draggableItem.slotUI.inUseText.gameObject.SetActive(false);
             activeSkillList[draggableItem.activeSkillDrop.num].skillController = null;
@@ -92,7 +92,7 @@ public class InventoryManager : MonoBehaviour
                 draggableItem.activeSkillDrop = null;
                 foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
                 {
-                    if (draggableItem.itemName.Equals(dItem.itemName))
+                    if (draggableItem.itemDescription.itemName.Equals(dItem.itemDescription.itemName))
                     {
                         draggableItem.itemDescription.quantityInInventory = 1;
                         int numInInventory = itemManager.skillGemList[dItem];
@@ -107,7 +107,7 @@ public class InventoryManager : MonoBehaviour
             {
                 foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
                 {
-                    if (draggableItem.itemName.Equals(dItem.itemName))
+                    if (draggableItem.itemDescription.itemName.Equals(dItem.itemDescription.itemName))
                     {
                         dItem.itemDescription.quantityInInventory++;
                         dItem.slotUI.amountText.text = dItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[dItem].ToString();
@@ -121,20 +121,20 @@ public class InventoryManager : MonoBehaviour
     }
     public void DropInActiveSkill(DraggableItem draggableItem, Transform parent) //From Inventory to Active Skill slot
     {
-        if (draggableItem.itemDescription.quantityInInventory > 1 && draggableItem.slotType == DraggableItem.SlotType.SkillGem) //if there is more than 1 amount in inventory, spawn new dragItem and put it back in inventory
+        if (draggableItem.itemDescription.quantityInInventory > 1 && draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillGem) //if there is more than 1 amount in inventory, spawn new dragItem and put it back in inventory
         {
             foreach (DraggableItem prefab in itemManager.t1GemPrefabList)
             {
-                if (draggableItem.itemName.Equals(prefab.itemName))
+                if (draggableItem.itemDescription.itemName.Equals(prefab.itemDescription.itemName))
                 {
                     DraggableItem newItem = Instantiate(prefab, draggableItem.slotUI.fadedImage.transform); //Create new item back into inventory
                     newItem.inventory = this;
                     newItem.slotUI = draggableItem.slotUI;
                     newItem.name = draggableItem.name;
-                    newItem.itemName = draggableItem.itemName;
-                    newItem.image.sprite = draggableItem.image.sprite;
-                    newItem.gemUpgrades = draggableItem.gemUpgrades;
-                    newItem.slotType = draggableItem.slotType;
+                    newItem.itemDescription.itemName = draggableItem.itemDescription.itemName;
+                    newItem.itemDescription.itemSprite = draggableItem.itemDescription.itemSprite;
+                    newItem.itemDescription.upgrade = draggableItem.itemDescription.upgrade;
+                    newItem.itemDescription.itemType = draggableItem.itemDescription.itemType;
                     newItem.itemDescription.quantityInInventory = draggableItem.itemDescription.quantityInInventory;
                     newItem.itemDescription.quantityInInventory--;
                     itemManager.skillGemList.Add(newItem, itemManager.skillGemList[draggableItem]);
@@ -153,7 +153,7 @@ public class InventoryManager : MonoBehaviour
         {
             draggableItem.isInInventory = false;
             draggableItem.currentParent = parent;   //set new parent
-            if (draggableItem.slotType == DraggableItem.SlotType.SkillGem)
+            if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillGem)
             {
                 draggableItem.itemDescription.quantityInInventory--;
                 draggableItem.slotUI.amountText.text = draggableItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[draggableItem].ToString();
@@ -164,11 +164,11 @@ public class InventoryManager : MonoBehaviour
     }
     public void InstantiateSkill(DraggableItem dragItem) //Add skill to gameplay
     {
-        if (dragItem.slotType == DraggableItem.SlotType.SkillOrb)
+        if (dragItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
         {
             foreach (SkillController sc in itemManager.skillControllerPrefabsList) //Look for skill controller name.
             {
-                if (sc.skillOrbName.Equals(dragItem.itemName)) //Get skill controller and set to draggableItem
+                if (sc.skillOrbName.Equals(dragItem.itemDescription.itemName)) //Get skill controller and set to draggableItem
                 {
                     SkillController skill = Instantiate(sc, skillParent.transform);
                     skill.name = sc.name;
@@ -208,7 +208,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //Skill gains exp if there is already exist.
             {
-                if (dItem.itemName.Equals(itemName))
+                if (dItem.itemDescription.itemName.Equals(itemName))
                 {
                     foreach (Skill skill in activeSkillList) //if skill is in active slot, add exp to skill controller. Else add to skill save data.
                     {
@@ -248,7 +248,7 @@ public class InventoryManager : MonoBehaviour
             //Create DraggbleItem for orb.
             foreach (DraggableItem prefab in itemManager.orbPrefabList)
             {
-                if (prefab.itemName.Equals(itemName))
+                if (prefab.itemDescription.itemName.Equals(itemName))
                 {
                     DraggableItem draggableItem = Instantiate(prefab, inventoryOrbDrop.contentParent.transform);
                     draggableItem.inventory = this;
@@ -259,9 +259,9 @@ public class InventoryManager : MonoBehaviour
                     draggableItem.currentParent = slotUI.fadedImage.transform;   //set new parent
                     draggableItem.transform.SetParent(draggableItem.currentParent);
                     slotUI.name = itemName;
-                    slotUI.nameText.text = draggableItem.itemName;
+                    slotUI.nameText.text = draggableItem.itemDescription.itemName;
                     slotUI.levelText.text = "Lv. " + draggableItem.skillController.level.ToString();
-                    slotUI.fadedImage.sprite = draggableItem.image.sprite;
+                    slotUI.fadedImage.sprite = draggableItem.itemDescription.itemSprite;
                     itemManager.skillOrbList.Add(draggableItem, 1);
                     return;
                 }
@@ -271,13 +271,13 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (DraggableItem dItem in itemManager.skillGemList.Keys) //if gem exist, add to quantity and gem inventory quantity
             {
-                if (dItem.itemName.Equals(itemName)) //If the gem inventory slotUI has no more quantity left, then create and set new dragItem to slotUI. Else, add to inventory.
+                if (dItem.itemDescription.itemName.Equals(itemName)) //If the gem inventory slotUI has no more quantity left, then create and set new dragItem to slotUI. Else, add to inventory.
                 {
                     if (dItem.slotUI.inUseText.gameObject.activeSelf == true)
                     {
                         foreach (DraggableItem prefab in itemManager.t1GemPrefabList) //Create new dragItem, set to slotUI
                         {
-                            if (prefab.itemName.Equals(itemName))
+                            if (prefab.itemDescription.itemName.Equals(itemName))
                             {
                                 dItem.slotUI.inUseText.gameObject.SetActive(false);
                                 DraggableItem draggableItem = Instantiate(prefab, inventoryGemDrop.contentParent.transform);
@@ -307,7 +307,7 @@ public class InventoryManager : MonoBehaviour
             //Create DraggbleItem for gem.
             foreach (DraggableItem prefab in itemManager.t1GemPrefabList)
             {
-                if (prefab.itemName.Equals(itemName))
+                if (prefab.itemDescription.itemName.Equals(itemName))
                 {
                     DraggableItem draggableItem = Instantiate(prefab, inventoryGemDrop.contentParent.transform);
                     draggableItem.inventory = this;
@@ -319,9 +319,9 @@ public class InventoryManager : MonoBehaviour
                     draggableItem.transform.SetParent(draggableItem.currentParent);
                     draggableItem.itemDescription.quantityInInventory++;
                     slotUI.name = itemName;
-                    slotUI.nameText.text = draggableItem.itemName;
-                    slotUI.levelText.text = "Tier " + draggableItem.tier.ToString();
-                    slotUI.fadedImage.sprite = draggableItem.image.sprite;
+                    slotUI.nameText.text = draggableItem.itemDescription.itemName;
+                    slotUI.levelText.text = "Tier " + draggableItem.itemDescription.currentLevel.ToString();
+                    slotUI.fadedImage.sprite = draggableItem.itemDescription.itemSprite;
                     itemManager.skillGemList.Add(draggableItem, 1);
                     draggableItem.slotUI.amountText.text = draggableItem.itemDescription.quantityInInventory + "/" + itemManager.skillGemList[draggableItem].ToString();
                     return;
@@ -400,6 +400,8 @@ public class InventoryManager : MonoBehaviour
             pItemUI.itemDescription.pItemSlotUI = pItemUI;
             pItemUI.image.sprite = item.itemSprite;
             pItemUI.quanityText.text = item.quantityInInventory.ToString() + "/" + item.maxQuantity.ToString();
+            ToolTipTrigger tooltip = pItemUI.gameObject.GetComponent<ToolTipTrigger>();
+            if (tooltip != null) tooltip.itemDesc = item;
         }
 
     }

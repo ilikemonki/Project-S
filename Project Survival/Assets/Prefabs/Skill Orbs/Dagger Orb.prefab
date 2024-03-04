@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7327212868577625724}
   - component: {fileID: 7327212868577625715}
   - component: {fileID: -6162699754021087771}
+  - component: {fileID: -8850347610926983175}
   m_Layer: 5
   m_Name: Dagger Orb
   m_TagString: Untagged
@@ -90,14 +91,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d287221379a9f354892eda68563949aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotType: 0
-  gemUpgrades: {fileID: 0}
   skillController: {fileID: 0}
   activeSkillDrop: {fileID: 0}
   inventory: {fileID: 0}
   slotUI: {fileID: 0}
-  itemName: Dagger Orb
-  tier: 0
   image: {fileID: 7327212868577625724}
   currentParent: {fileID: 0}
   isInInventory: 0
@@ -114,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6912fdd674bbe547bc8776136bd3c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemType: 1
   itemName: Dagger Orb
   itemTags: Projectile
   description: Throws daggers at enemies.
@@ -125,3 +123,16 @@ MonoBehaviour:
   quantityInInventory: 0
   upgrade: {fileID: 0}
   pItemSlotUI: {fileID: 0}
+--- !u!114 &-8850347610926983175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7327212868577625713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 681d887972ff9cd48b6b0f1059563446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDesc: {fileID: -6162699754021087771}

@@ -137,6 +137,8 @@ public class EnemyStats : MonoBehaviour
         chilled = false; burned = false; shocked = false; bleeding = false;
         totalBurnDamage = 0; totalBleedDamage = 0;
         attackTimer = attackCooldown;
+        damageFlashTimer = 0;
+        burnedTimer = 0; chilledTimer = 0; shockedTimer = 0; bleedingTimer = 0;
         burnOneSecCounter = 0; bleedOneSecCounter = 0;
         for (int i = 0; i > topAilmentsEffect.Count; i++)
         {
@@ -259,6 +261,7 @@ public class EnemyStats : MonoBehaviour
     }
     public void UpdateStatus()
     {
+        if (gameObject.activeSelf == false) return;
         if (knockedBack) //reset velocity after knockedback
         {
             knockbackTimer += Time.deltaTime;

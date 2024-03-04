@@ -159,12 +159,12 @@ public class Shop : MonoBehaviour
                 itemUIList[i].quantityText.text = pItemShopList[i].quantityInInventory.ToString() + "/" + pItemShopList[i].maxQuantity;
                 if (string.IsNullOrWhiteSpace(pItemShopList[i].description)) //if there is no description. set statOnlyText.text
                 {
-                    itemUIList[i].statOnlyText.text = updateStats.FormatStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statOnlyText.text = updateStats.FormatCurrentLevelStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 else
                 {
                     itemUIList[i].descriptionText.text = pItemShopList[i].description;
-                    itemUIList[i].statText.text = updateStats.FormatStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statText.text = updateStats.FormatCurrentLevelStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
@@ -189,7 +189,7 @@ public class Shop : MonoBehaviour
                 itemUIList[i].priceText.text = orbShopList[i].price.ToString(); 
                 foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //if orb exist, show exp orb gained.
                 {
-                    if (dItem.itemName.Equals(orbShopList[i].itemName))
+                    if (dItem.itemDescription.itemName.Equals(orbShopList[i].itemName))
                     {
                         itemUIList[i].quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " Exp";
                         break;
@@ -214,7 +214,7 @@ public class Shop : MonoBehaviour
                 itemUIList[i].priceText.text = gemShopList[i].price.ToString();
                 foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
                 {
-                    if (dItem.itemName.Equals(gemShopList[i].itemName))
+                    if (dItem.itemDescription.itemName.Equals(gemShopList[i].itemName))
                     {
                         itemUIList[i].quantityText.text = (itemManager.skillGemList[dItem]).ToString();
                         break;
@@ -224,15 +224,14 @@ public class Shop : MonoBehaviour
                 {
                     itemUIList[i].quantityText.text = "0";
                 }
-                    itemUIList[i].descriptionText.text = gemShopList[i].description; 
                 if (string.IsNullOrWhiteSpace(gemShopList[i].description))
                 {
-                    itemUIList[i].statOnlyText.text = updateStats.FormatStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statOnlyText.text = updateStats.FormatCurrentLevelStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 else
                 {
                     itemUIList[i].descriptionText.text = gemShopList[i].description;
-                    itemUIList[i].statText.text = updateStats.FormatStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statText.text = updateStats.FormatCurrentLevelStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }

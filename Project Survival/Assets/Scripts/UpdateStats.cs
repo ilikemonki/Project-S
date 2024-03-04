@@ -200,7 +200,7 @@ public class UpdateStats : MonoBehaviour
         }
         skill.UpdateSkillStats();
     }
-    public string FormatStatsToString(Upgrades.LevelModifiers stats)
+    public string FormatCurrentLevelStatsToString(Upgrades.LevelModifiers stats)
     {
         string statNameString = "";
         string fullString = "";
@@ -216,7 +216,7 @@ public class UpdateStats : MonoBehaviour
             {
                 if (fullString.Equals("")) //For first modifier only
                 {
-                    if (IsNotPercentModifier(stats.modifier[i]))
+                    if (CheckPercentModifier(stats.modifier[i]))
                     {
                         fullString = statNameString + ": " + "<color=green>+" + stats.amt[i] + "</color>";
                     }
@@ -227,7 +227,7 @@ public class UpdateStats : MonoBehaviour
                 }
                 else
                 {
-                    if (IsNotPercentModifier(stats.modifier[i]))
+                    if (CheckPercentModifier(stats.modifier[i]))
                     {
                         fullString = fullString + "\n" +
                             statNameString + ": " + "<color=green>+" + stats.amt[i] + "</color>";
@@ -243,7 +243,7 @@ public class UpdateStats : MonoBehaviour
             {
                 if (fullString.Equals("")) //For first modifier only
                 {
-                    if (IsNotPercentModifier(stats.modifier[i]))
+                    if (CheckPercentModifier(stats.modifier[i]))
                     {
                         fullString = statNameString + ": " + "<color=red>" + stats.amt[i] + "</color>";
                     }
@@ -254,7 +254,7 @@ public class UpdateStats : MonoBehaviour
                 }
                 else
                 {
-                    if (IsNotPercentModifier(stats.modifier[i]))
+                    if (CheckPercentModifier(stats.modifier[i]))
                     {
                         fullString = fullString + "\n" +
                             statNameString + ": " + "<color=red>" + stats.amt[i] + "</color>";
@@ -269,7 +269,71 @@ public class UpdateStats : MonoBehaviour
         }
         return fullString;
     }
-    public bool IsNotPercentModifier(Upgrades.LevelModifiers.Modifier mod)
+    public string FormatSkillStatsToString(SkillController sc) //Return stats of the skill controller as string.
+    {
+        string fullString = "";
+        for(int i = 0; i < sc.damageTypes.Count; i++)
+        {
+            if (sc.damageTypes[i] > 0)
+            {
+                if (i == 0) //physical damage
+                    fullString = "Physical: " + sc.damageTypes[i] + "\n";
+                else if (i == 1) //Fire damage
+                    fullString += "Fire: " + sc.damageTypes[i] + "\n";
+                else if (i == 2) //cold damage
+                    fullString += "Cold: " + sc.damageTypes[i] + "\n";
+                else if (i == 3) //lightning damage
+                    fullString += "Lightning: " + sc.damageTypes[i] + "\n";
+            }
+        }
+        if (sc.criticalChance > 0)
+        {
+            fullString += "Critical Chance: " + sc.criticalChance + "%\n";
+        }
+        if (sc.criticalDamage > gameplayManager.criticalDamageAdditive)
+        {
+            fullString += "Critical Chance: " + sc.criticalDamage + "%\n";
+        }
+        for (int i = 0; i < sc.ailmentsChance.Count; i++)
+        {
+            if (sc.ailmentsChance[i] > 0)
+            {
+                if (i == 0) //physical damage
+                    fullString += "Bleed Chance: " + sc.ailmentsChance[i] + "%\n";
+                else if (i == 1) //Fire damage
+                    fullString += "Burn Chance: " + sc.ailmentsChance[i] + "%\n";
+                else if (i == 2) //cold damage
+                    fullString += "Chill Chance: " + sc.ailmentsChance[i] + "%\n";
+                else if (i == 3) //lightning damage
+                    fullString += "Shock Chance: " + sc.ailmentsChance[i] + "%\n";
+            }
+        }
+        for (int i = 0; i < sc.ailmentsEffect.Count; i++)
+        {
+            if (sc.ailmentsEffect[i] > gameplayManager.ailmentsEffectAdditive[i])
+            {
+                if (i == 0) //physical damage
+                    fullString += "Bleed Effect: " + sc.ailmentsEffect[i] + "%\n";
+                else if (i == 1) //Fire damage
+                    fullString += "Burn Effect: " + sc.ailmentsEffect[i] + "%\n";
+                else if (i == 2) //cold damage
+                    fullString += "Chill Effect: " + sc.ailmentsEffect[i] + "%\n";
+                else if (i == 3) //lightning damage
+                    fullString += "Shock Effect: " + sc.ailmentsEffect[i] + "%\n";
+            }
+        }
+        if (sc.projectile > 0)
+        {
+            fullString += "Projectile: " + sc.projectile + "\n";
+        }
+        if (sc.strike > 0)
+        {
+            fullString += "Projectile: " + sc.strike + "\n";
+        }
+
+        return fullString;
+    }
+    public bool CheckPercentModifier(Upgrades.LevelModifiers.Modifier mod) //Check if modifier is percent or flat value
     {
         if (mod == Upgrades.LevelModifiers.Modifier.strike || mod == Upgrades.LevelModifiers.Modifier.projectile || mod == Upgrades.LevelModifiers.Modifier.pierce || mod == Upgrades.LevelModifiers.Modifier.chain ||
             mod == Upgrades.LevelModifiers.Modifier.regen || mod == Upgrades.LevelModifiers.Modifier.degen || mod == Upgrades.LevelModifiers.Modifier.life_steal || mod == Upgrades.LevelModifiers.Modifier.knockback)

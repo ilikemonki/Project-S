@@ -924,6 +924,8 @@ public class SkillController : MonoBehaviour
                         level++;
                     }
                 }
+                gameplayManager.itemManager.skillExpDict[skillOrbName] = exp;
+                gameplayManager.itemManager.skillLevelDict[skillOrbName] = level;
             }
         }
     }

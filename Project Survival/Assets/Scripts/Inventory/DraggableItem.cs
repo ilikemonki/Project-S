@@ -6,19 +6,10 @@ using UnityEngine.EventSystems;
 
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public enum SlotType
-    {
-        SkillOrb,
-        SkillGem,
-    }
-    public SlotType slotType;
-    public Upgrades gemUpgrades;
     public SkillController skillController;
     public ActiveSkillDrop activeSkillDrop;
     public InventoryManager inventory;
     public SkillSlotUI slotUI;
-    public string itemName;
-    public int tier;
     public Image image;
     public Transform currentParent;
     public bool isInInventory;

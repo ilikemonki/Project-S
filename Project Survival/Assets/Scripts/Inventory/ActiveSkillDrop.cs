@@ -29,20 +29,20 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             GameObject dropped = eventData.pointerDrag;
             if (dropped.TryGetComponent(out DraggableItem draggable))
             {
-                if (!draggable.slotType.ToString().Equals(slotType.ToString())) return; //if dragItem is not the same slotType, return;
+                if (!draggable.itemDescription.itemType.ToString().Equals(slotType.ToString())) return; //if dragItem is not the same slotType, return;
                 draggableItem = draggable;
                 if (draggableItem.isInInventory) //Moving from inventory to active skill
                 {
                     draggableItem.activeSkillDrop = this; // New activeskilldrop
                     inventory.DropInActiveSkill(draggableItem, transform);
 
-                    if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+                    if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
                     {
                         foreach (ActiveSkillDrop asd in inventory.activeSkillList[num].skillGemDropList) //Apply all Gem Modifiers from new skill group
                         {
                             if (asd.draggableItem != null && inventory.activeSkillList[num].skillController != null)
                             {
-                                inventory.gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.gemUpgrades, inventory.activeSkillList[num].skillController);
+                                inventory.gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[num].skillController);
                             }
                         }
                         inventory.activeSkillList[num].autoToggle.isOn = true;
@@ -52,13 +52,13 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     {
                         if (inventory.activeSkillList[num].skillController != null)
                         {
-                            inventory.gameplayManager.updateStats.ApplyGemUpgrades(draggableItem.gemUpgrades, inventory.activeSkillList[num].skillController);
+                            inventory.gameplayManager.updateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[num].skillController);
                         }
                     }
                 }
                 else //From active slot to active slot
                 {
-                    if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+                    if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
                     {
                         if (draggableItem.activeSkillDrop.num == num) return;
                         //old active slot
@@ -78,7 +78,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                         {
                             if (asd.draggableItem != null)
                             {
-                                inventory.gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.gemUpgrades, inventory.activeSkillList[num].skillController);
+                                inventory.gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[num].skillController);
                             }
                         }
                     }
@@ -90,16 +90,16 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                             {
                                 if (inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController != null)
                                 {
-                                    inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.gemUpgrades, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
+                                    inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
                                 }
                                 //inventory.ApplyGemModifier(draggableItem.skillGem.gemModifierList, num); //apply to new skill controller
-                                inventory.gameplayManager.updateStats.ApplyGemUpgrades(draggableItem.gemUpgrades, inventory.activeSkillList[num].skillController);
+                                inventory.gameplayManager.updateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[num].skillController);
                             }
                             else // Moved to slot with no skill controller
                             {
                                 if (inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController != null)
                                 {
-                                    inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.gemUpgrades, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
+                                    inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
                                 }
                             }
                         }
@@ -112,7 +112,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     }
                     draggableItem.currentParent = transform;
                 }
-                if (nameText != null) nameText.text = "Lv. " + draggableItem.skillController.level.ToString() + " " + draggableItem.itemName;
+                if (nameText != null) nameText.text = "Lv. " + draggableItem.skillController.level.ToString() + " " + draggableItem.itemDescription.itemName;
             }
         }
     }
@@ -120,7 +120,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
     {
         if (draggableItem != null && eventData.button == PointerEventData.InputButton.Right)
         {
-            if (draggableItem.slotType == DraggableItem.SlotType.SkillOrb)
+            if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
             {
                 inventory.DropInInventory(draggableItem);
             }
@@ -128,7 +128,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
             {
                 if (inventory.activeSkillList[num].skillController != null)
                 {
-                    inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.gemUpgrades, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
+                    inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
                 }
                 inventory.DropInInventory(draggableItem);
             }

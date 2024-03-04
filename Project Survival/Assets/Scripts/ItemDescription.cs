@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class ItemDescription : MonoBehaviour
 {
+    public enum ItemType
+    {
+        PassiveItem,
+        SkillOrb,
+        SkillGem,
+    }
+    public ItemType itemType;
     public string itemName, itemTags, description;
     public Sprite itemSprite;
-    public int maxQuantity, rarity, currentLevel;
+    public int maxQuantity, rarity;
+    public int currentLevel; //Used for gem tiers as well
     public int price;
     public int quantityInInventory;
     public Upgrades upgrade;

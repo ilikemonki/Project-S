@@ -14,6 +14,7 @@ public class GameplayManager : MonoBehaviour
     public UpdateStats updateStats;
     public FloatingTextController floatingTextController;
     public InventoryManager inventory;
+    public ItemManager itemManager;
     public GameObject waveUI;
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI levelText;

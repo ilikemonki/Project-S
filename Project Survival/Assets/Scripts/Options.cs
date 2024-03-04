@@ -28,7 +28,7 @@ public class Options : MonoBehaviour
             {
                 if (inventoryManager.activeSkillList[i].skillController != null)
                 {
-                    inventoryManager.activeSkillList[i].activeSkillDrop.nameText.text = "Lv. " + inventoryManager.activeSkillList[i].skillController.level.ToString() + " " + inventoryManager.activeSkillList[i].activeSkillDrop.draggableItem.itemName;
+                    inventoryManager.activeSkillList[i].activeSkillDrop.nameText.text = "Lv. " + inventoryManager.activeSkillList[i].skillController.level.ToString() + " " + inventoryManager.activeSkillList[i].activeSkillDrop.draggableItem.itemDescription.itemName;
                     if (itemManager.skillExpDict.ContainsKey(inventoryManager.activeSkillList[i].skillController.skillOrbName))
                     {
                         itemManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.exp;
@@ -40,7 +40,7 @@ public class Options : MonoBehaviour
             {
                 foreach (string orbName in itemManager.skillLevelDict.Keys)
                 {
-                    if (dItem.itemName.Equals(orbName))
+                    if (dItem.itemDescription.itemName.Equals(orbName))
                     {
                         dItem.slotUI.levelText.text = "Lv. " + itemManager.skillLevelDict[orbName].ToString();
                     }

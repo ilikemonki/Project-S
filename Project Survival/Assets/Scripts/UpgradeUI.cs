@@ -34,7 +34,7 @@ public class UpgradeUI : MonoBehaviour, IPointerClickHandler
             levelText.text = upgrade.itemDescription.currentLevel.ToString() + "/" + upgrade.levelModifiersList.Count;
             descriptionText.text = upgrade.itemDescription.description;
             upgradeText.text = "";
-            upgradeText.text = updateStats.FormatStatsToString(upgrade.levelModifiersList[upgrade.itemDescription.currentLevel]); //Get stats string
+            upgradeText.text = updateStats.FormatCurrentLevelStatsToString(upgrade.levelModifiersList[upgrade.itemDescription.currentLevel]); //Get stats string
         }
     }
 }

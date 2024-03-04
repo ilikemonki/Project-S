@@ -385,6 +385,7 @@ GameObject:
   - component: {fileID: 8600563836348228486}
   - component: {fileID: 8600563836348228485}
   - component: {fileID: 123610123}
+  - component: {fileID: -5073116281476608182}
   m_Layer: 5
   m_Name: PItem Slot UI
   m_TagString: Untagged
@@ -469,6 +470,19 @@ MonoBehaviour:
   image: {fileID: 8600563835691847743}
   quanityText: {fileID: 8600563835054983952}
   equipToggle: {fileID: 8600563836207423679}
+--- !u!114 &-5073116281476608182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8600563836348228491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 681d887972ff9cd48b6b0f1059563446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDesc: {fileID: 0}
 --- !u!1 &8600563837147114231
 GameObject:
   m_ObjectHideFlags: 0
