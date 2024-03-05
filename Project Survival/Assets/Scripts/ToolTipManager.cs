@@ -16,6 +16,7 @@ public class ToolTipManager : MonoBehaviour
     public RectTransform rectTransformWindow;
     public TextMeshProUGUI nameText, tagText, descriptionText, statText, statOnlyText;
     public Image itemImage;
+    Vector2 anchorPos;
     public void Awake()
     {
         current = this;
@@ -24,11 +25,11 @@ public class ToolTipManager : MonoBehaviour
     {
         if (itemToolTipWindow.activeSelf)
         {
-            Vector2 anchorPos = Input.mousePosition / canvasRectTransform.localScale.x;
+            anchorPos = Input.mousePosition;
             if (anchorPos.x + rectTransformWindow.rect.width > canvasRectTransform.rect.width)
                 anchorPos.x = canvasRectTransform.rect.width - rectTransformWindow.rect.width;
-            if (anchorPos.y + rectTransformWindow.rect.height > canvasRectTransform.rect.height)
-                anchorPos.y = canvasRectTransform.rect.height - rectTransformWindow.rect.height;
+            if (anchorPos.y < rectTransformWindow.rect.height)
+                anchorPos.y = rectTransformWindow.rect.height;
             rectTransformWindow.anchoredPosition = anchorPos;
         }
     }

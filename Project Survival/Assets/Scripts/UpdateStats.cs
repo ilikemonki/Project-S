@@ -277,14 +277,34 @@ public class UpdateStats : MonoBehaviour
             if (sc.damageTypes[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString = "Physical: " + sc.damageTypes[i] + "\n";
+                    fullString = "Physical Damage: " + sc.damageTypes[i] + "\n";
                 else if (i == 1) //Fire damage
-                    fullString += "Fire: " + sc.damageTypes[i] + "\n";
+                    fullString += "Fire Damage: " + sc.damageTypes[i] + "\n";
                 else if (i == 2) //cold damage
-                    fullString += "Cold: " + sc.damageTypes[i] + "\n";
+                    fullString += "Cold Damage: " + sc.damageTypes[i] + "\n";
                 else if (i == 3) //lightning damage
-                    fullString += "Lightning: " + sc.damageTypes[i] + "\n";
+                    fullString += "Lightning Damage: " + sc.damageTypes[i] + "\n";
             }
+        }
+        if (sc.projectile > 0)
+        {
+            fullString += "Projectile: " + sc.projectile + "\n";
+        }
+        if (sc.pierce > 0)
+        {
+            fullString += "Pierce: " + sc.pierce + "\n";
+        }
+        if (sc.chain > 0)
+        {
+            fullString += "Chain: " + sc.chain + "\n";
+        }
+        if (sc.strike > 0)
+        {
+            fullString += "Strike: " + sc.strike + "\n";
+        }
+        if (sc.cooldown > 0)
+        {
+            fullString += "Cooldown: " + sc.cooldown + "s\n";
         }
         if (sc.criticalChance > 0)
         {
@@ -292,43 +312,65 @@ public class UpdateStats : MonoBehaviour
         }
         if (sc.criticalDamage > gameplayManager.criticalDamageAdditive)
         {
-            fullString += "Critical Chance: " + sc.criticalDamage + "%\n";
+            fullString += "Critical Damage: " + sc.criticalDamage + "%\n";
+        }
+        if (sc.attackRange > 0)
+        {
+            fullString += "Attack Range: " + sc.attackRange + "\n";
         }
         for (int i = 0; i < sc.ailmentsChance.Count; i++)
         {
             if (sc.ailmentsChance[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "Bleed Chance: " + sc.ailmentsChance[i] + "%\n";
+                {
+                    fullString += "Bleed Chance: " + sc.ailmentsChance[i] + "%\n"; 
+                    if (sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) >= 1)
+                        fullString += "Bleed Damage: " + sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) + "\n";
+                    else
+                        fullString += "Bleed Damage: " + 1 + "\n";
+                }
                 else if (i == 1) //Fire damage
+                {
                     fullString += "Burn Chance: " + sc.ailmentsChance[i] + "%\n";
+                    if (sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) >= 1)
+                        fullString += "Burn Damage: " + sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) + "\n";
+                    else
+                        fullString += "Burn Damage: " + 1 + "\n"; ;
+                }
                 else if (i == 2) //cold damage
-                    fullString += "Chill Chance: " + sc.ailmentsChance[i] + "%\n";
+                {
+                    fullString += "Chill Chance: " + sc.ailmentsChance[i] + "%\n"; fullString += "Chill Effect: " + sc.ailmentsEffect[i] + "%\n";
+                }
                 else if (i == 3) //lightning damage
-                    fullString += "Shock Chance: " + sc.ailmentsChance[i] + "%\n";
+                {
+                    fullString += "Shock Chance: " + sc.ailmentsChance[i] + "%\n"; fullString += "Shock Effect: " + sc.ailmentsEffect[i] + "%\n";
+                }
             }
         }
-        for (int i = 0; i < sc.ailmentsEffect.Count; i++)
+        if (sc.lifeStealChance > 0)
         {
-            if (sc.ailmentsEffect[i] > gameplayManager.ailmentsEffectAdditive[i])
-            {
-                if (i == 0) //physical damage
-                    fullString += "Bleed Effect: " + sc.ailmentsEffect[i] + "%\n";
-                else if (i == 1) //Fire damage
-                    fullString += "Burn Effect: " + sc.ailmentsEffect[i] + "%\n";
-                else if (i == 2) //cold damage
-                    fullString += "Chill Effect: " + sc.ailmentsEffect[i] + "%\n";
-                else if (i == 3) //lightning damage
-                    fullString += "Shock Effect: " + sc.ailmentsEffect[i] + "%\n";
-            }
+            fullString += "Lifesteal Chance: " + sc.lifeStealChance + "%\n";
         }
-        if (sc.projectile > 0)
+        if (sc.lifeSteal > 0)
         {
-            fullString += "Projectile: " + sc.projectile + "\n";
+            fullString += "Lifesteal: " + sc.lifeSteal + "\n";
         }
-        if (sc.strike > 0)
+        if (sc.travelSpeed > 0)
         {
-            fullString += "Projectile: " + sc.strike + "\n";
+            fullString += "Travel Speed: " + sc.travelSpeed + "\n";
+        }
+        if (sc.travelRange > 0)
+        {
+            fullString += "Travel Range: " + sc.travelRange + "\n";
+        }
+        if (sc.knockBack > 0)
+        {
+            fullString += "Knockback: " + sc.knockBack + "\n";
+        }
+        if (sc.size > 0)
+        {
+            fullString += "Size: " + sc.size * 100 + "%\n";
         }
 
         return fullString;
