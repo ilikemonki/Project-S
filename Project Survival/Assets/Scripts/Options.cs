@@ -22,6 +22,7 @@ public class Options : MonoBehaviour
             GameManager.PauseGame();
             menuUI.SetActive(true);
             SkillsUIButton();
+            inventoryManager.ShowPlayerEnemyStats();
             inventoryManager.UpdateGeneralStatistics();
             //Save data and set text when opening inventory.
             for (int i = 0; i < inventoryManager.activeSkillList.Count; i++) //Save exp and level of skill controller.

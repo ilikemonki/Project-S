@@ -26,7 +26,8 @@ public class EnemyManager : MonoBehaviour
         public float moveSpeed;
         public int exp;
         public float attackCooldown;
-        public float projectileSpeed;
+        public float projectileTravelSpeed;
+        public float projectileTravelRange;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -153,9 +154,9 @@ public class EnemyManager : MonoBehaviour
         enemy.knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
         enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange,
             enemyGroup.enemyPrefab.projectiles, enemyGroup.enemyPrefab.spreadAttack,
-            enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack,
-            enemyGroup.enemyPrefab.projectileRange);
-        enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage, enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectileSpeed);   //Set new stats to enemy
+            enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
+        enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage,
+            enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectileTravelSpeed, enemyGroup.projectileTravelRange);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
     }
     public void UpdateAllEnemyStats()
@@ -169,7 +170,8 @@ public class EnemyManager : MonoBehaviour
                 eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
                 eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.enemyExpMultiplier / 100);
                 eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
-                eGroup.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileSpeedMultiplier / 100);
+                eGroup.projectileTravelSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
+                eGroup.projectileTravelRange = eGroup.enemyPrefab.projectileRange * (1 + gameplayManager.enemyProjectileTravelRangeMultiplier / 100);
             }
         }
     }

@@ -948,6 +948,10 @@ public class SkillController : MonoBehaviour
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive + addedCriticalDamage;
             size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize) / 100);
+            lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.meleeLifeStealChanceAdditive + addedLifeStealChance;
+            lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.meleeLifeStealAdditive + addedLifeSteal;
+            travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultipiler + gameplayManager.meleeTravelSpeedMultipiler + addedTravelSpeed) / 100);
+            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultipiler + gameplayManager.meleeTravelRangeMultipiler + addedTravelRange) / 100);
         }
         else //is projectile
         {
@@ -960,6 +964,10 @@ public class SkillController : MonoBehaviour
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive + addedCriticalDamage;
             size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize) / 100);
+            lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.projectileLifeStealChanceAdditive + addedLifeStealChance;
+            lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.projectileLifeStealAdditive + addedLifeSteal;
+            travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultipiler + gameplayManager.projectileTravelSpeedMultipiler + addedTravelSpeed) / 100);
+            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultipiler + gameplayManager.projectileTravelRangeMultipiler + addedTravelRange) / 100);
         }
         if (gameplayManager.furthestAttackRange < attackRange)
         {
@@ -973,10 +981,6 @@ public class SkillController : MonoBehaviour
             }
         }
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
-        travelSpeed = baseTravelSpeed * (1 + (gameplayManager.projectileSpeedMultiplier + addedTravelSpeed) / 100);
-        travelRange = baseTravelRange * (1 + (gameplayManager.projectileDistanceMultiplier + addedTravelRange) / 100);
-        lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + addedLifeStealChance;
-        lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + addedLifeSteal;
         knockBack = baseKnockBack + addedKnockBack;
         currentCooldown = cooldown;
         UpdateSize();

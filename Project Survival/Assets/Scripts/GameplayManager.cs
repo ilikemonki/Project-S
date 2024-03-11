@@ -36,22 +36,21 @@ public class GameplayManager : MonoBehaviour
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> damageTypeMultiplier;
     public int strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive;
-    public float projectileSpeedMultiplier;
     public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
-    public float projectileDistanceMultiplier;
     public float cooldownMultiplier, projectileCooldownMultiplier, meleeCooldownMultiplier;
     public float moveSpeedMultiplier;
     public float maxHealthMultiplier;
     public float defenseMultiplier;
     public float criticalChanceAdditive, projectileCriticalChanceAdditive, meleeCriticalChanceAdditive, criticalDamageAdditive, projectileCriticalDamageAdditive, meleeCriticalDamageAdditive;
     public float sizeMultiplier, projectileSizeMultiplier, meleeSizeMultiplier;
-    public float regenAdditive, degenAdditive, lifeStealChanceAdditive, lifeStealAdditive;
+    public float regenAdditive, degenAdditive, lifeStealChanceAdditive, meleeLifeStealChanceAdditive, projectileLifeStealChanceAdditive, lifeStealAdditive, meleeLifeStealAdditive, projectileLifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
     public List<float> ailmentsEffectAdditive;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
     public float coinDropRateMultipiler;
+    public float travelRangeMultipiler, projectileTravelRangeMultipiler, meleeTravelRangeMultipiler, travelSpeedMultipiler, projectileTravelSpeedMultipiler, meleeTravelSpeedMultipiler;
     [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;
@@ -59,7 +58,8 @@ public class GameplayManager : MonoBehaviour
     public float enemyDamageMultiplier;
     public int enemyExpMultiplier;
     public float enemyAttackCooldownMultiplier;
-    public float enemyProjectileSpeedMultiplier;
+    public float enemyProjectileTravelSpeedMultiplier;
+    public float enemyProjectileTravelRangeMultiplier;
     public List<float> resistances;//[0]physical,[1]fire,[2]cold,[3]lightning
     public float dropChanceMultiplier;
 

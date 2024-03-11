@@ -27,8 +27,10 @@ public class InventoryManager : MonoBehaviour
     public ItemManager itemManager;
     public PItemSlotUI pItemSlotUIPrefab;
     public GameObject pItemInventoryParent;
+    public TextMeshProUGUI playerStats1Text, playerStats2Text;
     private void Start()
     {
+        ShowPlayerEnemyStats();
         foreach(Skill skill in activeSkillList) //Set current skills at start of game.
         {
             if (skill.activeSkillDrop.draggableItem != null)
@@ -403,6 +405,10 @@ public class InventoryManager : MonoBehaviour
             ToolTipTrigger tooltip = pItemUI.gameObject.GetComponent<ToolTipTrigger>();
             if (tooltip != null) tooltip.itemDesc = item;
         }
-
+    }
+    public void ShowPlayerEnemyStats()
+    {
+        gameplayManager.updateStats.FormatPlayerStats1ToString(playerStats1Text);
+        gameplayManager.updateStats.FormatPlayerStats2ToString(playerStats2Text);
     }
 }

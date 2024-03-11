@@ -45,7 +45,7 @@ public class EnemyStats : MonoBehaviour
         defaultMaterial = spriteRenderer.material;
         CheckAttack();
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float projectileSpeed)
+    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float projectileSpeed, float projectileRange)
     {
         this.baseMoveSpeed = baseMoveSpeed;
         moveSpeed = baseMoveSpeed;
@@ -55,15 +55,15 @@ public class EnemyStats : MonoBehaviour
         this.exp = exp;
         this.attackCooldown = attackCooldown;
         this.projectileSpeed = projectileSpeed;
+        this.projectileRange = projectileRange;
     }
-    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, bool burstAttack, float projectileRange)
+    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, bool burstAttack)
     {
         this.attackRange = attackRange;
         this.projectiles = projectiles;
         this.spreadAttack = spreadAttack;
         this.circleAttack = circleAttack;
         this.burstAttack = burstAttack;
-        this.projectileRange = projectileRange;
         CheckAttack();
     }
     public void CheckAttack()
@@ -259,7 +259,7 @@ public class EnemyStats : MonoBehaviour
             }
         }
     }
-    public void UpdateStatus()
+    public void UpdateStatusEffect()
     {
         if (gameObject.activeSelf == false) return;
         if (knockedBack) //reset velocity after knockedback

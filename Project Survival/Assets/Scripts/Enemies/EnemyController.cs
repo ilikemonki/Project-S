@@ -21,7 +21,7 @@ public class EnemyController : MonoBehaviour
     {
         for (int i = 0; i < enemyList.Count; ++i)
         {
-            enemyList[i].UpdateStatus();
+            enemyList[i].UpdateStatusEffect();
         }
     }
     public void MoveAndAttack(List<EnemyStats> enemyList)
