@@ -28,12 +28,11 @@ public class Upgrades : MonoBehaviour
             magnet_range,
             size, projectile_size, melee_size,
         }
-        public List<Modifier> modifier;
-        public List<float> amt;
+        public List<Modifier> modifier = new();
+        public List<float> amt = new();
     }
     public ItemDescription itemDescription;
     public List<LevelModifiers> levelModifiersList = new();
-    public bool equiped; //whether player wants the item equiped or not.
     public void Start()
     {
         //Check if gameobject has itemDescription script, then set it.

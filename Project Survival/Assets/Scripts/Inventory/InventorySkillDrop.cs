@@ -32,7 +32,7 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
                 {
                     if (inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController != null)
                     {
-                        inventory.gameplayManager.updateStats.UnapplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController);
+                        UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.num].skillController, true);
                     }
                     inventory.DropInInventory(draggableItem);
                 }

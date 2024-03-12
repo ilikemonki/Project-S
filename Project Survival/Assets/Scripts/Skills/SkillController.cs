@@ -912,14 +912,14 @@ public class SkillController : MonoBehaviour
             if (exp >= gameplayManager.skillExpCapList[level - 1]) //check if level up
             {
                 gameplayManager.floatingTextController.DisplayPlayerText(player.transform, skillOrbName + " Leveled Up!", Color.white, 3f);
-                gameplayManager.updateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
+                UpdateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
                 exp -= gameplayManager.skillExpCapList[level - 1];
                 level++;
                 if (level < 5)
                 {
                     if (exp >= gameplayManager.skillExpCapList[level - 1]) //if skill levels up 2 times on one exp gain. level up again. Should not be able to level more than 2.
                     {
-                        gameplayManager.updateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
+                        UpdateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
                         exp -= gameplayManager.skillExpCapList[level - 1];
                         level++;
                     }
@@ -973,11 +973,11 @@ public class SkillController : MonoBehaviour
         {
             gameplayManager.furthestAttackRange = attackRange;
         }
-        for (int i = 0; i < damageTypes.Count; i++)
+        for (int i = 0; i < damageTypes.Count; i++) //Calculate damage with enemy's resistance.
         {
             if (baseDamageTypes[i] > 0)
             {
-                damageTypes[i] = (baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + damage) / 100)) * (1 - gameplayManager.resistances[i] / 100);
+                damageTypes[i] = (baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + damage) / 100)) * (1 - gameplayManager.enemyResistances[i] / 100);
             }
         }
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.

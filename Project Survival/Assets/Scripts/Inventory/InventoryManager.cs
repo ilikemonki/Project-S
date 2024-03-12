@@ -27,10 +27,11 @@ public class InventoryManager : MonoBehaviour
     public ItemManager itemManager;
     public PItemSlotUI pItemSlotUIPrefab;
     public GameObject pItemInventoryParent;
-    public TextMeshProUGUI playerStats1Text, playerStats2Text;
+    public TextMeshProUGUI playerStats1Text, playerStats2Text, enemyStatsText;
     private void Start()
     {
-        ShowPlayerEnemyStats();
+        UpdateStats.FormatPlayerStatsToString();
+        UpdateStats.FormatEnemyStatsToString();
         foreach(Skill skill in activeSkillList) //Set current skills at start of game.
         {
             if (skill.activeSkillDrop.draggableItem != null)
@@ -58,7 +59,7 @@ public class InventoryManager : MonoBehaviour
             {
                 if (asd.draggableItem != null && activeSkillList[i].skillController != null)
                 {
-                    gameplayManager.updateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, activeSkillList[i].skillController);
+                    UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, activeSkillList[i].skillController, false);
                 }
             }
         }
@@ -194,7 +195,7 @@ public class InventoryManager : MonoBehaviour
                     {
                         for (int i = 0; i < skill.level - 1; i++)
                         {
-                            gameplayManager.updateStats.ApplySkillUpgrades(skill.levelUpgrades, skill, i);
+                            UpdateStats.ApplySkillUpgrades(skill.levelUpgrades, skill, i);
                         }
                     }
                     dragItem.skillController = skill;
@@ -405,10 +406,5 @@ public class InventoryManager : MonoBehaviour
             ToolTipTrigger tooltip = pItemUI.gameObject.GetComponent<ToolTipTrigger>();
             if (tooltip != null) tooltip.itemDesc = item;
         }
-    }
-    public void ShowPlayerEnemyStats()
-    {
-        gameplayManager.updateStats.FormatPlayerStats1ToString(playerStats1Text);
-        gameplayManager.updateStats.FormatPlayerStats2ToString(playerStats2Text);
     }
 }

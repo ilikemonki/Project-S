@@ -9,7 +9,6 @@ public class Shop : MonoBehaviour
     public ItemManager itemManager;
     public GameplayManager gameplayManager;
     public InventoryManager inventoryManager;
-    public UpdateStats updateStats;
     [System.Serializable]
     public class ItemUI
     {
@@ -159,12 +158,12 @@ public class Shop : MonoBehaviour
                 itemUIList[i].quantityText.text = pItemShopList[i].quantityInInventory.ToString() + "/" + pItemShopList[i].maxQuantity;
                 if (string.IsNullOrWhiteSpace(pItemShopList[i].description)) //if there is no description. set statOnlyText.text
                 {
-                    itemUIList[i].statOnlyText.text = updateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statOnlyText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 else
                 {
                     itemUIList[i].descriptionText.text = pItemShopList[i].description;
-                    itemUIList[i].statText.text = updateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
@@ -226,12 +225,12 @@ public class Shop : MonoBehaviour
                 }
                 if (string.IsNullOrWhiteSpace(gemShopList[i].description))
                 {
-                    itemUIList[i].statOnlyText.text = updateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statOnlyText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 else
                 {
                     itemUIList[i].descriptionText.text = gemShopList[i].description;
-                    itemUIList[i].statText.text = updateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].statText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
                 }
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
@@ -287,17 +286,17 @@ public class Shop : MonoBehaviour
                 if (!itemManager.pItemInventoryList.Contains(item)) //add item to inventory list
                 {
                     itemManager.pItemInventoryList.Add(item);
-                    item.upgrade.equiped = true;
-                    updateStats.ApplyGlobalUpgrades(item.upgrade); //apply the pItem upgrade
+                    UpdateStats.ApplyGlobalUpgrades(item.upgrade, false); //apply the pItem upgrade
                 }
-                else //if item is already in inventory, apply the upgrades  if it is still equiped.
+                else //if item is already in inventory, apply the upgrades.
                 {
-                    if (item.upgrade.equiped == true)
+                    if (item.pItemSlotUI.quantityDisabled > 0) //if item is disabled, adjust imageDisable fill amount
                     {
-                        updateStats.ApplyGlobalUpgrades(item.upgrade);
+                        item.pItemSlotUI.imageDisable.fillAmount = (float)item.pItemSlotUI.quantityDisabled / (float)item.quantityInInventory;
                     }
+                    UpdateStats.ApplyGlobalUpgrades(item.upgrade, false);
                 }
-                if (item.quantityInInventory >= item.maxQuantity) //Remove item from available item list
+                if (item.quantityInInventory >= item.maxQuantity) //Remove item from available shop item list
                 {
                     itemManager.availablePItemList.Remove(item);
                 }
@@ -308,7 +307,6 @@ public class Shop : MonoBehaviour
                 inventoryManager.AddCollectibleIntoInventory(item.itemName);
             }
         }
-        updateStats.FormatPlayerStats1ToString(inventoryManager.playerStats1Text);
-        updateStats.FormatPlayerStats2ToString(inventoryManager.playerStats2Text);
+        UpdateStats.FormatPlayerStatsToString();
     }
 }

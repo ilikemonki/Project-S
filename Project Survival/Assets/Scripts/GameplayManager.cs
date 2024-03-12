@@ -11,7 +11,6 @@ public class GameplayManager : MonoBehaviour
     public PlayerStats player;
     public EnemyManager enemyManager;
     public LevelUpManager levelUpManager;
-    public UpdateStats updateStats;
     public FloatingTextController floatingTextController;
     public InventoryManager inventory;
     public ItemManager itemManager;
@@ -49,7 +48,6 @@ public class GameplayManager : MonoBehaviour
     public List<float> ailmentsEffectAdditive;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
-    public float coinDropRateMultipiler;
     public float travelRangeMultipiler, projectileTravelRangeMultipiler, meleeTravelRangeMultipiler, travelSpeedMultipiler, projectileTravelSpeedMultipiler, meleeTravelSpeedMultipiler;
     [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
@@ -60,8 +58,8 @@ public class GameplayManager : MonoBehaviour
     public float enemyAttackCooldownMultiplier;
     public float enemyProjectileTravelSpeedMultiplier;
     public float enemyProjectileTravelRangeMultiplier;
-    public List<float> resistances;//[0]physical,[1]fire,[2]cold,[3]lightning
-    public float dropChanceMultiplier;
+    public List<float> enemyResistances;//[0]physical,[1]fire,[2]cold,[3]lightning
+    public float dropChanceMultiplier, coinDropChanceMultipiler;
 
     private void Start()
     {

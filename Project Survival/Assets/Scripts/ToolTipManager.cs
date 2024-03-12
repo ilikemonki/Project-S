@@ -44,7 +44,7 @@ public class ToolTipManager : MonoBehaviour
         {
             current.layoutElement1.enabled = false;
             current.layoutElement2.enabled = false;
-            current.statText.text = current.updateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[itemDesc.currentLevel]);
+            current.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[itemDesc.currentLevel]);
         }
         else if (itemDesc.itemType == ItemDescription.ItemType.SkillOrb) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {
@@ -53,14 +53,14 @@ public class ToolTipManager : MonoBehaviour
             DraggableItem dragItem = itemDesc.gameObject.GetComponent<DraggableItem>();
             if (dragItem.skillController != null) //if Orb's skill is equiped and exist, Get those stats and set as text.
             {
-                current.statText.text = current.updateStats.FormatSkillStatsToString(dragItem.skillController);
+                current.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
             }
             else // if skill isn't equipped, get it from the prefab, set it to scToolTip, calculate its stats, then set as text.
             {
                 current.CalculateSkillControllerPrefabStats(itemDesc);
-                current.statText.text = current.updateStats.FormatSkillStatsToString(current.skillControllerToolTip);
+                current.statText.text = UpdateStats.FormatSkillStatsToString(current.skillControllerToolTip);
             }
-            current.skillUpgradesText.text = current.updateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
+            current.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
         }
         current.itemToolTipWindow.SetActive(true);
     }
@@ -122,7 +122,7 @@ public class ToolTipManager : MonoBehaviour
             skillControllerToolTip.UpdateSkillStats();
             for (int i = 0; i < itemManager.skillLevelDict[itemDesc.itemName] - 1; i++)
             {
-                updateStats.ApplySkillUpgrades(prefab.levelUpgrades, skillControllerToolTip, i);
+                UpdateStats.ApplySkillUpgrades(prefab.levelUpgrades, skillControllerToolTip, i);
             }
             break;
         }
