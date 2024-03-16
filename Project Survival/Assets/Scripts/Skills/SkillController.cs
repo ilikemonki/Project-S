@@ -19,7 +19,8 @@ public class SkillController : MonoBehaviour
     public EnemyManager enemyManager;
     public EnemyDistances enemyDistances;
     public Upgrades levelUpgrades;
-    public int level, exp;
+    public int level;
+    public float exp;
     EnemyStats nearestEnemy;
     float shortestDistance, distanceToEnemy;
     [Header("Base Stats")]
@@ -904,7 +905,7 @@ public class SkillController : MonoBehaviour
             poolList.Add(skill);
         }
     }
-    public void GainExp(int amt)
+    public void GainExp(float amt)
     {
         if (level < 5)
         {

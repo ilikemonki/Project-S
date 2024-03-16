@@ -6,7 +6,7 @@ public class DropRate : MonoBehaviour
 {
     public GameplayManager gameplayManager;
     public InventoryManager inventoryManager;
-    public List<CurrenciesToDrop> collectiblesList;  //Coin
+    public List<CurrenciesToDrop> collectiblesList;  //Prefab and their drop chance List
     public GameObject collectiblesParent;   //parent for collectibles except coins
     public List<ICollectibles> coinList;    //pool list
     public List<ICollectibles> magnetList;    //magnet pool list
@@ -134,7 +134,11 @@ public class DropRate : MonoBehaviour
     {
         foreach (CurrenciesToDrop item in collectiblesList)
         {
-            item.chanceRange = Mathf.Round(item.baseChanceRange * ((100 - gameplayManager.dropChanceMultiplier) / 100));
+            if (item.prefab.CompareTag("Coin"))
+            {
+                item.chanceRange = Mathf.Round(item.baseChanceRange - ((gameplayManager.dropChanceMultiplier + gameplayManager.coinDropChanceMultipiler) / 10));
+            }
+            item.chanceRange = Mathf.Round(item.baseChanceRange - ((gameplayManager.dropChanceMultiplier) / 10));
         }
     }
 }

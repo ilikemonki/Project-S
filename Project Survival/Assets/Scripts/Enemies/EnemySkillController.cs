@@ -31,9 +31,9 @@ public class EnemySkillController : MonoBehaviour
     public void SpreadBehavior(EnemyStats enemy, Transform playerPos)       //Spawn/Activate skill. Projectiles spread.
     {
         counter = 0;
-        spreadAngle = 90 / enemy.projectiles;
+        spreadAngle = 90 / enemy.projectile;
         direction = playerPos.position - enemy.transform.position;
-        for (int p = 0; p < enemy.projectiles; p++)    //number of projectiles
+        for (int p = 0; p < enemy.projectile; p++)    //number of projectiles
         {
             if (p != 0) counter++;
             for (int i = 0; i < projectileList.Count; i++)
@@ -68,8 +68,8 @@ public class EnemySkillController : MonoBehaviour
     }
     public void CircleBehavior(EnemyStats enemy)
     {
-        spreadAngle = 360 / enemy.projectiles;
-        for (int p = 0; p < enemy.projectiles; p++)    //number of projectiles/strikes
+        spreadAngle = 360 / enemy.projectile;
+        for (int p = 0; p < enemy.projectile; p++)    //number of projectiles/strikes
         {
             for (int i = 0; i < projectileList.Count; i++)
             {
@@ -92,7 +92,7 @@ public class EnemySkillController : MonoBehaviour
     public void BurstBehavior(EnemyStats enemy, Transform playerPos)
     {
         direction = playerPos.position - enemy.transform.position;
-        for (int p = 0; p < enemy.projectiles; p++)    //number of projectiles
+        for (int p = 0; p < enemy.projectile; p++)    //number of projectiles
         {
             for (int i = 0; i < projectileList.Count; i++)
             {

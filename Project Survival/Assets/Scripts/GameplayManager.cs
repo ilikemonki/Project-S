@@ -26,7 +26,8 @@ public class GameplayManager : MonoBehaviour
     [Header("Game Stats")]
     public int waveCounter;
     public float timer, maxTimer;
-    public int level, exp, expCap, expCapIncrease;
+    public int level;
+    public float exp, expCap, expCapIncrease;
     public int coins; 
     public List<int> skillExpCapList;   //amount of exp needed for next level. For skills.
     public int expOrbBonus; //Skill gains this amount of exp if they already have that orb.
@@ -49,17 +50,19 @@ public class GameplayManager : MonoBehaviour
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
     public float travelRangeMultipiler, projectileTravelRangeMultipiler, meleeTravelRangeMultipiler, travelSpeedMultipiler, projectileTravelSpeedMultipiler, meleeTravelSpeedMultipiler;
+    public float expMultiplier;
+    public float dropChanceMultiplier, coinDropChanceMultipiler;
     [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;
     public float enemyMaxHealthMultiplier;
     public float enemyDamageMultiplier;
-    public int enemyExpMultiplier;
     public float enemyAttackCooldownMultiplier;
+    public float enemyProjectileAdditive;
     public float enemyProjectileTravelSpeedMultiplier;
     public float enemyProjectileTravelRangeMultiplier;
+    public float enemyProjectileSizeMultiplier;
     public List<float> enemyResistances;//[0]physical,[1]fire,[2]cold,[3]lightning
-    public float dropChanceMultiplier, coinDropChanceMultipiler;
 
     private void Start()
     {
@@ -90,7 +93,7 @@ public class GameplayManager : MonoBehaviour
             GoToNextRound();
         }
     }
-    public void GainExp(int amt)
+    public void GainExp(float amt)
     {
         exp += amt;
         GameManager.totalExp += amt;

@@ -24,10 +24,12 @@ public class EnemyManager : MonoBehaviour
         public float damage;
         public float maxHealth;
         public float moveSpeed;
-        public int exp;
+        public float exp;
         public float attackCooldown;
+        public float projectile;
         public float projectileTravelSpeed;
         public float projectileTravelRange;
+        public float projectileSize;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -152,11 +154,9 @@ public class EnemyManager : MonoBehaviour
         enemy.boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         enemy.boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
         enemy.knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
-        enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange,
-            enemyGroup.enemyPrefab.projectiles, enemyGroup.enemyPrefab.spreadAttack,
-            enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
+        enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
         enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage,
-            enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectileTravelSpeed, enemyGroup.projectileTravelRange);   //Set new stats to enemy
+            enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectile, enemyGroup.projectileTravelSpeed, enemyGroup.projectileTravelRange, enemyGroup.projectileSize);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
     }
     public void UpdateAllEnemyStats()
@@ -168,10 +168,22 @@ public class EnemyManager : MonoBehaviour
                 eGroup.damage = eGroup.enemyPrefab.damage * (1 + gameplayManager.enemyDamageMultiplier / 100);
                 eGroup.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
                 eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
-                eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.enemyExpMultiplier / 100);
+                eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.expMultiplier / 100);
                 eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
-                eGroup.projectileTravelSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
-                eGroup.projectileTravelRange = eGroup.enemyPrefab.projectileRange * (1 + gameplayManager.enemyProjectileTravelRangeMultiplier / 100);
+                if (eGroup.enemyPrefab.canAttack == true)
+                {
+                    eGroup.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
+                    eGroup.projectileTravelSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
+                    eGroup.projectileTravelRange = eGroup.enemyPrefab.projectileRange * (1 + gameplayManager.enemyProjectileTravelRangeMultiplier / 100);
+                    eGroup.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
+                }
+                else
+                {
+                    eGroup.projectile = 0;
+                    eGroup.projectileTravelSpeed = 0;
+                    eGroup.projectileTravelRange = 0;
+                    eGroup.projectileSize = 0;
+                }
             }
         }
     }

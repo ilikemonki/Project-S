@@ -14,7 +14,7 @@ public class EnemyStats : MonoBehaviour
     public float maxHealth;
     public float damage;
     public float moveSpeed, baseMoveSpeed; //baseMoveSpeed is the current movespeed, use to reset current movespeed back to normal when chilled.
-    public int exp;
+    public float exp;
     public bool chilled, burned, shocked, bleeding;
     public List<float> topAilmentsEffect;
     //public List<float> ailmentsCounter;
@@ -32,9 +32,10 @@ public class EnemyStats : MonoBehaviour
     public bool canAttack; //initialize in awake
     public bool spreadAttack, circleAttack, burstAttack;
     public float attackCooldown, attackTimer, attackRange;
-    public float projectiles;
+    public float projectile;
     public float projectileSpeed;
     public float projectileRange;
+    public float projectileSize;
     //Status Timers
     float knockbackTimer, damageFlashTimer, chilledTimer, burnedTimer, shockedTimer, bleedingTimer;
     int burnOneSecCounter, bleedOneSecCounter; //When timer hits 1 sec, increment counter. 5 counters mean 5 seconds
@@ -45,7 +46,7 @@ public class EnemyStats : MonoBehaviour
         defaultMaterial = spriteRenderer.material;
         CheckAttack();
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, int exp, float attackCooldown, float projectileSpeed, float projectileRange)
+    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, float exp, float attackCooldown, float projectile, float projectileSpeed, float projectileRange, float projectileSize)
     {
         this.baseMoveSpeed = baseMoveSpeed;
         moveSpeed = baseMoveSpeed;
@@ -54,13 +55,14 @@ public class EnemyStats : MonoBehaviour
         this.damage = damage;
         this.exp = exp;
         this.attackCooldown = attackCooldown;
+        this.projectile = projectile;
         this.projectileSpeed = projectileSpeed;
         this.projectileRange = projectileRange;
+        this.projectileSize = projectileSize;
     }
-    public void SetNonModifiedStats(float attackRange, float projectiles, bool spreadAttack, bool circleAttack, bool burstAttack)
+    public void SetNonModifiedStats(float attackRange, bool spreadAttack, bool circleAttack, bool burstAttack)
     {
         this.attackRange = attackRange;
-        this.projectiles = projectiles;
         this.spreadAttack = spreadAttack;
         this.circleAttack = circleAttack;
         this.burstAttack = burstAttack;

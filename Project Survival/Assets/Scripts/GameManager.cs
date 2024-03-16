@@ -6,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static int totalCoins;
     public static int totalKills, totalSkillsUsed, totalCrits, totalDashes, totalBleed, totalBurn, totalChill, totalShock, totalCoinsCollected, totalSkillGemsCollected;
-    public static int totalExp, totalPassiveItems;
+    public static int totalPassiveItems;
+    public static float totalExp;
     public static float totalDamageDealt, totalPhysicalDamage, totalFireDamage, totalColdDamage, totalLightningDamage, totalBleedDamage, totalBurnDamage, TotalDotDamage;
     public static float totalDamageTaken, totalHealing, totalRegen, totalDegen, totalLifeStealProc, totalLifeSteal;
     public static float totalTime; //add Player Level and Wave to Statistics.

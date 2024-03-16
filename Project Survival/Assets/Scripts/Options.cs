@@ -8,6 +8,7 @@ public class Options : MonoBehaviour
     public GameObject menuUI, pauseUI, shopBtn;
     public InventoryManager inventoryManager;
     public ItemManager itemManager;
+    public LevelUpManager levelUpManager;
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -51,7 +52,11 @@ public class Options : MonoBehaviour
         }
         else //close
         {
-            GameManager.UnpauseGame();
+            if (levelUpManager.levelUpUI.activeSelf == false) //if level up menu is open, keep game paused.
+            {
+                GameManager.UnpauseGame();
+            }
+            ToolTipManager.HideToolTip();
             menuUI.SetActive(false);
         }
     }
