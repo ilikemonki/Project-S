@@ -142,7 +142,7 @@ MonoBehaviour:
   exp: 0
   baseDamageTypes:
   - 0
-  - 3
+  - 5
   - 0
   - 0
   baseAilmentsChance:
@@ -152,7 +152,7 @@ MonoBehaviour:
   - 0
   baseAilmentsEffect:
   - 0
-  - 0
+  - 50
   - 0
   - 0
   baseDamage: 0
@@ -225,9 +225,27 @@ MonoBehaviour:
   useRandomTargeting: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
-  addedDamageTypes: []
-  addedAilmentsChance: []
-  addedAilmentsEffect: []
+  addedBaseDamageTypes:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedDamageTypes:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedAilmentsChance:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedAilmentsEffect:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedBaseDamage: 0
   addedDamage: 0
   addedTravelSpeed: 0
   addedAttackRange: 0
@@ -283,16 +301,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 01000000
+  - modifier: 1b00000001000000
     amt:
+    - 50
     - 1
-  - modifier: 01000000
+  - modifier: 1b00000001000000
     amt:
+    - 50
     - 1
-  - modifier: 01000000
+  - modifier: 1b00000001000000
     amt:
+    - 50
     - 1
-  - modifier: 01000000
+  - modifier: 1b00000001000000
     amt:
+    - 50
     - 1
-  equiped: 0

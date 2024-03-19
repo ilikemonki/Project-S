@@ -86,9 +86,11 @@ public class SkillController : MonoBehaviour
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
     //Stats that are altered are stored in these variables.
-    [HideInInspector] public List<float> addedDamageTypes;
-    [HideInInspector] public List<float> addedAilmentsChance;
-    [HideInInspector] public List<float> addedAilmentsEffect;
+    public List<float> addedBaseDamageTypes;
+    public List<float> addedDamageTypes;
+    public List<float> addedAilmentsChance;
+    public List<float> addedAilmentsEffect;
+    [HideInInspector] public float addedBaseDamage;
     [HideInInspector] public float addedDamage;
     [HideInInspector] public float addedTravelSpeed;
     [HideInInspector] public float addedAttackRange;
@@ -912,7 +914,7 @@ public class SkillController : MonoBehaviour
             exp += amt;
             if (exp >= gameplayManager.skillExpCapList[level - 1]) //check if level up
             {
-                gameplayManager.floatingTextController.DisplayPlayerText(player.transform, skillOrbName + " Leveled Up!", Color.white, 3f);
+                FloatingTextController.DisplayPlayerText(player.transform, skillOrbName + " Leveled Up!", Color.white, 3f);
                 UpdateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
                 exp -= gameplayManager.skillExpCapList[level - 1];
                 level++;
@@ -934,11 +936,11 @@ public class SkillController : MonoBehaviour
     {
         for (int i = 0; i < ailmentsChance.Count; i++)
         {
-            ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i];
+            ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i] + addedAilmentsChance[i];
         }
         for (int i = 0; i < ailmentsEffect.Count; i++)
         {
-            ailmentsEffect[i] = baseAilmentsEffect[i] + gameplayManager.ailmentsEffectAdditive[i];
+            ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) + (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
         }
         if (isMelee)   //is melee
         {
@@ -974,11 +976,11 @@ public class SkillController : MonoBehaviour
         {
             gameplayManager.furthestAttackRange = attackRange;
         }
-        for (int i = 0; i < damageTypes.Count; i++) //Calculate damage with enemy's resistance.
+        for (int i = 0; i < baseDamageTypes.Count; i++) //Calculate damage with enemy's resistance.
         {
-            if (baseDamageTypes[i] > 0)
+            if (baseDamageTypes[i] + addedBaseDamage + addedBaseDamageTypes[i] + gameplayManager.baseDamageAdditive + gameplayManager.baseDamageTypeAdditive[i] > 0)
             {
-                damageTypes[i] = (baseDamageTypes[i] * (1 + (gameplayManager.damageTypeMultiplier[i] + damage) / 100)) * (1 - gameplayManager.enemyResistances[i] / 100);
+                damageTypes[i] = ((baseDamageTypes[i] + gameplayManager.baseDamageTypeAdditive[i] + gameplayManager.baseDamageAdditive + addedBaseDamageTypes[i] + addedBaseDamage) * (1 + (gameplayManager.damageTypeMultiplier[i] + damage + addedDamageTypes[i]) / 100)) * (1 - gameplayManager.enemyResistances[i] / 100);
             }
         }
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.

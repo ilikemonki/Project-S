@@ -83,7 +83,7 @@ public class PlayerStats : MonoBehaviour
                 if (!dodgeList.Contains(collision.gameObject))
                 {
                     dodgeList.Add(collision.gameObject);
-                    gameplayManager.floatingTextController.DisplayPlayerText(transform, "Dodge", Color.white, 0.7f);
+                    FloatingTextController.DisplayPlayerText(transform, "Dodge", Color.white, 0.7f);
                 }
             }
             return;
@@ -128,7 +128,7 @@ public class PlayerStats : MonoBehaviour
         else if (collision.CompareTag("Health Potion"))
         {
             collision.gameObject.SetActive(false);
-            Heal(maxHealth * 0.15f);
+            Heal(maxHealth * 0.15f, true);
         }
         else if (collision.CompareTag("Magnet"))
         {
@@ -139,7 +139,7 @@ public class PlayerStats : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             gameplayManager.inventory.AddCollectibleIntoInventory(collision.name);
-            gameplayManager.floatingTextController.DisplayPlayerText(transform, "+1 " + collision.name, Color.white, 0.7f);
+            FloatingTextController.DisplayPlayerText(transform, "+1 " + collision.name, Color.white, 0.7f);
         }
         playerCollector.collectiblesList.Remove(collectible);
     }
@@ -181,7 +181,7 @@ public class PlayerStats : MonoBehaviour
                 isInvincible = true;
             }
         }
-        gameplayManager.floatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red, 0.7f);
+        FloatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red, 0.7f);
         GameManager.totalDamageTaken += dmg;
         foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
         {
@@ -217,12 +217,13 @@ public class PlayerStats : MonoBehaviour
         isDead = true;
     }
 
-    public void Heal(float amt)
+    public void Heal(float amt, bool showFloatingText)
     {
         if (currentHealth == maxHealth || isDead) return;
         if (currentHealth + amt > maxHealth)
         {
-            gameplayManager.floatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green, 0.7f);
+            if (showFloatingText)
+                FloatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green, 0.7f);
             currentHealth = maxHealth;
             GameManager.totalHealing += maxHealth - currentHealth;
             foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
@@ -240,7 +241,8 @@ public class PlayerStats : MonoBehaviour
         }
         else
         {
-            gameplayManager.floatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green, 0.7f);
+            if (showFloatingText)
+                FloatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green, 0.7f);
             currentHealth += amt;
             GameManager.totalHealing += amt;
             foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
@@ -267,12 +269,12 @@ public class PlayerStats : MonoBehaviour
         {
             if (amt + currentHealth > maxHealth)
             {
-                Heal(maxHealth - currentHealth);
+                Heal(maxHealth - currentHealth, false);
                 GameManager.totalRegen += maxHealth - currentHealth;
             }
             else
             {
-                Heal(amt);
+                Heal(amt, false);
                 GameManager.totalRegen += amt;
             }
             GameManager.totalDegen += degen;
@@ -331,7 +333,7 @@ public class PlayerStats : MonoBehaviour
 
     public void CheckHPBarColor()
     {
-        gameplayManager.hpText.text = currentHealth.ToString();
+        gameplayManager.hpText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
         if (currentHealth <= 0)
         {
             return;

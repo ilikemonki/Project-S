@@ -11,7 +11,6 @@ public class GameplayManager : MonoBehaviour
     public PlayerStats player;
     public EnemyManager enemyManager;
     public LevelUpManager levelUpManager;
-    public FloatingTextController floatingTextController;
     public InventoryManager inventory;
     public ItemManager itemManager;
     public GameObject waveUI;
@@ -19,7 +18,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
-    public TextMeshProUGUI coinText, hpText, regenText, expText, expCapText, dashText, dashTimerText;
+    public TextMeshProUGUI coinText, hpText, regenText, expText, dashText, dashTimerText;
     public Vector3 mousePos;
     public Camera cam;
     public float furthestAttackRange;    //Gets furthest range between all skills, used in EnemyDistances to find targets within the range.
@@ -34,6 +33,8 @@ public class GameplayManager : MonoBehaviour
     [Header("Player Multipliers")]
     //Player/Skill Global Multipliers
     public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
+    public float baseDamageAdditive, baseProjectileDamageAdditive, baseMeleeDamageAdditive;
+    public List<float> baseDamageTypeAdditive;
     public List<float> damageTypeMultiplier;
     public int strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive;
     public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
@@ -46,7 +47,8 @@ public class GameplayManager : MonoBehaviour
     public float regenAdditive, degenAdditive, lifeStealChanceAdditive, meleeLifeStealChanceAdditive, projectileLifeStealChanceAdditive, lifeStealAdditive, meleeLifeStealAdditive, projectileLifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
-    public List<float> ailmentsEffectAdditive;
+    public List<float> baseAilmentsEffect;
+    public List<float> ailmentsEffectMultiplier;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
     public float travelRangeMultipiler, projectileTravelRangeMultipiler, meleeTravelRangeMultipiler, travelSpeedMultipiler, projectileTravelSpeedMultipiler, meleeTravelSpeedMultipiler;
@@ -71,9 +73,9 @@ public class GameplayManager : MonoBehaviour
         timer = maxTimer;
         UpdateCoinText();
         UpdateDashText();
+        UpdateExpBar();
         expSlider.maxValue = expCap;
-        expCapText.text = expCap.ToString();
-        hpText.text = player.currentHealth.ToString();
+        hpText.text = player.currentHealth.ToString() + "/" + player.maxHealth.ToString();
     }
 
     // Update is called once per frame
@@ -105,7 +107,6 @@ public class GameplayManager : MonoBehaviour
             exp -= expCap;
             expCap += expCapIncrease;
             expSlider.maxValue = expCap;
-            expCapText.text = expCap.ToString();
             if (!levelUpManager.stopLevelUp) levelUpManager.OpenUI();
         }
         UpdateExpBar();
@@ -124,7 +125,6 @@ public class GameplayManager : MonoBehaviour
         UpdateLevelText();
         expCap += expCapIncrease;
         expSlider.maxValue = expCap;
-        expCapText.text = expCap.ToString();
         levelUpManager.OpenUI();
 
     }
@@ -165,7 +165,7 @@ public class GameplayManager : MonoBehaviour
     public void UpdateExpBar()
     {
         expSlider.value = exp;
-        expText.text = exp.ToString();
+        expText.text = exp.ToString() + "/" + expCap;
     }
     public void GoToNextRound()
     {

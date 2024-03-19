@@ -154,10 +154,17 @@ public class EnemyManager : MonoBehaviour
         enemy.boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         enemy.boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
         enemy.knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
+        enemy.chilled = false; enemy.burned = false; enemy.shocked = false; enemy.bleeding = false;
+        for (int i = 0; i < enemy.topAilmentsEffect.Count; i++)
+        {
+            enemy.topAilmentsEffect[i] = 0;
+        }
         enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
         enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage,
             enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectile, enemyGroup.projectileTravelSpeed, enemyGroup.projectileTravelRange, enemyGroup.projectileSize);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
+        if (enemy.burned)
+            Debug.Log(enemy + "is spawned Burned");
     }
     public void UpdateAllEnemyStats()
     {

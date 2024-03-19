@@ -94,11 +94,11 @@ public class EnemyStats : MonoBehaviour
 
         if (isCrit)
         {
-            enemyManager.gameplayManager.floatingTextController.DisplayFloatingCritText(transform, (damage).ToString());
+            FloatingTextController.DisplayFloatingCritText(transform, (damage).ToString());
             GameManager.totalCrits++;
         }
         else
-            enemyManager.gameplayManager.floatingTextController.DisplayFloatingText(transform, (damage).ToString());
+            FloatingTextController.DisplayFloatingText(transform, (damage).ToString());
         currentHealth -= damage;
         GameManager.totalDamageDealt += damage;
         if (currentHealth <= 0f && !isDead)
@@ -110,9 +110,9 @@ public class EnemyStats : MonoBehaviour
     {
         damage = CalculateDamage(damage);
         if (bleeding)
-            enemyManager.gameplayManager.floatingTextController.DisplayDoTText(transform, (damage).ToString(), Color.white);
+            FloatingTextController.DisplayDoTText(transform, (damage).ToString(), Color.white);
         else if (burned)
-            enemyManager.gameplayManager.floatingTextController.DisplayDoTText(transform, (damage).ToString(), Color.red);
+            FloatingTextController.DisplayDoTText(transform, (damage).ToString(), Color.red);
         currentHealth -= damage;
         GameManager.totalDamageDealt += damage;
         GameManager.TotalDotDamage += damage;
@@ -136,16 +136,16 @@ public class EnemyStats : MonoBehaviour
         spriteRenderer.material = defaultMaterial;
         knockedBack = false;
         isSpawning = false;
-        chilled = false; burned = false; shocked = false; bleeding = false;
+        //for (int i = 0; i < topAilmentsEffect.Count; i++) //Reset at EnemyManager
+        //{
+        //    topAilmentsEffect[i] = 0;
+        //}
+        //chilled = false; burned = false; shocked = false; bleeding = false;
         totalBurnDamage = 0; totalBleedDamage = 0;
         attackTimer = attackCooldown;
         damageFlashTimer = 0;
         burnedTimer = 0; chilledTimer = 0; shockedTimer = 0; bleedingTimer = 0;
         burnOneSecCounter = 0; bleedOneSecCounter = 0;
-        for (int i = 0; i > topAilmentsEffect.Count; i++)
-        {
-            topAilmentsEffect[i] = 0;
-        }
     }
     protected virtual void OnEnable()
     {
@@ -316,7 +316,7 @@ public class EnemyStats : MonoBehaviour
                 burnOneSecCounter++;
                 burnedTimer = 0;
             }
-            if (burnOneSecCounter >= 5) //Remove burn
+            if (burnOneSecCounter >= 20) //Remove burn
             {
                 burned = false;
                 topAilmentsEffect[1] = 0;

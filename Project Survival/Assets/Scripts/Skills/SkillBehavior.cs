@@ -99,9 +99,9 @@ public class SkillBehavior : MonoBehaviour
         }
     }
 
-    public void DoDamage(EnemyStats enemy, float damagePercent)
+    public void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {
-        totalDamage = damages.Sum() * (damagePercent / 100);
+        totalDamage = damages.Sum() * (damageEffectiveness / 100);
         isCrit = false;
         if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
         {
@@ -112,7 +112,7 @@ public class SkillBehavior : MonoBehaviour
         {
             if (skillController.player.currentHealth < skillController.player.maxHealth)
             {
-                skillController.player.Heal(skillController.lifeSteal);
+                skillController.player.Heal(skillController.lifeSteal, true);
                 GameManager.totalLifeStealProc++;
                 if (skillController.lifeSteal + skillController.player.currentHealth > skillController.player.maxHealth)
                     GameManager.totalLifeSteal += skillController.player.maxHealth - skillController.player.currentHealth;
@@ -124,10 +124,7 @@ public class SkillBehavior : MonoBehaviour
         {
             if (Random.Range(1, 101) <= ailmentsChance[1])
             {
-                if (isCrit)
-                    enemy.ApplyBurn(damages[1] * (damagePercent / 100) * (skillController.criticalDamage / 100) * (ailmentsEffect[1] / 100));
-                else
-                    enemy.ApplyBurn(damages[1] * (damagePercent / 100) * (ailmentsEffect[1] / 100));
+                enemy.ApplyBurn((damages[1] * (damageEffectiveness / 100)) * (ailmentsEffect[1] / 100));
             }
         }
         else if (skillController.highestDamageType.Equals(2))   //cold, chill
@@ -148,10 +145,7 @@ public class SkillBehavior : MonoBehaviour
         {
             if (Random.Range(1, 101) <= ailmentsChance[0])
             {
-                if (isCrit)
-                    enemy.ApplyBleed(damages[0] * (damagePercent / 100) * (skillController.criticalDamage / 100) * (ailmentsEffect[0] / 100));
-                else
-                    enemy.ApplyBleed(damages[0] * (damagePercent / 100) * (ailmentsEffect[0] / 100));
+                enemy.ApplyBleed((damages[0] * (damageEffectiveness / 100)) * (ailmentsEffect[0] / 100));
             }
         }
         enemy.TakeDamage(totalDamage, isCrit); 

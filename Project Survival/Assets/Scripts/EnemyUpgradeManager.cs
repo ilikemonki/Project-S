@@ -116,7 +116,7 @@ public class EnemyUpgradeManager : MonoBehaviour
             case UpdateStats.EnemyModifier.projectile_size: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.projectile_travel_range: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.projectile_travel_speed: value = 5; value += valueBoost; break;
-            default: GameManager.DebugLog("GetModifierValue has no switch case for " + mod); break;
+            default: Debug.Log("GetModifierValue has no switch case for " + mod); break;
         }
         return value;
     }

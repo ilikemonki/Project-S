@@ -9,6 +9,7 @@ public class UpdateStats : MonoBehaviour
     {
         //additive
         strike, projectile, pierce, chain,
+        base_damage, base_projectile_damage, base_melee_damage, base_physical_damage, base_fire_damage, base_cold_damage, base_lightning_damage,
         critical_chance, projectile_critical_chance, melee_critical_chance, critical_damage, projectile_critical_damage, melee_critical_damage,
         regen, degen, life_steal_chance, projectile_life_steal_chance, melee_life_steal_chance, life_steal, projectile_life_steal, melee_life_steal,
         bleed_chance, burn_chance, chill_chance, shock_chance,
@@ -58,13 +59,20 @@ public class UpdateStats : MonoBehaviour
             switch (upgrade.levelModifiersList[lv].modifier[i])
             {
                 case Modifier.attack_range: current.gameplayManager.attackRangeMultiplier += x; break;
+                case Modifier.base_cold_damage: current.gameplayManager.baseDamageTypeAdditive[2] += x; break;
+                case Modifier.base_damage: current.gameplayManager.baseDamageAdditive += x; break;
+                case Modifier.base_fire_damage: current.gameplayManager.baseDamageTypeAdditive[1] += x; break;
+                case Modifier.base_lightning_damage: current.gameplayManager.baseDamageTypeAdditive[3] += x; break;
+                case Modifier.base_physical_damage: current.gameplayManager.baseDamageTypeAdditive[0] += x; break;
+                case Modifier.base_melee_damage: current.gameplayManager.baseMeleeDamageAdditive += x; break;
+                case Modifier.base_projectile_damage: current.gameplayManager.baseProjectileDamageAdditive += x; break;
                 case Modifier.bleed_chance: current.gameplayManager.ailmentsChanceAdditive[0] += x; break;
-                case Modifier.bleed_effect: current.gameplayManager.ailmentsEffectAdditive[0] += x; break;
+                case Modifier.bleed_effect: current.gameplayManager.ailmentsEffectMultiplier[0] += x; break;
                 case Modifier.burn_chance: current.gameplayManager.ailmentsChanceAdditive[1] += x; break;
-                case Modifier.burn_effect: current.gameplayManager.ailmentsEffectAdditive[1] += x; break;
+                case Modifier.burn_effect: current.gameplayManager.ailmentsEffectMultiplier[1] += x; break;
                 case Modifier.chain: current.gameplayManager.chainAdditive += (int)x; break;
                 case Modifier.chill_chance: current.gameplayManager.ailmentsChanceAdditive[2] += x; break;
-                case Modifier.chill_effect: current.gameplayManager.ailmentsEffectAdditive[2] += x; break;
+                case Modifier.chill_effect: current.gameplayManager.ailmentsEffectMultiplier[2] += x; break;
                 case Modifier.cold_damage: current.gameplayManager.damageTypeMultiplier[2] += x; break;
                 case Modifier.cooldown: current.gameplayManager.cooldownMultiplier += x; break;
                 case Modifier.critical_chance: current.gameplayManager.criticalChanceAdditive += x; break;
@@ -104,12 +112,12 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.projectile_travel_speed: current.gameplayManager.projectileTravelSpeedMultipiler += x; break;
                 case Modifier.regen: current.gameplayManager.regenAdditive += x; break;
                 case Modifier.shock_chance: current.gameplayManager.ailmentsChanceAdditive[3] += x; break;
-                case Modifier.shock_effect: current.gameplayManager.ailmentsEffectAdditive[3] += x; break;
+                case Modifier.shock_effect: current.gameplayManager.ailmentsEffectMultiplier[3] += x; break;
                 case Modifier.size: current.gameplayManager.sizeMultiplier += x; break;
                 case Modifier.strike: current.gameplayManager.strikeAdditive += (int)x; break;
                 case Modifier.travel_range: current.gameplayManager.travelRangeMultipiler += x; break;
                 case Modifier.travel_speed: current.gameplayManager.travelSpeedMultipiler += x; break;
-                default: GameManager.DebugLog("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[lv].modifier[i]); break;
+                default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[lv].modifier[i]); break;
             }
         }
         current.gameplayManager.player.UpdatePlayerStats();
@@ -136,6 +144,11 @@ public class UpdateStats : MonoBehaviour
             switch (upgrade.levelModifiersList[level].modifier[i])
             {
                 case Modifier.attack_range: skill.addedAttackRange += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.base_cold_damage: skill.addedBaseDamageTypes[2] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.base_damage: skill.addedBaseDamage += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.base_fire_damage: skill.addedBaseDamageTypes[1] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.base_lightning_damage: skill.addedBaseDamageTypes[3] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.base_physical_damage: skill.addedBaseDamageTypes[0] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.bleed_chance: skill.addedAilmentsChance[0] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.bleed_effect: skill.addedAilmentsEffect[0] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.burn_chance: skill.addedAilmentsChance[1] += upgrade.levelModifiersList[level].amt[i]; break;
@@ -162,7 +175,7 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.strike: skill.addedStrike += (int)upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.travel_range: skill.addedTravelRange += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.travel_speed: skill.addedTravelSpeed += upgrade.levelModifiersList[level].amt[i]; break;
-                default: GameManager.DebugLog("ApplySkillMod has no switch case for " + upgrade.levelModifiersList[level].modifier[i]); break;
+                default: Debug.Log("ApplySkillMod has no switch case for " + upgrade.levelModifiersList[level].modifier[i]); break;
             }
         }
         skill.UpdateSkillStats();
@@ -208,7 +221,7 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.strike: skill.addedStrike += (int)x; break;
                 case Modifier.travel_range: skill.addedTravelRange += x; break;
                 case Modifier.travel_speed: skill.addedTravelSpeed += x; break;
-                default: GameManager.DebugLog("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[0].modifier[i]); break;
+                default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[0].modifier[i]); break;
             }
         }
         skill.UpdateSkillStats();
@@ -233,7 +246,7 @@ public class UpdateStats : MonoBehaviour
                 case EnemyModifier.projectile_size: current.gameplayManager.enemyProjectileSizeMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.projectile_travel_range: current.gameplayManager.enemyProjectileTravelRangeMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.projectile_travel_speed: current.gameplayManager.enemyProjectileTravelSpeedMultiplier += upgrade.amt[i]; break;
-                default: GameManager.DebugLog("ApplyEnemyUpgrades has no switch case for " + upgrade.modifier[i]); break;
+                default: Debug.Log("ApplyEnemyUpgrades has no switch case for " + upgrade.modifier[i]); break;
             }
         }
         current.enemyManager.UpdateAllEnemyStats();
@@ -251,6 +264,13 @@ public class UpdateStats : MonoBehaviour
                 switch (upgrade.levelModifiersList[k].modifier[i])
                 {
                     case Modifier.attack_range: skillUpgradesString += "\tAttack Range: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
+                    case Modifier.base_cold_damage: skillUpgradesString += "\tBase Cold Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.base_damage: skillUpgradesString += "\tBase Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.base_fire_damage: skillUpgradesString += "\tBase Fire Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.base_lightning_damage: skillUpgradesString += "\tBase Lightning Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.base_physical_damage: skillUpgradesString += "\tBase Physical Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.base_melee_damage: skillUpgradesString += "\tBase Melee Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.base_projectile_damage: skillUpgradesString += "\tBase Projectile Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.bleed_chance: skillUpgradesString += "\tBleed Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.bleed_effect: skillUpgradesString += "\tBleed Effect: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.burn_chance: skillUpgradesString += "\tBurn Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
@@ -277,7 +297,7 @@ public class UpdateStats : MonoBehaviour
                     case Modifier.strike: skillUpgradesString += "\tStrike: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.travel_range: skillUpgradesString += "\tTravel Range: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.travel_speed: skillUpgradesString += "\tTravel Speed: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
-                    default: GameManager.DebugLog("SkillUpgradesToString has no switch case for " + upgrade.levelModifiersList[k].modifier[i]); break;
+                    default: Debug.Log("SkillUpgradesToString has no switch case for " + upgrade.levelModifiersList[k].modifier[i]); break;
                 }
             }
         }
@@ -360,13 +380,13 @@ public class UpdateStats : MonoBehaviour
             if (sc.damageTypes[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString = "Physical Damage: " + (sc.baseDamageTypes[i] * (1 + (current.gameplayManager.damageTypeMultiplier[i] + sc.damage) / 100)) + "\n";
+                    fullString = "Physical Damage: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 1) //Fire damage
-                    fullString += "<color=red>Fire Damage</color>: " + (sc.baseDamageTypes[i] * (1 + (current.gameplayManager.damageTypeMultiplier[i] + sc.damage) / 100)) + "\n";
+                    fullString += "<color=red>Fire Damage</color>: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 2) //cold damage
-                    fullString += "<color=blue>Cold Damage</color>: " + (sc.baseDamageTypes[i] * (1 + (current.gameplayManager.damageTypeMultiplier[i] + sc.damage) / 100)) + "\n";
+                    fullString += "<color=blue>Cold Damage</color>: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 3) //lightning damage
-                    fullString += "<color=yellow>Lightning Damage</color>: " + (sc.baseDamageTypes[i] * (1 + (current.gameplayManager.damageTypeMultiplier[i] + sc.damage) / 100)) + "\n";
+                    fullString += "<color=yellow>Lightning Damage</color>: " + (sc.damageTypes[i]) + "\n";
             }
         }
         if (sc.criticalChance > 0)
@@ -439,7 +459,7 @@ public class UpdateStats : MonoBehaviour
         fullString += "Regen: " + current.gameplayManager.player.regen + "\n";
         fullString += "Degen: " + current.gameplayManager.player.degen + "\n";
         fullString += "Movement Speed: " + current.gameplayManager.player.moveSpeed + " (+" + current.gameplayManager.moveSpeedMultiplier + "%)\n";
-        fullString += "Dash: " + current.gameplayManager.player.playerMovement.maxCharges + "\n";
+        fullString += "Dash: " + current.gameplayManager.player.playerMovement.maxCharges + " (+" + current.gameplayManager.dashChargesAdditive + ")\n";
         fullString += "Dash Cooldown: " + current.gameplayManager.player.playerMovement.dashCooldown + " (+" + current.gameplayManager.dashCooldownMultiplier + "%)\n";
         fullString += "Dash Power: " + current.gameplayManager.player.playerMovement.dashPower + " (+" + current.gameplayManager.dashPowerMultiplier + "%)\n";
         fullString += "Magnet Range: " + current.gameplayManager.player.magnetRange + " (+" + current.gameplayManager.magnetRangeMultiplier + "%)\n";
@@ -451,6 +471,26 @@ public class UpdateStats : MonoBehaviour
         current.inventoryManager.playerStats1Text.text = fullString;
         fullString = string.Empty;
         //Second stats
+        if (current.gameplayManager.baseDamageAdditive > 0)
+            fullString += "Base Damage: +" + current.gameplayManager.baseDamageAdditive + "\n";
+        if (current.gameplayManager.baseProjectileDamageAdditive > 0)
+            fullString += "Base Projectile Damage: +" + current.gameplayManager.baseProjectileDamageAdditive + "\n";
+        if (current.gameplayManager.baseMeleeDamageAdditive > 0)
+            fullString += "Base Melee Damage: +" + current.gameplayManager.baseMeleeDamageAdditive + "\n";
+        for (int i = 0; i < current.gameplayManager.baseDamageTypeAdditive.Count; i++)
+        {
+            if (current.gameplayManager.baseDamageTypeAdditive[i] > 0)
+            {
+                if (i == 0) //physical damage
+                    fullString = "Base Physical Damage: +" + current.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                else if (i == 1) //Fire damage
+                    fullString += "<color=red>Base Fire Damage</color>: +" + current.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                else if (i == 2) //cold damage
+                    fullString += "<color=blue>Base Cold Damage</color>: +" + current.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                else if (i == 3) //lightning damage
+                    fullString += "<color=yellow>Base Lightning Damage</color>: +" + current.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+            }
+        }
         if (current.gameplayManager.damageMultiplier > 0)
             fullString += "Damage: +" + current.gameplayManager.damageMultiplier + "%\n";
         if (current.gameplayManager.projectileDamageMultiplier > 0)
@@ -509,25 +549,25 @@ public class UpdateStats : MonoBehaviour
             {
                 if (current.gameplayManager.ailmentsChanceAdditive[i] > 0)
                     fullString += "Bleed Chance: +" + current.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Bleed Effect: +" + current.gameplayManager.ailmentsEffectAdditive[i] + "%\n";
+                fullString += "Bleed Effect: +" + current.gameplayManager.baseAilmentsEffect[i] * (1 + (current.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + current.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
             }
             else if (i == 1) //Fire damage
             {
                 if (current.gameplayManager.ailmentsChanceAdditive[i] > 0)
                     fullString += "Burn Chance: +" + current.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Burn Effect: +" + current.gameplayManager.ailmentsEffectAdditive[i] + "%\n";
+                fullString += "Burn Effect: +" + current.gameplayManager.baseAilmentsEffect[i] * (1 + (current.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + current.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
             }
             else if (i == 2) //cold damage
             {
                 if (current.gameplayManager.ailmentsChanceAdditive[i] > 0)
                     fullString += "Chill Chance: +" + current.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Chill Effect: +" + current.gameplayManager.ailmentsEffectAdditive[i] + "%\n";
+                fullString += "Chill Effect: +" + current.gameplayManager.baseAilmentsEffect[i] * (1 + (current.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + current.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
             }
             else if (i == 3) //lightning damage
             {
                 if (current.gameplayManager.ailmentsChanceAdditive[i] > 0)
                     fullString += "Shock Chance: +" + current.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Shock Effect: +" + current.gameplayManager.ailmentsEffectAdditive[i] + "%\n";
+                fullString += "Shock Effect: +" + current.gameplayManager.baseAilmentsEffect[i] * (1 + (current.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + current.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
             }
         }
         if (current.gameplayManager.lifeStealChanceAdditive > 0)
@@ -610,7 +650,7 @@ public class UpdateStats : MonoBehaviour
                 case EnemyModifier.projectile_size: fullString += "Projectile Size: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.projectile_travel_range: fullString += "Projectile Travel Range: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.projectile_travel_speed: fullString += "Projectile Travel Speed: +" + mod.amt[i] + "%\n"; break;
-                default: GameManager.DebugLog("FormatEnemyUpgradeToString has no switch case for " + mod.modifier[i]); break;
+                default: Debug.Log("FormatEnemyUpgradeToString has no switch case for " + mod.modifier[i]); break;
             }
         }
         return fullString;
@@ -618,7 +658,10 @@ public class UpdateStats : MonoBehaviour
     public bool CheckPercentModifier(Modifier mod) //Check if modifier is percent or flat value
     {
         if (mod == Modifier.strike || mod == Modifier.projectile || mod == Modifier.pierce || mod == Modifier.chain ||
-            mod == Modifier.regen || mod == Modifier.degen || mod == Modifier.life_steal || mod == Modifier.knockback)
+            mod == Modifier.regen || mod == Modifier.degen || mod == Modifier.life_steal || mod == Modifier.knockback ||
+            mod == Modifier.projectile_life_steal || mod == Modifier.melee_life_steal || 
+            mod ==Modifier.base_cold_damage || mod == Modifier.base_damage || mod == Modifier.base_fire_damage || mod == Modifier.base_lightning_damage || mod == Modifier.base_physical_damage ||
+            mod == Modifier.base_melee_damage || mod == Modifier.base_projectile_damage)
         {
             return true;
         }
