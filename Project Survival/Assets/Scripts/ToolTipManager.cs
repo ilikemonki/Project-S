@@ -6,7 +6,7 @@ using TMPro;
 
 public class ToolTipManager : MonoBehaviour
 {
-    public static ToolTipManager current;
+    public static ToolTipManager instance;
     public UpdateStats updateStats;
     public RectTransform canvasRectTransform;
     public ItemManager itemManager;
@@ -19,7 +19,7 @@ public class ToolTipManager : MonoBehaviour
     Vector2 anchorPos;
     public void Awake()
     {
-        current = this;
+        instance = this;
         itemToolTipWindow.SetActive(false);
     }
     public void Update()
@@ -36,47 +36,47 @@ public class ToolTipManager : MonoBehaviour
     }
     public static void ShowItemToolTip(ItemDescription itemDesc)
     {
-        current.ClearToolTip();
-        current.nameText.text = itemDesc.itemName;
-        current.tagText.text = itemDesc.itemTags;
-        current.descriptionText.text = itemDesc.description;
+        instance.ClearToolTip();
+        instance.nameText.text = itemDesc.itemName;
+        instance.tagText.text = itemDesc.itemTags;
+        instance.descriptionText.text = itemDesc.description;
         if (itemDesc.itemType == ItemDescription.ItemType.PassiveItem || itemDesc.itemType == ItemDescription.ItemType.SkillGem)
         {
-            current.layoutElement1.enabled = false;
-            current.layoutElement2.enabled = false;
-            current.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[itemDesc.currentLevel]);
+            instance.layoutElement1.enabled = false;
+            instance.layoutElement2.enabled = false;
+            instance.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[itemDesc.currentLevel]);
         }
         else if (itemDesc.itemType == ItemDescription.ItemType.SkillOrb) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {
-            current.layoutElement1.enabled = true;
-            current.layoutElement2.enabled = true;
+            instance.layoutElement1.enabled = true;
+            instance.layoutElement2.enabled = true;
             DraggableItem dragItem = itemDesc.gameObject.GetComponent<DraggableItem>();
             if (dragItem.skillController != null) //if Orb's skill is equiped and exist, Get those stats and set as text.
             {
-                current.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
+                instance.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
             }
             else // if skill isn't equipped, get it from the prefab, set it to scToolTip, calculate its stats, then set as text.
             {
-                current.CalculateSkillControllerPrefabStats(itemDesc);
-                current.statText.text = UpdateStats.FormatSkillStatsToString(current.skillControllerToolTip);
+                instance.CalculateSkillControllerPrefabStats(itemDesc);
+                instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
             }
-            current.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
+            instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
         }
-        current.itemToolTipWindow.SetActive(true);
+        instance.itemToolTipWindow.SetActive(true);
     }
     public static void HideToolTip()
     {
-        current.itemToolTipWindow.SetActive(false);
+        instance.itemToolTipWindow.SetActive(false);
     }
     public void ClearToolTip()
     {
-        current.nameText.text = string.Empty;
-        current.tagText.text = string.Empty;
-        current.descriptionText.text = string.Empty;
-        current.statText.text = string.Empty;
-        current.skillUpgradesText.text = string.Empty;
+        instance.nameText.text = string.Empty;
+        instance.tagText.text = string.Empty;
+        instance.descriptionText.text = string.Empty;
+        instance.statText.text = string.Empty;
+        instance.skillUpgradesText.text = string.Empty;
     }
-    public void CalculateSkillControllerPrefabStats(ItemDescription itemDesc) //Calculate skill's prefab stats to show it's current stats in tooltip
+    public void CalculateSkillControllerPrefabStats(ItemDescription itemDesc) //Calculate skill's prefab stats to show it's current stats in tooltip if skill not equipped
     {
         foreach (SkillController prefab in itemManager.skillControllerPrefabsList) //Look for skill controller name.
         {
@@ -89,7 +89,6 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.baseCooldown = prefab.baseCooldown;
                 skillControllerToolTip.baseCriticalChance = prefab.baseCriticalChance;
                 skillControllerToolTip.baseCriticalDamage = prefab.baseCriticalDamage;
-                skillControllerToolTip.baseDamage = prefab.baseDamage;
                 skillControllerToolTip.baseDamageTypes = prefab.baseDamageTypes;
                 skillControllerToolTip.baseKnockBack = prefab.baseKnockBack;
                 skillControllerToolTip.baseLifeSteal = prefab.baseLifeSteal;

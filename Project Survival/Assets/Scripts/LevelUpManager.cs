@@ -110,8 +110,8 @@ public class LevelUpManager : MonoBehaviour
             case UpdateStats.Modifier.max_health: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
             case UpdateStats.Modifier.melee_attack_range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.melee_cooldown: returnValue = 4; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_critical_chance: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_critical_damage: returnValue = 8; if (randModifiers <= 2) returnValue += 4; else if (randModifiers <= 3) returnValue += 2; break;
+            case UpdateStats.Modifier.melee_critical_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.melee_critical_damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.melee_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
             case UpdateStats.Modifier.melee_life_steal: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             case UpdateStats.Modifier.melee_life_steal_chance: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
@@ -124,8 +124,8 @@ public class LevelUpManager : MonoBehaviour
             //case UpdateStats.Modifier.projectile: returnValue = ; if (randModifiers <= 2) returnValue += ; else if (randModifiers <= 3) returnValue += ; break;
             case UpdateStats.Modifier.projectile_attack_range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.projectile_cooldown: returnValue = 4; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_critical_chance: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_critical_damage: returnValue = 8; if (randModifiers <= 2) returnValue += 4; else if (randModifiers <= 3) returnValue += 2; break;
+            case UpdateStats.Modifier.projectile_critical_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.projectile_critical_damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.projectile_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
             case UpdateStats.Modifier.projectile_life_steal: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
             case UpdateStats.Modifier.projectile_life_steal_chance: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare

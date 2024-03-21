@@ -152,14 +152,13 @@ MonoBehaviour:
   - 0
   baseAilmentsEffect:
   - 0
-  - 50
   - 0
   - 0
-  baseDamage: 0
+  - 0
   baseTravelSpeed: 10
   baseAttackRange: 6
   baseTravelRange: 10
-  baseCooldown: 0.5
+  baseCooldown: 1.5
   baseKnockBack: 0
   baseCriticalChance: 20
   baseCriticalDamage: 0

@@ -171,7 +171,7 @@ public class SkillBehavior : MonoBehaviour
         if (hitOnceOnly) return;
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
-            EnemyStats enemy = col.GetComponent<EnemyStats>();
+            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null) return;
             if (isThrowWeapon) //The skills used here cannot be manual.
             {
                 if (skillController.useBarrage)

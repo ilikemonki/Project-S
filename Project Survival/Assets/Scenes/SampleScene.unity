@@ -5514,8 +5514,8 @@ MonoBehaviour:
   enemiesAlive: 0
   rounds:
   - enemyGroups:
-    - enemyPrefab: {fileID: 1732526505297304020, guid: 92915f96541be5c4aa279a6f0c24efa2, type: 3}
-      numberToSpawn: 50
+    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
       damage: 0
@@ -5527,8 +5527,8 @@ MonoBehaviour:
       projectileTravelSpeed: 0
       projectileTravelRange: 0
       projectileSize: 0
-    - enemyPrefab: {fileID: 1732526505297304020, guid: 92915f96541be5c4aa279a6f0c24efa2, type: 3}
-      numberToSpawn: 50
+    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
       damage: 0
@@ -5540,8 +5540,8 @@ MonoBehaviour:
       projectileTravelSpeed: 0
       projectileTravelRange: 0
       projectileSize: 0
-    - enemyPrefab: {fileID: 1732526505297304020, guid: 92915f96541be5c4aa279a6f0c24efa2, type: 3}
-      numberToSpawn: 50
+    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
       damage: 0
@@ -17963,7 +17963,6 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseDamage: 0
   baseTravelSpeed: 5
   baseAttackRange: 4.5
   baseTravelRange: 5
@@ -21457,6 +21456,8 @@ MonoBehaviour:
   projectileDamageMultiplier: 0
   meleeDamageMultiplier: 0
   baseDamageAdditive: 0
+  baseProjectileDamageAdditive: 0
+  baseMeleeDamageAdditive: 0
   baseDamageTypeAdditive:
   - 0
   - 0
@@ -46053,7 +46054,6 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseDamage: 0
   baseTravelSpeed: 0
   baseAttackRange: 10
   baseTravelRange: 0
@@ -53620,7 +53620,6 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseDamage: 0
   baseTravelSpeed: 0
   baseAttackRange: 0
   baseTravelRange: 0

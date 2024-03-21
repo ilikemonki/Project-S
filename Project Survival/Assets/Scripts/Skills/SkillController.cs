@@ -27,7 +27,6 @@ public class SkillController : MonoBehaviour
     public List<float> baseDamageTypes; //[0]physical,[1]fire,[2]cold,[3]lightning
     public List<float> baseAilmentsChance;
     public List<float> baseAilmentsEffect;
-    public float baseDamage;
     public float baseTravelSpeed;
     public float baseAttackRange;
     public float baseTravelRange;
@@ -940,11 +939,11 @@ public class SkillController : MonoBehaviour
         }
         for (int i = 0; i < ailmentsEffect.Count; i++)
         {
-            ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) + (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
+            ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) * (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
         }
         if (isMelee)   //is melee
         {
-            damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
+            damage = gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
             strike = baseStrike + gameplayManager.strikeAdditive + addedStrike;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier + addedAttackRange) / 100);
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
@@ -958,7 +957,7 @@ public class SkillController : MonoBehaviour
         }
         else //is projectile
         {
-            damage = baseDamage + gameplayManager.damageMultiplier + gameplayManager.projectileDamageMultiplier + addedDamage;
+            damage = gameplayManager.damageMultiplier + gameplayManager.projectileDamageMultiplier + addedDamage;
             projectile = baseProjectile + gameplayManager.projectileAdditive + addedProjectile;
             chain = baseChain + gameplayManager.chainAdditive + addedChain;
             pierce = basePierce + gameplayManager.pierceAdditive + addedPierce;

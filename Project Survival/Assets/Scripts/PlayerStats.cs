@@ -95,7 +95,7 @@ public class PlayerStats : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (isInvincible) return;
-            EnemyStats enemy = collision.GetComponent<EnemyStats>();
+            EnemyStats enemy = collision.GetComponentInParent<EnemyStats>();
             TakeDamage(enemy.damage, true, false); //Do damage to player
             foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
             {
