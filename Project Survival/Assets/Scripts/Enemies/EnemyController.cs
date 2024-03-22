@@ -31,11 +31,13 @@ public class EnemyController : MonoBehaviour
             if (enemyList[i].isActiveAndEnabled)
             {
                 distanceToPlayer = Vector3.Distance(enemyList[i].transform.position, enemyManager.player.transform.position);
-                if (!enemyList[i].knockedBack)   //knockedback
+                if (!enemyList[i].isAttacking)
                 {
-                    if (enemyList[i].canAttack && (distanceToPlayer <= enemyList[i].attackRange))   //stop and attack
+                    if (enemyList[i].canAttack && (distanceToPlayer <= enemyList[i].attackRange))   //stop to attack
                     {
                         enemyList[i].rb.velocity = Vector2.zero;
+                        enemyList[i].isAttacking = true;
+                        enemyList[i].attackImage.SetActive(false);
                     }
                     else
                     {
@@ -45,27 +47,31 @@ public class EnemyController : MonoBehaviour
                         }
                     }
                 }
-                if (enemyList[i].canAttack)    //Attack
+                if (enemyList[i].canAttack && enemyList[i].isAttacking)    //Attack
                 {
+                    if (!enemyList[i].knockedBack) enemyList[i].rb.velocity = Vector2.zero;
                     enemyList[i].attackTimer -= Time.deltaTime;
+                    if (enemyList[i].attackTimer <= 0.5f && enemyList[i].attackImage.activeSelf == false)
+                    {
+                        enemyList[i].attackImage.SetActive(true);
+                    }
                     if (enemyList[i].attackTimer <= 0f)
                     {
-                        if (distanceToPlayer <= enemyList[i].attackRange)
+                        if (enemyList[i].spreadAttack)
                         {
-                            if (enemyList[i].spreadAttack)
-                            {
-                                enemyProjectilePool.SpreadBehavior(enemyList[i], enemyManager.player.transform);
-                            }
-                            else if (enemyList[i].circleAttack)
-                            {
-                                enemyProjectilePool.CircleBehavior(enemyList[i]);
-                            }
-                            else if (enemyList[i].burstAttack)
-                            {
-                                enemyProjectilePool.BurstBehavior(enemyList[i], enemyManager.player.transform);
-                            }
-                            enemyList[i].attackTimer = enemyList[i].attackCooldown;
+                            enemyProjectilePool.SpreadBehavior(enemyList[i], enemyManager.player.transform);
                         }
+                        else if (enemyList[i].circleAttack)
+                        {
+                            enemyProjectilePool.CircleBehavior(enemyList[i]);
+                        }
+                        else if (enemyList[i].burstAttack)
+                        {
+                            enemyProjectilePool.BurstBehavior(enemyList[i], enemyManager.player.transform);
+                        }
+                        enemyList[i].attackTimer = enemyList[i].attackCooldown;
+                        enemyList[i].attackImage.SetActive(false); 
+                        enemyList[i].isAttacking = false;
                     }
                 }
             }

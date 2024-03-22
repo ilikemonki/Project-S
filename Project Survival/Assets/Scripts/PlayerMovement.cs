@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float baseDashPower, dashPower;
     public int baseCharges, maxCharges, currentCharges;
     public bool isDashing;
-    float moveX, moveY;
+    float moveX, moveY, dashDirectionX, dashDirectionY;
     public float timer;
     private Vector3 smoothInput, smoothVelocity;
 
@@ -99,7 +99,17 @@ public class PlayerMovement : MonoBehaviour
         player.gameplayManager.UpdateDashText();
         isDashing = true;
         trailRend.emitting = true;
-        rb.velocity = new Vector2(moveDirection.x * player.moveSpeed * dashPower, moveDirection.y * player.moveSpeed * dashPower);
+        if (moveDirection.x > 0)
+            dashDirectionX = player.moveSpeed;
+        else if (moveDirection.x < 0)
+            dashDirectionX = -player.moveSpeed;
+        else dashDirectionX = 0;
+        if (moveDirection.y > 0)
+            dashDirectionY = player.moveSpeed;
+        else if (moveDirection.y < 0)
+            dashDirectionY = -player.moveSpeed;
+        else dashDirectionY = 0;
+        rb.velocity = new Vector2(moveDirection.x * dashPower + dashDirectionX, moveDirection.y * dashPower + dashDirectionY);
         yield return Timing.WaitForSeconds(dashIFrameSeconds);
         isDashing = false;
         trailRend.emitting = false;

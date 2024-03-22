@@ -12,8 +12,6 @@ public class SkillBehavior : MonoBehaviour
     public float travelSpeed;
     public int pierce, chain;
     public float despawnTime;
-    public List<float> ailmentsChance;
-    public List<float> ailmentsEffect;
     protected EnemyStats nearestEnemy;
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
@@ -26,15 +24,14 @@ public class SkillBehavior : MonoBehaviour
     public Vector3 startingPos;
     public float currentTravelRange; //travel
 
-    public void SetStats(List<float> damages, float travelSpeed, int pierce, int chain, float despawnTime, List<float> ailmentsChance, List<float> ailmentsEffect)
+    public void SetStats(List<float> damages, float travelSpeed, int pierce, int chain, float despawnTime, float size)
     {
         this.damages = damages;
         this.travelSpeed = travelSpeed;
         this.pierce = pierce;
         this.chain = chain;
-        this.despawnTime = despawnTime;
-        this.ailmentsChance = ailmentsChance;
-        this.ailmentsEffect = ailmentsEffect;
+        this.despawnTime = despawnTime; 
+        transform.localScale = new Vector3(size, size, 1);
         if (isThrowWeapon)
         {
             this.travelSpeed = 8;
@@ -122,30 +119,30 @@ public class SkillBehavior : MonoBehaviour
         }
         if (skillController.highestDamageType.Equals(1))    //fire, burn
         {
-            if (Random.Range(1, 101) <= ailmentsChance[1])
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[1])
             {
-                enemy.ApplyBurn((damages[1] * (damageEffectiveness / 100)) * (ailmentsEffect[1] / 100));
+                enemy.ApplyBurn((damages[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
             }
         }
         else if (skillController.highestDamageType.Equals(2))   //cold, chill
         {
-            if (Random.Range(1, 101) <= ailmentsChance[2])
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[2])
             {
-                enemy.ApplyChill(ailmentsEffect[2]);
+                enemy.ApplyChill(skillController.ailmentsEffect[2]);
             }
         }
         else if (skillController.highestDamageType.Equals(3))   //lightning, shock
         {
-            if (Random.Range(1, 101) <= ailmentsChance[3])
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[3])
             {
-                enemy.ApplyShock(ailmentsEffect[3]);
+                enemy.ApplyShock(skillController.ailmentsEffect[3]);
             }
         }
         else //physical, bleed
         {
-            if (Random.Range(1, 101) <= ailmentsChance[0])
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[0])
             {
-                enemy.ApplyBleed((damages[0] * (damageEffectiveness / 100)) * (ailmentsEffect[0] / 100));
+                enemy.ApplyBleed((damages[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
             }
         }
         enemy.TakeDamage(totalDamage, isCrit); 

@@ -6,7 +6,6 @@ public class PlayerCollector : MonoBehaviour
 {
     public PlayerStats player;
     public CircleCollider2D magnet;
-    public float pullSpeed;
     public List<ICollectibles> collectiblesList= new();
     float magnetTimer;
     bool useMagnet;
@@ -23,7 +22,7 @@ public class PlayerCollector : MonoBehaviour
                 }
                 else
                 {
-                    collectiblesList[i].PullCollectible(pullSpeed, player.transform);
+                    collectiblesList[i].PullCollectible(player.moveSpeed + 3f, player.transform);
                 }
             }
         }
@@ -48,7 +47,7 @@ public class PlayerCollector : MonoBehaviour
             {
                 collectibles.isCollecting = true;
                 collectiblesList.Add(collectibles);
-                collectibles.PullCollectible(pullSpeed, player.transform);
+                collectibles.PullCollectible(player.moveSpeed + 3f, player.transform);
             }
 
         }

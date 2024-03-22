@@ -36,6 +36,8 @@ public class EnemyStats : MonoBehaviour
     public float projectileSpeed;
     public float projectileRange;
     public float projectileSize;
+    public bool isAttacking;
+    public GameObject attackImage;
     //Status Timers
     float knockbackTimer, damageFlashTimer, chilledTimer, burnedTimer, shockedTimer, bleedingTimer;
     int burnOneSecCounter, bleedOneSecCounter; //When timer hits 1 sec, increment counter. 5 counters mean 5 seconds
@@ -46,7 +48,7 @@ public class EnemyStats : MonoBehaviour
         defaultMaterial = spriteRenderer.material;
         CheckAttack();
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, float exp, float attackCooldown, float projectile, float projectileSpeed, float projectileRange, float projectileSize)
+    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, float exp, float attackCooldown, float projectile, float projectileSpeed, float projectileSize)
     {
         this.baseMoveSpeed = baseMoveSpeed;
         moveSpeed = baseMoveSpeed;
@@ -57,12 +59,12 @@ public class EnemyStats : MonoBehaviour
         this.attackCooldown = attackCooldown;
         this.projectile = projectile;
         this.projectileSpeed = projectileSpeed;
-        this.projectileRange = projectileRange;
         this.projectileSize = projectileSize;
     }
-    public void SetNonModifiedStats(float attackRange, bool spreadAttack, bool circleAttack, bool burstAttack)
+    public void SetNonModifiedStats(float attackRange, float projectileRange, bool spreadAttack, bool circleAttack, bool burstAttack)
     {
         this.attackRange = attackRange;
+        this.projectileRange = projectileRange;
         this.spreadAttack = spreadAttack;
         this.circleAttack = circleAttack;
         this.burstAttack = burstAttack;
@@ -133,6 +135,8 @@ public class EnemyStats : MonoBehaviour
 
     private void OnDisable()
     {
+        isAttacking = false;
+        attackImage.SetActive(false);
         spriteRenderer.material = defaultMaterial;
         knockedBack = false;
         isSpawning = false;

@@ -158,8 +158,8 @@ MonoBehaviour:
   baseTravelSpeed: 10
   baseAttackRange: 6
   baseTravelRange: 10
-  baseCooldown: 1.5
-  baseKnockBack: 0
+  baseCooldown: 1
+  baseKnockBack: 5
   baseCriticalChance: 20
   baseCriticalDamage: 0
   baseLifeStealChance: 0

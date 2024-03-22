@@ -90,17 +90,19 @@ MonoBehaviour:
   knockedBack: 0
   knockBackImmune: 0
   isSpawning: 0
-  canAttack: 0
-  spreadAttack: 0
+  canAttack: 1
+  spreadAttack: 1
   circleAttack: 0
   burstAttack: 0
   attackCooldown: 2
   attackTimer: 0
   attackRange: 6
-  projectile: 0
-  projectileSpeed: 0
-  projectileRange: 0
+  projectile: 1
+  projectileSpeed: 5
+  projectileRange: 10
   projectileSize: 0
+  isAttacking: 0
+  attackImage: {fileID: 2829899858205658493}
 --- !u!50 &4105796019299493428
 Rigidbody2D:
   serializedVersion: 4
@@ -138,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8595297867802418955
 RectTransform:
   m_ObjectHideFlags: 0

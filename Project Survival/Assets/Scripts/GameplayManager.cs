@@ -62,7 +62,7 @@ public class GameplayManager : MonoBehaviour
     public float enemyAttackCooldownMultiplier;
     public float enemyProjectileAdditive;
     public float enemyProjectileTravelSpeedMultiplier;
-    public float enemyProjectileTravelRangeMultiplier;
+    //public float enemyProjectileTravelRangeMultiplier;
     public float enemyProjectileSizeMultiplier;
     public List<float> enemyResistances;//[0]physical,[1]fire,[2]cold,[3]lightning
 

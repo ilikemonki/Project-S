@@ -29,7 +29,7 @@ public class UpdateStats : MonoBehaviour
     }
     public enum EnemyModifier
     {
-        move_speed, max_health, damage, attack_cooldown, projectile, projectile_travel_speed, projectile_travel_range, projectile_size,
+        move_speed, max_health, damage, attack_cooldown, projectile, projectile_travel_speed, projectile_size,
         physical_resistance, fire_resistance, cold_resistance, lightning_resistance
     }
     public static UpdateStats instance;
@@ -244,7 +244,7 @@ public class UpdateStats : MonoBehaviour
                 case EnemyModifier.physical_resistance: instance.gameplayManager.enemyResistances[0] += upgrade.amt[i]; break;
                 case EnemyModifier.projectile: instance.gameplayManager.enemyProjectileAdditive += upgrade.amt[i]; break;
                 case EnemyModifier.projectile_size: instance.gameplayManager.enemyProjectileSizeMultiplier += upgrade.amt[i]; break;
-                case EnemyModifier.projectile_travel_range: instance.gameplayManager.enemyProjectileTravelRangeMultiplier += upgrade.amt[i]; break;
+                //case EnemyModifier.projectile_travel_range: instance.gameplayManager.enemyProjectileTravelRangeMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.projectile_travel_speed: instance.gameplayManager.enemyProjectileTravelSpeedMultiplier += upgrade.amt[i]; break;
                 default: Debug.Log("ApplyEnemyUpgrades has no switch case for " + upgrade.modifier[i]); break;
             }
@@ -627,7 +627,7 @@ public class UpdateStats : MonoBehaviour
         fullString += "Attack Cooldown: +" + instance.gameplayManager.enemyAttackCooldownMultiplier + "%\n";
         fullString += "Projectile: +" + instance.gameplayManager.enemyProjectileAdditive + "\n";
         fullString += "Projectile Size: +" + instance.gameplayManager.enemyProjectileSizeMultiplier + "%\n";
-        fullString += "Projectile Travel Range: +" + instance.gameplayManager.enemyProjectileTravelRangeMultiplier + "%\n";
+        //fullString += "Projectile Travel Range: +" + instance.gameplayManager.enemyProjectileTravelRangeMultiplier + "%\n";
         fullString += "Projectile Travel Speed: +" + instance.gameplayManager.enemyProjectileTravelSpeedMultiplier + "%\n";
         instance.inventoryManager.enemyStatsText.text = fullString;
     }
@@ -648,7 +648,7 @@ public class UpdateStats : MonoBehaviour
                 case EnemyModifier.physical_resistance: fullString += "Physical Resistance: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.projectile: fullString += "Projectile: +" + mod.amt[i] + "\n"; break;
                 case EnemyModifier.projectile_size: fullString += "Projectile Size: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.projectile_travel_range: fullString += "Projectile Travel Range: +" + mod.amt[i] + "%\n"; break;
+                //case EnemyModifier.projectile_travel_range: fullString += "Projectile Travel Range: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.projectile_travel_speed: fullString += "Projectile Travel Speed: +" + mod.amt[i] + "%\n"; break;
                 default: Debug.Log("FormatEnemyUpgradeToString has no switch case for " + mod.modifier[i]); break;
             }

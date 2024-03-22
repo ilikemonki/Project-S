@@ -4632,7 +4632,7 @@ MonoBehaviour:
   dashIFrameSeconds: 0.25
   baseDashCooldown: 1
   dashCooldown: 0
-  baseDashPower: 3
+  baseDashPower: 4
   dashPower: 0
   baseCharges: 6
   maxCharges: 0
@@ -28508,7 +28508,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 177331393}
   magnet: {fileID: 1245201451}
-  pullSpeed: 8
   collectiblesList: []
 --- !u!58 &1245201451
 CircleCollider2D:

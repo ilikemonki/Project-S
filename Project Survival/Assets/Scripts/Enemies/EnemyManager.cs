@@ -28,7 +28,6 @@ public class EnemyManager : MonoBehaviour
         public float attackCooldown;
         public float projectile;
         public float projectileTravelSpeed;
-        public float projectileTravelRange;
         public float projectileSize;
     }
     public int enemiesAlive;
@@ -159,9 +158,9 @@ public class EnemyManager : MonoBehaviour
         {
             enemy.topAilmentsEffect[i] = 0;
         }
-        enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
+        enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.projectileRange, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
         enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage,
-            enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectile, enemyGroup.projectileTravelSpeed, enemyGroup.projectileTravelRange, enemyGroup.projectileSize);   //Set new stats to enemy
+            enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectile, enemyGroup.projectileTravelSpeed, enemyGroup.projectileSize);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
         if (enemy.burned)
             Debug.Log(enemy + "is spawned Burned");
@@ -181,14 +180,12 @@ public class EnemyManager : MonoBehaviour
                 {
                     eGroup.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
                     eGroup.projectileTravelSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
-                    eGroup.projectileTravelRange = eGroup.enemyPrefab.projectileRange * (1 + gameplayManager.enemyProjectileTravelRangeMultiplier / 100);
                     eGroup.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
                 }
                 else
                 {
                     eGroup.projectile = 0;
                     eGroup.projectileTravelSpeed = 0;
-                    eGroup.projectileTravelRange = 0;
                     eGroup.projectileSize = 0;
                 }
             }

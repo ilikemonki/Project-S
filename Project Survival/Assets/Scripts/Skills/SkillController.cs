@@ -49,13 +49,13 @@ public class SkillController : MonoBehaviour
     public float criticalChance, criticalDamage;
     public float size;
     public float lifeStealChance, lifeSteal;
-    public int strike, projectile, pierce, chain;
+    public int strike, combo, projectile, pierce, chain;
     [Header("Other Stats")]
     public float currentCooldown;
-    public float despawnTime;
+    public float despawnTime; //skills that don't travel will despawn
     int counter;    //Used in spread skill
     Vector3 direction;
-    float spreadAngle;
+    float spreadAngle, comboCounter;
     public bool stopFiring;
     public int highestDamageType;
     public float maxSpreadAngle, lateralOffset;
@@ -339,7 +339,7 @@ public class SkillController : MonoBehaviour
                 }
                 else
                     poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((direction).normalized);   //Set direction
                 if (useBackwardsDirection && barrageCounter % 2 == 1) //reverse direction.
                 {
@@ -375,7 +375,7 @@ public class SkillController : MonoBehaviour
                 }
                 else
                     poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
                 if (useBackwardsDirection && barrageCounter % 2 == 1)
                 {
@@ -416,7 +416,7 @@ public class SkillController : MonoBehaviour
                     }
                     else
                         poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    SetBehavourStats(poolList[i]);
                     poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
                     if (useBackwardsDirection && p % 2 == 1)
                     {
@@ -466,8 +466,8 @@ public class SkillController : MonoBehaviour
                 if (!pList[i].isActiveAndEnabled)
                 {
                     pList[i].isOrbitSkill = true;
-                    pList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * attackRange;
-                    pList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    pList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * attackRange; 
+                    SetBehavourStats(poolList[i]);
                     pList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -519,7 +519,7 @@ public class SkillController : MonoBehaviour
                             poolList[i].transform.eulerAngles = new Vector3(0, 0, spreadAngle * p);
                         }
                     } 
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    SetBehavourStats(poolList[i]);
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -625,7 +625,7 @@ public class SkillController : MonoBehaviour
                             poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg);
                         }
                     }
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    SetBehavourStats(poolList[i]);
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -722,7 +722,7 @@ public class SkillController : MonoBehaviour
                             poolList[i].transform.position = new Vector3(spawnPos.position.x - (direction.normalized.y * (counter * distanceApart)), spawnPos.position.y + (direction.normalized.x * (counter * distanceApart)), 0);
                         }
                     }
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    SetBehavourStats(poolList[i]);
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg);
                     poolList[i].gameObject.SetActive(true);
@@ -808,7 +808,7 @@ public class SkillController : MonoBehaviour
                             }
                         }
                     }
-                    poolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                    SetBehavourStats(poolList[i]);
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                     poolList[i].gameObject.SetActive(true);
                     break;
@@ -831,7 +831,7 @@ public class SkillController : MonoBehaviour
                 else direction = gameplayManager.mousePos - spawnPos.position;
                 orbitPoolList[i].transform.position = spawnPos.position;    //set starting position on player
                 orbitPoolList[i].isThrowWeapon = true;
-                orbitPoolList[i].SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+                SetBehavourStats(poolList[i]);
                 orbitPoolList[i].SetDirection((direction).normalized);   //Set direction
                 orbitPoolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                 orbitPoolList[i].gameObject.SetActive(true);
@@ -854,7 +854,7 @@ public class SkillController : MonoBehaviour
                 poolList[i].transform.position = spawnPos.position;
                 poolList[i].enemyChainList.AddRange(chainList);
                 poolList[i].target = target;
-                poolList[i].SetStats(damageTypes, travelSpeed, 0, chain - 1, despawnTime, ailmentsChance, ailmentsEffect);
+                SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((direction).normalized);   //Set direction
                 poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                 poolList[i].gameObject.SetActive(true);
@@ -902,7 +902,7 @@ public class SkillController : MonoBehaviour
             SkillBehavior skill = Instantiate(prefab, parent.transform);    //Spawn, add to list, and initialize prefabs
             skill.gameObject.SetActive(false);
             skill.skillController = this;
-            skill.SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, ailmentsChance, ailmentsEffect);
+            skill.SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, size);
             poolList.Add(skill);
         }
     }
@@ -985,18 +985,9 @@ public class SkillController : MonoBehaviour
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
         knockBack = baseKnockBack + addedKnockBack;
         currentCooldown = cooldown;
-        UpdateSize();
     }
-    public void UpdateSize()
+    public void SetBehavourStats(SkillBehavior sb)
     {
-        for (int i = 0; i < poolList.Count; i++)
-        {
-            poolList[i].transform.localScale = new Vector3(size, size, 1);
-        }
-        for (int i = 0; i < orbitPoolList.Count; i++)
-        {
-            orbitPoolList[i].transform.localScale = new Vector3(size, size, 1);
-        }
+        sb.SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, size);
     }
-
 }

@@ -11,7 +11,7 @@ public class EnemySkillController : MonoBehaviour
     Vector3 direction;
     private void Start()
     {
-        PopulatePool(50);
+        PopulatePool(20);
     }
     private void FixedUpdate()
     {
