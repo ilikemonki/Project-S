@@ -3789,7 +3789,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -5525,7 +5525,6 @@ MonoBehaviour:
       attackCooldown: 0
       projectile: 0
       projectileTravelSpeed: 0
-      projectileTravelRange: 0
       projectileSize: 0
     - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       numberToSpawn: 100
@@ -5538,7 +5537,6 @@ MonoBehaviour:
       attackCooldown: 0
       projectile: 0
       projectileTravelSpeed: 0
-      projectileTravelRange: 0
       projectileSize: 0
     - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       numberToSpawn: 100
@@ -5551,7 +5549,6 @@ MonoBehaviour:
       attackCooldown: 0
       projectile: 0
       projectileTravelSpeed: 0
-      projectileTravelRange: 0
       projectileSize: 0
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
@@ -13766,7 +13763,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -14054,7 +14051,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -17899,7 +17896,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &775911829
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17949,7 +17946,7 @@ MonoBehaviour:
   level: 0
   exp: 0
   baseDamageTypes:
-  - 2
+  - 20
   - 0
   - 0
   - 0
@@ -17963,16 +17960,18 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseTravelSpeed: 5
-  baseAttackRange: 4.5
-  baseTravelRange: 5
+  baseTravelSpeed: 8
+  baseAttackRange: 6
+  baseTravelRange: 8
+  baseDuration: 0
   baseCooldown: 1
   baseKnockBack: 0
-  baseCriticalChance: 60
+  baseCriticalChance: 0
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 3
+  baseCombo: 10
   baseProjectile: 0
   basePierce: 20
   baseChain: 0
@@ -17995,6 +17994,7 @@ MonoBehaviour:
   travelSpeed: 0
   attackRange: 0
   travelRange: 0
+  duration: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -18003,11 +18003,15 @@ MonoBehaviour:
   lifeStealChance: 0
   lifeSteal: 0
   strike: 0
+  combo: 0
   projectile: 0
   pierce: 0
   chain: 0
   currentCooldown: 0
   despawnTime: 0
+  spreadAngle: 0
+  comboCounter: 0
+  comboMultiplier: 0
   stopFiring: 0
   highestDamageType: 0
   maxSpreadAngle: 90
@@ -18018,14 +18022,14 @@ MonoBehaviour:
   autoUseSkill: 1
   isMelee: 1
   useOnTarget: 0
-  useBarrage: 0
+  useBarrage: 1
   useScatter: 0
   useSpread: 0
   useOrbit: 0
-  useCircular: 1
+  useCircular: 0
   useLateral: 0
   useBurst: 0
-  useThrowWeapon: 1
+  useThrowWeapon: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
@@ -18057,6 +18061,7 @@ MonoBehaviour:
   addedTravelSpeed: 0
   addedAttackRange: 0
   addedTravelRange: 0
+  addedDuration: 0
   addedCooldown: 0
   addedKnockBack: 0
   addedCriticalChance: 0
@@ -18065,6 +18070,7 @@ MonoBehaviour:
   addedLifeStealChance: 0
   addedLifeSteal: 0
   addedStrike: 0
+  addedCombo: 0
   addedProjectile: 0
   addedPierce: 0
   addedChain: 0
@@ -21469,12 +21475,14 @@ MonoBehaviour:
   - 0
   - 0
   strikeAdditive: 0
+  comboAdditive: 0
   projectileAdditive: 0
   pierceAdditive: 0
   chainAdditive: 0
   attackRangeMultiplier: 0
   projectileAttackRangeMultiplier: 0
   meleeAttackRangeMultiplier: 0
+  durationMultiplier: 0
   cooldownMultiplier: 0
   projectileCooldownMultiplier: 0
   meleeCooldownMultiplier: 0
@@ -21532,7 +21540,6 @@ MonoBehaviour:
   enemyAttackCooldownMultiplier: 0
   enemyProjectileAdditive: 0
   enemyProjectileTravelSpeedMultiplier: 0
-  enemyProjectileTravelRangeMultiplier: 0
   enemyProjectileSizeMultiplier: 0
   enemyResistances:
   - 0
@@ -24555,7 +24562,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -28728,7 +28735,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -30724,7 +30731,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -42362,7 +42369,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -46056,6 +46063,7 @@ MonoBehaviour:
   baseTravelSpeed: 0
   baseAttackRange: 10
   baseTravelRange: 0
+  baseDuration: 0
   baseCooldown: 1
   baseKnockBack: 0
   baseCriticalChance: 0
@@ -46063,6 +46071,7 @@ MonoBehaviour:
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 2
+  baseCombo: 0
   baseProjectile: 0
   basePierce: 0
   baseChain: 0
@@ -46085,6 +46094,7 @@ MonoBehaviour:
   travelSpeed: 0
   attackRange: 0
   travelRange: 0
+  duration: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -46093,11 +46103,15 @@ MonoBehaviour:
   lifeStealChance: 0
   lifeSteal: 0
   strike: 0
+  combo: 0
   projectile: 0
   pierce: 0
   chain: 0
   currentCooldown: 0
   despawnTime: 0.2
+  spreadAngle: 0
+  comboCounter: 0
+  comboMultiplier: 0
   stopFiring: 0
   highestDamageType: 0
   maxSpreadAngle: 90
@@ -46147,6 +46161,7 @@ MonoBehaviour:
   addedTravelSpeed: 0
   addedAttackRange: 0
   addedTravelRange: 0
+  addedDuration: 0
   addedCooldown: 0
   addedKnockBack: 0
   addedCriticalChance: 0
@@ -46155,6 +46170,7 @@ MonoBehaviour:
   addedLifeStealChance: 0
   addedLifeSteal: 0
   addedStrike: 0
+  addedCombo: 0
   addedProjectile: 0
   addedPierce: 0
   addedChain: 0
@@ -51560,7 +51576,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.5166376, g: 1, b: 0.4188679, a: 1}
@@ -53622,6 +53638,7 @@ MonoBehaviour:
   baseTravelSpeed: 0
   baseAttackRange: 0
   baseTravelRange: 0
+  baseDuration: 0
   baseCooldown: 0
   baseKnockBack: 0
   baseCriticalChance: 0
@@ -53629,6 +53646,7 @@ MonoBehaviour:
   baseLifeStealChance: 0
   baseLifeSteal: 0
   baseStrike: 0
+  baseCombo: 0
   baseProjectile: 0
   basePierce: 0
   baseChain: 0
@@ -53651,6 +53669,7 @@ MonoBehaviour:
   travelSpeed: 0
   attackRange: 0
   travelRange: 0
+  duration: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -53659,11 +53678,15 @@ MonoBehaviour:
   lifeStealChance: 0
   lifeSteal: 0
   strike: 0
+  combo: 0
   projectile: 0
   pierce: 0
   chain: 0
   currentCooldown: 0
   despawnTime: 0
+  spreadAngle: 0
+  comboCounter: 0
+  comboMultiplier: 0
   stopFiring: 0
   highestDamageType: 0
   maxSpreadAngle: 90
@@ -53697,6 +53720,7 @@ MonoBehaviour:
   addedTravelSpeed: 0
   addedAttackRange: 0
   addedTravelRange: 0
+  addedDuration: 0
   addedCooldown: 0
   addedKnockBack: 0
   addedCriticalChance: 0
@@ -53705,6 +53729,7 @@ MonoBehaviour:
   addedLifeStealChance: 0
   addedLifeSteal: 0
   addedStrike: 0
+  addedCombo: 0
   addedProjectile: 0
   addedPierce: 0
   addedChain: 0

@@ -309,7 +309,7 @@ MonoBehaviour:
   image: {fileID: 8600563835691847743}
   imageDisable: {fileID: 7695610261102718836}
   quanityText: {fileID: 8600563835054983952}
-  isEnabled: 1
+  quantityDisabled: 0
 --- !u!114 &-5073116281476608182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}

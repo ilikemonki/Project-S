@@ -108,13 +108,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
-  damages: []
+  damageTypes:
+  - 0
+  - 0
+  - 0
+  - 0
   travelSpeed: 0
   pierce: 0
   chain: 0
   despawnTime: 0
-  ailmentsChance: []
-  ailmentsEffect: []
   target: {fileID: 0}
   rb: {fileID: 5043445816700823471}
   spriteRend: {fileID: 5043445816700823441}
@@ -125,7 +127,7 @@ MonoBehaviour:
   isThrowWeapon: 0
   isHoming: 0
   startingPos: {x: 0, y: 0, z: 0}
-  currentRange: 0
+  currentTravelRange: 0
 --- !u!50 &5043445816700823471
 Rigidbody2D:
   serializedVersion: 4

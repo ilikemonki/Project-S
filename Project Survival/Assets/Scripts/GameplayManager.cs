@@ -36,8 +36,9 @@ public class GameplayManager : MonoBehaviour
     public float baseDamageAdditive, baseProjectileDamageAdditive, baseMeleeDamageAdditive;
     public List<float> baseDamageTypeAdditive;
     public List<float> damageTypeMultiplier;
-    public int strikeAdditive, projectileAdditive, pierceAdditive, chainAdditive;
+    public int strikeAdditive, comboAdditive, projectileAdditive, pierceAdditive, chainAdditive;
     public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
+    public float durationMultiplier;
     public float cooldownMultiplier, projectileCooldownMultiplier, meleeCooldownMultiplier;
     public float moveSpeedMultiplier;
     public float maxHealthMultiplier;
@@ -65,6 +66,7 @@ public class GameplayManager : MonoBehaviour
     //public float enemyProjectileTravelRangeMultiplier;
     public float enemyProjectileSizeMultiplier;
     public List<float> enemyResistances;//[0]physical,[1]fire,[2]cold,[3]lightning
+    //add enemy spawn rate
 
     private void Start()
     {

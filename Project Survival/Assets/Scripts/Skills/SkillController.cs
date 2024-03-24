@@ -30,12 +30,13 @@ public class SkillController : MonoBehaviour
     public float baseTravelSpeed;
     public float baseAttackRange;
     public float baseTravelRange;
+    public float baseDuration;
     public float baseCooldown;
     public float baseKnockBack;
     public float baseCriticalChance, baseCriticalDamage;
     float baseSize; //gets from prefab, do not alter.
     public float baseLifeStealChance, baseLifeSteal;
-    public int baseStrike, baseProjectile, basePierce, baseChain;
+    public int baseStrike, baseCombo, baseProjectile, basePierce, baseChain;
     [Header("Current Stats")]
     public List<float> damageTypes;
     public List<float> ailmentsChance;
@@ -44,6 +45,7 @@ public class SkillController : MonoBehaviour
     public float travelSpeed;
     public float attackRange;
     public float travelRange;
+    public float duration;
     public float cooldown;
     public float knockBack;
     public float criticalChance, criticalDamage;
@@ -52,10 +54,10 @@ public class SkillController : MonoBehaviour
     public int strike, combo, projectile, pierce, chain;
     [Header("Other Stats")]
     public float currentCooldown;
-    public float despawnTime; //skills that don't travel will despawn
+    public float despawnTime; //skills that don't travel or have duration will have despawnTime
     int counter;    //Used in spread skill
     Vector3 direction;
-    float spreadAngle, comboCounter;
+    public float spreadAngle, comboCounter, comboMultiplier;
     public bool stopFiring;
     public int highestDamageType;
     public float maxSpreadAngle, lateralOffset;
@@ -94,12 +96,13 @@ public class SkillController : MonoBehaviour
     [HideInInspector] public float addedTravelSpeed;
     [HideInInspector] public float addedAttackRange;
     [HideInInspector] public float addedTravelRange;
+    [HideInInspector] public float addedDuration;
     [HideInInspector] public float addedCooldown;
     [HideInInspector] public float addedKnockBack;
     [HideInInspector] public float addedCriticalChance, addedCriticalDamage;
     [HideInInspector] public float addedSize;
     [HideInInspector] public float addedLifeStealChance, addedLifeSteal;
-    [HideInInspector] public int addedStrike, addedProjectile, addedPierce, addedChain;
+    [HideInInspector] public int addedStrike, addedCombo, addedProjectile, addedPierce, addedChain;
 
     private void OnDrawGizmos()
     {
@@ -124,22 +127,22 @@ public class SkillController : MonoBehaviour
         {
             UpdateSkillStats();
         }
+        PopulatePool(projectile + strike, prefab, poolParent, poolList);
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
-            PopulatePool(baseStrike + gameplayManager.strikeAdditive, meleeWeaponPrefab, orbitParent, orbitPoolList);
-            OrbitBehavior(baseStrike + gameplayManager.strikeAdditive, orbitParent.transform, orbitPoolList);
+            PopulatePool(strike, meleeWeaponPrefab, orbitParent, orbitPoolList);
+            OrbitBehavior(strike, orbitParent.transform, orbitPoolList);
         } 
         else if (!isMelee && useOrbit) //orbiting projectile
         {
-            PopulatePool(baseProjectile + gameplayManager.projectileAdditive, prefab, orbitParent, orbitPoolList);
-            OrbitBehavior(baseProjectile + gameplayManager.projectileAdditive, orbitParent.transform, orbitPoolList);
+            PopulatePool(projectile, prefab, orbitParent, orbitPoolList);
+            OrbitBehavior(projectile, orbitParent.transform, orbitPoolList);
         }
         else if (useThrowWeapon)
         {
             orbitParent.transform.SetParent(player.transform.parent);
-            PopulatePool(baseStrike + gameplayManager.strikeAdditive, meleeWeaponPrefab, orbitParent, orbitPoolList);
+            PopulatePool(strike, meleeWeaponPrefab, orbitParent, orbitPoolList);
         }
-        PopulatePool(baseProjectile + gameplayManager.projectileAdditive + baseStrike + gameplayManager.strikeAdditive, prefab, poolParent, poolList);
     }
     // Update is called once per frame
     protected virtual void Update()
@@ -150,8 +153,8 @@ public class SkillController : MonoBehaviour
         }
         else if (!stopFiring && !useOrbit)
         {
-            currentCooldown -= Time.deltaTime;
-            if (currentCooldown <= 0f)
+            currentCooldown += Time.deltaTime;
+            if (currentCooldown >= cooldown)
             {
                 if (skillTrigger.isTriggerSkill == false)   //Use skill if it is not a skill trigger
                 {
@@ -164,7 +167,7 @@ public class SkillController : MonoBehaviour
             if (barrageCounter < strike + projectile) //fires the amount of attacks
             {
                 barrageCooldown += Time.deltaTime;
-                if (barrageCooldown >= 0.10f) //firing interval here.
+                if (barrageCooldown >= 0.15f) //firing interval here.
                 {
                     if (useBarrage)
                         BarrageBehavior(targetPos, transform, null);
@@ -206,7 +209,13 @@ public class SkillController : MonoBehaviour
             nearestEnemy = enemyDistances.closestEnemyList[0];
         }
         stopFiring = true;
-        currentCooldown = cooldown;
+        currentCooldown = 0;
+        if (combo > 0)
+        {
+            if (comboCounter > combo) comboMultiplier = combo;
+            else comboMultiplier = comboCounter;
+            comboCounter = 0;
+        }
         //use skills
         if (useThrowWeapon)
         {
@@ -306,7 +315,7 @@ public class SkillController : MonoBehaviour
                 if (sc.skillController.skillTrigger.useUsageTrigger)
                 {
                     sc.skillController.skillTrigger.currentCounter++; 
-                    if (sc.skillController.currentCooldown <= 0f)
+                    if (sc.skillController.currentCooldown >= cooldown)
                         sc.skillController.UseSkill();
                 }
             }
@@ -445,8 +454,8 @@ public class SkillController : MonoBehaviour
         {
             if (!orbitPoolList[i].isActiveAndEnabled)
             {
-                orbitPoolList[i].despawnTime -= Time.deltaTime;
-                if (orbitPoolList[i].despawnTime <= 0)
+                orbitPoolList[i].currentDespawnTime += Time.deltaTime;
+                if (orbitPoolList[i].currentDespawnTime >= despawnTime)
                 {
                     orbitPoolList[i].travelSpeed = travelSpeed;
                     orbitPoolList[i].pierce = pierce;
@@ -902,7 +911,7 @@ public class SkillController : MonoBehaviour
             SkillBehavior skill = Instantiate(prefab, parent.transform);    //Spawn, add to list, and initialize prefabs
             skill.gameObject.SetActive(false);
             skill.skillController = this;
-            skill.SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, size);
+            skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
             poolList.Add(skill);
         }
     }
@@ -945,6 +954,7 @@ public class SkillController : MonoBehaviour
         {
             damage = gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
             strike = baseStrike + gameplayManager.strikeAdditive + addedStrike;
+            combo = baseCombo + gameplayManager.comboAdditive + addedCombo;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier + addedAttackRange) / 100);
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive + addedCriticalChance;
@@ -983,11 +993,18 @@ public class SkillController : MonoBehaviour
             }
         }
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
+        duration = baseDuration * (1 + (gameplayManager.durationMultiplier  + addedCooldown / 100));
         knockBack = baseKnockBack + addedKnockBack;
-        currentCooldown = cooldown;
+        currentCooldown = 0;
     }
     public void SetBehavourStats(SkillBehavior sb)
     {
-        sb.SetStats(damageTypes, travelSpeed, pierce, chain, despawnTime, size);
+        if (isMelee && combo > 0 && comboMultiplier > 0)
+        {
+            sb.SetStats(damageTypes[0] * (1 + (combo * 0.02f * comboMultiplier)), damageTypes[1] * (1 + (combo * 0.02f * comboMultiplier)),
+                damageTypes[2] * (1 + (combo * 0.02f * comboMultiplier)), damageTypes[3] * (1 + (combo * 0.02f * comboMultiplier)), travelSpeed, pierce, chain, size);
+            return;
+        }
+        sb.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
     }
 }

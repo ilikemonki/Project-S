@@ -8,29 +8,36 @@ public class SkillBehavior : MonoBehaviour
 {
     public SkillController skillController;
     public Vector3 direction;
-    public List<float> damages;
+    public List<float> damageTypes;
     public float travelSpeed;
     public int pierce, chain;
-    public float despawnTime;
     protected EnemyStats nearestEnemy;
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
     float totalDamage;
     bool isCrit, hitOnceOnly;
+    bool hasHitEnemy;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
     public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon, isHoming;
     public Vector3 startingPos;
     public float currentTravelRange; //travel
+    public float currentDuration;
+    public float currentDespawnTime;
 
-    public void SetStats(List<float> damages, float travelSpeed, int pierce, int chain, float despawnTime, float size)
+    public void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
     {
-        this.damages = damages;
+        currentDespawnTime = 0;
+        currentDuration = 0;
+        currentTravelRange = 0;
+        this.damageTypes[0] = physical;
+        this.damageTypes[1] = fire;
+        this.damageTypes[2] = cold;
+        this.damageTypes[3] = lightning;
         this.travelSpeed = travelSpeed;
         this.pierce = pierce;
         this.chain = chain;
-        this.despawnTime = despawnTime; 
         transform.localScale = new Vector3(size, size, 1);
         if (isThrowWeapon)
         {
@@ -54,15 +61,23 @@ public class SkillBehavior : MonoBehaviour
         {
             if (!returnSkill)
             {
-                if (travelSpeed <= 0) //skills that doesn't travel will despawn
+                if (travelSpeed <= 0 && skillController.duration <= 0) //skills that doesn't travel or have duration will despawn
                 {
-                    despawnTime -= Time.deltaTime;
-                    if (despawnTime <= 0f)
+                    currentDespawnTime += Time.deltaTime;
+                    if (currentDespawnTime >= skillController.despawnTime)
                     {
                         gameObject.SetActive(false);
                     }
                 }
-                else //skills that travel range will check the distance traveled.
+                else if (skillController.duration > 0) //Skills with duration (can have travelspeed) will use duration
+                {
+                    currentDuration += Time.deltaTime;
+                    if (currentDuration >= skillController.duration)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                }
+                else if (travelSpeed > 0) //skills that travel range will check the distance traveled.
                 {
                     currentTravelRange = Vector3.Distance(transform.position, startingPos);
                     if (currentTravelRange >= skillController.travelRange)
@@ -98,7 +113,7 @@ public class SkillBehavior : MonoBehaviour
 
     public void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {
-        totalDamage = damages.Sum() * (damageEffectiveness / 100);
+        totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
         isCrit = false;
         if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
         {
@@ -121,7 +136,7 @@ public class SkillBehavior : MonoBehaviour
         {
             if (Random.Range(1, 101) <= skillController.ailmentsChance[1])
             {
-                enemy.ApplyBurn((damages[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
+                enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
             }
         }
         else if (skillController.highestDamageType.Equals(2))   //cold, chill
@@ -142,10 +157,15 @@ public class SkillBehavior : MonoBehaviour
         {
             if (Random.Range(1, 101) <= skillController.ailmentsChance[0])
             {
-                enemy.ApplyBleed((damages[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
+                enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
             }
         }
-        enemy.TakeDamage(totalDamage, isCrit); 
+        enemy.TakeDamage(totalDamage, isCrit);
+        if (skillController.isMelee && skillController.combo > 1 && !hasHitEnemy && skillController.comboCounter < skillController.combo)
+        {
+            hasHitEnemy = true;
+            skillController.comboCounter++;
+        }
         if (isCrit)
         {
             foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
@@ -175,14 +195,14 @@ public class SkillBehavior : MonoBehaviour
                 {
                     hitOnceOnly = true;
                     travelSpeed = 0;
-                    despawnTime = 10;
+                    currentDespawnTime = -10;
                     //Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));    //spawn skill on enemy.
                 }
                 else if (skillController.useScatter)
                 {
                     hitOnceOnly = true;
                     travelSpeed = 0;
-                    despawnTime = 10;
+                    currentDespawnTime = -10;
                     //Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));
                 }
                 else if (skillController.useBurst)
@@ -239,7 +259,7 @@ public class SkillBehavior : MonoBehaviour
             }
             if (skillController.useOrbit && isOrbitSkill && gameObject.activeSelf)   //Object is a weapon and using orbit behavior
             {
-                despawnTime = skillController.cooldown;
+                currentDespawnTime = 0;
                 if (skillController.isMelee)
                 {
                     gameObject.SetActive(false);
@@ -381,6 +401,7 @@ public class SkillBehavior : MonoBehaviour
     private void OnDisable()
     {
         enemyChainList.Clear();
+        hasHitEnemy = false;
         target = null;
         returnSkill = false;
         hitOnceOnly = false;
