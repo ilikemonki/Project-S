@@ -12,9 +12,8 @@ public class Shop : MonoBehaviour
     [System.Serializable]
     public class ItemUI
     {
-        public TextMeshProUGUI nameText, tagText, descriptionText, statText, statOnlyText, priceText, quantityText;
+        public TextMeshProUGUI nameText, tagText, descriptionText, priceText, quantityText;
         public Image itemImage;
-        public Button buyButton;
         public Toggle lockToggle;
         public GameObject itemUIGameObject;
     }
@@ -83,63 +82,118 @@ public class Shop : MonoBehaviour
     }
     public void PopulatePItemShop()
     {
-        pItemShopList.Clear();
-        if (itemManager.availablePItemList.Count >= itemUIList.Count)
+        if (itemManager.availablePItemList.Count > itemUIList.Count) //is pItem has enough to populate
         {
-            for (int i = 0; i < 1000; i++) //Get random pItems
+            for (int j = 0; j < itemUIList.Count; j++)
             {
-                rand = Random.Range(0, itemManager.availablePItemList.Count);
-                if (!pItemShopList.Contains(itemManager.availablePItemList[rand]))
+                if (pItemShopList[j] != null)
                 {
-                    pItemShopList.Add(itemManager.availablePItemList[rand]);
-                    if (pItemShopList.Count == itemUIList.Count)
+                    if (!pItemShopList[j].shopLock)
                     {
-                        break;
+                        for (int i = 0; i < 1000; i++) //Get random pItems
+                        {
+                            rand = Random.Range(0, itemManager.availablePItemList.Count);
+                            if (!pItemShopList.Contains(itemManager.availablePItemList[rand]))
+                            {
+                                pItemShopList[j] = (itemManager.availablePItemList[rand]);
+                                pItemShopList[j].shopLock = false;
+                            }
+                        }
+                    }
+                }
+                else //if itemUI is empty, add item to shop.
+                {
+                    for (int i = 0; i < 1000; i++) //Get random pItems
+                    {
+                        rand = Random.Range(0, itemManager.availablePItemList.Count);
+                        if (!pItemShopList.Contains(itemManager.availablePItemList[rand]))
+                        {
+                            pItemShopList[j] = itemManager.availablePItemList[rand];
+                            pItemShopList[j].shopLock = false;
+                        }
                     }
                 }
             }
         }
-        else if (itemManager.availablePItemList.Count < itemUIList.Count)
+        else if (itemManager.availablePItemList.Count <= itemUIList.Count) //if pItem dont have enough to populate
         {
+            pItemShopList.Clear();
             for (int i = 0; i < itemManager.availablePItemList.Count; i++) //Get random items
             {
                 if (!pItemShopList.Contains(itemManager.availablePItemList[i]))
                 {
                     pItemShopList.Add(itemManager.availablePItemList[i]);
+                    pItemShopList[i].shopLock = false;
                 }
             }
         }
     }
     public void PopulateOrbShop()
     {
-        orbShopList.Clear();
-        for (int i = 0; i < 1000; i++) //Get random orbs
+        for (int j = 0; j < itemUIList.Count; j++)
         {
-            rand = Random.Range(0, itemManager.orbPrefabList.Count);
-            ItemDescription itemDesc = itemManager.orbPrefabList[rand].itemDescription;
-            if (!orbShopList.Contains(itemDesc))
+            if (orbShopList[j] != null)
             {
-                orbShopList.Add(itemDesc);
-                if (orbShopList.Count == itemUIList.Count)
+                if (!orbShopList[j].shopLock)
                 {
-                    break;
+                    for (int i = 0; i < 1000; i++) //Get random orbs
+                    {
+                        rand = Random.Range(0, itemManager.orbPrefabList.Count);
+                        ItemDescription itemDesc = itemManager.orbPrefabList[rand].itemDescription;
+                        if (!orbShopList.Contains(itemDesc))
+                        {
+                            orbShopList[j] = itemDesc;
+                            orbShopList[j].shopLock = false;
+                        }
+                    }
+                }
+            }
+            else //if itemUI is empty, add item to shop.
+            {
+                for (int i = 0; i < 1000; i++) //Get random orbs
+                {
+                    rand = Random.Range(0, itemManager.orbPrefabList.Count);
+                    ItemDescription itemDesc = itemManager.orbPrefabList[rand].itemDescription;
+                    if (!orbShopList.Contains(itemDesc))
+                    {
+                        orbShopList[j] = itemDesc;
+                        orbShopList[j].shopLock = false;
+                    }
                 }
             }
         }
     }
     public void PopulateGemShop()
     {
-        gemShopList.Clear();
-        for (int i = 0; i < 1000; i++) //Get random gems
+        for (int j = 0; j < itemUIList.Count; j++)
         {
-            rand = Random.Range(0, itemManager.t1GemPrefabList.Count); //t1 gems
-            ItemDescription itemDesc = itemManager.t1GemPrefabList[rand].itemDescription;
-            if (!gemShopList.Contains(itemDesc))
+            if (gemShopList[j] != null)
             {
-                gemShopList.Add(itemDesc);
-                if (gemShopList.Count == itemUIList.Count)
+                if (!gemShopList[j].shopLock)
                 {
-                    break;
+                    for (int i = 0; i < 1000; i++) //Get random gems
+                    {
+                        rand = Random.Range(0, itemManager.t1GemPrefabList.Count); //t1 gems
+                        ItemDescription itemDesc = itemManager.t1GemPrefabList[rand].itemDescription;
+                        if (!gemShopList.Contains(itemDesc))
+                        {
+                            gemShopList[j] = itemDesc;
+                            gemShopList[j].shopLock = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 1000; i++) //Get random gems
+                {
+                    rand = Random.Range(0, itemManager.t1GemPrefabList.Count); //t1 gems
+                    ItemDescription itemDesc = itemManager.t1GemPrefabList[rand].itemDescription;
+                    if (!gemShopList.Contains(itemDesc))
+                    {
+                        gemShopList[j] = itemDesc;
+                        gemShopList[j].shopLock = false;
+                    }
                 }
             }
         }
@@ -151,20 +205,22 @@ public class Shop : MonoBehaviour
         {
             for (int i = 0; i < pItemShopList.Count; i++)
             {
+                if (pItemShopList[i] != null)
+                {
+                    if (pItemShopList[i].shopLock)
+                        itemUIList[i].lockToggle.isOn = true;
+                    else
+                        itemUIList[i].lockToggle.isOn = false;
+                }
                 itemUIList[i].itemImage.sprite = pItemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = pItemShopList[i].itemName;
                 itemUIList[i].tagText.text = pItemShopList[i].itemTags;
                 itemUIList[i].priceText.text = pItemShopList[i].price.ToString();
                 itemUIList[i].quantityText.text = pItemShopList[i].quantityInInventory.ToString() + "/" + pItemShopList[i].maxQuantity;
-                if (string.IsNullOrWhiteSpace(pItemShopList[i].description)) //if there is no description. set statOnlyText.text
-                {
-                    itemUIList[i].statOnlyText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
-                }
+                if (string.IsNullOrWhiteSpace(pItemShopList[i].description))
+                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
                 else
-                {
-                    itemUIList[i].descriptionText.text = pItemShopList[i].description;
-                    itemUIList[i].statText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
-                }
+                    itemUIList[i].descriptionText.text = pItemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
             if (pItemShopList.Count < itemUIList.Count) //deactivate other itemUI's that is not used.
@@ -182,6 +238,13 @@ public class Shop : MonoBehaviour
         {
             for (int i = 0; i < orbShopList.Count; i++)
             {
+                if (orbShopList[i] != null)
+                {
+                    if (orbShopList[i].shopLock)
+                        itemUIList[i].lockToggle.isOn = true;
+                    else
+                        itemUIList[i].lockToggle.isOn = false;
+                }
                 itemUIList[i].itemImage.sprite = orbShopList[i].itemSprite;
                 itemUIList[i].nameText.text = orbShopList[i].itemName;
                 itemUIList[i].tagText.text = orbShopList[i].itemTags;
@@ -198,8 +261,7 @@ public class Shop : MonoBehaviour
                 {
                     itemUIList[i].quantityText.text = "0";
                 }
-                itemUIList[i].descriptionText.text = orbShopList[i].description;
-                itemUIList[i].statText.text = "Stats Here";
+                itemUIList[i].descriptionText.text = orbShopList[i].description + "\n\n";
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
         }
@@ -207,6 +269,13 @@ public class Shop : MonoBehaviour
         {
             for (int i = 0; i < gemShopList.Count; i++)
             {
+                if (gemShopList[i] != null)
+                {
+                    if (gemShopList[i].shopLock)
+                        itemUIList[i].lockToggle.isOn = true;
+                    else
+                        itemUIList[i].lockToggle.isOn = false;
+                }
                 itemUIList[i].itemImage.sprite = gemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = gemShopList[i].itemName;
                 itemUIList[i].tagText.text = gemShopList[i].itemTags;
@@ -224,14 +293,9 @@ public class Shop : MonoBehaviour
                     itemUIList[i].quantityText.text = "0";
                 }
                 if (string.IsNullOrWhiteSpace(gemShopList[i].description))
-                {
-                    itemUIList[i].statOnlyText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
-                }
+                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
                 else
-                {
-                    itemUIList[i].descriptionText.text = gemShopList[i].description;
-                    itemUIList[i].statText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
-                }
+                    itemUIList[i].descriptionText.text = gemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
         }
@@ -244,35 +308,10 @@ public class Shop : MonoBehaviour
             itemUIList[i].tagText.text = "";
             itemUIList[i].priceText.text = "";
             itemUIList[i].quantityText.text = "";
-            itemUIList[i].statOnlyText.text = "";
             itemUIList[i].descriptionText.text = "";
-            itemUIList[i].statText.text = "";
         }
     }
-    public void BuyButton1()
-    {
-        if (isPItemShop) BuyItem(pItemShopList[0], itemUIList[0]);
-        if (isOrbShop) BuyItem(orbShopList[0], itemUIList[0]);
-        if (isGemShop) BuyItem(gemShopList[0], itemUIList[0]);
-    }
-    public void BuyButton2()
-    {
-        if (isPItemShop) BuyItem(pItemShopList[1], itemUIList[1]);
-        if (isOrbShop) BuyItem(orbShopList[1], itemUIList[1]);
-        if (isGemShop) BuyItem(gemShopList[1], itemUIList[1]);
-    }
-    public void BuyButton3()
-    {
-        if (isPItemShop) BuyItem(pItemShopList[2], itemUIList[2]);
-        if (isOrbShop) BuyItem(orbShopList[2], itemUIList[2]);
-        if (isGemShop) BuyItem(gemShopList[2], itemUIList[2]);
-    }
-    public void BuyButton4()
-    {
-        if (isPItemShop) BuyItem(pItemShopList[3], itemUIList[3]);
-        if (isOrbShop) BuyItem(orbShopList[3], itemUIList[3]);
-        if (isGemShop) BuyItem(gemShopList[3], itemUIList[3]);
-    }
+
     public void BuyItem(ItemDescription item, ItemUI itemUI)
     {
         if (item.price <= gameplayManager.coins && itemUI.priceText.text != "Sold") //check if you can buy it.
@@ -301,12 +340,144 @@ public class Shop : MonoBehaviour
                     itemManager.availablePItemList.Remove(item);
                 }
                 inventoryManager.UpdatePassiveItemsInventory(item); //Adds item to Passive Items Inventory UI or updates it.
+                itemUI.quantityText.text = item.quantityInInventory.ToString() + "/" + item.maxQuantity;
             }
             else if (isOrbShop || isGemShop) //Send gem and orb to inventory
             {
                 inventoryManager.AddCollectibleIntoInventory(item.itemName);
+                if (isGemShop)
+                {
+                    foreach (DraggableItem dItem in itemManager.skillGemList.Keys)
+                    {
+                        if (dItem.itemDescription.itemName.Equals(item.itemName))
+                        {
+                            itemUI.quantityText.text = (itemManager.skillGemList[dItem]).ToString();
+                            break;
+                        }
+                    }
+                }
             }
         }
         UpdateStats.FormatPlayerStatsToString();
+    }
+    public void BuyButton1()
+    {
+        if (isPItemShop) BuyItem(pItemShopList[0], itemUIList[0]);
+        else if (isOrbShop) BuyItem(orbShopList[0], itemUIList[0]);
+        else if (isGemShop) BuyItem(gemShopList[0], itemUIList[0]);
+    }
+    public void BuyButton2()
+    {
+        if (isPItemShop) BuyItem(pItemShopList[1], itemUIList[1]);
+        else if (isOrbShop) BuyItem(orbShopList[1], itemUIList[1]);
+        else if (isGemShop) BuyItem(gemShopList[1], itemUIList[1]);
+    }
+    public void BuyButton3()
+    {
+        if (isPItemShop) BuyItem(pItemShopList[2], itemUIList[2]);
+        else if (isOrbShop) BuyItem(orbShopList[2], itemUIList[2]);
+        else if (isGemShop) BuyItem(gemShopList[2], itemUIList[2]);
+    }
+    public void BuyButton4()
+    {
+        if (isPItemShop) BuyItem(pItemShopList[3], itemUIList[3]);
+        else if (isOrbShop) BuyItem(orbShopList[3], itemUIList[3]);
+        else if (isGemShop) BuyItem(gemShopList[3], itemUIList[3]);
+    }
+    public void Lock1()
+    {
+        if (isPItemShop)
+        {
+            if (pItemShopList[0].shopLock)
+                pItemShopList[0].shopLock = false;
+            else
+                pItemShopList[0].shopLock = true;
+        }
+        else if (isOrbShop)
+        {
+            if (orbShopList[0].shopLock)
+                orbShopList[0].shopLock = false;
+            else
+                orbShopList[0].shopLock = true;
+        }
+        else if (isGemShop)
+        {
+            if (gemShopList[0].shopLock)
+                gemShopList[0].shopLock = false;
+            else
+                gemShopList[0].shopLock = true;
+        }
+    }
+    public void Lock2()
+    {
+        if (isPItemShop)
+        {
+            if (pItemShopList[1].shopLock)
+                pItemShopList[1].shopLock = false;
+            else
+                pItemShopList[1].shopLock = true;
+        }
+        else if (isOrbShop)
+        {
+            if (orbShopList[1].shopLock)
+                orbShopList[1].shopLock = false;
+            else
+                orbShopList[1].shopLock = true;
+        }
+        else if (isGemShop)
+        {
+            if (gemShopList[1].shopLock)
+                gemShopList[1].shopLock = false;
+            else
+                gemShopList[1].shopLock = true;
+        }
+    }
+    public void Lock3()
+    {
+        if (isPItemShop)
+        {
+            if (pItemShopList[2].shopLock)
+                pItemShopList[2].shopLock = false;
+            else
+                pItemShopList[2].shopLock = true;
+        }
+        else if (isOrbShop)
+        {
+            if (orbShopList[2].shopLock)
+                orbShopList[2].shopLock = false;
+            else
+                orbShopList[2].shopLock = true;
+        }
+        else if (isGemShop)
+        {
+            if (gemShopList[2].shopLock)
+                gemShopList[2].shopLock = false;
+            else
+                gemShopList[2].shopLock = true;
+        }
+    }
+    public void Lock4()
+    {
+        if (isPItemShop)
+        {
+            if (pItemShopList[3].shopLock)
+                pItemShopList[3].shopLock = false;
+            else
+                pItemShopList[3].shopLock = true;
+        }
+        else if (isOrbShop)
+        {
+            if (orbShopList[3].shopLock)
+                orbShopList[3].shopLock = false;
+            else
+                orbShopList[3].shopLock = true;
+        }
+        else if (isGemShop)
+        {
+            if (gemShopList[3].shopLock)
+                gemShopList[3].shopLock = false;
+            else
+                gemShopList[3].shopLock = true;
+        }
     }
 }
