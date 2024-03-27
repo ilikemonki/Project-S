@@ -89,7 +89,7 @@ public class FloatingTextController : MonoBehaviour
                 current.floatingTextList[i].color = color;
                 current.floatingTextList[i].transform.position = new Vector3(transform.position.x + Random.Range(-0.3f, 0.3f), transform.position.y, transform.position.z);
                 current.floatingTextList[i].gameObject.SetActive(true);
-                current.floatingTextList[i].transform.DOJump(transform.position + new Vector3(0,0.3f,0), 0.3f, 1, 0.5f).SetEase(Ease.InFlash).OnComplete(() => current.floatingTextList[i].gameObject.SetActive(false));
+                current.floatingTextList[i].transform.DOJump(transform.position + new Vector3(0,0.3f,0), 0.3f, 1, 0.3f).SetEase(Ease.InFlash).OnComplete(() => current.floatingTextList[i].gameObject.SetActive(false));
                 return;
             }
         }

@@ -26,6 +26,7 @@ public class Shop : MonoBehaviour
     public List<ItemDescription> orbShopList; //Current orb shop items
     public List<ItemDescription> gemShopList; //Current gem shop items
     public bool isPItemShop, isOrbShop, isGemShop;
+    public int freeReroll;
     public void Start()
     {
         rerollText.text = rerollPrice.ToString() + "\n Reroll";
@@ -49,7 +50,30 @@ public class Shop : MonoBehaviour
     }
     public void RerollButton()
     {
-        if (rerollPrice <= gameplayManager.coins)
+        if (freeReroll > 0)
+        {
+            freeReroll--;
+            if (freeReroll > 0)
+                rerollText.text = freeReroll + " Free Reroll";
+            else
+                rerollText.text = rerollPrice.ToString() + "\n Reroll";
+            if (isPItemShop)
+            {
+                PopulatePItemShop();
+                SetUI();
+            }
+            else if (isOrbShop)
+            {
+                PopulateOrbShop();
+                SetUI();
+            }
+            else if (isGemShop)
+            {
+                PopulateGemShop();
+                SetUI();
+            }
+        }
+        else if (rerollPrice <= gameplayManager.coins)
         {
             gameplayManager.coins -= (int)rerollPrice;
             rerollPrice += rerollIncrement;
@@ -74,6 +98,11 @@ public class Shop : MonoBehaviour
     }
     public void PopulateAllShop()
     {
+        freeReroll = gameplayManager.freeShopRerollAdditive;
+        if (freeReroll > 0)
+        {
+            rerollText.text = freeReroll + " Free Reroll";
+        }
         coinText.text = gameplayManager.coins.ToString();
         PopulatePItemShop();
         PopulateOrbShop();
@@ -211,6 +240,7 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = true;
                     else
                         itemUIList[i].lockToggle.isOn = false;
+                    itemUIList[i].lockToggle.interactable = true;
                 }
                 itemUIList[i].itemImage.sprite = pItemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = pItemShopList[i].itemName;
@@ -244,6 +274,7 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = true;
                     else
                         itemUIList[i].lockToggle.isOn = false;
+                    itemUIList[i].lockToggle.interactable = true;
                 }
                 itemUIList[i].itemImage.sprite = orbShopList[i].itemSprite;
                 itemUIList[i].nameText.text = orbShopList[i].itemName;
@@ -275,6 +306,7 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = true;
                     else
                         itemUIList[i].lockToggle.isOn = false;
+                    itemUIList[i].lockToggle.interactable = true;
                 }
                 itemUIList[i].itemImage.sprite = gemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = gemShopList[i].itemName;
@@ -319,6 +351,8 @@ public class Shop : MonoBehaviour
             gameplayManager.coins -= item.price;
             coinText.text = gameplayManager.coins.ToString();
             itemUI.priceText.text = "Sold";
+            itemUI.lockToggle.interactable = false;
+            itemUI.lockToggle.isOn = false;
             if (isPItemShop)
             {
                 item.quantityInInventory++;

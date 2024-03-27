@@ -195,6 +195,15 @@ public class UpdateStats : MonoBehaviour
             switch (upgrade.levelModifiersList[0].modifier[i])
             {
                 case Modifier.attack_range: skill.addedAttackRange += x; break;
+                case Modifier.melee_attack_range: skill.addedAttackRange += x; break;
+                case Modifier.projectile_attack_range: skill.addedAttackRange += x; break;
+                case Modifier.base_cold_damage: skill.addedBaseDamageTypes[2] += x; break;
+                case Modifier.base_damage: skill.addedBaseDamage += x; break;
+                case Modifier.base_fire_damage: skill.addedBaseDamageTypes[1] += x; break;
+                case Modifier.base_lightning_damage: skill.addedBaseDamageTypes[3] += x; break;
+                case Modifier.base_melee_damage: skill.addedBaseDamage += x; break;
+                case Modifier.base_physical_damage: skill.addedBaseDamageTypes[0] += x; break;
+                case Modifier.base_projectile_damage: skill.addedBaseDamage += x; break;
                 case Modifier.bleed_chance: skill.addedAilmentsChance[0] += x; break;
                 case Modifier.bleed_effect: skill.addedAilmentsEffect[0] += x; break;
                 case Modifier.burn_chance: skill.addedAilmentsChance[1] += x; break;
@@ -204,23 +213,41 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.chill_effect: skill.addedAilmentsEffect[2] += x; break;
                 case Modifier.cold_damage: skill.addedDamageTypes[2] += x; break;
                 case Modifier.cooldown: skill.addedCooldown += x; break;
+                case Modifier.melee_cooldown: skill.addedCooldown += x; break;
+                case Modifier.projectile_cooldown: skill.addedCooldown += x; break;
                 case Modifier.critical_chance: skill.addedCriticalChance += x; break;
                 case Modifier.critical_damage: skill.addedCriticalDamage += x; break;
+                case Modifier.melee_critical_chance: skill.addedCriticalChance += x; break;
+                case Modifier.melee_critical_damage: skill.addedCriticalDamage += x; break;
+                case Modifier.projectile_critical_chance: skill.addedCriticalChance += x; break;
+                case Modifier.projectile_critical_damage: skill.addedCriticalDamage += x; break;
                 case Modifier.damage: skill.addedDamage += x; break;
+                case Modifier.melee_damage: skill.addedDamage += x; break;
+                case Modifier.projectile_damage: skill.addedDamage += x; break;
                 case Modifier.fire_damage: skill.addedDamageTypes[1] += x; break;
                 case Modifier.knockback: skill.addedKnockBack += x; break;
                 case Modifier.life_steal: skill.addedLifeSteal += x; break;
                 case Modifier.life_steal_chance: skill.addedLifeStealChance += x; break;
+                case Modifier.melee_life_steal: skill.addedLifeSteal += x; break;
+                case Modifier.melee_life_steal_chance: skill.addedLifeStealChance += x; break;
+                case Modifier.projectile_life_steal: skill.addedLifeSteal += x; break;
+                case Modifier.projectile_life_steal_chance: skill.addedLifeStealChance += x; break;
                 case Modifier.lightning_damage: skill.addedDamageTypes[3] += x; break;
                 case Modifier.physical_damage: skill.addedDamageTypes[0] += x; break;
                 case Modifier.pierce: skill.addedPierce += (int)x; break;
                 case Modifier.projectile: skill.addedProjectile += (int)x; break;
                 case Modifier.shock_chance: skill.addedAilmentsChance[3] += x; break;
                 case Modifier.shock_effect: skill.addedAilmentsEffect[3] += x; break;
-                case Modifier.size: skill.addedSize += x; break; //doesn't have baseSize
+                case Modifier.size: skill.addedSize += x; break;
+                case Modifier.melee_size: skill.addedSize += x; break;
+                case Modifier.projectile_size: skill.addedSize += x; break;
                 case Modifier.strike: skill.addedStrike += (int)x; break;
                 case Modifier.travel_range: skill.addedTravelRange += x; break;
                 case Modifier.travel_speed: skill.addedTravelSpeed += x; break;
+                case Modifier.melee_travel_range: skill.addedTravelRange += x; break;
+                case Modifier.melee_travel_speed: skill.addedTravelSpeed += x; break;
+                case Modifier.projectile_travel_range: skill.addedTravelRange += x; break;
+                case Modifier.projectile_travel_speed: skill.addedTravelSpeed += x; break;
                 default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[0].modifier[i]); break;
             }
         }

@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 2398783455814874361}
   - component: {fileID: 8107869552629071974}
   m_Layer: 12
-  m_Name: Dagger
+  m_Name: Dagger Skill Behavior
   m_TagString: Player Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

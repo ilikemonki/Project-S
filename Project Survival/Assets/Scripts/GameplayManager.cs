@@ -55,6 +55,7 @@ public class GameplayManager : MonoBehaviour
     public float travelRangeMultipiler, projectileTravelRangeMultipiler, meleeTravelRangeMultipiler, travelSpeedMultipiler, projectileTravelSpeedMultipiler, meleeTravelSpeedMultipiler;
     public float expMultiplier;
     public float dropChanceMultiplier, coinDropChanceMultipiler;
+    public int freeLevelupRerollAdditive, freeShopRerollAdditive; 
     [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;

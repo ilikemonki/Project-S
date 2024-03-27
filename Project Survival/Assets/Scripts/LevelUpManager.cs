@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class LevelUpManager : MonoBehaviour
 {
     public bool stopLevelUp;
-    public int rerollPrice, rerollIncrement;
+    public int rerollPrice, rerollIncrement, freeReroll;
     public TextMeshProUGUI rerollText;
     public GameObject levelUpUI;
     public GameplayManager gameplayManager;
@@ -16,7 +16,7 @@ public class LevelUpManager : MonoBehaviour
     public List<UpgradeUI> upgradeUIList;
     public Upgrades tempUpgrades;
     List<int> modifierList = new();
-    public void GetRandomLevelUpGrowthStats()
+    public void PopulateLevelUpGrowthStats()
     {
         for (int u = 0; u < upgradeUIList.Count; u++)
         {
@@ -48,22 +48,35 @@ public class LevelUpManager : MonoBehaviour
     }
     public void Reroll()
     {
-        if (rerollPrice <= gameplayManager.coins)
+        if (freeReroll > 0)
+        {
+            freeReroll--;
+            if (freeReroll > 0)
+                rerollText.text = freeReroll + " Free Reroll";
+            else
+                rerollText.text = rerollPrice.ToString() + "\n Reroll";
+            PopulateLevelUpGrowthStats();
+        }
+        else if (rerollPrice <= gameplayManager.coins)
         {
             gameplayManager.GainCoins(-rerollPrice);
             rerollPrice += rerollIncrement;
             rerollText.text = rerollPrice + "\n Reroll";
-            GetRandomLevelUpGrowthStats();
+            PopulateLevelUpGrowthStats();
         }
     }
 
     public void OpenUI()
     {
-        rerollText.text = rerollPrice + "\n Reroll"; 
+        freeReroll = gameplayManager.freeLevelupRerollAdditive;
+        if (freeReroll > 0)
+            rerollText.text = freeReroll + " Free Reroll";
+        else
+            rerollText.text = rerollPrice + "\n Reroll"; 
         if (levelUpUI.activeSelf == false)
         {
             GameManager.PauseGame();
-            GetRandomLevelUpGrowthStats();
+            PopulateLevelUpGrowthStats();
             levelUpUI.SetActive(true);
         }
     }

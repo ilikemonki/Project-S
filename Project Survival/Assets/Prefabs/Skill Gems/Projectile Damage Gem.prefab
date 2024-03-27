@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6779741434865891654}
   - component: {fileID: 5753103734539780946}
   m_Layer: 5
-  m_Name: Projectile Gem
+  m_Name: Projectile Damage Gem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,9 +114,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 6779741434865891654}
   levelModifiersList:
-  - modifier: 01000000
+  - modifier: 23000000
     amt:
-    - 1
+    - 50
 --- !u!114 &6779741434865891654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,14 +130,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 2
-  itemName: Projectile Gem
+  itemName: Projectile Damage Gem
   itemTags: Projectile
   description: 
   itemSprite: {fileID: 21300000, guid: 77934458497654b4a88f0ee23b9e75df, type: 3}
   maxQuantity: 0
   rarity: 0
   currentLevel: 0
-  price: 10
+  price: 15
   quantityInInventory: 0
   upgrade: {fileID: 3042264853330663203}
   pItemSlotUI: {fileID: 0}
