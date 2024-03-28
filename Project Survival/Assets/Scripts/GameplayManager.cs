@@ -32,8 +32,8 @@ public class GameplayManager : MonoBehaviour
     public int expOrbBonus; //Skill gains this amount of exp if they already have that orb.
     [Header("Player Multipliers")]
     //Player/Skill Global Multipliers
-    public float damageMultiplier, projectileDamageMultiplier, meleeDamageMultiplier;
-    public float baseDamageAdditive, baseProjectileDamageAdditive, baseMeleeDamageAdditive;
+    public float damageMultiplier;
+    public float projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> baseDamageTypeAdditive;
     public List<float> damageTypeMultiplier;
     public int strikeAdditive, comboAdditive, projectileAdditive, pierceAdditive, chainAdditive;

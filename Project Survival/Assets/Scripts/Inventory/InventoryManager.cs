@@ -32,37 +32,37 @@ public class InventoryManager : MonoBehaviour
     {
         UpdateStats.FormatPlayerStatsToString();
         UpdateStats.FormatEnemyStatsToString();
-        foreach(Skill skill in activeSkillList) //Set current skills at start of game.
-        {
-            if (skill.activeSkillDrop.draggableItem != null)
-            {
-                InstantiateSkill(skill.activeSkillDrop.draggableItem);
-                skill.activeSkillDrop.nameText.text = "Lv. " + skill.skillController.level.ToString() + " " + skill.activeSkillDrop.draggableItem.itemDescription.itemName;
-                SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.contentParent.transform);
-                skill.activeSkillDrop.draggableItem.slotUI = slotUI;
-                slotUI.inUseText.gameObject.SetActive(true);
-                slotUI.name = uiPrefab.name;
-                slotUI.nameText.text = skill.activeSkillDrop.draggableItem.itemDescription.itemName;
-                slotUI.levelText.text = "Lv. " + skill.skillController.level.ToString();
-                slotUI.fadedImage.sprite = skill.activeSkillDrop.draggableItem.itemDescription.itemSprite;
-                itemManager.skillOrbList.Add(skill.activeSkillDrop.draggableItem, 1);
-                skill.autoToggle.gameObject.SetActive(true);
-            }
-            else
-            {
-                skill.autoToggle.gameObject.SetActive(false);
-            }
-        }
-        for (int i = 0; i < activeSkillList.Count; i++) //Apply gem mods to active skills
-        {
-            foreach (ActiveSkillDrop asd in activeSkillList[i].skillGemDropList)
-            {
-                if (asd.draggableItem != null && activeSkillList[i].skillController != null)
-                {
-                    UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, activeSkillList[i].skillController, false);
-                }
-            }
-        }
+        //foreach(Skill skill in activeSkillList) //Set current skills at start of game.
+        //{
+        //    if (skill.activeSkillDrop.draggableItem != null)
+        //    {
+        //        InstantiateSkill(skill.activeSkillDrop.draggableItem);
+        //        skill.activeSkillDrop.nameText.text = "Lv. " + skill.skillController.level.ToString() + " " + skill.activeSkillDrop.draggableItem.itemDescription.itemName;
+        //        SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.contentParent.transform);
+        //        skill.activeSkillDrop.draggableItem.slotUI = slotUI;
+        //        slotUI.inUseText.gameObject.SetActive(true);
+        //        slotUI.name = uiPrefab.name;
+        //        slotUI.nameText.text = skill.activeSkillDrop.draggableItem.itemDescription.itemName;
+        //        slotUI.levelText.text = "Lv. " + skill.skillController.level.ToString();
+        //        slotUI.fadedImage.sprite = skill.activeSkillDrop.draggableItem.itemDescription.itemSprite;
+        //        itemManager.skillOrbList.Add(skill.activeSkillDrop.draggableItem, 1);
+        //        skill.autoToggle.gameObject.SetActive(true);
+        //    }
+        //    else
+        //    {
+        //        skill.autoToggle.gameObject.SetActive(false);
+        //    }
+        //}
+        //for (int i = 0; i < activeSkillList.Count; i++) //Apply gem mods to active skills
+        //{
+        //    foreach (ActiveSkillDrop asd in activeSkillList[i].skillGemDropList)
+        //    {
+        //        if (asd.draggableItem != null && activeSkillList[i].skillController != null)
+        //        {
+        //            UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, activeSkillList[i].skillController, false);
+        //        }
+        //    }
+        //}
     }
     public void DropInInventory(DraggableItem draggableItem)
     {
@@ -207,7 +207,7 @@ public class InventoryManager : MonoBehaviour
     }
     public void AddCollectibleIntoInventory(string itemName)
     {
-        if (itemName.Contains("Orb"))
+        if (itemName.Contains("Orb")) //Orb
         {
             foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //Skill gains exp if there is already exist.
             {
@@ -248,6 +248,12 @@ public class InventoryManager : MonoBehaviour
                     return;
                 }
             }
+            if (!itemManager.skillExpDict.ContainsKey(itemName)) //if skill isn't saved to dictionary, add and save it.
+            {
+                Debug.Log(itemName + " Add into Dictionary");
+                itemManager.skillExpDict.Add(itemName, 0);
+                itemManager.skillLevelDict.Add(itemName, 1);
+            }
             //Create DraggbleItem for orb.
             foreach (DraggableItem prefab in itemManager.orbPrefabList)
             {
@@ -263,14 +269,14 @@ public class InventoryManager : MonoBehaviour
                     draggableItem.transform.SetParent(draggableItem.currentParent);
                     slotUI.name = itemName;
                     slotUI.nameText.text = draggableItem.itemDescription.itemName;
-                    slotUI.levelText.text = "Lv. " + draggableItem.skillController.level.ToString();
+                    slotUI.levelText.text = "Lv. " + draggableItem.itemDescription.currentLevel.ToString();
                     slotUI.fadedImage.sprite = draggableItem.itemDescription.itemSprite;
                     itemManager.skillOrbList.Add(draggableItem, 1);
                     return;
                 }
             }
         }
-        else
+        else //Gem
         {
             foreach (DraggableItem dItem in itemManager.skillGemList.Keys) //if gem exist, add to quantity and gem inventory quantity
             {

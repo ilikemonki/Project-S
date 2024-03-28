@@ -95,12 +95,9 @@ public class LevelUpManager : MonoBehaviour
         {
             case UpdateStats.Modifier.attack_range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.base_cold_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.base_damage: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             case UpdateStats.Modifier.base_fire_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.base_lightning_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.base_physical_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.base_melee_damage: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.base_projectile_damage: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             case UpdateStats.Modifier.bleed_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.bleed_effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.burn_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
@@ -160,8 +157,7 @@ public class LevelUpManager : MonoBehaviour
     {
         if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectile 
             || mod == UpdateStats.Modifier.strike || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.base_cold_damage
-            || mod == UpdateStats.Modifier.base_damage || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage
-             || mod == UpdateStats.Modifier.base_melee_damage || mod == UpdateStats.Modifier.base_physical_damage || mod == UpdateStats.Modifier.base_projectile_damage)
+            || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage || mod == UpdateStats.Modifier.base_physical_damage)
         {
             return false;
         }

@@ -46,7 +46,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735531887519041076}
   m_Layer: 5
-  m_Name: Dagger Pool
+  m_Name: Behavior Pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,11 +81,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1735531887672982296}
-  - component: {fileID: 1735531887672982297}
+  - component: {fileID: -8080742769469004546}
   - component: {fileID: 6986161325550505959}
   - component: {fileID: 7864732532003815873}
   m_Layer: 0
-  m_Name: Dagger Controller
+  m_Name: Flying Slash Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,7 +113,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1735531887672982297
+--- !u!114 &-8080742769469004546
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,12 +122,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1735531887672982295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 576d7c6676515224c94a53fa00328b46, type: 3}
+  m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: -6595649996783161566, guid: 213c7f03c092cd640a098be94ba1aea6, type: 3}
-  meleeWeaponPrefab: {fileID: 0}
-  skillOrbName: Dagger Orb
+  prefabBehavior: {fileID: -6595649996783161566, guid: cafe278724dfca94ea475e0c1721a353, type: 3}
+  meleeWeaponPrefab: {fileID: -6595649996783161566, guid: 825b72de0a508864a8fc361043aed917, type: 3}
+  skillOrbName: Flying Slash Orb
   poolParent: {fileID: 1735531887519041077}
   orbitParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
@@ -141,13 +141,13 @@ MonoBehaviour:
   level: 1
   exp: 0
   baseDamageTypes:
+  - 10
   - 0
-  - 5
   - 0
   - 0
   baseAilmentsChance:
   - 0
-  - 100
+  - 0
   - 0
   - 0
   baseAilmentsEffect:
@@ -155,19 +155,22 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseTravelSpeed: 10
-  baseAttackRange: 6
-  baseTravelRange: 10
+  baseTravelSpeed: 6
+  baseAttackRange: 4
+  baseTravelRange: 6
+  baseDuration: 0
   baseCooldown: 1
-  baseKnockBack: 5
-  baseCriticalChance: 20
+  baseKnockBack: 0
+  baseCriticalChance: 0
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseStrike: 0
-  baseProjectile: 1
+  baseStrike: 1
+  baseCombo: 0
+  baseProjectile: 0
   basePierce: 0
   baseChain: 0
+  despawnTime: 0
   damageTypes:
   - 0
   - 0
@@ -187,6 +190,7 @@ MonoBehaviour:
   travelSpeed: 0
   attackRange: 0
   travelRange: 0
+  duration: 0
   cooldown: 0
   knockBack: 0
   criticalChance: 0
@@ -195,24 +199,27 @@ MonoBehaviour:
   lifeStealChance: 0
   lifeSteal: 0
   strike: 0
+  combo: 0
   projectile: 0
   pierce: 0
   chain: 0
   currentCooldown: 0
-  despawnTime: 0
+  comboCounter: 0
+  comboMultiplier: 0
   stopFiring: 0
   highestDamageType: 0
+  spreadAngle: 0
   maxSpreadAngle: 90
   lateralOffset: 0.6
   targetless: 0
   targetPos: {x: 0, y: 0, z: 0}
   activateBarrage: 0
   autoUseSkill: 1
-  isMelee: 0
+  isMelee: 1
   useOnTarget: 0
   useBarrage: 0
-  useScatter: 0
-  useSpread: 1
+  useScatter: 1
+  useSpread: 0
   useOrbit: 0
   useCircular: 0
   useLateral: 0
@@ -244,11 +251,11 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  addedBaseDamage: 0
   addedDamage: 0
   addedTravelSpeed: 0
   addedAttackRange: 0
   addedTravelRange: 0
+  addedDuration: 0
   addedCooldown: 0
   addedKnockBack: 0
   addedCriticalChance: 0
@@ -257,6 +264,7 @@ MonoBehaviour:
   addedLifeStealChance: 0
   addedLifeSteal: 0
   addedStrike: 0
+  addedCombo: 0
   addedProjectile: 0
   addedPierce: 0
   addedChain: 0
@@ -300,19 +308,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 1b00000001000000
+  - modifier: 0400000036000000
     amt:
-    - 50
-    - 1
-  - modifier: 1b00000001000000
+    - 15
+    - 20
+  - modifier: 0400000036000000
     amt:
-    - 50
-    - 1
-  - modifier: 1b00000001000000
+    - 15
+    - 20
+  - modifier: 0400000036000000
     amt:
-    - 50
-    - 1
-  - modifier: 1b00000001000000
+    - 15
+    - 20
+  - modifier: 0400000036000000
     amt:
-    - 50
-    - 1
+    - 15
+    - 20

@@ -9,7 +9,7 @@ public class UpdateStats : MonoBehaviour
     {
         //additive
         strike, projectile, pierce, chain,
-        base_damage, base_projectile_damage, base_melee_damage, base_physical_damage, base_fire_damage, base_cold_damage, base_lightning_damage,
+        base_physical_damage, base_fire_damage, base_cold_damage, base_lightning_damage,
         critical_chance, projectile_critical_chance, melee_critical_chance, critical_damage, projectile_critical_damage, melee_critical_damage,
         regen, degen, life_steal_chance, projectile_life_steal_chance, melee_life_steal_chance, life_steal, projectile_life_steal, melee_life_steal,
         bleed_chance, burn_chance, chill_chance, shock_chance,
@@ -60,12 +60,9 @@ public class UpdateStats : MonoBehaviour
             {
                 case Modifier.attack_range: instance.gameplayManager.attackRangeMultiplier += x; break;
                 case Modifier.base_cold_damage: instance.gameplayManager.baseDamageTypeAdditive[2] += x; break;
-                case Modifier.base_damage: instance.gameplayManager.baseDamageAdditive += x; break;
                 case Modifier.base_fire_damage: instance.gameplayManager.baseDamageTypeAdditive[1] += x; break;
                 case Modifier.base_lightning_damage: instance.gameplayManager.baseDamageTypeAdditive[3] += x; break;
                 case Modifier.base_physical_damage: instance.gameplayManager.baseDamageTypeAdditive[0] += x; break;
-                case Modifier.base_melee_damage: instance.gameplayManager.baseMeleeDamageAdditive += x; break;
-                case Modifier.base_projectile_damage: instance.gameplayManager.baseProjectileDamageAdditive += x; break;
                 case Modifier.bleed_chance: instance.gameplayManager.ailmentsChanceAdditive[0] += x; break;
                 case Modifier.bleed_effect: instance.gameplayManager.ailmentsEffectMultiplier[0] += x; break;
                 case Modifier.burn_chance: instance.gameplayManager.ailmentsChanceAdditive[1] += x; break;
@@ -145,7 +142,6 @@ public class UpdateStats : MonoBehaviour
             {
                 case Modifier.attack_range: skill.addedAttackRange += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.base_cold_damage: skill.addedBaseDamageTypes[2] += upgrade.levelModifiersList[level].amt[i]; break;
-                case Modifier.base_damage: skill.addedBaseDamage += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.base_fire_damage: skill.addedBaseDamageTypes[1] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.base_lightning_damage: skill.addedBaseDamageTypes[3] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.base_physical_damage: skill.addedBaseDamageTypes[0] += upgrade.levelModifiersList[level].amt[i]; break;
@@ -198,12 +194,9 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.melee_attack_range: skill.addedAttackRange += x; break;
                 case Modifier.projectile_attack_range: skill.addedAttackRange += x; break;
                 case Modifier.base_cold_damage: skill.addedBaseDamageTypes[2] += x; break;
-                case Modifier.base_damage: skill.addedBaseDamage += x; break;
                 case Modifier.base_fire_damage: skill.addedBaseDamageTypes[1] += x; break;
                 case Modifier.base_lightning_damage: skill.addedBaseDamageTypes[3] += x; break;
-                case Modifier.base_melee_damage: skill.addedBaseDamage += x; break;
                 case Modifier.base_physical_damage: skill.addedBaseDamageTypes[0] += x; break;
-                case Modifier.base_projectile_damage: skill.addedBaseDamage += x; break;
                 case Modifier.bleed_chance: skill.addedAilmentsChance[0] += x; break;
                 case Modifier.bleed_effect: skill.addedAilmentsEffect[0] += x; break;
                 case Modifier.burn_chance: skill.addedAilmentsChance[1] += x; break;
@@ -292,12 +285,9 @@ public class UpdateStats : MonoBehaviour
                 {
                     case Modifier.attack_range: skillUpgradesString += "\tAttack Range: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.base_cold_damage: skillUpgradesString += "\tBase Cold Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
-                    case Modifier.base_damage: skillUpgradesString += "\tBase Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.base_fire_damage: skillUpgradesString += "\tBase Fire Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.base_lightning_damage: skillUpgradesString += "\tBase Lightning Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.base_physical_damage: skillUpgradesString += "\tBase Physical Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
-                    case Modifier.base_melee_damage: skillUpgradesString += "\tBase Melee Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
-                    case Modifier.base_projectile_damage: skillUpgradesString += "\tBase Projectile Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.bleed_chance: skillUpgradesString += "\tBleed Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.bleed_effect: skillUpgradesString += "\tBleed Effect: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.burn_chance: skillUpgradesString += "\tBurn Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
@@ -417,9 +407,10 @@ public class UpdateStats : MonoBehaviour
             }
         }
         if (sc.criticalChance > 0)
+        {
             fullString += "Critical Chance: " + sc.criticalChance + "%\n";
-        if (sc.criticalDamage > instance.gameplayManager.criticalDamageAdditive)
             fullString += "Critical Damage: " + sc.criticalDamage + "%\n";
+        }
         if (sc.cooldown > 0)
             fullString += "Cooldown: " + sc.cooldown + "s\n";
         if (sc.projectile > 0)
@@ -482,6 +473,7 @@ public class UpdateStats : MonoBehaviour
         instance.inventoryManager.playerStats1Text.text = string.Empty;
         string fullString = "";
         fullString += "Health: " + instance.gameplayManager.player.currentHealth + "/" + instance.gameplayManager.player.maxHealth + " (+" + instance.gameplayManager.maxHealthMultiplier + "%)\n";
+        fullString += "Level: " + instance.gameplayManager.level + "\n";
         fullString += "Defense: " + instance.gameplayManager.player.defense + " (+" + instance.gameplayManager.defenseMultiplier + "%)\n";
         fullString += "Regen: " + instance.gameplayManager.player.regen + "\n";
         fullString += "Degen: " + instance.gameplayManager.player.degen + "\n";
@@ -498,12 +490,6 @@ public class UpdateStats : MonoBehaviour
         instance.inventoryManager.playerStats1Text.text = fullString;
         fullString = string.Empty;
         //Second stats
-        if (instance.gameplayManager.baseDamageAdditive > 0)
-            fullString += "Base Damage: +" + instance.gameplayManager.baseDamageAdditive + "\n";
-        if (instance.gameplayManager.baseProjectileDamageAdditive > 0)
-            fullString += "Base Projectile Damage: +" + instance.gameplayManager.baseProjectileDamageAdditive + "\n";
-        if (instance.gameplayManager.baseMeleeDamageAdditive > 0)
-            fullString += "Base Melee Damage: +" + instance.gameplayManager.baseMeleeDamageAdditive + "\n";
         for (int i = 0; i < instance.gameplayManager.baseDamageTypeAdditive.Count; i++)
         {
             if (instance.gameplayManager.baseDamageTypeAdditive[i] > 0)
@@ -687,8 +673,7 @@ public class UpdateStats : MonoBehaviour
         if (mod == Modifier.strike || mod == Modifier.projectile || mod == Modifier.pierce || mod == Modifier.chain ||
             mod == Modifier.regen || mod == Modifier.degen || mod == Modifier.life_steal || mod == Modifier.knockback ||
             mod == Modifier.projectile_life_steal || mod == Modifier.melee_life_steal || 
-            mod ==Modifier.base_cold_damage || mod == Modifier.base_damage || mod == Modifier.base_fire_damage || mod == Modifier.base_lightning_damage || mod == Modifier.base_physical_damage ||
-            mod == Modifier.base_melee_damage || mod == Modifier.base_projectile_damage)
+            mod ==Modifier.base_cold_damage || mod == Modifier.base_fire_damage || mod == Modifier.base_lightning_damage || mod == Modifier.base_physical_damage)
         {
             return true;
         }

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5438158504819307474}
   - component: {fileID: 3021294798455253695}
   m_Layer: 12
-  m_Name: O-Slash
+  m_Name: O-Slash Behavior
   m_TagString: Player Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

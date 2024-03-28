@@ -1,0 +1,326 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1735531886693428291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1735531886693428290}
+  m_Layer: 0
+  m_Name: Orbit Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1735531886693428290
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531886693428291}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1735531887672982296}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1735531887519041077
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1735531887519041076}
+  m_Layer: 5
+  m_Name: Behavior Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1735531887519041076
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887519041077}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1735531887672982296}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1735531887672982295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1735531887672982296}
+  - component: {fileID: -8080742769469004546}
+  - component: {fileID: 6986161325550505959}
+  - component: {fileID: 7864732532003815873}
+  m_Layer: 0
+  m_Name: Dagger Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1735531887672982296
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887672982295}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1735531886693428290}
+  - {fileID: 1735531887519041076}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &-8080742769469004546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887672982295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabBehavior: {fileID: -6595649996783161566, guid: 213c7f03c092cd640a098be94ba1aea6, type: 3}
+  meleeWeaponPrefab: {fileID: 0}
+  skillOrbName: Dagger Orb
+  poolParent: {fileID: 1735531887519041077}
+  orbitParent: {fileID: 1735531886693428291}
+  gameplayManager: {fileID: 0}
+  poolList: []
+  orbitPoolList: []
+  enemiesInRange: []
+  player: {fileID: 0}
+  enemyManager: {fileID: 0}
+  enemyDistances: {fileID: 0}
+  levelUpgrades: {fileID: 7864732532003815873}
+  level: 1
+  exp: 0
+  baseDamageTypes:
+  - 4
+  - 0
+  - 0
+  - 0
+  baseAilmentsChance:
+  - 0
+  - 0
+  - 0
+  - 0
+  baseAilmentsEffect:
+  - 0
+  - 0
+  - 0
+  - 0
+  baseTravelSpeed: 10
+  baseAttackRange: 6
+  baseTravelRange: 10
+  baseDuration: 0
+  baseCooldown: 1
+  baseKnockBack: 0
+  baseCriticalChance: 0
+  baseCriticalDamage: 0
+  baseLifeStealChance: 0
+  baseLifeSteal: 0
+  baseStrike: 0
+  baseCombo: 0
+  baseProjectile: 1
+  basePierce: 0
+  baseChain: 0
+  despawnTime: 0
+  damageTypes:
+  - 0
+  - 0
+  - 0
+  - 0
+  ailmentsChance:
+  - 0
+  - 0
+  - 0
+  - 0
+  ailmentsEffect:
+  - 0
+  - 0
+  - 0
+  - 0
+  damage: 0
+  travelSpeed: 0
+  attackRange: 0
+  travelRange: 0
+  duration: 0
+  cooldown: 0
+  knockBack: 0
+  criticalChance: 0
+  criticalDamage: 0
+  size: 0
+  lifeStealChance: 0
+  lifeSteal: 0
+  strike: 0
+  combo: 0
+  projectile: 0
+  pierce: 0
+  chain: 0
+  currentCooldown: 0
+  comboCounter: 0
+  comboMultiplier: 0
+  stopFiring: 0
+  highestDamageType: 0
+  spreadAngle: 0
+  maxSpreadAngle: 90
+  lateralOffset: 0.6
+  targetless: 0
+  targetPos: {x: 0, y: 0, z: 0}
+  activateBarrage: 0
+  autoUseSkill: 1
+  isMelee: 0
+  useOnTarget: 0
+  useBarrage: 1
+  useScatter: 0
+  useSpread: 0
+  useOrbit: 0
+  useCircular: 0
+  useLateral: 0
+  useBurst: 0
+  useThrowWeapon: 0
+  useRandomDirection: 0
+  useBackwardsDirection: 0
+  useReturnDirection: 0
+  useRandomTargeting: 0
+  skillTrigger: {fileID: 6986161325550505959}
+  devOnlyCheckThis: 0
+  addedBaseDamageTypes:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedDamageTypes:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedAilmentsChance:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedAilmentsEffect:
+  - 0
+  - 0
+  - 0
+  - 0
+  addedDamage: 0
+  addedTravelSpeed: 0
+  addedAttackRange: 0
+  addedTravelRange: 0
+  addedDuration: 0
+  addedCooldown: 0
+  addedKnockBack: 0
+  addedCriticalChance: 0
+  addedCriticalDamage: 0
+  addedSize: 0
+  addedLifeStealChance: 0
+  addedLifeSteal: 0
+  addedStrike: 0
+  addedCombo: 0
+  addedProjectile: 0
+  addedPierce: 0
+  addedChain: 0
+--- !u!114 &6986161325550505959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887672982295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faff3d6ba3d55f045a423973b972149f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  counterGoal: 0
+  currentCounter: 0
+  isTriggerSkill: 0
+  useCritTrigger: 0
+  useDamageTakenTrigger: 0
+  useHealTrigger: 0
+  useDashTrigger: 0
+  useUsageTrigger: 0
+  useBleedTrigger: 0
+  useBurnTrigger: 0
+  useChillTrigger: 0
+  useShockTrigger: 0
+  useDegenTrigger: 0
+  useContactTrigger: 0
+--- !u!114 &7864732532003815873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735531887672982295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac80314bb7d8b640a080f630b0fa563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDescription: {fileID: 0}
+  levelModifiersList:
+  - modifier: 0400000001000000
+    amt:
+    - 10
+    - 1
+  - modifier: 0400000001000000
+    amt:
+    - 10
+    - 1
+  - modifier: 0400000001000000
+    amt:
+    - 10
+    - 1
+  - modifier: 0400000001000000
+    amt:
+    - 10
+    - 1
