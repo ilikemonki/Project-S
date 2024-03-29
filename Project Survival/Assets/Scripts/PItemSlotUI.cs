@@ -9,7 +9,7 @@ public class PItemSlotUI : MonoBehaviour
     public ItemDescription itemDescription;
     public Image image, imageDisable;
     public TextMeshProUGUI quanityText;
-    public int quantityDisabled;
+    public int quantityDisabled; //number of quantity disabled.
     public void TogglePItem()
     {
         if (itemDescription.quantityInInventory == 1)

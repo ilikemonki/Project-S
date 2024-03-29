@@ -114,7 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 6779741434865891654}
   levelModifiersList:
-  - modifier: 23000000
+  - modifier: 20000000
     amt:
     - 50
 --- !u!114 &6779741434865891654
@@ -136,7 +136,7 @@ MonoBehaviour:
   itemSprite: {fileID: 21300000, guid: 77934458497654b4a88f0ee23b9e75df, type: 3}
   maxQuantity: 0
   rarity: 0
-  currentLevel: 0
+  currentLevel: 1
   price: 15
   quantityInInventory: 0
   upgrade: {fileID: 3042264853330663203}

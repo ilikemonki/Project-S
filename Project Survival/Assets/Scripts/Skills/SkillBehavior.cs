@@ -38,7 +38,7 @@ public class SkillBehavior : MonoBehaviour
         this.travelSpeed = travelSpeed;
         this.pierce = pierce;
         this.chain = chain;
-        transform.localScale = new Vector3(size, size, 1);
+        transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x + (size / 100), skillController.prefabBehavior.transform.localScale.y + (size / 100), 1);
         if (isThrowWeapon)
         {
             this.travelSpeed = 8;

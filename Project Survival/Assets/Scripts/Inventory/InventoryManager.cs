@@ -171,7 +171,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (SkillController sc in itemManager.skillControllerPrefabsList) //Look for skill controller name.
             {
-                if (sc.skillOrbName.Equals(dragItem.itemDescription.itemName)) //Get skill controller and set to draggableItem
+                if (sc.skillOrbDescription.itemName.Equals(dragItem.itemDescription.itemName)) //Get skill controller and set to draggableItem
                 {
                     SkillController skill = Instantiate(sc, skillParent.transform);
                     skill.name = sc.name;
@@ -180,15 +180,15 @@ public class InventoryManager : MonoBehaviour
                     skill.enemyManager = enemyManager;
                     skill.enemyDistances = enemyDistances;
                     skill.gameplayManager = gameplayManager;
-                    if (!itemManager.skillExpDict.ContainsKey(skill.skillOrbName)) //if skill isn't saved to dictionary, add and save it.
+                    if (!itemManager.skillExpDict.ContainsKey(skill.skillOrbDescription.itemName)) //if skill isn't saved to dictionary, add and save it.
                     {
-                        itemManager.skillExpDict.Add(skill.skillOrbName, skill.exp);
-                        itemManager.skillLevelDict.Add(skill.skillOrbName, skill.level);
+                        itemManager.skillExpDict.Add(skill.skillOrbDescription.itemName, skill.exp);
+                        itemManager.skillLevelDict.Add(skill.skillOrbDescription.itemName, skill.level);
                     }
                     else //set skill's exp and level from skill's saved info.
                     {
-                        skill.level = itemManager.skillLevelDict[skill.skillOrbName];
-                        skill.exp = itemManager.skillExpDict[skill.skillOrbName];
+                        skill.level = itemManager.skillLevelDict[skill.skillOrbDescription.itemName];
+                        skill.exp = itemManager.skillExpDict[skill.skillOrbDescription.itemName];
                     }
                     skill.UpdateSkillStats();
                     if (skill.level > 1)
@@ -217,7 +217,7 @@ public class InventoryManager : MonoBehaviour
                     {
                         if (skill.skillController != null)
                         {
-                            if (skill.skillController.skillOrbName.Equals(itemName))
+                            if (skill.skillController.skillOrbDescription.itemName.Equals(itemName))
                             {
                                 skill.skillController.GainExp(gameplayManager.expOrbBonus);
                                 dItem.slotUI.levelText.text = "Lv. " + skill.skillController.level;

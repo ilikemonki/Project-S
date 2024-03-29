@@ -32,4 +32,17 @@ public class ItemDescription : MonoBehaviour
             }
         }
     }
+    public void Clone(ItemDescription cloneFrom)
+    {
+        itemType = cloneFrom.itemType;
+        itemName = cloneFrom.itemName;
+        itemTags = cloneFrom.itemTags;
+        description = cloneFrom.description;
+        maxQuantity = cloneFrom.maxQuantity;
+        rarity = cloneFrom.rarity;
+        currentLevel = cloneFrom.currentLevel;
+        price = cloneFrom.price;
+        quantityInInventory = cloneFrom.quantityInInventory;
+        upgrade = cloneFrom.upgrade;
+    }
 }

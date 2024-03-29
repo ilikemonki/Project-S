@@ -136,7 +136,7 @@ MonoBehaviour:
   itemSprite: {fileID: 21300000, guid: 77934458497654b4a88f0ee23b9e75df, type: 3}
   maxQuantity: 0
   rarity: 0
-  currentLevel: 0
+  currentLevel: 1
   price: 10
   quantityInInventory: 0
   upgrade: {fileID: 3042264853330663203}

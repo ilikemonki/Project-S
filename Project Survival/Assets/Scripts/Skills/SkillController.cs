@@ -8,7 +8,7 @@ public class SkillController : MonoBehaviour
 {
     public SkillBehavior prefabBehavior;
     public SkillBehavior meleeWeaponPrefab;
-    public string skillOrbName;
+    public ItemDescription skillOrbDescription;
     public GameObject poolParent, orbitParent;
     public GameplayManager gameplayManager;
     public List<SkillBehavior> poolList = new();
@@ -34,7 +34,6 @@ public class SkillController : MonoBehaviour
     public float baseCooldown;
     public float baseKnockBack;
     public float baseCriticalChance, baseCriticalDamage;
-    float baseSize; //gets from prefab, do not alter.
     public float baseLifeStealChance, baseLifeSteal;
     public int baseStrike, baseCombo, baseProjectile, basePierce, baseChain;
     public float despawnTime; //skills that don't travel or have duration will have despawnTime
@@ -116,7 +115,6 @@ public class SkillController : MonoBehaviour
     }
     private void Awake()
     {
-        baseSize = prefabBehavior.transform.localScale.x;
         CheckTargetless();
     }
     // Start is called before the first frame update
@@ -745,7 +743,7 @@ public class SkillController : MonoBehaviour
     {
         rememberEnemiesList.Clear();
         if (useRandomTargeting) GetEnemiesInRangeUnsorted(spawnPos);
-        for (int p = 0; p < numOfAttacks; p++)
+        for (int t = 0; t < numOfAttacks; t++)
         {
             for (int i = 0; i < poolList.Count; i++)
             {
@@ -760,7 +758,7 @@ public class SkillController : MonoBehaviour
                         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
                         poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
                     } 
-                    else if (!autoUseSkill && p == 0 && !useThrowWeapon) //manual and first strike hits at mouse pos.
+                    else if (!autoUseSkill && t == 0 && !useThrowWeapon) //manual and first strike hits at mouse pos.
                     {
                         counter = 1;
                         direction = gameplayManager.mousePos - spawnPos.position;
@@ -785,7 +783,7 @@ public class SkillController : MonoBehaviour
                     }
                     else //target enemy
                     {
-                        if (closestEnemyList == null)   //skill used from other than player
+                        if (closestEnemyList == null)   //skill used from another source than player
                         {
                             nearestEnemy = FindNearestEnemy(spawnPos);
                             if (nearestEnemy != null)
@@ -802,14 +800,22 @@ public class SkillController : MonoBehaviour
                         }
                         else //skill used from player
                         {
-                            if (closestEnemyList.Count <= 0)
+                            if (closestEnemyList.Count < t || closestEnemyList.Count <= 0)
                             {
                                 stopFiring = false;
                                 return;
                             }
-                            direction = closestEnemyList[p - counter].transform.position - spawnPos.position;
+                            try //getting errors because the index is out of range.
+                            {
+                                direction = closestEnemyList[t].transform.position - spawnPos.position;
+                            }
+                            catch
+                            {
+                                stopFiring = false;
+                                return;
+                            }
                             if (direction.magnitude <= attackRange)
-                                poolList[i].transform.position = closestEnemyList[p - counter].transform.position;
+                                poolList[i].transform.position = closestEnemyList[t].transform.position;
                             else
                             {
                                 stopFiring = false;
@@ -922,7 +928,7 @@ public class SkillController : MonoBehaviour
             exp += amt;
             if (exp >= gameplayManager.skillExpCapList[level - 1]) //check if level up
             {
-                FloatingTextController.DisplayPlayerText(player.transform, skillOrbName + " Leveled Up!", Color.white, 3f);
+                FloatingTextController.DisplayPlayerText(player.transform, skillOrbDescription.itemName + " Leveled Up!", Color.white, 3f);
                 UpdateStats.ApplySkillUpgrades(levelUpgrades, this, level - 1);
                 exp -= gameplayManager.skillExpCapList[level - 1];
                 level++;
@@ -935,8 +941,8 @@ public class SkillController : MonoBehaviour
                         level++;
                     }
                 }
-                gameplayManager.itemManager.skillExpDict[skillOrbName] = exp;
-                gameplayManager.itemManager.skillLevelDict[skillOrbName] = level;
+                gameplayManager.itemManager.skillExpDict[skillOrbDescription.itemName] = exp;
+                gameplayManager.itemManager.skillLevelDict[skillOrbDescription.itemName] = level;
             }
         }
     }
@@ -959,7 +965,7 @@ public class SkillController : MonoBehaviour
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive + addedCriticalDamage;
-            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize) / 100);
+            size = gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize;
             lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.meleeLifeStealChanceAdditive + addedLifeStealChance;
             lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.meleeLifeStealAdditive + addedLifeSteal;
             travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultipiler + gameplayManager.meleeTravelSpeedMultipiler + addedTravelSpeed) / 100);
@@ -975,7 +981,7 @@ public class SkillController : MonoBehaviour
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier + addedCooldown) / 100);
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive + addedCriticalDamage;
-            size = baseSize * (1 + (gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize) / 100);
+            size = gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize;
             lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.projectileLifeStealChanceAdditive + addedLifeStealChance;
             lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.projectileLifeStealAdditive + addedLifeSteal;
             travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultipiler + gameplayManager.projectileTravelSpeedMultipiler + addedTravelSpeed) / 100);

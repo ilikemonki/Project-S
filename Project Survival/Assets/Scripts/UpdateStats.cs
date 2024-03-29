@@ -392,12 +392,14 @@ public class UpdateStats : MonoBehaviour
     public static string FormatSkillStatsToString(SkillController sc) //Return stats of the skill controller as string.
     {
         string fullString = "";
-        for(int i = 0; i < sc.damageTypes.Count; i++)
+        fullString += "Level: " + sc.level + "\n";
+        fullString += "Exp: " + sc.exp + "\n";
+        for (int i = 0; i < sc.damageTypes.Count; i++)
         {
             if (sc.damageTypes[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString = "Physical Damage: " + (sc.damageTypes[i]) + "\n";
+                    fullString += "Physical Damage: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Fire Damage</color>: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 2) //cold damage
@@ -429,7 +431,8 @@ public class UpdateStats : MonoBehaviour
             {
                 if (i == 0) //physical damage
                 {
-                    fullString += "Bleed Chance: " + sc.ailmentsChance[i] + "%\n"; 
+                    fullString += "Bleed Chance: " + sc.ailmentsChance[i] + "%\n";
+                    fullString += "Bleed Effect: " + sc.ailmentsEffect[i] + "%\n";
                     if (sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) >= 1)
                         fullString += "Bleed Damage: " + sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) + "\n";
                     else
@@ -438,6 +441,7 @@ public class UpdateStats : MonoBehaviour
                 else if (i == 1) //Fire damage
                 {
                     fullString += "Burn Chance: " + sc.ailmentsChance[i] + "%\n";
+                    fullString += "Burn Effect: " + sc.ailmentsEffect[i] + "%\n";
                     if (sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) >= 1)
                         fullString += "Burn Damage: " + sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) + "\n";
                     else
@@ -464,7 +468,7 @@ public class UpdateStats : MonoBehaviour
         if (sc.knockBack > 0)
             fullString += "Knockback: " + sc.knockBack + "\n";
         if (sc.size > 0)
-            fullString += "Size: " + sc.size * 100 + "%\n";
+            fullString += "Size: " + sc.size + "%\n";
 
         return fullString;
     }
@@ -495,7 +499,7 @@ public class UpdateStats : MonoBehaviour
             if (instance.gameplayManager.baseDamageTypeAdditive[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString = "Base Physical Damage: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                    fullString += "Base Physical Damage: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Base Fire Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
                 else if (i == 2) //cold damage
@@ -515,7 +519,7 @@ public class UpdateStats : MonoBehaviour
             if (instance.gameplayManager.damageTypeMultiplier[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString = "Physical Damage: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
+                    fullString += "Physical Damage: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Fire Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
                 else if (i == 2) //cold damage

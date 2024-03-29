@@ -12,6 +12,7 @@ public class Shop : MonoBehaviour
     [System.Serializable]
     public class ItemUI
     {
+        public ItemDescription itemDesc;
         public TextMeshProUGUI nameText, tagText, descriptionText, priceText, quantityText;
         public Image itemImage;
         public Toggle lockToggle;
@@ -242,15 +243,16 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = false;
                     itemUIList[i].lockToggle.interactable = true;
                 }
+                itemUIList[i].itemDesc.Clone(pItemShopList[i]);
                 itemUIList[i].itemImage.sprite = pItemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = pItemShopList[i].itemName;
                 itemUIList[i].tagText.text = pItemShopList[i].itemTags;
                 itemUIList[i].priceText.text = pItemShopList[i].price.ToString();
                 itemUIList[i].quantityText.text = pItemShopList[i].quantityInInventory.ToString() + "/" + pItemShopList[i].maxQuantity;
                 if (string.IsNullOrWhiteSpace(pItemShopList[i].description))
-                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
                 else
-                    itemUIList[i].descriptionText.text = pItemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[pItemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].descriptionText.text = pItemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
             if (pItemShopList.Count < itemUIList.Count) //deactivate other itemUI's that is not used.
@@ -276,6 +278,7 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = false;
                     itemUIList[i].lockToggle.interactable = true;
                 }
+                itemUIList[i].itemDesc.Clone(orbShopList[i]);
                 itemUIList[i].itemImage.sprite = orbShopList[i].itemSprite;
                 itemUIList[i].nameText.text = orbShopList[i].itemName;
                 itemUIList[i].tagText.text = orbShopList[i].itemTags;
@@ -290,7 +293,7 @@ public class Shop : MonoBehaviour
                 }
                 if (string.IsNullOrWhiteSpace(itemUIList[i].quantityText.text))
                 {
-                    itemUIList[i].quantityText.text = "0";
+                    itemUIList[i].quantityText.text = "New";
                 }
                 itemUIList[i].descriptionText.text = orbShopList[i].description + "\n\n";
                 itemUIList[i].itemUIGameObject.SetActive(true);
@@ -308,6 +311,7 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = false;
                     itemUIList[i].lockToggle.interactable = true;
                 }
+                itemUIList[i].itemDesc.Clone(gemShopList[i]);
                 itemUIList[i].itemImage.sprite = gemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = gemShopList[i].itemName;
                 itemUIList[i].tagText.text = gemShopList[i].itemTags;
@@ -325,9 +329,9 @@ public class Shop : MonoBehaviour
                     itemUIList[i].quantityText.text = "0";
                 }
                 if (string.IsNullOrWhiteSpace(gemShopList[i].description))
-                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel - 1]);
                 else
-                    itemUIList[i].descriptionText.text = gemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel]);
+                    itemUIList[i].descriptionText.text = gemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel - 1]);
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
         }
@@ -376,7 +380,7 @@ public class Shop : MonoBehaviour
                 inventoryManager.UpdatePassiveItemsInventory(item); //Adds item to Passive Items Inventory UI or updates it.
                 itemUI.quantityText.text = item.quantityInInventory.ToString() + "/" + item.maxQuantity;
             }
-            else if (isOrbShop || isGemShop) //Send gem and orb to inventory
+            else //Send gem and orb to inventory
             {
                 inventoryManager.AddCollectibleIntoInventory(item.itemName);
                 if (isGemShop)
@@ -390,6 +394,8 @@ public class Shop : MonoBehaviour
                         }
                     }
                 }
+                else
+                    itemUI.quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " Exp";
             }
         }
         UpdateStats.FormatPlayerStatsToString();

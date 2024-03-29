@@ -43,23 +43,32 @@ public class ToolTipManager : MonoBehaviour
         {
             instance.layoutElement1.enabled = false;
             instance.layoutElement2.enabled = false;
-            instance.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[itemDesc.currentLevel]);
+            instance.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[0]);
         }
         else if (itemDesc.itemType == ItemDescription.ItemType.SkillOrb) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {
             instance.layoutElement1.enabled = true;
             instance.layoutElement2.enabled = true;
             DraggableItem dragItem = itemDesc.gameObject.GetComponent<DraggableItem>();
-            if (dragItem.skillController != null) //if Orb's skill is equiped and exist, Get those stats and set as text.
-            {
-                instance.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
-                instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
-            }
-            else // if skill isn't equipped, get it from the prefab, set it to scToolTip, calculate its stats, then set as text.
+            if (dragItem == null) //when item is in shop.
             {
                 instance.CalculateSkillControllerPrefabStats(itemDesc);
                 instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
                 instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(instance.skillControllerToolTip.levelUpgrades);
+            }
+            else
+            {
+                if (dragItem.skillController != null) //if Orb's skill is equiped and exist, Get those stats and set as text.
+                {
+                    instance.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
+                    instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
+                }
+                else // if skill isn't equipped, get it from the prefab, set it to scToolTip, calculate its stats, then set as text.
+                {
+                    instance.CalculateSkillControllerPrefabStats(itemDesc);
+                    instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
+                    instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(instance.skillControllerToolTip.levelUpgrades);
+                }
             }
         }
         instance.itemToolTipWindow.SetActive(true);
@@ -80,15 +89,19 @@ public class ToolTipManager : MonoBehaviour
     {
         foreach (SkillController prefab in itemManager.skillControllerPrefabsList) //Look for skill controller name.
         {
-            if (prefab.skillOrbName.Equals(itemDesc.itemName)) //Get skill controller and set to skillControllerTooltip
+            if (prefab.skillOrbDescription.itemName.Equals(itemDesc.itemName)) //Get skill controller and set to skillControllerTooltip
             {
-                skillControllerToolTip.baseAilmentsChance.Clear();
-                skillControllerToolTip.baseAilmentsEffect.Clear();
-                skillControllerToolTip.baseDamageTypes.Clear();
-                skillControllerToolTip.addedAilmentsChance.Clear();
-                skillControllerToolTip.addedAilmentsEffect.Clear();
-                skillControllerToolTip.addedBaseDamageTypes.Clear();
-                skillControllerToolTip.levelUpgrades.levelModifiersList.Clear();
+                ClearToolTipSkillController();
+                if (itemManager.skillLevelDict.ContainsKey(itemDesc.itemName))
+                {
+                    skillControllerToolTip.level = itemManager.skillLevelDict[itemDesc.itemName];
+                    skillControllerToolTip.exp = itemManager.skillExpDict[itemDesc.itemName];
+                }
+                else
+                {
+                    skillControllerToolTip.level = 1;
+                    skillControllerToolTip.exp = 0;
+                }
                 skillControllerToolTip.isMelee = prefab.isMelee;
                 skillControllerToolTip.baseAilmentsChance.AddRange(prefab.baseAilmentsChance);
                 skillControllerToolTip.baseAilmentsEffect.AddRange(prefab.baseAilmentsEffect);
@@ -118,7 +131,7 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.addedCriticalChance = prefab.addedCriticalChance;
                 skillControllerToolTip.addedCriticalDamage = prefab.addedCriticalDamage;
                 skillControllerToolTip.addedDamage = prefab.addedDamage;
-                skillControllerToolTip.addedDamageTypes = prefab.addedDamageTypes;
+                skillControllerToolTip.addedDamageTypes.AddRange(prefab.addedDamageTypes);
                 skillControllerToolTip.addedDuration = prefab.addedDuration;
                 skillControllerToolTip.addedKnockBack = prefab.addedKnockBack;
                 skillControllerToolTip.addedLifeSteal = prefab.addedLifeSteal;
@@ -130,13 +143,50 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.addedTravelRange = prefab.addedTravelRange;
                 skillControllerToolTip.addedTravelSpeed = prefab.addedTravelSpeed;
                 skillControllerToolTip.levelUpgrades.levelModifiersList.AddRange(prefab.levelUpgrades.levelModifiersList);
-                for (int i = 0; i < itemManager.skillLevelDict[itemDesc.itemName] - 1; i++) //Apply the level upgrades.
+                if (itemManager.skillLevelDict.ContainsKey(itemDesc.itemName))
                 {
-                    UpdateStats.ApplySkillUpgrades(prefab.levelUpgrades, skillControllerToolTip, i);
+                    for (int i = 0; i < itemManager.skillLevelDict[itemDesc.itemName] - 1; i++) //Apply the level upgrades.
+                    {
+                        UpdateStats.ApplySkillUpgrades(prefab.levelUpgrades, skillControllerToolTip, i);
+                    }
                 }
                 skillControllerToolTip.UpdateSkillStats();
                 break;
             }
         }
+    }
+    public void ClearToolTipSkillController()
+    {
+        skillControllerToolTip.baseAilmentsChance.Clear();
+        skillControllerToolTip.baseAilmentsEffect.Clear();
+        skillControllerToolTip.baseDamageTypes.Clear();
+        skillControllerToolTip.addedAilmentsChance.Clear();
+        skillControllerToolTip.addedAilmentsEffect.Clear();
+        skillControllerToolTip.addedBaseDamageTypes.Clear();
+        skillControllerToolTip.addedDamageTypes.Clear();
+        skillControllerToolTip.levelUpgrades.levelModifiersList.Clear(); 
+        for (int i = 0; i < skillControllerToolTip.damageTypes.Count; i++)
+        {
+            skillControllerToolTip.damageTypes[i] = 0;
+            skillControllerToolTip.ailmentsChance[i] = 0;
+            skillControllerToolTip.ailmentsEffect[i] = 0;
+        }
+        skillControllerToolTip.damage = 0;
+        skillControllerToolTip.travelSpeed = 0;
+        skillControllerToolTip.attackRange = 0;
+        skillControllerToolTip.travelRange = 0;
+        skillControllerToolTip.duration = 0;
+        skillControllerToolTip.cooldown = 0;
+        skillControllerToolTip.knockBack = 0;
+        skillControllerToolTip.criticalChance = 0; 
+        skillControllerToolTip.criticalDamage = 0;
+        skillControllerToolTip.size = 0;
+        skillControllerToolTip.lifeStealChance = 0; 
+        skillControllerToolTip.lifeSteal = 0;
+        skillControllerToolTip.strike = 0;
+        skillControllerToolTip.combo = 0;
+        skillControllerToolTip.projectile = 0;
+        skillControllerToolTip.pierce = 0;
+        skillControllerToolTip.chain = 0;
     }
 }

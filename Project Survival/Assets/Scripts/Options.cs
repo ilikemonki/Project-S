@@ -32,10 +32,10 @@ public class Options : MonoBehaviour
                 if (inventoryManager.activeSkillList[i].skillController != null)
                 {
                     inventoryManager.activeSkillList[i].activeSkillDrop.nameText.text = "Lv. " + inventoryManager.activeSkillList[i].skillController.level.ToString() + " " + inventoryManager.activeSkillList[i].activeSkillDrop.draggableItem.itemDescription.itemName;
-                    if (itemManager.skillExpDict.ContainsKey(inventoryManager.activeSkillList[i].skillController.skillOrbName))
+                    if (itemManager.skillExpDict.ContainsKey(inventoryManager.activeSkillList[i].skillController.skillOrbDescription.itemName))
                     {
-                        itemManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.exp;
-                        itemManager.skillLevelDict[inventoryManager.activeSkillList[i].skillController.skillOrbName] = inventoryManager.activeSkillList[i].skillController.level;
+                        itemManager.skillExpDict[inventoryManager.activeSkillList[i].skillController.skillOrbDescription.itemName] = inventoryManager.activeSkillList[i].skillController.exp;
+                        itemManager.skillLevelDict[inventoryManager.activeSkillList[i].skillController.skillOrbDescription.itemName] = inventoryManager.activeSkillList[i].skillController.level;
                     }
                 }
             }
