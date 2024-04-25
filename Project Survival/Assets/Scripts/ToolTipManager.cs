@@ -25,7 +25,7 @@ public class ToolTipManager : MonoBehaviour
     {
         if (itemToolTipWindow.activeSelf)
         {
-            anchorPos = Input.mousePosition;
+            anchorPos = Input.mousePosition / canvasRectTransform.localScale.x;
             if (anchorPos.x + rectTransformWindow.rect.width > canvasRectTransform.rect.width)
                 anchorPos.x = canvasRectTransform.rect.width - rectTransformWindow.rect.width;
             if (anchorPos.y < rectTransformWindow.rect.height)

@@ -90,8 +90,8 @@ MonoBehaviour:
   knockedBack: 0
   knockBackImmune: 0
   isSpawning: 0
-  canAttack: 1
-  spreadAttack: 1
+  canAttack: 0
+  spreadAttack: 0
   circleAttack: 0
   burstAttack: 0
   attackCooldown: 2

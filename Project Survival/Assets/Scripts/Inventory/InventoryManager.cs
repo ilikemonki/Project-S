@@ -69,12 +69,12 @@ public class InventoryManager : MonoBehaviour
         if(draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
         {
             draggableItem.slotUI.inUseText.gameObject.SetActive(false);
-            activeSkillList[draggableItem.activeSkillDrop.num].skillController = null;
+            activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController = null;
             draggableItem.activeSkillDrop.draggableItem = null;
             draggableItem.isInInventory = true;
             draggableItem.currentParent = draggableItem.slotUI.fadedImage.transform;   //set new parent
             draggableItem.transform.SetParent(draggableItem.currentParent);
-            draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.num + 1).ToString();
+            draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.activeSlotNum + 1).ToString();
             draggableItem.activeSkillDrop = null;
             //Destroy Skill Controller when moving orb to inventory.
             draggableItem.skillController.enabled = false;
@@ -136,7 +136,7 @@ public class InventoryManager : MonoBehaviour
                     newItem.name = draggableItem.name;
                     newItem.itemDescription.itemName = draggableItem.itemDescription.itemName;
                     newItem.itemDescription.itemSprite = draggableItem.itemDescription.itemSprite;
-                    newItem.itemDescription.upgrade = draggableItem.itemDescription.upgrade;
+                    //newItem.itemDescription.upgrade = newItem.GetComponent<Upgrades>();
                     newItem.itemDescription.itemType = draggableItem.itemDescription.itemType;
                     newItem.itemDescription.quantityInInventory = draggableItem.itemDescription.quantityInInventory;
                     newItem.itemDescription.quantityInInventory--;
@@ -199,7 +199,7 @@ public class InventoryManager : MonoBehaviour
                         }
                     }
                     dragItem.skillController = skill;
-                    activeSkillList[dragItem.activeSkillDrop.num].skillController = skill;
+                    activeSkillList[dragItem.activeSkillDrop.activeSlotNum].skillController = skill;
                     return;
                 }
             }
