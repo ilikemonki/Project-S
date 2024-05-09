@@ -41,7 +41,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                         {
                             if (asd.draggableItem != null && inventory.activeSkillList[activeSlotNum].skillController != null)
                             {
-                                UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, false);
+                                UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, asd.frameImage, false);
                             }
                         }
                         inventory.activeSkillList[activeSlotNum].autoToggle.isOn = true;
@@ -51,7 +51,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     {
                         if (inventory.activeSkillList[activeSlotNum].skillController != null)
                         {
-                            UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, false);
+                            UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, frameImage, false);
                         }
                     }
                 }
@@ -61,7 +61,13 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                     {
                         if (draggableItem.activeSkillDrop.activeSlotNum == activeSlotNum) return;
                         //old active slot
-                        inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController.UpdateSkillStats(); //Reset stats
+                        foreach (ActiveSkillDrop asd in inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillGemDropList) //Unapply all Gem Modifiers from old skill group
+                        {
+                            if (asd.draggableItem != null)
+                            {
+                                UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, asd.frameImage, true);
+                            }
+                        }
                         draggableItem.activeSkillDrop.nameText.text = "Active Skill " + (draggableItem.activeSkillDrop.activeSlotNum + 1).ToString();
                         inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController = null; //null the skillController in skill list
                         inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].autoToggle.isOn = true;
@@ -77,7 +83,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                         {
                             if (asd.draggableItem != null)
                             {
-                                UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, false);
+                                UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, asd.frameImage, false);
                             }
                         }
                     }
@@ -89,19 +95,20 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                             {
                                 if (inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController != null)
                                 {
-                                    UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, true);
+                                    UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, frameImage, true);
                                 }
                                 //inventory.ApplyGemModifier(draggableItem.skillGem.gemModifierList, num); //apply to new skill controller
-                                UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, false);
+                                UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, frameImage, false);
                             }
                             else // Moved to slot with no skill controller
                             {
                                 if (inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController != null)
                                 {
-                                    UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, true);
+                                    UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, frameImage, true);
                                 }
                             }
                             draggableItem.activeSkillDrop.draggableItem = null; //set old activeskilldrop's dragItem to null
+                            draggableItem.activeSkillDrop.frameImage.color = Color.white;
                             draggableItem.activeSkillDrop = this; // New activeskilldrop
                         }
                         else  //if moved to same skill group, do nothing.
@@ -109,6 +116,8 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                             if (draggableItem.activeSkillDrop != this) //if moved within the same skill group
                             {
                                 draggableItem.activeSkillDrop.draggableItem = null; //set old activeskilldrop's dragItem to null
+                                frameImage.color = draggableItem.activeSkillDrop.frameImage.color;
+                                draggableItem.activeSkillDrop.frameImage.color = Color.white;
                                 draggableItem.activeSkillDrop = this; // New activeskilldrop
                             }
                         }
@@ -125,13 +134,17 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
         {
             if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
             {
+                for(int i = 0; i < inventory.activeSkillList[activeSlotNum].skillGemDropList.Count; i++)
+                {
+                    inventory.activeSkillList[activeSlotNum].skillGemDropList[i].frameImage.color = Color.white;
+                }
                 inventory.DropInInventory(draggableItem);
             }
             else
             {
                 if (inventory.activeSkillList[activeSlotNum].skillController != null)
                 {
-                    UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, true);
+                    UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, frameImage, true);
                 }
                 inventory.DropInInventory(draggableItem);
             }

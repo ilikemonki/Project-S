@@ -180,7 +180,7 @@ public class UpdateStats : MonoBehaviour
         FormatEnemyStatsToString();
     }
     //Apply gem modifiers to skill.
-    public static void ApplyGemUpgrades(Upgrades upgrade, SkillController skill, bool unapplyUpgrades)
+    public static void ApplyGemUpgrades(Upgrades upgrade, SkillController skill, Image frameImage, bool unapplyUpgrades)
     {
         //Check if gem can apply to the skill orb. If gem doesn't have projectile or melee tag, it can be applied to all gems.
         if ((upgrade.itemDescription.itemTags.Contains("Projectile") && skill.skillOrbDescription.itemTags.Contains("Projectile")) ||
@@ -251,12 +251,22 @@ public class UpdateStats : MonoBehaviour
                 }
                 if (unapplyUpgrades) Debug.Log("Unapplying Gem : " + upgrade.name);
                 else Debug.Log("Applying Gem : " + upgrade.name);
+                frameImage.color = Color.white;
             }
             skill.UpdateSkillStats();
             FormatPlayerStatsToString();
             FormatEnemyStatsToString();
         }
-        else Debug.Log(upgrade.name + " not applied to orb.");
+        else //Do not apply gem upgrades. Change item frame color to red.
+        {
+            if (frameImage != null) frameImage.color = Color.red;
+            if (unapplyUpgrades) 
+            {
+                Debug.Log("white");
+                frameImage.color = Color.white; 
+            }
+            Debug.Log(upgrade.name + "tags do not match. Not applied to orb.");
+        }
     }
     public static void ApplyEnemyUpgrades(EnemyUpgradeManager.EnemyUpgrades upgrade)
     {

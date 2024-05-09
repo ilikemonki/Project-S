@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Options : MonoBehaviour
 {
-    public GameObject skillsUI, statsUI, passiveItemsUI, playerEnemyStatsUI, shopUI;
-    public GameObject menuUI, pauseUI, shopBtn;
+    public GameObject skillsUI, statisticsUI, passiveItemsUI, playerEnemyStatsUI, shopUI;
+    public GameObject inventoryUI, pauseUI, shopBtn;
     public InventoryManager inventoryManager;
     public ItemManager itemManager;
     public LevelUpManager levelUpManager;
+    public void Start()
+    {
+        if (inventoryUI.activeSelf) GameManager.PauseGame();
+    }
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -18,10 +22,10 @@ public class Options : MonoBehaviour
     }
     public void OpenCloseUI() //Opens and close inventory
     {
-        if (menuUI.activeSelf == false) //open
+        if (inventoryUI.activeSelf == false) //open
         {
             GameManager.PauseGame();
-            menuUI.SetActive(true);
+            inventoryUI.SetActive(true);
             SkillsUIButton();
             UpdateStats.FormatPlayerStatsToString();
             UpdateStats.FormatEnemyStatsToString();
@@ -57,12 +61,12 @@ public class Options : MonoBehaviour
                 GameManager.UnpauseGame();
             }
             ToolTipManager.HideToolTip();
-            menuUI.SetActive(false);
+            inventoryUI.SetActive(false);
         }
     }
     public void SkillsUIButton()
     {
-        statsUI.SetActive(false);
+        statisticsUI.SetActive(false);
         passiveItemsUI.SetActive(false);
         shopUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
@@ -74,11 +78,11 @@ public class Options : MonoBehaviour
         passiveItemsUI.SetActive(false);
         shopUI.SetActive(false);
         playerEnemyStatsUI.SetActive(false);
-        statsUI.SetActive(true);
+        statisticsUI.SetActive(true);
     }
     public void PassiveItemsUIButton()
     {
-        statsUI.SetActive(false);
+        statisticsUI.SetActive(false);
         skillsUI.SetActive(false);
         shopUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
@@ -86,7 +90,7 @@ public class Options : MonoBehaviour
     }
     public void ShopUIButton()
     {
-        statsUI.SetActive(false);
+        statisticsUI.SetActive(false);
         skillsUI.SetActive(false);
         playerEnemyStatsUI.SetActive(true);
         shopUI.SetActive(true);

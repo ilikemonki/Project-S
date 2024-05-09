@@ -13415,11 +13415,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillsUI: {fileID: 1524488100}
-  statsUI: {fileID: 1092393886}
+  statisticsUI: {fileID: 1092393886}
   passiveItemsUI: {fileID: 1541189017}
   playerEnemyStatsUI: {fileID: 1557529432}
   shopUI: {fileID: 1660154751}
-  menuUI: {fileID: 1145976284}
+  inventoryUI: {fileID: 1145976284}
   pauseUI: {fileID: 655124365}
   shopBtn: {fileID: 1332467078}
   inventoryManager: {fileID: 1322437152}

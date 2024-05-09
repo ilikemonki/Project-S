@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
+//When dropped into Inventory.
 public class InventorySkillDrop : MonoBehaviour, IDropHandler
 {
     public enum SlotType
@@ -26,13 +27,17 @@ public class InventorySkillDrop : MonoBehaviour, IDropHandler
 
                 if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
                 {
+                    for (int i = 0; i < inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillGemDropList.Count; i++)
+                    {
+                        inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillGemDropList[i].frameImage.color = Color.white;
+                    }
                     inventory.DropInInventory(draggableItem);
                 }
-                else
+                else //gem
                 {
                     if (inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController != null)
                     {
-                        UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, true);
+                        UpdateStats.ApplyGemUpgrades(draggableItem.itemDescription.upgrade, inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController, draggableItem.activeSkillDrop.frameImage, true);
                     }
                     inventory.DropInInventory(draggableItem);
                 }
