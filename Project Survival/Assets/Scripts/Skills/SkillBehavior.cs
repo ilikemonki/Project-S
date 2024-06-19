@@ -248,7 +248,7 @@ public class SkillBehavior : MonoBehaviour
                 else if (skillController.useOnTarget)
                 {
                     gameObject.SetActive(false);
-                    skillController.OnTargetBehavior(skillController.strike, transform, null);
+                    skillController.MultiTargetBehavior(skillController.strike, transform, null);
                 }
                 return;
             }

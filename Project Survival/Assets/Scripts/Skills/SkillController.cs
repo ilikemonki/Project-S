@@ -60,28 +60,30 @@ public class SkillController : MonoBehaviour
     public bool stopFiring;
     public int highestDamageType;
     public float spreadAngle, maxSpreadAngle, lateralOffset;
-    public bool targetless; //Keeps using it's skill regardless of enemies.
+    public bool targetless; //Keeps using it's skill regardless of enemies. If false, requires a target to use skill.
     float barrageCooldown; //For barrage and scatter behaviors
     int barrageCounter;
     public Vector3 targetPos; //last known pos of mouse or enemy.
     public bool activateBarrage;
     //Behaviors 
     [Header("Behaviors")]
-    public bool autoUseSkill;
-    public bool isMelee;
-    public bool useOnTarget;    //On Target spawns on enemies.
-    public bool useBarrage;
-    public bool useScatter; 
-    public bool useSpread;
-    public bool useOrbit; //targetless
-    public bool useCircular; //targetless
-    public bool useLateral;
-    public bool useBurst;
+    public bool autoUseSkill; //Manual or automatic use of skill. Manual can freely target enemies.
+    public bool isMelee; //whether or not it is melee or projectile.
+    public bool useMultiTarget; //is automatic only.
+    public bool useBarrage; //Use strike/projectile back to back on the same target/area.
+    public bool useScatter; //Use strike/projectile back to back but has a uneven target/angle.
+    public bool useSpread; //skill will evenly spread and angle itself.
+    public bool useOrbit; //targetless. Orbits around the player
+    public bool useCircular; //targetless. Skill will evenly spread itself around the player.
+    public bool useLateral; //Skill will line itself up horizontally.
+    public bool useBurst; //Use all strike/projectile at once but has uneven target/angle, long CD, Increased Stats.
     public bool useThrowWeapon; //Whether or not to put this in the game.
+    [Header("Secondary Behaviors")]
+    public bool useOnTarget;    //Spawns on enemies. If false, spawns on player.
     public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
     public bool useBackwardsDirection; //Shoots from behind
     public bool useReturnDirection; //projectiles only.
-    public bool useRandomTargeting;
+    public bool useRandomTargeting; //Randomly targets an enemy in range. Targetless/Manual does nothing.
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
@@ -301,10 +303,10 @@ public class SkillController : MonoBehaviour
         {
             CircularBehavior(strike + projectile, transform);
         }
-        else if (useOnTarget)
+        else if (useMultiTarget)
         {
             if (enemyDistances.closestEnemyList.Count > 0)
-                OnTargetBehavior(strike, transform, enemyDistances.closestEnemyList);
+                MultiTargetBehavior(strike + projectile, transform, enemyDistances.closestEnemyList);
         }
         foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check use trigger skill condition
         {
@@ -359,7 +361,7 @@ public class SkillController : MonoBehaviour
         }
         if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false); //deactivate object that uses this skill ie throwWeapon.
     }
-    public void ScatterBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
+    public void ScatterBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill.
     {
         for (int i = 0; i < poolList.Count; i++)
         {
@@ -640,7 +642,7 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void LateralBehavior(int numOfAttacks, float distanceApart, Transform target, Transform spawnPos, bool useBackwards)       //Spawn/Activate skill. Projectiles spread.
+    public void LateralBehavior(int numOfAttacks, float distanceApart, Transform target, Transform spawnPos, bool useBackwards)
     {
         counter = 0;
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
@@ -739,7 +741,7 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void OnTargetBehavior(int numOfAttacks, Transform spawnPos, List<EnemyStats> closestEnemyList)       //Spawn on closest enemies. Melee. Null closestEnemyList == doesn't spawn from player
+    public void MultiTargetBehavior(int numOfAttacks, Transform spawnPos, List<EnemyStats> closestEnemyList)       //Targets multiple mobs at once. Only automatic. Null closestEnemyList == doesn't spawn from player
     {
         rememberEnemiesList.Clear();
         if (useRandomTargeting) GetEnemiesInRangeUnsorted(spawnPos);
@@ -758,7 +760,7 @@ public class SkillController : MonoBehaviour
                         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
                         poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
                     } 
-                    else if (!autoUseSkill && t == 0 && !useThrowWeapon) //manual and first strike hits at mouse pos.
+                    else if (!autoUseSkill && t == 0 && !useThrowWeapon) //manual and first strike hits at mouse pos. Remove this later. Cannot be manual.
                     {
                         counter = 1;
                         direction = gameplayManager.mousePos - spawnPos.position;
@@ -783,7 +785,7 @@ public class SkillController : MonoBehaviour
                     }
                     else //target enemy
                     {
-                        if (closestEnemyList == null)   //skill used from another source than player
+                        if (closestEnemyList == null)   //skill used from another source other than player
                         {
                             nearestEnemy = FindNearestEnemy(spawnPos);
                             if (nearestEnemy != null)
@@ -823,7 +825,12 @@ public class SkillController : MonoBehaviour
                             }
                         }
                     }
+                    if (!isMelee)
+                    {
+                        poolList[i].transform.position = spawnPos.position;
+                    }
                     SetBehavourStats(poolList[i]);
+                    poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                     poolList[i].gameObject.SetActive(true);
                     break;

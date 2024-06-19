@@ -210,7 +210,7 @@ MonoBehaviour:
   highestDamageType: 0
   spreadAngle: 0
   maxSpreadAngle: 90
-  lateralOffset: 0.6
+  lateralOffset: 0.8
   targetless: 0
   targetPos: {x: 0, y: 0, z: 0}
   activateBarrage: 0

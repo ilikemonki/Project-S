@@ -14,7 +14,7 @@ public class GameplayManager : MonoBehaviour
     public InventoryManager inventory;
     public ItemManager itemManager;
     public GameObject waveUI;
-    public TextMeshProUGUI waveText;
+    public TextMeshProUGUI waveText, aliveMobsText;
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
@@ -97,6 +97,11 @@ public class GameplayManager : MonoBehaviour
             timer = 0;
             GoToNextRound();
         }
+        UpdateAliveMobsText();
+    }
+    public void UpdateAliveMobsText()
+    {
+        aliveMobsText.text = enemyManager.enemiesAlive.ToString();
     }
     public void GainExp(float amt)
     {
