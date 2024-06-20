@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735531886693428290}
   m_Layer: 0
-  m_Name: Orbit Pool
+  m_Name: FollowPlayer Pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   meleeWeaponPrefab: {fileID: 0}
   skillOrbDescription: {fileID: -6162699754021087771, guid: 9ab27ddedc0990c4da53d0ad80aba806, type: 3}
   poolParent: {fileID: 1735531887519041077}
-  orbitParent: {fileID: 1735531886693428291}
+  followPlayerParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
   poolList: []
   orbitPoolList: []

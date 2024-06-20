@@ -9,7 +9,7 @@ public class SkillController : MonoBehaviour
     public SkillBehavior prefabBehavior;
     public SkillBehavior meleeWeaponPrefab;
     public ItemDescription skillOrbDescription;
-    public GameObject poolParent, orbitParent;
+    public GameObject poolParent, followPlayerParent;
     public GameplayManager gameplayManager;
     public List<SkillBehavior> poolList = new();
     public List<SkillBehavior> orbitPoolList = new();
@@ -129,18 +129,18 @@ public class SkillController : MonoBehaviour
         PopulatePool(projectile + strike, prefabBehavior, poolParent, poolList);
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
-            PopulatePool(strike, meleeWeaponPrefab, orbitParent, orbitPoolList);
-            OrbitBehavior(strike, orbitParent.transform, orbitPoolList);
+            PopulatePool(strike, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
+            OrbitBehavior(strike, followPlayerParent.transform, orbitPoolList);
         } 
         else if (!isMelee && useOrbit) //orbiting projectile
         {
-            PopulatePool(projectile, prefabBehavior, orbitParent, orbitPoolList);
-            OrbitBehavior(projectile, orbitParent.transform, orbitPoolList);
+            PopulatePool(projectile, prefabBehavior, followPlayerParent, orbitPoolList);
+            OrbitBehavior(projectile, followPlayerParent.transform, orbitPoolList);
         }
         else if (useThrowWeapon)
         {
-            orbitParent.transform.SetParent(player.transform.parent);
-            PopulatePool(strike, meleeWeaponPrefab, orbitParent, orbitPoolList);
+            followPlayerParent.transform.SetParent(player.transform.parent);
+            PopulatePool(strike, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
         }
     }
     // Update is called once per frame
@@ -443,23 +443,24 @@ public class SkillController : MonoBehaviour
     {
         if (autoUseSkill)
         {
-            orbitParent.transform.Rotate(new Vector3(0, 0, -(60 + (travelSpeed * 10)) * Time.deltaTime));
+            followPlayerParent.transform.Rotate(new Vector3(0, 0, -(60 + (travelSpeed * 10)) * Time.deltaTime)); //rotation speed
         }
         else
         {
-            direction = gameplayManager.mousePos - orbitParent.transform.position;
-            orbitParent.transform.rotation = Quaternion.RotateTowards(orbitParent.transform.rotation, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), (60 + (travelSpeed * 10)) * Time.deltaTime);
+            direction = gameplayManager.mousePos - followPlayerParent.transform.position;
+            followPlayerParent.transform.rotation = Quaternion.RotateTowards(followPlayerParent.transform.rotation, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), (60 + (travelSpeed * 10)) * Time.deltaTime);
         }
-        for (int i = 0; i < orbitPoolList.Count; i++)
+        for (int i = 0; i < orbitPoolList.Count; i++) //increment current CD to respawn the skill.
         {
             if (!orbitPoolList[i].isActiveAndEnabled)
             {
                 orbitPoolList[i].currentDespawnTime += Time.deltaTime;
-                if (orbitPoolList[i].currentDespawnTime >= despawnTime)
+                if (orbitPoolList[i].currentDespawnTime >= cooldown) //used to be set to despawnTime
                 {
                     orbitPoolList[i].travelSpeed = travelSpeed;
                     orbitPoolList[i].pierce = pierce;
                     orbitPoolList[i].chain = chain;
+                    orbitPoolList[i].currentDespawnTime = 0;
                     orbitPoolList[i].gameObject.SetActive(true);
                 }
             }
@@ -475,8 +476,8 @@ public class SkillController : MonoBehaviour
                 if (!pList[i].isActiveAndEnabled)
                 {
                     pList[i].isOrbitSkill = true;
-                    pList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * attackRange; 
-                    SetBehavourStats(poolList[i]);
+                    pList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * (attackRange * 0.5f); 
+                    SetBehavourStats(orbitPoolList[i]);
                     pList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -845,7 +846,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > orbitPoolList.Count - 2)
             {
-                PopulatePool(2, meleeWeaponPrefab, orbitParent, orbitPoolList);
+                PopulatePool(2, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
             }
             if (!orbitPoolList[i].isActiveAndEnabled)
             {
@@ -1009,6 +1010,10 @@ public class SkillController : MonoBehaviour
         duration = baseDuration * (1 + (gameplayManager.durationMultiplier  + addedCooldown / 100));
         knockBack = baseKnockBack + addedKnockBack;
         currentCooldown = 0;
+        for (int i = 0; i < orbitPoolList.Count; i++)
+        {
+            SetBehavourStats(orbitPoolList[i]);
+        }
     }
     public void SetBehavourStats(SkillBehavior sb)
     {

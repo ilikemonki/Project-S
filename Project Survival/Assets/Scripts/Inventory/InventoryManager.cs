@@ -79,7 +79,7 @@ public class InventoryManager : MonoBehaviour
             //Destroy Skill Controller when moving orb to inventory.
             draggableItem.skillController.enabled = false;
             Destroy(draggableItem.skillController.poolParent);
-            Destroy(draggableItem.skillController.orbitParent);
+            Destroy(draggableItem.skillController.followPlayerParent);
             Destroy(draggableItem.skillController.gameObject);
             draggableItem.skillController = null;
         }
