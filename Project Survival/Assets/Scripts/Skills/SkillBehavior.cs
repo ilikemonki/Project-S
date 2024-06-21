@@ -208,47 +208,47 @@ public class SkillBehavior : MonoBehaviour
                 else if (skillController.useBurst)
                 {
                     gameObject.SetActive(false);
-                    skillController.BurstBehavior(skillController.strike, enemy.transform, transform);
+                    skillController.BurstBehavior(skillController.meleeAmount, enemy.transform, transform);
                 }
                 else if (skillController.useSpread)
                 {
                     gameObject.SetActive(false); 
                     if (skillController.useRandomDirection)
-                        skillController.SpreadBehavior(skillController.strike, skillController.maxSpreadAngle, null, transform, false);
+                        skillController.SpreadBehavior(skillController.meleeAmount, skillController.maxSpreadAngle, null, transform, false);
                     else if (skillController.useBackwardsDirection)
                     {
-                        skillController.SpreadBehavior(skillController.strike - (skillController.strike / 2), skillController.maxSpreadAngle, enemy.transform, transform, false);
-                        skillController.SpreadBehavior(skillController.strike / 2, skillController.maxSpreadAngle, enemy.transform, transform, true);
+                        skillController.SpreadBehavior(skillController.meleeAmount - (skillController.meleeAmount / 2), skillController.maxSpreadAngle, enemy.transform, transform, false);
+                        skillController.SpreadBehavior(skillController.meleeAmount / 2, skillController.maxSpreadAngle, enemy.transform, transform, true);
                     }
                     else
                     {
-                        skillController.SpreadBehavior(skillController.strike, skillController.maxSpreadAngle, enemy.transform, transform, false);
+                        skillController.SpreadBehavior(skillController.meleeAmount, skillController.maxSpreadAngle, enemy.transform, transform, false);
                     }
                 }
                 else if (skillController.useLateral)
                 {
                     gameObject.SetActive(false);
                     if (skillController.useRandomDirection)
-                        skillController.LateralBehavior(skillController.strike, transform.localScale.x - skillController.lateralOffset, null, transform, false);
+                        skillController.LateralBehavior(skillController.meleeAmount, transform.localScale.x - skillController.lateralOffset, null, transform, false);
                     else if (skillController.useBackwardsDirection)
                     {
-                        skillController.LateralBehavior(skillController.strike - (skillController.strike / 2), transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
-                        skillController.LateralBehavior(skillController.strike / 2, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, true);
+                        skillController.LateralBehavior(skillController.meleeAmount - (skillController.meleeAmount / 2), transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
+                        skillController.LateralBehavior(skillController.meleeAmount / 2, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, true);
                     }
                     else
                     {
-                        skillController.LateralBehavior(skillController.strike, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
+                        skillController.LateralBehavior(skillController.meleeAmount, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
                     }
                 }
                 else if (skillController.useCircular)
                 {
                     gameObject.SetActive(false);
-                    skillController.CircularBehavior(skillController.strike, transform);
+                    skillController.CircularBehavior(skillController.meleeAmount, transform);
                 }
                 else if (skillController.useOnTarget)
                 {
                     gameObject.SetActive(false);
-                    skillController.MultiTargetBehavior(skillController.strike, transform, null);
+                    skillController.MultiTargetBehavior(skillController.meleeAmount, transform, null);
                 }
                 return;
             }

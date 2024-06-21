@@ -36,7 +36,7 @@ public class GameplayManager : MonoBehaviour
     public float projectileDamageMultiplier, meleeDamageMultiplier;
     public List<float> baseDamageTypeAdditive;
     public List<float> damageTypeMultiplier;
-    public int strikeAdditive, comboAdditive, projectileAdditive, pierceAdditive, chainAdditive;
+    public int meleeAmountAdditive, comboAdditive, projectileAmountAdditive, pierceAdditive, chainAdditive;
     public float attackRangeMultiplier, projectileAttackRangeMultiplier, meleeAttackRangeMultiplier;
     public float durationMultiplier;
     public float cooldownMultiplier, projectileCooldownMultiplier, meleeCooldownMultiplier;

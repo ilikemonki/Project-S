@@ -116,9 +116,9 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.baseLifeSteal = prefab.baseLifeSteal;
                 skillControllerToolTip.baseLifeStealChance = prefab.baseLifeStealChance;
                 skillControllerToolTip.basePierce = prefab.basePierce;
-                skillControllerToolTip.baseProjectile = prefab.baseProjectile;
+                skillControllerToolTip.baseProjectileAmount = prefab.baseProjectileAmount;
                 skillControllerToolTip.size = prefab.size;
-                skillControllerToolTip.baseStrike = prefab.baseStrike;
+                skillControllerToolTip.baseMeleeAmount = prefab.baseMeleeAmount;
                 skillControllerToolTip.baseTravelRange = prefab.baseTravelRange;
                 skillControllerToolTip.baseTravelSpeed = prefab.baseTravelSpeed;
                 skillControllerToolTip.addedAilmentsChance.AddRange(prefab.addedAilmentsChance);
@@ -137,9 +137,9 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.addedLifeSteal = prefab.addedLifeSteal;
                 skillControllerToolTip.addedLifeStealChance = prefab.addedLifeStealChance;
                 skillControllerToolTip.addedPierce = prefab.addedPierce;
-                skillControllerToolTip.addedProjectile = prefab.addedProjectile;
+                skillControllerToolTip.addedProjectileAmount = prefab.addedProjectileAmount;
                 skillControllerToolTip.addedSize = prefab.addedSize;
-                skillControllerToolTip.addedStrike = prefab.addedStrike;
+                skillControllerToolTip.addedMeleeAmount = prefab.addedMeleeAmount;
                 skillControllerToolTip.addedTravelRange = prefab.addedTravelRange;
                 skillControllerToolTip.addedTravelSpeed = prefab.addedTravelSpeed;
                 skillControllerToolTip.levelUpgrades.levelModifiersList.AddRange(prefab.levelUpgrades.levelModifiersList);
@@ -183,9 +183,9 @@ public class ToolTipManager : MonoBehaviour
         skillControllerToolTip.size = 0;
         skillControllerToolTip.lifeStealChance = 0; 
         skillControllerToolTip.lifeSteal = 0;
-        skillControllerToolTip.strike = 0;
+        skillControllerToolTip.meleeAmount = 0;
         skillControllerToolTip.combo = 0;
-        skillControllerToolTip.projectile = 0;
+        skillControllerToolTip.projectileAmount = 0;
         skillControllerToolTip.pierce = 0;
         skillControllerToolTip.chain = 0;
     }

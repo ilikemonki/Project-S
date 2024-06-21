@@ -155,8 +155,8 @@ public class LevelUpManager : MonoBehaviour
     }
     public bool CheckModifier(UpdateStats.Modifier mod) //Check modifier if they can be chosen
     {
-        if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectile 
-            || mod == UpdateStats.Modifier.strike || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.base_cold_damage
+        if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectileAmount 
+            || mod == UpdateStats.Modifier.meleeAmount || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.base_cold_damage
             || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage || mod == UpdateStats.Modifier.base_physical_damage)
         {
             return false;

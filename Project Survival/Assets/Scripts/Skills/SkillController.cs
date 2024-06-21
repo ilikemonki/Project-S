@@ -35,7 +35,7 @@ public class SkillController : MonoBehaviour
     public float baseKnockBack;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseLifeStealChance, baseLifeSteal;
-    public int baseStrike, baseCombo, baseProjectile, basePierce, baseChain;
+    public int baseMeleeAmount, baseCombo, baseProjectileAmount, basePierce, baseChain;
     public float despawnTime; //skills that don't travel or have duration will have despawnTime
     [Header("Current Stats")]
     public List<float> damageTypes;
@@ -51,7 +51,7 @@ public class SkillController : MonoBehaviour
     public float criticalChance, criticalDamage;
     public float size;
     public float lifeStealChance, lifeSteal;
-    public int strike, combo, projectile, pierce, chain;
+    public int meleeAmount, combo, projectileAmount, pierce, chain;
     [Header("Other Stats")]
     public float currentCooldown;
     int counter;    //Used in spread skill
@@ -70,18 +70,19 @@ public class SkillController : MonoBehaviour
     public bool autoUseSkill; //Manual or automatic use of skill. Manual can freely target enemies.
     public bool isMelee; //whether or not it is melee or projectile.
     public bool useMultiTarget; //is automatic only.
-    public bool useBarrage; //Use strike/projectile back to back on the same target/area.
-    public bool useScatter; //Use strike/projectile back to back but has a uneven target/angle.
+    public bool useBarrage; //Use melee/projectile back to back on the same target/area.
+    public bool useScatter; //Use melee/projectile back to back but has a uneven target/angle.
     public bool useSpread; //skill will evenly spread and angle itself.
     public bool useOrbit; //targetless. Orbits around the player
     public bool useCircular; //targetless. Skill will evenly spread itself around the player.
     public bool useLateral; //Skill will line itself up horizontally.
-    public bool useBurst; //Use all strike/projectile at once but has uneven target/angle, long CD, Increased Stats.
+    public bool useBurst; //Use all melee/projectile at once but has uneven target/angle, long CD, Increased Stats.
     public bool useThrowWeapon; //Whether or not to put this in the game.
     [Header("Secondary Behaviors")]
     public bool useOnTarget;    //Spawns on enemies. If false, spawns on player.
+    public bool useSelfTarget; //use skill on self. Cannot be a skill gem.
     public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
-    public bool useBackwardsDirection; //Shoots from behind
+    public bool useBackwardsDirection; //Shoots from behind.
     public bool useReturnDirection; //projectiles only.
     public bool useRandomTargeting; //Randomly targets an enemy in range. Targetless/Manual does nothing.
     [Header("Trigger")]
@@ -102,7 +103,7 @@ public class SkillController : MonoBehaviour
     [HideInInspector] public float addedCriticalChance, addedCriticalDamage;
     [HideInInspector] public float addedSize;
     [HideInInspector] public float addedLifeStealChance, addedLifeSteal;
-    [HideInInspector] public int addedStrike, addedCombo, addedProjectile, addedPierce, addedChain;
+    [HideInInspector] public int addedMeleeAmount, addedCombo, addedProjectileAmount, addedPierce, addedChain;
 
     private void OnDrawGizmos()
     {
@@ -126,21 +127,21 @@ public class SkillController : MonoBehaviour
         {
             UpdateSkillStats();
         }
-        PopulatePool(projectile + strike, prefabBehavior, poolParent, poolList);
+        PopulatePool(projectileAmount + meleeAmount, prefabBehavior, poolParent, poolList);
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
-            PopulatePool(strike, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
-            OrbitBehavior(strike, followPlayerParent.transform, orbitPoolList);
+            PopulatePool(meleeAmount, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
+            OrbitBehavior(meleeAmount, followPlayerParent.transform, orbitPoolList);
         } 
         else if (!isMelee && useOrbit) //orbiting projectile
         {
-            PopulatePool(projectile, prefabBehavior, followPlayerParent, orbitPoolList);
-            OrbitBehavior(projectile, followPlayerParent.transform, orbitPoolList);
+            PopulatePool(projectileAmount, prefabBehavior, followPlayerParent, orbitPoolList);
+            OrbitBehavior(projectileAmount, followPlayerParent.transform, orbitPoolList);
         }
         else if (useThrowWeapon)
         {
             followPlayerParent.transform.SetParent(player.transform.parent);
-            PopulatePool(strike, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
+            PopulatePool(meleeAmount, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
         }
     }
     // Update is called once per frame
@@ -163,7 +164,7 @@ public class SkillController : MonoBehaviour
         }
         else if (activateBarrage) //activates barrage/scatter firing inverval.
         {
-            if (barrageCounter < strike + projectile) //fires the amount of attacks
+            if (barrageCounter < meleeAmount + projectileAmount) //fires the amount of attacks
             {
                 barrageCooldown += Time.deltaTime;
                 if (barrageCooldown >= 0.15f) //firing interval here.
@@ -176,7 +177,7 @@ public class SkillController : MonoBehaviour
                     barrageCooldown = 0;
                 }
             }
-            else if (barrageCounter >= strike + projectile)
+            else if (barrageCounter >= meleeAmount + projectileAmount)
             {
                 barrageCounter = 0;
                 activateBarrage = false;
@@ -245,68 +246,68 @@ public class SkillController : MonoBehaviour
         else if (useBurst)
         {
             if (targetless)
-                BurstBehavior(strike + projectile, null, transform);
+                BurstBehavior(meleeAmount + projectileAmount, null, transform);
             else
-                BurstBehavior(strike + projectile, nearestEnemy.transform, transform);
+                BurstBehavior(meleeAmount + projectileAmount, nearestEnemy.transform, transform);
         }
         else if (useSpread)
         {
             if (useRandomDirection)
-                SpreadBehavior(strike + projectile, maxSpreadAngle, null, transform, false);
+                SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, null, transform, false);
             else if (useBackwardsDirection)
             {
                 if (targetless)
                 {
-                    SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), maxSpreadAngle, null, transform, false);
-                    SpreadBehavior((strike + projectile) / 2, maxSpreadAngle, null, transform, true);
+                    SpreadBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), maxSpreadAngle, null, transform, false);
+                    SpreadBehavior((meleeAmount + projectileAmount) / 2, maxSpreadAngle, null, transform, true);
                 }
                 else
                 {
-                    SpreadBehavior((strike + projectile) - ((strike + projectile) / 2), maxSpreadAngle, nearestEnemy.transform, transform, false);
-                    SpreadBehavior((strike + projectile) / 2, maxSpreadAngle, nearestEnemy.transform, transform, true);
+                    SpreadBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), maxSpreadAngle, nearestEnemy.transform, transform, false);
+                    SpreadBehavior((meleeAmount + projectileAmount) / 2, maxSpreadAngle, nearestEnemy.transform, transform, true);
                 }
             }
             else
             {
                 if (targetless)
-                    SpreadBehavior(strike + projectile, maxSpreadAngle, null, transform, false);
+                    SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, null, transform, false);
                 else
-                    SpreadBehavior(strike + projectile, maxSpreadAngle, nearestEnemy.transform, transform, false);
+                    SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, nearestEnemy.transform, transform, false);
             }
         }
         else if (useLateral)
         {
             if (useRandomDirection)
-                LateralBehavior(strike + projectile, poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
+                LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
             else if (useBackwardsDirection)
             {
                 if (targetless)
                 {
-                    LateralBehavior((strike + projectile) - ((strike + projectile) / 2), poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
-                    LateralBehavior((strike + projectile) / 2, poolList[0].transform.localScale.x - lateralOffset, null, transform, true);
+                    LateralBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
+                    LateralBehavior((meleeAmount + projectileAmount) / 2, poolList[0].transform.localScale.x - lateralOffset, null, transform, true);
                 }
                 else
                 {
-                    LateralBehavior((strike + projectile) - ((strike + projectile) / 2), poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, false);
-                    LateralBehavior((strike + projectile) / 2, poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, true);
+                    LateralBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, false);
+                    LateralBehavior((meleeAmount + projectileAmount) / 2, poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, true);
                 }
             }
             else
             {
                 if (targetless)
-                    LateralBehavior(strike + projectile, poolList[0].transform.localScale.x * (1 - lateralOffset), null, transform, false);
+                    LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x * (1 - lateralOffset), null, transform, false);
                 else
-                    LateralBehavior(strike + projectile, poolList[0].transform.localScale.x * (1 - lateralOffset), nearestEnemy.transform, transform, false);
+                    LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x * (1 - lateralOffset), nearestEnemy.transform, transform, false);
             }
         }
         else if (useCircular)
         {
-            CircularBehavior(strike + projectile, transform);
+            CircularBehavior(meleeAmount + projectileAmount, transform);
         }
         else if (useMultiTarget)
         {
             if (enemyDistances.closestEnemyList.Count > 0)
-                MultiTargetBehavior(strike + projectile, transform, enemyDistances.closestEnemyList);
+                MultiTargetBehavior(meleeAmount + projectileAmount, transform, enemyDistances.closestEnemyList);
         }
         foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check use trigger skill condition
         {
@@ -331,7 +332,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > poolList.Count - 2)
             {
-                PopulatePool(strike + projectile, prefabBehavior, poolParent, poolList);
+                PopulatePool(meleeAmount + projectileAmount, prefabBehavior, poolParent, poolList);
             }
             if (!poolList[i].isActiveAndEnabled)
             {
@@ -367,7 +368,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > poolList.Count - 2)
             {
-                PopulatePool(strike + projectile, prefabBehavior, poolParent, poolList);
+                PopulatePool(meleeAmount + projectileAmount, prefabBehavior, poolParent, poolList);
             }
             if (!poolList[i].isActiveAndEnabled)
             {
@@ -469,7 +470,7 @@ public class SkillController : MonoBehaviour
     public void OrbitBehavior(int numOfAttacks, Transform spawnPos, List<SkillBehavior> pList)
     {
         spreadAngle = 360 / numOfAttacks;
-        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/strikes
+        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/melee
         {
             for (int i = 0; i < pList.Count; i++)
             {
@@ -488,7 +489,7 @@ public class SkillController : MonoBehaviour
     public void CircularBehavior(int numOfAttacks, Transform spawnPos)
     {
         spreadAngle = 360 / numOfAttacks;
-        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/strikes
+        for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/melee
         {
             for (int i = 0; i < poolList.Count; i++)
             {
@@ -761,7 +762,7 @@ public class SkillController : MonoBehaviour
                         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
                         poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
                     } 
-                    else if (!autoUseSkill && t == 0 && !useThrowWeapon) //manual and first strike hits at mouse pos. Remove this later. Cannot be manual.
+                    else if (!autoUseSkill && t == 0 && !useThrowWeapon) //manual and first melee hits at mouse pos. Remove this later. Cannot be manual.
                     {
                         counter = 1;
                         direction = gameplayManager.mousePos - spawnPos.position;
@@ -814,6 +815,7 @@ public class SkillController : MonoBehaviour
                             }
                             catch
                             {
+                                Debug.Log("Multi Target Error: Did not find target.");
                                 stopFiring = false;
                                 return;
                             }
@@ -869,7 +871,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > poolList.Count - 2)
             {
-                PopulatePool(projectile, prefabBehavior, poolParent, poolList);
+                PopulatePool(projectileAmount, prefabBehavior, poolParent, poolList);
             }
             if (!poolList[i].isActiveAndEnabled)
             {
@@ -967,7 +969,7 @@ public class SkillController : MonoBehaviour
         if (isMelee)   //is melee
         {
             damage = gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
-            strike = baseStrike + gameplayManager.strikeAdditive + addedStrike;
+            meleeAmount = baseMeleeAmount + gameplayManager.meleeAmountAdditive + addedMeleeAmount;
             combo = baseCombo + gameplayManager.comboAdditive + addedCombo;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier + addedAttackRange) / 100);
             cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
@@ -982,7 +984,7 @@ public class SkillController : MonoBehaviour
         else //is projectile
         {
             damage = gameplayManager.damageMultiplier + gameplayManager.projectileDamageMultiplier + addedDamage;
-            projectile = baseProjectile + gameplayManager.projectileAdditive + addedProjectile;
+            projectileAmount = baseProjectileAmount + gameplayManager.projectileAmountAdditive + addedProjectileAmount;
             chain = baseChain + gameplayManager.chainAdditive + addedChain;
             pierce = basePierce + gameplayManager.pierceAdditive + addedPierce;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier + addedAttackRange) / 100);

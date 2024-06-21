@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6779741434865891654}
   - component: {fileID: 5753103734539780946}
   m_Layer: 5
-  m_Name: Strike Gem
+  m_Name: Melee Gem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 2
-  itemName: Strike Gem
+  itemName: Melee Gem
   itemTags: Melee
   description: 
   itemSprite: {fileID: 21300000, guid: ea98bab234abcde4cb88fe332cf98b76, type: 3}
