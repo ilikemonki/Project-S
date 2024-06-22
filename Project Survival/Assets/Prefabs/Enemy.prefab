@@ -69,7 +69,16 @@ MonoBehaviour:
   enemyMovement: {fileID: 3096171719315698499}
   currentHealth: 0
   maxHealth: 100
-  damage: 3
+  damageTypes:
+  - 10
+  - 0
+  - 0
+  - 0
+  reductions:
+  - 0
+  - 0
+  - 0
+  - 0
   moveSpeed: 0
   baseMoveSpeed: 3
   exp: 1

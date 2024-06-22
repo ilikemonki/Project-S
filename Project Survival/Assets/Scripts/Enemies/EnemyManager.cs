@@ -21,7 +21,8 @@ public class EnemyManager : MonoBehaviour
         public int whenToSpawn;   //start spawning when spawner reach the amount of mobs spawned
         public int currentSpawned;
         //Make changes to these stats only when enemy stat changes happen. This way we don't need to keep calculating their stats everytime an enemy spawns.
-        public float damage;
+        public List<float> damageTypes; //manually set to 4 in inspector
+        public List<float> reductions;
         public float maxHealth;
         public float moveSpeed;
         public float exp;
@@ -159,7 +160,7 @@ public class EnemyManager : MonoBehaviour
             enemy.topAilmentsEffect[i] = 0;
         }
         enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.projectileRange, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
-        enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damage,
+        enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damageTypes, enemyGroup.reductions,
             enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectile, enemyGroup.projectileTravelSpeed, enemyGroup.projectileSize);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
         if (enemy.burned)
@@ -171,7 +172,12 @@ public class EnemyManager : MonoBehaviour
         {
             foreach (var eGroup in rounds[i].enemyGroups)
             {
-                eGroup.damage = eGroup.enemyPrefab.damage * (1 + gameplayManager.enemyDamageMultiplier / 100);
+                for (int j = 0; j < gameplayManager.damageTypeMultiplier.Count; j++)
+                {
+                    if (eGroup.enemyPrefab.damageTypes[j] > 0)
+                        eGroup.damageTypes[j] = eGroup.enemyPrefab.damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
+                    eGroup.reductions[j] = eGroup.enemyPrefab.reductions[j] + gameplayManager.enemyReductions[j];
+                }
                 eGroup.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
                 eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
                 eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.expMultiplier / 100);

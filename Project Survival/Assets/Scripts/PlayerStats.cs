@@ -21,6 +21,7 @@ public class PlayerStats : MonoBehaviour
     public float baseDefense;
     public float baseRegen, baseDegen;
     public float baseMagnetRange;
+    public List<float> baseReductions;
     [Header("Current Stats")]
     public float moveSpeed;
     public float currentHealth;
@@ -28,6 +29,7 @@ public class PlayerStats : MonoBehaviour
     public float defense;
     public float regen, degen;
     public float magnetRange;
+    public List<float> reductions;
     //I-Frames
     public float iFrameDuration;
     float iFrameTimer;
@@ -96,7 +98,7 @@ public class PlayerStats : MonoBehaviour
         {
             if (isInvincible) return;
             EnemyStats enemy = collision.GetComponentInParent<EnemyStats>();
-            TakeDamage(enemy.damage, true, false); //Do damage to player
+            TakeDamage(enemy.damageTypes, true); //Do damage to player
             foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
             {
                 if (sc.skillController != null)
@@ -115,7 +117,7 @@ public class PlayerStats : MonoBehaviour
         {
             if (isInvincible) return;
             EnemyProjectile enemyProj = collision.GetComponent<EnemyProjectile>();
-            TakeDamage(enemyProj.enemyStats.damage, false, false); //Do damage to player
+            TakeDamage(enemyProj.enemyStats.damageTypes, false); //Do damage to player
             enemyProj.gameObject.SetActive(false);
             return;
         }
@@ -143,45 +145,66 @@ public class PlayerStats : MonoBehaviour
         }
         playerCollector.collectiblesList.Remove(collectible);
     }
-    public void TakeDamage(float dmg, bool triggerIframe, bool isDotDamage)
+    public void TakeDamage(List<float> dmgType, bool triggerIframe)
     {
         if (isDead) return;
-        if (isDotDamage) //Dot damage doesn't calculate defense
+        for (int i = 0; i < dmgType.Count; i++)
         {
-            if (dmg <= 0) dmg = 1;
-            else dmg = Mathf.Round(dmg);
-        }
-        else
-        {
-            if (dmg <= 0 || defense >= dmg)
-                dmg = 1;
-            else
-                dmg = Mathf.Round(dmg - defense);
-        }
-        if (!triggerIframe) //hit w/ projectile will not trigger IFrame
-        {
-            if (gameObject.activeSelf)
+            if(dmgType[i] > 0)
             {
-                DamageFlash();
-            }
-            currentHealth -= dmg;
-            UpdateHealthBar();
-        }
-        else
-        {
-            if (!isInvincible)
-            {
-                if (gameObject.activeSelf)
+                float totalDamage = Mathf.Round((dmgType[i] - defense) * (1 - reductions[i] / 100));
+                if (totalDamage <= 0)
+                    totalDamage = 1;
+                if (!triggerIframe) //hit w/ projectile will not trigger IFrame
                 {
-                    DamageFlash();
+                    if (gameObject.activeSelf)
+                    {
+                        DamageFlash();
+                    }
+                    currentHealth -= totalDamage;
+                    UpdateHealthBar();
                 }
-                currentHealth -= dmg;
-                UpdateHealthBar();
-                iFrameTimer = iFrameDuration;
-                isInvincible = true;
+                else
+                {
+                    if (!isInvincible)
+                    {
+                        if (gameObject.activeSelf)
+                        {
+                            DamageFlash();
+                        }
+                        currentHealth -= totalDamage;
+                        UpdateHealthBar();
+                        iFrameTimer = iFrameDuration;
+                        isInvincible = true;
+                    }
+                }
+                FloatingTextController.DisplayPlayerText(transform, "-" + (totalDamage).ToString(), Color.red, 0.7f);
+                GameManager.totalDamageTaken += totalDamage;
+                foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
+                {
+                    if (sc.skillController != null)
+                    {
+                        if (sc.skillController.skillTrigger.useDamageTakenTrigger)
+                        {
+                            sc.skillController.skillTrigger.currentCounter += totalDamage;
+                            if (sc.skillController.currentCooldown <= 0f)
+                                sc.skillController.UseSkill();
+                        }
+                    }
+                }
+                break;
             }
         }
-        FloatingTextController.DisplayPlayerText(transform, "-" + (dmg).ToString(), Color.red, 0.7f);
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    public void TakeDegenDamage(float dmg)
+    {
+        if (isDead) return;
+        currentHealth -= dmg;
+        UpdateHealthBar();
         GameManager.totalDamageTaken += dmg;
         foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
         {
@@ -194,10 +217,6 @@ public class PlayerStats : MonoBehaviour
                         sc.skillController.UseSkill();
                 }
             }
-        }
-        if (currentHealth <= 0)
-        {
-            Die();
         }
     }
     public void UpdateMaxHealthBar()   //set health bar to current max
@@ -296,7 +315,7 @@ public class PlayerStats : MonoBehaviour
             amt *= -1; //make it positive
             if (amt >= currentHealth)
             {
-                TakeDamage(currentHealth - 1, false, true);
+                TakeDegenDamage(currentHealth - 1);
                 GameManager.totalDegen += currentHealth - 1;
                 foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
                 {
@@ -312,8 +331,8 @@ public class PlayerStats : MonoBehaviour
                 }
             }
             else
-            { 
-                TakeDamage(amt, false, true);
+            {
+                TakeDegenDamage(amt);
                 GameManager.totalDegen += amt;
                 foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
                 {
@@ -358,6 +377,10 @@ public class PlayerStats : MonoBehaviour
         moveSpeed = baseMoveSpeed * (1 + gameplayManager.moveSpeedMultiplier / 100);
         maxHealth = baseMaxHealth * (1 + gameplayManager.maxHealthMultiplier / 100);
         defense = baseDefense * (1 + gameplayManager.defenseMultiplier / 100);
+        for(int i = 0; i < reductions.Count; i++)
+        {
+            reductions[i] = baseReductions[i] + gameplayManager.reductionsAdditive[i];
+        }
         regen = baseRegen + gameplayManager.regenAdditive;
         degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100);

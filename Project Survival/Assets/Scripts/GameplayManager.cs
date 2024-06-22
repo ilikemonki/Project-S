@@ -52,21 +52,23 @@ public class GameplayManager : MonoBehaviour
     public List<float> ailmentsEffectMultiplier;
     public int dashChargesAdditive, dashCooldownMultiplier;
     public float dashPowerMultiplier;
-    public float travelRangeMultipiler, projectileTravelRangeMultipiler, meleeTravelRangeMultipiler, travelSpeedMultipiler, projectileTravelSpeedMultipiler, meleeTravelSpeedMultipiler;
+    public float travelRangeMultiplier, projectileTravelRangeMultiplier, meleeTravelRangeMultiplier, travelSpeedMultiplier, projectileTravelSpeedMultiplier, meleeTravelSpeedMultiplier;
     public float expMultiplier;
-    public float dropChanceMultiplier, coinDropChanceMultipiler;
+    public float dropChanceMultiplier, coinDropChanceMultiplier;
+    public List<float> reductionsAdditive;
     public int freeLevelupRerollAdditive, freeShopRerollAdditive; 
     [Header("Enemy Multipliers")]
     //Enemy Global Multipliers
     public float enemyMoveSpeedMultiplier;
     public float enemyMaxHealthMultiplier;
     public float enemyDamageMultiplier;
+    public List<float> enemyDamageTypeMultiplier;
     public float enemyAttackCooldownMultiplier;
     public float enemyProjectileAdditive;
     public float enemyProjectileTravelSpeedMultiplier;
     //public float enemyProjectileTravelRangeMultiplier;
     public float enemyProjectileSizeMultiplier;
-    public List<float> enemyResistances;//[0]physical,[1]fire,[2]cold,[3]lightning
+    public List<float> enemyReductions;//[0]physical,[1]fire,[2]cold,[3]lightning
     //add enemy spawn rate
 
     private void Start()

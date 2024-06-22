@@ -12,7 +12,8 @@ public class EnemyStats : MonoBehaviour
     //Stats
     public float currentHealth;
     public float maxHealth;
-    public float damage;
+    public List<float> damageTypes;
+    public List<float> reductions;
     public float moveSpeed, baseMoveSpeed; //baseMoveSpeed is the current movespeed, use to reset current movespeed back to normal when chilled.
     public float exp;
     public bool chilled, burned, shocked, bleeding;
@@ -48,13 +49,14 @@ public class EnemyStats : MonoBehaviour
         defaultMaterial = spriteRenderer.material;
         CheckAttack();
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, float damage, float exp, float attackCooldown, float projectile, float projectileSpeed, float projectileSize)
+    public void SetStats(float baseMoveSpeed, float maxHealth, List<float> damageTypes, List<float> reductions, float exp, float attackCooldown, float projectile, float projectileSpeed, float projectileSize)
     {
         this.baseMoveSpeed = baseMoveSpeed;
         moveSpeed = baseMoveSpeed;
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
-        this.damage = damage;
+        this.damageTypes.AddRange(damageTypes);
+        this.reductions.AddRange(reductions);
         this.exp = exp;
         this.attackCooldown = attackCooldown;
         this.projectile = projectile;

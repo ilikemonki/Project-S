@@ -105,13 +105,13 @@ public class EnemyUpgradeManager : MonoBehaviour
         switch (mod)
         {
             case UpdateStats.EnemyModifier.attack_cooldown: value = 5; value += valueBoost; break;
-            case UpdateStats.EnemyModifier.cold_resistance: value = 5; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.cold_reduction: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.damage: value = 20; value += valueBoost; break;
-            case UpdateStats.EnemyModifier.fire_resistance: value = 5; value += valueBoost; break;
-            case UpdateStats.EnemyModifier.lightning_resistance: value = 5; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.fire_reduction: value = 5; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.lightning_reduction: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.max_health: value = 20; value += valueBoost; break;
             case UpdateStats.EnemyModifier.move_speed: value = 5; value += valueBoost; break;
-            case UpdateStats.EnemyModifier.physical_resistance: value = 5; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.physical_reduction: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.projectile: value = 1; break;
             case UpdateStats.EnemyModifier.projectile_size: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.projectile_travel_speed: value = 5; value += valueBoost; break;

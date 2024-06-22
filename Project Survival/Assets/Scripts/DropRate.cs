@@ -136,7 +136,7 @@ public class DropRate : MonoBehaviour
         {
             if (item.prefab.CompareTag("Coin"))
             {
-                item.chanceRange = Mathf.Round(item.baseChanceRange - ((gameplayManager.dropChanceMultiplier + gameplayManager.coinDropChanceMultipiler) / 10));
+                item.chanceRange = Mathf.Round(item.baseChanceRange - ((gameplayManager.dropChanceMultiplier + gameplayManager.coinDropChanceMultiplier) / 10));
             }
             item.chanceRange = Mathf.Round(item.baseChanceRange - ((gameplayManager.dropChanceMultiplier) / 10));
         }

@@ -978,8 +978,8 @@ public class SkillController : MonoBehaviour
             size = gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize;
             lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.meleeLifeStealChanceAdditive + addedLifeStealChance;
             lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.meleeLifeStealAdditive + addedLifeSteal;
-            travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultipiler + gameplayManager.meleeTravelSpeedMultipiler + addedTravelSpeed) / 100);
-            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultipiler + gameplayManager.meleeTravelRangeMultipiler + addedTravelRange) / 100);
+            travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultiplier + gameplayManager.meleeTravelSpeedMultiplier + addedTravelSpeed) / 100);
+            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultiplier + gameplayManager.meleeTravelRangeMultiplier + addedTravelRange) / 100);
         }
         else //is projectile
         {
@@ -994,8 +994,8 @@ public class SkillController : MonoBehaviour
             size = gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize;
             lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.projectileLifeStealChanceAdditive + addedLifeStealChance;
             lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.projectileLifeStealAdditive + addedLifeSteal;
-            travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultipiler + gameplayManager.projectileTravelSpeedMultipiler + addedTravelSpeed) / 100);
-            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultipiler + gameplayManager.projectileTravelRangeMultipiler + addedTravelRange) / 100);
+            travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultiplier + gameplayManager.projectileTravelSpeedMultiplier + addedTravelSpeed) / 100);
+            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultiplier + gameplayManager.projectileTravelRangeMultiplier + addedTravelRange) / 100);
         }
         if (gameplayManager.furthestAttackRange < attackRange)
         {
@@ -1021,11 +1021,11 @@ public class SkillController : MonoBehaviour
     {
         if (isMelee && combo > 0 && comboMultiplier > 0)
         {
-            sb.SetStats((damageTypes[0] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyResistances[0] / 100), (damageTypes[1] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyResistances[1] / 100),
-                (damageTypes[2] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyResistances[2] / 100), (damageTypes[3] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyResistances[3] / 100), travelSpeed, pierce, chain, size);
+            sb.SetStats((damageTypes[0] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[0] / 100), (damageTypes[1] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[1] / 100),
+                (damageTypes[2] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[2] / 100), (damageTypes[3] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size);
             return;
         }
-        sb.SetStats(damageTypes[0] * (1 - gameplayManager.enemyResistances[0] / 100), damageTypes[1] * (1 - gameplayManager.enemyResistances[1] / 100),
-            damageTypes[2] * (1 - gameplayManager.enemyResistances[2] / 100), damageTypes[3] * (1 - gameplayManager.enemyResistances[3] / 100), travelSpeed, pierce, chain, size);
+        sb.SetStats(damageTypes[0] * (1 - gameplayManager.enemyReductions[0] / 100), damageTypes[1] * (1 - gameplayManager.enemyReductions[1] / 100),
+            damageTypes[2] * (1 - gameplayManager.enemyReductions[2] / 100), damageTypes[3] * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size);
     }
 }

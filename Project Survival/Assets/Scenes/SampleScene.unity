@@ -4783,10 +4783,15 @@ MonoBehaviour:
   isDead: 0
   baseMoveSpeed: 5
   baseMaxHealth: 100
-  baseDefense: 3
+  baseDefense: 0
   baseRegen: 1
   baseDegen: 0
   baseMagnetRange: 8
+  baseReductions:
+  - 0
+  - 0
+  - 0
+  - 0
   moveSpeed: 0
   currentHealth: 0
   maxHealth: 0
@@ -4794,6 +4799,11 @@ MonoBehaviour:
   regen: 0
   degen: 0
   magnetRange: 0
+  reductions:
+  - 0
+  - 0
+  - 0
+  - 0
   iFrameDuration: 0.2
   isInvincible: 0
   dodgeList: []
@@ -5912,7 +5922,16 @@ MonoBehaviour:
       numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
-      damage: 0
+      damageTypes:
+      - 0
+      - 0
+      - 0
+      - 0
+      reductions:
+      - 0
+      - 0
+      - 0
+      - 0
       maxHealth: 0
       moveSpeed: 0
       exp: 0
@@ -5924,19 +5943,16 @@ MonoBehaviour:
       numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
-      damage: 0
-      maxHealth: 0
-      moveSpeed: 0
-      exp: 0
-      attackCooldown: 0
-      projectile: 0
-      projectileTravelSpeed: 0
-      projectileSize: 0
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-      numberToSpawn: 100
-      whenToSpawn: 0
-      currentSpawned: 0
-      damage: 0
+      damageTypes:
+      - 0
+      - 0
+      - 0
+      - 0
+      reductions:
+      - 0
+      - 0
+      - 0
+      - 0
       maxHealth: 0
       moveSpeed: 0
       exp: 0
@@ -21411,9 +21427,9 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  strikeAdditive: 0
+  meleeAmountAdditive: 0
   comboAdditive: 0
-  projectileAdditive: 0
+  projectileAmountAdditive: 0
   pierceAdditive: 0
   chainAdditive: 0
   attackRangeMultiplier: 0
@@ -21462,25 +21478,35 @@ MonoBehaviour:
   dashChargesAdditive: 0
   dashCooldownMultiplier: 0
   dashPowerMultiplier: 0
-  travelRangeMultipiler: 0
-  projectileTravelRangeMultipiler: 0
-  meleeTravelRangeMultipiler: 0
-  travelSpeedMultipiler: 0
-  projectileTravelSpeedMultipiler: 0
-  meleeTravelSpeedMultipiler: 0
+  travelRangeMultiplier: 0
+  projectileTravelRangeMultiplier: 0
+  meleeTravelRangeMultiplier: 0
+  travelSpeedMultiplier: 0
+  projectileTravelSpeedMultiplier: 0
+  meleeTravelSpeedMultiplier: 0
   expMultiplier: 0
   dropChanceMultiplier: 0
-  coinDropChanceMultipiler: 0
+  coinDropChanceMultiplier: 0
+  reductionsAdditive:
+  - 0
+  - 0
+  - 0
+  - 0
   freeLevelupRerollAdditive: 1
   freeShopRerollAdditive: 1
   enemyMoveSpeedMultiplier: 0
   enemyMaxHealthMultiplier: 0
   enemyDamageMultiplier: 0
+  enemyDamageTypeMultiplier:
+  - 0
+  - 0
+  - 0
+  - 0
   enemyAttackCooldownMultiplier: 0
   enemyProjectileAdditive: 0
   enemyProjectileTravelSpeedMultiplier: 0
   enemyProjectileSizeMultiplier: 0
-  enemyResistances:
+  enemyReductions:
   - 0
   - 0
   - 0
@@ -54598,7 +54624,7 @@ MonoBehaviour:
   meleeWeaponPrefab: {fileID: 0}
   skillOrbDescription: {fileID: 0}
   poolParent: {fileID: 0}
-  orbitParent: {fileID: 0}
+  followPlayerParent: {fileID: 0}
   gameplayManager: {fileID: 944733854}
   poolList: []
   orbitPoolList: []
@@ -54634,9 +54660,9 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseStrike: 0
+  baseMeleeAmount: 0
   baseCombo: 0
-  baseProjectile: 0
+  baseProjectileAmount: 0
   basePierce: 0
   baseChain: 0
   despawnTime: 0
@@ -54667,9 +54693,9 @@ MonoBehaviour:
   size: 0
   lifeStealChance: 0
   lifeSteal: 0
-  strike: 0
+  meleeAmount: 0
   combo: 0
-  projectile: 0
+  projectileAmount: 0
   pierce: 0
   chain: 0
   currentCooldown: 0
@@ -54685,7 +54711,7 @@ MonoBehaviour:
   activateBarrage: 0
   autoUseSkill: 0
   isMelee: 0
-  useOnTarget: 0
+  useMultiTarget: 0
   useBarrage: 0
   useScatter: 0
   useSpread: 0
@@ -54694,6 +54720,8 @@ MonoBehaviour:
   useLateral: 0
   useBurst: 0
   useThrowWeapon: 0
+  useOnTarget: 0
+  useSelfTarget: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
@@ -54732,8 +54760,8 @@ MonoBehaviour:
   addedSize: 0
   addedLifeStealChance: 0
   addedLifeSteal: 0
-  addedStrike: 0
+  addedMeleeAmount: 0
   addedCombo: 0
-  addedProjectile: 0
+  addedProjectileAmount: 0
   addedPierce: 0
   addedChain: 0

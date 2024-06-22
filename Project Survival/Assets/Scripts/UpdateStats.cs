@@ -31,7 +31,7 @@ public class UpdateStats : MonoBehaviour
     public enum EnemyModifier
     {
         move_speed, max_health, damage, attack_cooldown, projectile, projectile_travel_speed, projectile_size,
-        physical_resistance, fire_resistance, cold_resistance, lightning_resistance
+        physical_reduction, fire_reduction, cold_reduction, lightning_reduction
     }
     public static UpdateStats instance;
     public GameplayManager gameplayManager;
@@ -92,8 +92,8 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.melee_life_steal: instance.gameplayManager.meleeLifeStealAdditive += x; break;
                 case Modifier.melee_life_steal_chance: instance.gameplayManager.meleeLifeStealChanceAdditive += x; break;
                 case Modifier.melee_size: instance.gameplayManager.meleeSizeMultiplier += x; break;
-                case Modifier.melee_travel_range: instance.gameplayManager.meleeTravelRangeMultipiler += x; break;
-                case Modifier.melee_travel_speed: instance.gameplayManager.meleeTravelSpeedMultipiler += x; break;
+                case Modifier.melee_travel_range: instance.gameplayManager.meleeTravelRangeMultiplier += x; break;
+                case Modifier.melee_travel_speed: instance.gameplayManager.meleeTravelSpeedMultiplier += x; break;
                 case Modifier.movement_speed: instance.gameplayManager.moveSpeedMultiplier += x; break;
                 case Modifier.physical_damage: instance.gameplayManager.damageTypeMultiplier[0] += x; break;
                 case Modifier.pierce: instance.gameplayManager.pierceAdditive += (int)x; break;
@@ -106,15 +106,15 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.projectile_life_steal: instance.gameplayManager.projectileLifeStealAdditive += x; break;
                 case Modifier.projectile_life_steal_chance: instance.gameplayManager.projectileLifeStealChanceAdditive += x; break;
                 case Modifier.projectile_size: instance.gameplayManager.projectileSizeMultiplier += x; break;
-                case Modifier.projectile_travel_range: instance.gameplayManager.projectileTravelRangeMultipiler += x; break;
-                case Modifier.projectile_travel_speed: instance.gameplayManager.projectileTravelSpeedMultipiler += x; break;
+                case Modifier.projectile_travel_range: instance.gameplayManager.projectileTravelRangeMultiplier += x; break;
+                case Modifier.projectile_travel_speed: instance.gameplayManager.projectileTravelSpeedMultiplier += x; break;
                 case Modifier.regen: instance.gameplayManager.regenAdditive += x; break;
                 case Modifier.shock_chance: instance.gameplayManager.ailmentsChanceAdditive[3] += x; break;
                 case Modifier.shock_effect: instance.gameplayManager.ailmentsEffectMultiplier[3] += x; break;
                 case Modifier.size: instance.gameplayManager.sizeMultiplier += x; break;
                 case Modifier.meleeAmount: instance.gameplayManager.meleeAmountAdditive += (int)x; break;
-                case Modifier.travel_range: instance.gameplayManager.travelRangeMultipiler += x; break;
-                case Modifier.travel_speed: instance.gameplayManager.travelSpeedMultipiler += x; break;
+                case Modifier.travel_range: instance.gameplayManager.travelRangeMultiplier += x; break;
+                case Modifier.travel_speed: instance.gameplayManager.travelSpeedMultiplier += x; break;
                 default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[lv].modifier[i]); break;
             }
         }
@@ -275,13 +275,13 @@ public class UpdateStats : MonoBehaviour
             switch (upgrade.modifier[i])
             {
                 case EnemyModifier.attack_cooldown: instance.gameplayManager.enemyAttackCooldownMultiplier += upgrade.amt[i]; break;
-                case EnemyModifier.cold_resistance: instance.gameplayManager.enemyResistances[2] += upgrade.amt[i]; break;
+                case EnemyModifier.cold_reduction: instance.gameplayManager.enemyReductions[2] += upgrade.amt[i]; break;
                 case EnemyModifier.damage: instance.gameplayManager.enemyDamageMultiplier += upgrade.amt[i]; break;
-                case EnemyModifier.fire_resistance: instance.gameplayManager.enemyResistances[1] += upgrade.amt[i]; break;
-                case EnemyModifier.lightning_resistance: instance.gameplayManager.enemyResistances[3] += upgrade.amt[i]; break;
+                case EnemyModifier.fire_reduction: instance.gameplayManager.enemyReductions[1] += upgrade.amt[i]; break;
+                case EnemyModifier.lightning_reduction: instance.gameplayManager.enemyReductions[3] += upgrade.amt[i]; break;
                 case EnemyModifier.max_health: instance.gameplayManager.enemyMaxHealthMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.move_speed: instance.gameplayManager.enemyMoveSpeedMultiplier += upgrade.amt[i]; break;
-                case EnemyModifier.physical_resistance: instance.gameplayManager.enemyResistances[0] += upgrade.amt[i]; break;
+                case EnemyModifier.physical_reduction: instance.gameplayManager.enemyReductions[0] += upgrade.amt[i]; break;
                 case EnemyModifier.projectile: instance.gameplayManager.enemyProjectileAdditive += upgrade.amt[i]; break;
                 case EnemyModifier.projectile_size: instance.gameplayManager.enemyProjectileSizeMultiplier += upgrade.amt[i]; break;
                 //case EnemyModifier.projectile_travel_range: instance.gameplayManager.enemyProjectileTravelRangeMultiplier += upgrade.amt[i]; break;
@@ -507,8 +507,8 @@ public class UpdateStats : MonoBehaviour
         fullString += "Dash Power: " + instance.gameplayManager.player.playerMovement.dashPower + " (+" + instance.gameplayManager.dashPowerMultiplier + "%)\n";
         fullString += "Magnet Range: " + instance.gameplayManager.player.magnetRange + " (+" + instance.gameplayManager.magnetRangeMultiplier + "%)\n";
         fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + " (+" + instance.gameplayManager.expMultiplier + "%)\n";
-        if (instance.gameplayManager.coinDropChanceMultipiler > 0)
-            fullString += "Coin Drop Chance: +" + instance.gameplayManager.coinDropChanceMultipiler + "%\n";
+        if (instance.gameplayManager.coinDropChanceMultiplier > 0)
+            fullString += "Coin Drop Chance: +" + instance.gameplayManager.coinDropChanceMultiplier + "%\n";
         if (instance.gameplayManager.dropChanceMultiplier > 0)
             fullString += "Drop Chance: +" + instance.gameplayManager.dropChanceMultiplier + "%\n";
         instance.inventoryManager.playerStats1Text.text = fullString;
@@ -619,18 +619,18 @@ public class UpdateStats : MonoBehaviour
             fullString += "Projectile Lifesteal: +" + instance.gameplayManager.projectileLifeStealAdditive + "\n";
         if (instance.gameplayManager.meleeLifeStealAdditive > 0)
             fullString += "Melee Lifesteal: +" + instance.gameplayManager.meleeLifeStealAdditive + "\n";
-        if (instance.gameplayManager.travelRangeMultipiler > 0)
-            fullString += "Travel Range: +" + instance.gameplayManager.travelRangeMultipiler + "%\n";
-        if (instance.gameplayManager.projectileTravelRangeMultipiler > 0)
-            fullString += "Projectile Travel Range: +" + instance.gameplayManager.projectileTravelRangeMultipiler + "%\n";
-        if (instance.gameplayManager.meleeTravelRangeMultipiler > 0)
-            fullString += "Melee Travel Range: +" + instance.gameplayManager.meleeTravelRangeMultipiler + "%\n";
-        if (instance.gameplayManager.travelSpeedMultipiler > 0)
-            fullString += "Travel Speed: +" + instance.gameplayManager.travelSpeedMultipiler + "%\n";
-        if (instance.gameplayManager.projectileTravelSpeedMultipiler > 0)
-            fullString += "Projectile Travel Speed: +" + instance.gameplayManager.projectileTravelSpeedMultipiler + "%\n";
-        if (instance.gameplayManager.meleeTravelSpeedMultipiler > 0)
-            fullString += "Melee Travel Speed: +" + instance.gameplayManager.meleeTravelSpeedMultipiler + "%\n";
+        if (instance.gameplayManager.travelRangeMultiplier > 0)
+            fullString += "Travel Range: +" + instance.gameplayManager.travelRangeMultiplier + "%\n";
+        if (instance.gameplayManager.projectileTravelRangeMultiplier > 0)
+            fullString += "Projectile Travel Range: +" + instance.gameplayManager.projectileTravelRangeMultiplier + "%\n";
+        if (instance.gameplayManager.meleeTravelRangeMultiplier > 0)
+            fullString += "Melee Travel Range: +" + instance.gameplayManager.meleeTravelRangeMultiplier + "%\n";
+        if (instance.gameplayManager.travelSpeedMultiplier > 0)
+            fullString += "Travel Speed: +" + instance.gameplayManager.travelSpeedMultiplier + "%\n";
+        if (instance.gameplayManager.projectileTravelSpeedMultiplier > 0)
+            fullString += "Projectile Travel Speed: +" + instance.gameplayManager.projectileTravelSpeedMultiplier + "%\n";
+        if (instance.gameplayManager.meleeTravelSpeedMultiplier > 0)
+            fullString += "Melee Travel Speed: +" + instance.gameplayManager.meleeTravelSpeedMultiplier + "%\n";
         if (instance.gameplayManager.sizeMultiplier > 0)
             fullString += "Size: +" + instance.gameplayManager.sizeMultiplier + "%\n";
         if (instance.gameplayManager.projectileSizeMultiplier > 0)
@@ -645,18 +645,18 @@ public class UpdateStats : MonoBehaviour
         instance.inventoryManager.enemyStatsText.text = string.Empty;
         string fullString = "";
         fullString += "Max Health: +" + instance.gameplayManager.enemyMaxHealthMultiplier + "%\n";
-        for (int i = 0; i < instance.gameplayManager.enemyResistances.Count; i++)
+        for (int i = 0; i < instance.gameplayManager.enemyReductions.Count; i++)
         {
-            if (instance.gameplayManager.enemyResistances[i] > 0)
+            if (instance.gameplayManager.enemyReductions[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "Physical Resistance: +" + instance.gameplayManager.enemyResistances[i] + "%\n";
+                    fullString += "Physical Resistance: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
                 else if (i == 1) //Fire damage
-                    fullString += "<color=red>Fire Resistance</color>: +" + instance.gameplayManager.enemyResistances[i] + "%\n";
+                    fullString += "<color=red>Fire Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
                 else if (i == 2) //cold damage
-                    fullString += "<color=blue>Cold Resistance</color>: +" + instance.gameplayManager.enemyResistances[i] + "%\n";
+                    fullString += "<color=blue>Cold Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
                 else if (i == 3) //lightning damage
-                    fullString += "<color=yellow>Lightning Resistance</color>: +" + instance.gameplayManager.enemyResistances[i] + "%\n";
+                    fullString += "<color=yellow>Lightning Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
             }
         }
         fullString += "Damage: +" + instance.gameplayManager.enemyDamageMultiplier + "%\n";
@@ -676,13 +676,13 @@ public class UpdateStats : MonoBehaviour
             switch (mod.modifier[i])
             {
                 case EnemyModifier.attack_cooldown: fullString += "Attack Cooldown: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.cold_resistance: fullString += "Cold Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.cold_reduction: fullString += "Cold Resistance: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.damage: fullString += "Damage: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.fire_resistance: fullString += "Fire Resistance: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.lightning_resistance: fullString += "Lightning Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.fire_reduction: fullString += "Fire Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.lightning_reduction: fullString += "Lightning Resistance: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.max_health: fullString += "Max Health: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.move_speed: fullString += "Movement Speed: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.physical_resistance: fullString += "Physical Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.physical_reduction: fullString += "Physical Resistance: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.projectile: fullString += "Projectile: +" + mod.amt[i] + "\n"; break;
                 case EnemyModifier.projectile_size: fullString += "Projectile Size: +" + mod.amt[i] + "%\n"; break;
                 //case EnemyModifier.projectile_travel_range: fullString += "Projectile Travel Range: +" + mod.amt[i] + "%\n"; break;
