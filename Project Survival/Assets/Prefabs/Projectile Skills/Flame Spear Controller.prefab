@@ -165,9 +165,9 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseStrike: 0
+  baseMeleeAmount: 0
   baseCombo: 0
-  baseProjectile: 1
+  baseProjectileAmount: 1
   basePierce: 4
   baseChain: 0
   despawnTime: 0
@@ -198,9 +198,9 @@ MonoBehaviour:
   size: 0
   lifeStealChance: 0
   lifeSteal: 0
-  strike: 0
+  meleeAmount: 0
   combo: 0
-  projectile: 0
+  projectileAmount: 0
   pierce: 0
   chain: 0
   currentCooldown: 0
@@ -226,6 +226,7 @@ MonoBehaviour:
   useBurst: 0
   useThrowWeapon: 0
   useOnTarget: 0
+  useSelfTarget: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
@@ -264,9 +265,9 @@ MonoBehaviour:
   addedSize: 0
   addedLifeStealChance: 0
   addedLifeSteal: 0
-  addedStrike: 0
+  addedMeleeAmount: 0
   addedCombo: 0
-  addedProjectile: 0
+  addedProjectileAmount: 0
   addedPierce: 0
   addedChain: 0
 --- !u!114 &6986161325550505959

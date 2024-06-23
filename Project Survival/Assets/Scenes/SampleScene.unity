@@ -5960,6 +5960,27 @@ MonoBehaviour:
       projectile: 0
       projectileTravelSpeed: 0
       projectileSize: 0
+    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      damageTypes:
+      - 0
+      - 0
+      - 0
+      - 0
+      reductions:
+      - 0
+      - 0
+      - 0
+      - 0
+      maxHealth: 0
+      moveSpeed: 0
+      exp: 0
+      attackCooldown: 0
+      projectile: 0
+      projectileTravelSpeed: 0
+      projectileSize: 0
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
     spawnInterval: 1
