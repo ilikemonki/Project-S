@@ -9,7 +9,7 @@ public class UpdateStats : MonoBehaviour
     public enum Modifier
     {
         //additive
-        meleeAmount, projectileAmount, pierce, chain,
+        melee_amount, projectile_amount, pierce, chain, combo,
         base_physical_damage, base_fire_damage, base_cold_damage, base_lightning_damage,
         critical_chance, projectile_critical_chance, melee_critical_chance, critical_damage, projectile_critical_damage, melee_critical_damage,
         regen, degen, life_steal_chance, projectile_life_steal_chance, melee_life_steal_chance, life_steal, projectile_life_steal, melee_life_steal,
@@ -72,6 +72,7 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.chill_chance: instance.gameplayManager.ailmentsChanceAdditive[2] += x; break;
                 case Modifier.chill_effect: instance.gameplayManager.ailmentsEffectMultiplier[2] += x; break;
                 case Modifier.cold_damage: instance.gameplayManager.damageTypeMultiplier[2] += x; break;
+                case Modifier.combo: instance.gameplayManager.comboAdditive += (int)x; break;
                 case Modifier.cooldown: instance.gameplayManager.cooldownMultiplier += x; break;
                 case Modifier.critical_chance: instance.gameplayManager.criticalChanceAdditive += x; break;
                 case Modifier.critical_damage: instance.gameplayManager.criticalDamageAdditive += x; break;
@@ -97,7 +98,7 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.movement_speed: instance.gameplayManager.moveSpeedMultiplier += x; break;
                 case Modifier.physical_damage: instance.gameplayManager.damageTypeMultiplier[0] += x; break;
                 case Modifier.pierce: instance.gameplayManager.pierceAdditive += (int)x; break;
-                case Modifier.projectileAmount: instance.gameplayManager.projectileAmountAdditive += (int)x; break;
+                case Modifier.projectile_amount: instance.gameplayManager.projectileAmountAdditive += (int)x; break;
                 case Modifier.projectile_attack_range: instance.gameplayManager.projectileAttackRangeMultiplier += x; break;
                 case Modifier.projectile_cooldown: instance.gameplayManager.projectileCooldownMultiplier += x; break;
                 case Modifier.projectile_critical_chance: instance.gameplayManager.projectileCriticalChanceAdditive += x; break;
@@ -112,7 +113,7 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.shock_chance: instance.gameplayManager.ailmentsChanceAdditive[3] += x; break;
                 case Modifier.shock_effect: instance.gameplayManager.ailmentsEffectMultiplier[3] += x; break;
                 case Modifier.size: instance.gameplayManager.sizeMultiplier += x; break;
-                case Modifier.meleeAmount: instance.gameplayManager.meleeAmountAdditive += (int)x; break;
+                case Modifier.melee_amount: instance.gameplayManager.meleeAmountAdditive += (int)x; break;
                 case Modifier.travel_range: instance.gameplayManager.travelRangeMultiplier += x; break;
                 case Modifier.travel_speed: instance.gameplayManager.travelSpeedMultiplier += x; break;
                 default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[lv].modifier[i]); break;
@@ -154,6 +155,7 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.chill_chance: skill.addedAilmentsChance[2] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.chill_effect: skill.addedAilmentsEffect[2] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.cold_damage: skill.addedDamageTypes[2] += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.combo: skill.addedCombo += (int)upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.cooldown: skill.addedCooldown += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.critical_chance: skill.addedCriticalChance += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.critical_damage: skill.addedCriticalDamage += upgrade.levelModifiersList[level].amt[i]; break;
@@ -165,11 +167,11 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.lightning_damage: skill.addedDamageTypes[3] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.physical_damage: skill.addedDamageTypes[0] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.pierce: skill.addedPierce += (int)upgrade.levelModifiersList[level].amt[i]; break;
-                case Modifier.projectileAmount: skill.addedProjectileAmount += (int)upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.projectile_amount: skill.addedProjectileAmount += (int)upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.shock_chance: skill.addedAilmentsChance[3] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.shock_effect: skill.addedAilmentsEffect[3] += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.size: skill.addedSize += upgrade.levelModifiersList[level].amt[i]; break;
-                case Modifier.meleeAmount: skill.addedMeleeAmount += (int)upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.melee_amount: skill.addedMeleeAmount += (int)upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.travel_range: skill.addedTravelRange += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.travel_speed: skill.addedTravelSpeed += upgrade.levelModifiersList[level].amt[i]; break;
                 default: Debug.Log("ApplySkillMod has no switch case for " + upgrade.levelModifiersList[level].modifier[i]); break;
@@ -211,6 +213,7 @@ public class UpdateStats : MonoBehaviour
                     case Modifier.chill_chance: skill.addedAilmentsChance[2] += x; break;
                     case Modifier.chill_effect: skill.addedAilmentsEffect[2] += x; break;
                     case Modifier.cold_damage: skill.addedDamageTypes[2] += x; break;
+                    case Modifier.combo: skill.addedCombo += (int)x; break;
                     case Modifier.cooldown: skill.addedCooldown += x; break;
                     case Modifier.melee_cooldown: skill.addedCooldown += x; break;
                     case Modifier.projectile_cooldown: skill.addedCooldown += x; break;
@@ -234,13 +237,13 @@ public class UpdateStats : MonoBehaviour
                     case Modifier.lightning_damage: skill.addedDamageTypes[3] += x; break;
                     case Modifier.physical_damage: skill.addedDamageTypes[0] += x; break;
                     case Modifier.pierce: skill.addedPierce += (int)x; break;
-                    case Modifier.projectileAmount: skill.addedProjectileAmount += (int)x; break;
+                    case Modifier.projectile_amount: skill.addedProjectileAmount += (int)x; break;
                     case Modifier.shock_chance: skill.addedAilmentsChance[3] += x; break;
                     case Modifier.shock_effect: skill.addedAilmentsEffect[3] += x; break;
                     case Modifier.size: skill.addedSize += x; break;
                     case Modifier.melee_size: skill.addedSize += x; break;
                     case Modifier.projectile_size: skill.addedSize += x; break;
-                    case Modifier.meleeAmount: skill.addedMeleeAmount += (int)x; break;
+                    case Modifier.melee_amount: skill.addedMeleeAmount += (int)x; break;
                     case Modifier.travel_range: skill.addedTravelRange += x; break;
                     case Modifier.travel_speed: skill.addedTravelSpeed += x; break;
                     case Modifier.melee_travel_range: skill.addedTravelRange += x; break;
@@ -316,6 +319,7 @@ public class UpdateStats : MonoBehaviour
                     case Modifier.chill_chance: skillUpgradesString += "\tChill Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.chill_effect: skillUpgradesString += "\tChill Effect: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.cold_damage: skillUpgradesString += "\tCold Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
+                    case Modifier.combo: skillUpgradesString += "\tCombo: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.cooldown: skillUpgradesString += "\tCooldown: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.critical_chance: skillUpgradesString += "\tCritical Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.critical_damage: skillUpgradesString += "\tCritical Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
@@ -327,11 +331,11 @@ public class UpdateStats : MonoBehaviour
                     case Modifier.lightning_damage: skillUpgradesString += "\tLightning Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.physical_damage: skillUpgradesString += "\tPhysical Damage: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.pierce: skillUpgradesString += "\tPierce: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
-                    case Modifier.projectileAmount: skillUpgradesString += "\tProjectile: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.projectile_amount: skillUpgradesString += "\tProjectile Amount: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.shock_chance: skillUpgradesString += "\tShock Chance: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.shock_effect: skillUpgradesString += "\tShock Effect: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.size: skillUpgradesString += "\tSize: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
-                    case Modifier.meleeAmount: skillUpgradesString += "\tStrike: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
+                    case Modifier.melee_amount: skillUpgradesString += "\tMelee Amount: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "</color>\n"; break;
                     case Modifier.travel_range: skillUpgradesString += "\tTravel Range: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     case Modifier.travel_speed: skillUpgradesString += "\tTravel Speed: <color=green>+" + upgrade.levelModifiersList[k].amt[i] + "%</color>\n"; break;
                     default: Debug.Log("SkillUpgradesToString has no switch case for " + upgrade.levelModifiersList[k].modifier[i]); break;
@@ -436,13 +440,15 @@ public class UpdateStats : MonoBehaviour
         if (sc.cooldown > 0)
             fullString += "Cooldown: " + sc.cooldown + "s\n";
         if (sc.projectileAmount > 0)
-            fullString += "Projectile: " + sc.projectileAmount + "\n";
+            fullString += "Projectile Amount: " + sc.projectileAmount + "\n";
         if (sc.pierce > 0)
             fullString += "Pierce: " + sc.pierce + "\n";
         if (sc.chain > 0)
             fullString += "Chain: " + sc.chain + "\n";
         if (sc.meleeAmount > 0)
-            fullString += "Strike: " + sc.meleeAmount + "\n";
+            fullString += "Melee Amount: " + sc.meleeAmount + "\n";
+        if (sc.combo > 0)
+            fullString += "Combo: " + sc.combo + "\n";
         if (sc.attackRange > 0)
             fullString += "Attack Range: " + sc.attackRange + "%\n";
         for (int i = 0; i < sc.ailmentsChance.Count; i++)
@@ -567,13 +573,15 @@ public class UpdateStats : MonoBehaviour
         if (instance.gameplayManager.meleeCooldownMultiplier > 0)
             fullString += "Melee Cooldown: +" + instance.gameplayManager.meleeCooldownMultiplier + "%\n";
         if (instance.gameplayManager.projectileAmountAdditive > 0)
-            fullString += "Projectile: +" + instance.gameplayManager.projectileAmountAdditive + "\n";
+            fullString += "Projectile Amount: +" + instance.gameplayManager.projectileAmountAdditive + "\n";
         if (instance.gameplayManager.pierceAdditive > 0)
             fullString += "Pierce: +" + instance.gameplayManager.pierceAdditive + "\n";
         if (instance.gameplayManager.chainAdditive > 0)
             fullString += "Chain: +" + instance.gameplayManager.chainAdditive + "\n";
         if (instance.gameplayManager.meleeAmountAdditive > 0)
-            fullString += "Strike: +" + instance.gameplayManager.meleeAmountAdditive + "\n";
+            fullString += "Melee Amount: +" + instance.gameplayManager.meleeAmountAdditive + "\n";
+        if (instance.gameplayManager.comboAdditive > 0)
+            fullString += "Combo: +" + instance.gameplayManager.comboAdditive + "\n";
         if (instance.gameplayManager.attackRangeMultiplier > 0)
             fullString += "Attack Range: +" + instance.gameplayManager.attackRangeMultiplier + "%\n";
         if (instance.gameplayManager.projectileAttackRangeMultiplier > 0)
@@ -694,7 +702,8 @@ public class UpdateStats : MonoBehaviour
     }
     public bool CheckPercentModifier(Modifier mod) //Check if modifier is percent or flat value
     {
-        if (mod == Modifier.meleeAmount || mod == Modifier.projectileAmount || mod == Modifier.pierce || mod == Modifier.chain ||
+        //check for additive modifiers
+        if (mod == Modifier.melee_amount || mod == Modifier.projectile_amount || mod == Modifier.pierce || mod == Modifier.chain || mod == Modifier.combo ||
             mod == Modifier.regen || mod == Modifier.degen || mod == Modifier.life_steal || mod == Modifier.knockback ||
             mod == Modifier.projectile_life_steal || mod == Modifier.melee_life_steal || 
             mod ==Modifier.base_cold_damage || mod == Modifier.base_fire_damage || mod == Modifier.base_lightning_damage || mod == Modifier.base_physical_damage)

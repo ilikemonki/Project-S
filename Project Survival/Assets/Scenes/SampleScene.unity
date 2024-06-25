@@ -19870,11 +19870,13 @@ MonoBehaviour:
   - {fileID: -8080742769469004546, guid: 47c1fa7bdd6a0ad478994c51d5fbd8c0, type: 3}
   - {fileID: -8080742769469004546, guid: 9e9a4814192f3da409e48dba5f61fa8c, type: 3}
   - {fileID: -8080742769469004546, guid: 69398bf9af102b64da3598a6577c54d9, type: 3}
+  - {fileID: -8080742769469004546, guid: 44c51cca96f095c41b2282af4e14ce0b, type: 3}
   orbPrefabList:
   - {fileID: 7327212868577625715, guid: 9ab27ddedc0990c4da53d0ad80aba806, type: 3}
   - {fileID: 7327212868577625715, guid: 20c0e7200f9c96843b92122930c50ee4, type: 3}
   - {fileID: 7327212868577625715, guid: 69b3a05d9c2ea59468b1de913c403bb0, type: 3}
   - {fileID: 7327212868577625715, guid: bc6cbd656055e5a42a5e3a65d250d5eb, type: 3}
+  - {fileID: 7327212868577625715, guid: 25a5cc2cbee6e2044b205482ce076a88, type: 3}
   t1GemPrefabList:
   - {fileID: 7689257177180367149, guid: 6360014830cef3349b4879926e6cd308, type: 3}
   - {fileID: 7689257177180367149, guid: 41b750dc24f15d84fa39adb169105505, type: 3}
@@ -54747,6 +54749,7 @@ MonoBehaviour:
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
+  continuous: 0
   skillTrigger: {fileID: 6986161326393925216}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

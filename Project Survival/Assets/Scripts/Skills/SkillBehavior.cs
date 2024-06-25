@@ -20,7 +20,7 @@ public class SkillBehavior : MonoBehaviour
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
-    public bool isOrbitSkill, rotateSkill, returnSkill, isThrowWeapon, isHoming;
+    public bool isOrbitSkill, rotateSkill, returnSkill, isHoming;
     public Vector3 startingPos;
     public float currentTravelRange; //travel
     public float currentDuration;
@@ -39,10 +39,6 @@ public class SkillBehavior : MonoBehaviour
         this.pierce = pierce;
         this.chain = chain;
         transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x + (size / 100), skillController.prefabBehavior.transform.localScale.y + (size / 100), 1);
-        if (isThrowWeapon)
-        {
-            this.travelSpeed = 8;
-        }
     }
 
     protected virtual void Update()
@@ -102,7 +98,7 @@ public class SkillBehavior : MonoBehaviour
         }
     }
 
-    public void SetDirection(Vector3 dir)
+    public void SetDirection(Vector3 dir) //set where the skill will go.
     {
         direction = dir;
         if ((direction.normalized.x < 0 && transform.localScale.y > 0) || (direction.normalized.x > 0 && transform.localScale.y < 0))
@@ -189,69 +185,6 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null) return;
-            if (isThrowWeapon) //The skills used here cannot be manual.
-            {
-                if (skillController.useBarrage)
-                {
-                    hitOnceOnly = true;
-                    travelSpeed = 0;
-                    currentDespawnTime = -10;
-                    //Timing.RunCoroutine(skillController.BarrageBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));    //spawn skill on enemy.
-                }
-                else if (skillController.useScatter)
-                {
-                    hitOnceOnly = true;
-                    travelSpeed = 0;
-                    currentDespawnTime = -10;
-                    //Timing.RunCoroutine(skillController.ScatterBehavior(skillController.strike, enemy.transform, transform, this).CancelWith(skillController.gameObject));
-                }
-                else if (skillController.useBurst)
-                {
-                    gameObject.SetActive(false);
-                    skillController.BurstBehavior(skillController.meleeAmount, enemy.transform, transform);
-                }
-                else if (skillController.useSpread)
-                {
-                    gameObject.SetActive(false); 
-                    if (skillController.useRandomDirection)
-                        skillController.SpreadBehavior(skillController.meleeAmount, skillController.maxSpreadAngle, null, transform, false);
-                    else if (skillController.useBackwardsDirection)
-                    {
-                        skillController.SpreadBehavior(skillController.meleeAmount - (skillController.meleeAmount / 2), skillController.maxSpreadAngle, enemy.transform, transform, false);
-                        skillController.SpreadBehavior(skillController.meleeAmount / 2, skillController.maxSpreadAngle, enemy.transform, transform, true);
-                    }
-                    else
-                    {
-                        skillController.SpreadBehavior(skillController.meleeAmount, skillController.maxSpreadAngle, enemy.transform, transform, false);
-                    }
-                }
-                else if (skillController.useLateral)
-                {
-                    gameObject.SetActive(false);
-                    if (skillController.useRandomDirection)
-                        skillController.LateralBehavior(skillController.meleeAmount, transform.localScale.x - skillController.lateralOffset, null, transform, false);
-                    else if (skillController.useBackwardsDirection)
-                    {
-                        skillController.LateralBehavior(skillController.meleeAmount - (skillController.meleeAmount / 2), transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
-                        skillController.LateralBehavior(skillController.meleeAmount / 2, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, true);
-                    }
-                    else
-                    {
-                        skillController.LateralBehavior(skillController.meleeAmount, transform.localScale.x - skillController.lateralOffset, enemy.transform, transform, false);
-                    }
-                }
-                else if (skillController.useCircular)
-                {
-                    gameObject.SetActive(false);
-                    skillController.CircularBehavior(skillController.meleeAmount, transform);
-                }
-                else if (skillController.useOnTarget)
-                {
-                    gameObject.SetActive(false);
-                    skillController.MultiTargetBehavior(skillController.meleeAmount, transform, null);
-                }
-                return;
-            }
             if (returnSkill)
             {
                 DoDamage(enemy, 50);
@@ -301,6 +234,7 @@ public class SkillBehavior : MonoBehaviour
     //How projectile act after hitting enemy
     void ProjectileBehavior()
     {
+        if (skillController.continuous) return;
         if (pierce <= 0 && chain <= 0)
         {
             if (skillController.useReturnDirection)

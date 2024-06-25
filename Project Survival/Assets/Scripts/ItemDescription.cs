@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemDescription : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class ItemDescription : MonoBehaviour
     public PItemSlotUI pItemSlotUI; //only for passive item
     public bool shopLock;
 
+    public void Awake()
+    {
+        if (gameObject.GetComponent<Image>() != null)
+            itemSprite = gameObject.GetComponent<Image>().sprite;
+    }
     public void Start()
     {
         if (upgrade == null)

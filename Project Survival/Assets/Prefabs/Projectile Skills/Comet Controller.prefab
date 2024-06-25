@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 6986161325550505959}
   - component: {fileID: 7864732532003815873}
   m_Layer: 0
-  m_Name: Flame Spear Controller
+  m_Name: Comet Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,9 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabBehavior: {fileID: -6595649996783161566, guid: d8d49d07a41b6ee4d8883920f1205e9c, type: 3}
+  prefabBehavior: {fileID: -6595649996783161566, guid: 28658304712967048a79a400ac26eaa2, type: 3}
   meleeWeaponPrefab: {fileID: 0}
-  skillOrbDescription: {fileID: -6162699754021087771, guid: bc6cbd656055e5a42a5e3a65d250d5eb, type: 3}
+  skillOrbDescription: {fileID: -6162699754021087771, guid: 25a5cc2cbee6e2044b205482ce076a88, type: 3}
   poolParent: {fileID: 1735531887519041077}
   followPlayerParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
@@ -141,25 +141,25 @@ MonoBehaviour:
   level: 1
   exp: 0
   baseDamageTypes:
+  - 4
   - 0
-  - 5
   - 0
   - 0
   baseAilmentsChance:
   - 0
-  - 20
+  - 0
   - 0
   - 0
   baseAilmentsEffect:
   - 0
-  - 20
   - 0
   - 0
-  baseTravelSpeed: 15
-  baseAttackRange: 8
-  baseTravelRange: 12
+  - 0
+  baseTravelSpeed: 10
+  baseAttackRange: 4
+  baseTravelRange: 10
   baseDuration: 0
-  baseCooldown: 2
+  baseCooldown: 1
   baseKnockBack: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
@@ -167,8 +167,8 @@ MonoBehaviour:
   baseLifeSteal: 0
   baseMeleeAmount: 0
   baseCombo: 0
-  baseProjectileAmount: 1
-  basePierce: 4
+  baseProjectileAmount: 2
+  basePierce: 0
   baseChain: 0
   despawnTime: 0
   damageTypes:
@@ -220,9 +220,9 @@ MonoBehaviour:
   useBarrage: 0
   useScatter: 0
   useSpread: 0
-  useOrbit: 0
+  useOrbit: 1
   useCircular: 0
-  useLateral: 1
+  useLateral: 0
   useBurst: 0
   useThrowWeapon: 0
   useOnTarget: 0
@@ -231,6 +231,7 @@ MonoBehaviour:
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
+  continuous: 1
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:
@@ -310,27 +311,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 05000000170000001b00000002000000
+  - modifier: 0400000001000000
     amt:
     - 10
-    - 20
-    - 20
     - 1
-  - modifier: 05000000170000001b00000002000000
+  - modifier: 0400000001000000
     amt:
     - 10
-    - 20
-    - 20
     - 1
-  - modifier: 05000000170000001b00000002000000
+  - modifier: 0400000001000000
     amt:
     - 10
-    - 20
-    - 20
     - 1
-  - modifier: 05000000170000001b00000002000000
+  - modifier: 0400000001000000
     amt:
     - 10
-    - 20
-    - 20
     - 1

@@ -77,7 +77,6 @@ public class SkillController : MonoBehaviour
     public bool useCircular; //targetless. Skill will evenly spread itself around the player.
     public bool useLateral; //Skill will line itself up horizontally.
     public bool useBurst; //Use all melee/projectile at once but has uneven target/angle, long CD, Increased Stats.
-    public bool useThrowWeapon; //Whether or not to put this in the game.
     [Header("Secondary Behaviors")]
     public bool useOnTarget;    //Spawns on enemies. If false, spawns on player.
     public bool useSelfTarget; //use skill on self. Cannot be a skill gem.
@@ -85,6 +84,8 @@ public class SkillController : MonoBehaviour
     public bool useBackwardsDirection; //Shoots from behind.
     public bool useReturnDirection; //projectiles only.
     public bool useRandomTargeting; //Randomly targets an enemy in range. Targetless/Manual does nothing.
+    [Header("Other Behaviors")]
+    public bool continuous; //doesn't despawn.
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
@@ -112,7 +113,7 @@ public class SkillController : MonoBehaviour
     }
     public void CheckTargetless()
     {
-        if (useOrbit || useRandomDirection || (useCircular && !useThrowWeapon) || !autoUseSkill)
+        if (useOrbit || useRandomDirection || useCircular || !autoUseSkill)
             targetless = true;
         else targetless = false;
     }
@@ -137,11 +138,6 @@ public class SkillController : MonoBehaviour
         {
             PopulatePool(projectileAmount, prefabBehavior, followPlayerParent, orbitPoolList);
             OrbitBehavior(projectileAmount, followPlayerParent.transform, orbitPoolList);
-        }
-        else if (useThrowWeapon)
-        {
-            followPlayerParent.transform.SetParent(player.transform.parent);
-            PopulatePool(meleeAmount, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
         }
     }
     // Update is called once per frame
@@ -217,14 +213,7 @@ public class SkillController : MonoBehaviour
             comboCounter = 0;
         }
         //use skills
-        if (useThrowWeapon)
-        {
-            if (targetless)
-                ThrowWeaponBehavior(null, transform);
-            else
-                ThrowWeaponBehavior(nearestEnemy.transform, transform);
-        }
-        else if (useBarrage)
+        if (useBarrage)
         {
             activateBarrage = true;
             if (targetless)
@@ -240,7 +229,7 @@ public class SkillController : MonoBehaviour
             else
                 targetPos = nearestEnemy.transform.position;
             if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-            else if (autoUseSkill || useThrowWeapon) direction = targetPos - transform.position;
+            else if (autoUseSkill) direction = targetPos - transform.position;
             else direction = targetPos - transform.position;
         }
         else if (useBurst)
@@ -326,7 +315,7 @@ public class SkillController : MonoBehaviour
     public void BarrageBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
     {
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        else if (autoUseSkill || useThrowWeapon) direction = target - transform.position;
+        else if (autoUseSkill) direction = target - transform.position;
         else direction = target - transform.position;
         for (int i = 0; i < poolList.Count; i++)
         {
@@ -338,7 +327,7 @@ public class SkillController : MonoBehaviour
             {
                 if (useOnTarget)
                 {
-                    if (autoUseSkill || useThrowWeapon)
+                    if (autoUseSkill)
                         poolList[i].transform.position = target;    //set starting position on target
                     else
                     {
@@ -360,7 +349,7 @@ public class SkillController : MonoBehaviour
                 break;
             }
         }
-        if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false); //deactivate object that uses this skill ie throwWeapon.
+        if (objectToDespawn != null) objectToDespawn.gameObject.SetActive(false); //deactivate object that uses this skill ie turrets.
     }
     public void ScatterBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill.
     {
@@ -374,7 +363,7 @@ public class SkillController : MonoBehaviour
             {
                 if (useOnTarget)
                 {
-                    if (autoUseSkill || useThrowWeapon)
+                    if (autoUseSkill)
                         poolList[i].transform.position = target + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);    //set starting position on target
                     else
                     {
@@ -401,7 +390,7 @@ public class SkillController : MonoBehaviour
     public void BurstBehavior(int numOfAttacks, Transform target, Transform spawnPos)
     {
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        else if (autoUseSkill || useThrowWeapon) direction = target.position - spawnPos.position;
+        else if (autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         for (int p = 0; p < numOfAttacks; p++)
         {
@@ -415,7 +404,7 @@ public class SkillController : MonoBehaviour
                 {
                     if (useOnTarget)
                     {
-                        if (autoUseSkill || useThrowWeapon)
+                        if (autoUseSkill)
                             poolList[i].transform.position = target.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);    //set starting position on target
                         else
                         {
@@ -467,22 +456,15 @@ public class SkillController : MonoBehaviour
             }
         }
     }
-    public void OrbitBehavior(int numOfAttacks, Transform spawnPos, List<SkillBehavior> pList)
+    public void OrbitBehavior(int numOfAttacks, Transform spawnPos, List<SkillBehavior> pList) //Used to set position of orbit skills and call at the start and when adding proj/melee.
     {
         spreadAngle = 360 / numOfAttacks;
         for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/melee
         {
-            for (int i = 0; i < pList.Count; i++)
-            {
-                if (!pList[i].isActiveAndEnabled)
-                {
-                    pList[i].isOrbitSkill = true;
-                    pList[i].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * (attackRange * 0.5f); 
-                    SetBehavourStats(orbitPoolList[i]);
-                    pList[i].gameObject.SetActive(true);
-                    break;
-                }
-            }
+            pList[p].isOrbitSkill = true;
+            pList[p].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * (attackRange * 0.5f); 
+            SetBehavourStats(orbitPoolList[p]);
+            pList[p].gameObject.SetActive(true);
         }
         stopFiring = false;
     }
@@ -501,7 +483,7 @@ public class SkillController : MonoBehaviour
                 {
                     if (useOnTarget) 
                     {
-                        if (autoUseSkill || useThrowWeapon)
+                        if (autoUseSkill)
                         {
                             direction = transform.position - spawnPos.position; 
                             poolList[i].SetDirection((Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * direction).normalized);
@@ -543,7 +525,7 @@ public class SkillController : MonoBehaviour
         counter = 0;
         spreadAngle = maxAngle / numOfAttacks;
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        else if(autoUseSkill || useThrowWeapon) direction = target.position - spawnPos.position;
+        else if(autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         if (useBackwards)
         {
@@ -562,7 +544,7 @@ public class SkillController : MonoBehaviour
                 {
                     if (useOnTarget && !useOrbit)
                     {
-                        if (autoUseSkill || useThrowWeapon)
+                        if (autoUseSkill)
                         {
                             if (p % 2 == 1)
                             {
@@ -648,7 +630,7 @@ public class SkillController : MonoBehaviour
     {
         counter = 0;
         if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        else if (autoUseSkill || useThrowWeapon) direction = target.position - spawnPos.position;
+        else if (autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         if (useBackwards)
         {
@@ -667,7 +649,7 @@ public class SkillController : MonoBehaviour
                 {
                     if (useOnTarget)
                     {
-                        if (autoUseSkill || useThrowWeapon)
+                        if (autoUseSkill)
                         {
                             if (p == 0)
                             {
@@ -757,12 +739,12 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useRandomDirection && !useThrowWeapon)
+                    if (useRandomDirection)
                     {
                         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
                         poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
                     } 
-                    else if (!autoUseSkill && t == 0 && !useThrowWeapon) //manual and first melee hits at mouse pos. Remove this later. Cannot be manual.
+                    else if (!autoUseSkill && t == 0 ) //manual and first melee hits at mouse pos. Remove this later. Cannot be manual.
                     {
                         counter = 1;
                         direction = gameplayManager.mousePos - spawnPos.position;
@@ -838,29 +820,6 @@ public class SkillController : MonoBehaviour
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
-            }
-        }
-        stopFiring = false;
-    }
-    public void ThrowWeaponBehavior(Transform target, Transform spawnPos)       //Spawn/Activate skill. Projectiles barrages.
-    {
-        for (int i = 0; i < orbitPoolList.Count; i++)
-        {
-            if (i > orbitPoolList.Count - 2)
-            {
-                PopulatePool(2, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
-            }
-            if (!orbitPoolList[i].isActiveAndEnabled)
-            {
-                if (autoUseSkill) direction = target.position - spawnPos.position;
-                else direction = gameplayManager.mousePos - spawnPos.position;
-                orbitPoolList[i].transform.position = spawnPos.position;    //set starting position on player
-                orbitPoolList[i].isThrowWeapon = true;
-                SetBehavourStats(poolList[i]);
-                orbitPoolList[i].SetDirection((direction).normalized);   //Set direction
-                orbitPoolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
-                orbitPoolList[i].gameObject.SetActive(true);
-                break;
             }
         }
         stopFiring = false;
@@ -1012,9 +971,35 @@ public class SkillController : MonoBehaviour
         duration = baseDuration * (1 + (gameplayManager.durationMultiplier  + addedCooldown / 100));
         knockBack = baseKnockBack + addedKnockBack;
         currentCooldown = 0;
-        for (int i = 0; i < orbitPoolList.Count; i++)
+        if (orbitPoolList.Count > 0)
         {
-            SetBehavourStats(orbitPoolList[i]);
+            if (orbitPoolList.Count < projectileAmount + meleeAmount) //if proj/melee has increased, spawn more to pool.
+            {
+                if (isMelee) //orbit melee, spawn orbiting weapons
+                {
+                    PopulatePool(meleeAmount - orbitPoolList.Count, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
+                    OrbitBehavior(meleeAmount, followPlayerParent.transform, orbitPoolList);
+                }
+                else //orbiting projectile
+                {
+                    PopulatePool(projectileAmount - orbitPoolList.Count, prefabBehavior, followPlayerParent, orbitPoolList);
+                    OrbitBehavior(projectileAmount, followPlayerParent.transform, orbitPoolList);
+                }
+            }
+            else if (orbitPoolList.Count > projectileAmount + meleeAmount) //if decreased, delete behavior.
+            {
+                int amountToDelete = orbitPoolList.Count - (projectileAmount + meleeAmount);
+                for (int i = 0; i < amountToDelete; i++)
+                {
+                    Destroy(orbitPoolList[^1].gameObject);
+                    orbitPoolList.RemoveAt(orbitPoolList.Count - 1);
+                }
+                OrbitBehavior(projectileAmount + meleeAmount, followPlayerParent.transform, orbitPoolList);
+            }
+            for (int i = 0; i < orbitPoolList.Count; i++) //Set orbit behaviour pool stats.
+            {
+                SetBehavourStats(orbitPoolList[i]);
+            }
         }
     }
     public void SetBehavourStats(SkillBehavior sb)
