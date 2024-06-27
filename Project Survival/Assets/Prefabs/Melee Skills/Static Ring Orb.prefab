@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -6162699754021087771}
   - component: {fileID: -8850347610926983175}
   m_Layer: 5
-  m_Name: Flame Spear Orb
+  m_Name: Static Ring Orb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 88eced2c9dbb5494bb27a53017480115, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 260c8f47fab8da147acef314807fa2d5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -112,14 +112,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 1
-  itemName: Flame Spear Orb
-  itemTags: Projectile, Travel, Fire
-  description: Fire flame spears that can pierce and burn enemies.
-  itemSprite: {fileID: 21300000, guid: 88eced2c9dbb5494bb27a53017480115, type: 3}
+  itemName: Static Ring Orb
+  itemTags: Melee, Lightning, AoE
+  description: Creates an AoE around player that pulses, dealing damage.
+  itemSprite: {fileID: 21300000, guid: 260c8f47fab8da147acef314807fa2d5, type: 3}
   maxQuantity: 0
   rarity: 1
   currentLevel: 1
-  price: 30
+  price: 20
   quantityInInventory: 0
   upgrade: {fileID: 0}
   pItemSlotUI: {fileID: 0}

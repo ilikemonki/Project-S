@@ -106,6 +106,7 @@ public class LevelUpManager : MonoBehaviour
             case UpdateStats.Modifier.chill_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.chill_effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
             case UpdateStats.Modifier.cold_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            //case UpdateStats.Modifier.combo: returnValue = ; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             case UpdateStats.Modifier.cooldown: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             case UpdateStats.Modifier.critical_chance: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             case UpdateStats.Modifier.critical_damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
@@ -155,7 +156,8 @@ public class LevelUpManager : MonoBehaviour
     }
     public bool CheckModifier(UpdateStats.Modifier mod) //Check modifier if they can be chosen
     {
-        if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectile_amount 
+        //Modifiers that can't be chosen.
+        if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectile_amount || mod == UpdateStats.Modifier.combo
             || mod == UpdateStats.Modifier.melee_amount || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.base_cold_damage
             || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage || mod == UpdateStats.Modifier.base_physical_damage)
         {

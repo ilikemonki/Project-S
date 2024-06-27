@@ -9,10 +9,10 @@ public class SkillController : MonoBehaviour
     public SkillBehavior prefabBehavior;
     public SkillBehavior meleeWeaponPrefab;
     public ItemDescription skillOrbDescription;
-    public GameObject poolParent, followPlayerParent;
+    public GameObject poolParent, stayOnPlayerParent;
     public GameplayManager gameplayManager;
     public List<SkillBehavior> poolList = new();
-    public List<SkillBehavior> orbitPoolList = new();
+    public List<SkillBehavior> stayOnPlayerPoolList = new();
     List<EnemyStats> rememberEnemiesList = new();
     public List<EnemyStats> enemiesInRange = new();
     public PlayerStats player;
@@ -36,7 +36,7 @@ public class SkillController : MonoBehaviour
     public float baseCriticalChance, baseCriticalDamage;
     public float baseLifeStealChance, baseLifeSteal;
     public int baseMeleeAmount, baseCombo, baseProjectileAmount, basePierce, baseChain;
-    public float despawnTime; //skills that don't travel or have duration will have despawnTime
+    public float despawnTime; //skills that don't travel or have duration will have despawnTime. For animations to finish
     [Header("Current Stats")]
     public List<float> damageTypes;
     public List<float> ailmentsChance;
@@ -53,6 +53,9 @@ public class SkillController : MonoBehaviour
     public float lifeStealChance, lifeSteal;
     public int meleeAmount, combo, projectileAmount, pierce, chain;
     [Header("Other Stats")]
+    public float hitboxColliderDuration; //duration for hitbox to stay up.
+    public bool fixedProjMelee; //Set a number here to set max proj/melee.
+    public bool fixedCooldown; //Cannot modify cooldown
     public float currentCooldown;
     int counter;    //Used in spread skill
     Vector3 direction;
@@ -77,15 +80,18 @@ public class SkillController : MonoBehaviour
     public bool useCircular; //targetless. Skill will evenly spread itself around the player.
     public bool useLateral; //Skill will line itself up horizontally.
     public bool useBurst; //Use all melee/projectile at once but has uneven target/angle, long CD, Increased Stats.
+    public bool useSimple;
     [Header("Secondary Behaviors")]
     public bool useOnTarget;    //Spawns on enemies. If false, spawns on player.
-    public bool useSelfTarget; //use skill on self. Cannot be a skill gem.
     public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
     public bool useBackwardsDirection; //Shoots from behind.
     public bool useReturnDirection; //projectiles only.
     public bool useRandomTargeting; //Randomly targets an enemy in range. Targetless/Manual does nothing.
     [Header("Other Behaviors")]
     public bool continuous; //doesn't despawn.
+    public bool pierceAll; //infinite pierce.
+    public bool stayOnPlayer; //Skill will stay on player and move with player.
+    public bool alwaysActivate; //Skill keeps running.
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;
@@ -117,31 +123,35 @@ public class SkillController : MonoBehaviour
             targetless = true;
         else targetless = false;
     }
-    private void Awake()
+    public virtual void Awake()
     {
         CheckTargetless();
     }
     // Start is called before the first frame update
-    protected virtual void Start()
+    public virtual void Start()
     {
         if (devOnlyCheckThis)
         {
             UpdateSkillStats();
         }
-        PopulatePool(projectileAmount + meleeAmount, prefabBehavior, poolParent, poolList);
+        PopulatePool(projectileAmount + meleeAmount, prefabBehavior, poolParent, poolList); //populate skill objects in regular pool.
         if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
         {
-            PopulatePool(meleeAmount, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
-            OrbitBehavior(meleeAmount, followPlayerParent.transform, orbitPoolList);
+            PopulatePool(meleeAmount, meleeWeaponPrefab, stayOnPlayerParent, stayOnPlayerPoolList);
+            OrbitBehavior(meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
         } 
         else if (!isMelee && useOrbit) //orbiting projectile
         {
-            PopulatePool(projectileAmount, prefabBehavior, followPlayerParent, orbitPoolList);
-            OrbitBehavior(projectileAmount, followPlayerParent.transform, orbitPoolList);
+            PopulatePool(projectileAmount, prefabBehavior, stayOnPlayerParent, stayOnPlayerPoolList);
+            OrbitBehavior(projectileAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
+        }
+        else if (stayOnPlayer) //populate list.
+        {
+            PopulatePool(projectileAmount + meleeAmount, prefabBehavior, stayOnPlayerParent, stayOnPlayerPoolList);
         }
     }
     // Update is called once per frame
-    protected virtual void Update()
+    public virtual void Update()
     {
         if (useOrbit)
         {
@@ -183,15 +193,15 @@ public class SkillController : MonoBehaviour
     }
     public void UseSkill()
     {
-        if ((enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) && !targetless) return; //if no enemies alive, return.
-        if (!targetless)   //Return if auto and not in attack range.
+        if ((enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) && !targetless && !alwaysActivate) return; //if no enemies alive, return.
+        if (!targetless && !alwaysActivate)   //Return if auto and not in attack range.
         {
             if (Vector3.Distance(transform.position, enemyDistances.closestEnemyList[0].transform.position) > attackRange)
             {
                 return;
             }
         }
-        if (skillTrigger.isTriggerSkill == true) //Check trigger condition.
+        if (skillTrigger.isTriggerSkill) //Is a trigger skill. Check trigger condition then return.
         {
             if (!skillTrigger.CheckTriggerCondition()) return;
         }
@@ -200,17 +210,20 @@ public class SkillController : MonoBehaviour
             GetEnemiesInRangeUnsorted(transform);
             nearestEnemy = enemiesInRange[Random.Range(0, enemiesInRange.Count)];
         }
-        else if (!targetless)
+        else if (!targetless && !alwaysActivate)
         {
             nearestEnemy = enemyDistances.closestEnemyList[0];
         }
         stopFiring = true;
         currentCooldown = 0;
-        if (combo > 0)
+        if (combo > 0 && isMelee)
         {
-            if (comboCounter > combo) comboMultiplier = combo;
+            if (comboCounter >= combo) 
+            { 
+                comboMultiplier = combo;
+                comboCounter = 0; //reset combo
+            }
             else comboMultiplier = comboCounter;
-            comboCounter = 0;
         }
         //use skills
         if (useBarrage)
@@ -292,6 +305,10 @@ public class SkillController : MonoBehaviour
         else if (useCircular)
         {
             CircularBehavior(meleeAmount + projectileAmount, transform);
+        }
+        else if (useSimple)
+        {
+            SimpleBehavior(meleeAmount + projectileAmount, transform, transform, stayOnPlayerPoolList);
         }
         else if (useMultiTarget)
         {
@@ -429,29 +446,71 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
+    public void SimpleBehavior(int numOfAttacks, Transform target, Transform spawnPos, List<SkillBehavior> pool)
+    {
+        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        else if (autoUseSkill) direction = target.position - spawnPos.position;
+        else direction = gameplayManager.mousePos - spawnPos.position;
+        for (int p = 0; p < numOfAttacks; p++)
+        {
+            for (int i = 0; i < pool.Count; i++)
+            {
+                if (i > pool.Count - 2)
+                {
+                    PopulatePool(numOfAttacks, prefabBehavior, stayOnPlayerParent, pool);
+                }
+                if (!pool[i].isActiveAndEnabled)
+                {
+                    if (useOnTarget)
+                    {
+                        if (autoUseSkill)
+                            pool[i].transform.position = target.position;    //set starting position on target
+                        else
+                        {
+                            if (direction.magnitude < attackRange)
+                                pool[i].transform.position = gameplayManager.mousePos + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+                            else pool[i].transform.position = (spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange) + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+                        }
+                    }
+                    else
+                        pool[i].transform.position = spawnPos.position;    //set starting position on player
+                    SetBehavourStats(pool[i]);
+                    pool[i].SetDirection((direction).normalized);
+                    if (useBackwardsDirection && p % 2 == 1)
+                    {
+                        pool[i].SetDirection((-pool[i].direction).normalized);   //Set direction
+                    }
+                    //pool[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(pool[i].direction.y, pool[i].direction.x) * Mathf.Rad2Deg); //set angle
+                    pool[i].gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+        stopFiring = false;
+    }
     public void RunOrbit()
     {
         if (autoUseSkill)
         {
-            followPlayerParent.transform.Rotate(new Vector3(0, 0, -(60 + (travelSpeed * 10)) * Time.deltaTime)); //rotation speed
+            stayOnPlayerParent.transform.Rotate(new Vector3(0, 0, -(60 + (travelSpeed * 10)) * Time.deltaTime)); //rotation speed
         }
         else
         {
-            direction = gameplayManager.mousePos - followPlayerParent.transform.position;
-            followPlayerParent.transform.rotation = Quaternion.RotateTowards(followPlayerParent.transform.rotation, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), (60 + (travelSpeed * 10)) * Time.deltaTime);
+            direction = gameplayManager.mousePos - stayOnPlayerParent.transform.position;
+            stayOnPlayerParent.transform.rotation = Quaternion.RotateTowards(stayOnPlayerParent.transform.rotation, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), (60 + (travelSpeed * 10)) * Time.deltaTime);
         }
-        for (int i = 0; i < orbitPoolList.Count; i++) //increment current CD to respawn the skill.
+        for (int i = 0; i < stayOnPlayerPoolList.Count; i++) //increment current CD to respawn the skill.
         {
-            if (!orbitPoolList[i].isActiveAndEnabled)
+            if (!stayOnPlayerPoolList[i].isActiveAndEnabled)
             {
-                orbitPoolList[i].currentDespawnTime += Time.deltaTime;
-                if (orbitPoolList[i].currentDespawnTime >= cooldown) //used to be set to despawnTime
+                stayOnPlayerPoolList[i].currentDespawnTime += Time.deltaTime;
+                if (stayOnPlayerPoolList[i].currentDespawnTime >= cooldown) //used to be set to despawnTime
                 {
-                    orbitPoolList[i].travelSpeed = travelSpeed;
-                    orbitPoolList[i].pierce = pierce;
-                    orbitPoolList[i].chain = chain;
-                    orbitPoolList[i].currentDespawnTime = 0;
-                    orbitPoolList[i].gameObject.SetActive(true);
+                    stayOnPlayerPoolList[i].travelSpeed = travelSpeed;
+                    stayOnPlayerPoolList[i].pierce = pierce;
+                    stayOnPlayerPoolList[i].chain = chain;
+                    stayOnPlayerPoolList[i].currentDespawnTime = 0;
+                    stayOnPlayerPoolList[i].gameObject.SetActive(true);
                 }
             }
         }
@@ -463,7 +522,7 @@ public class SkillController : MonoBehaviour
         {
             pList[p].isOrbitSkill = true;
             pList[p].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * (attackRange * 0.5f); 
-            SetBehavourStats(orbitPoolList[p]);
+            SetBehavourStats(stayOnPlayerPoolList[p]);
             pList[p].gameObject.SetActive(true);
         }
         stopFiring = false;
@@ -928,10 +987,14 @@ public class SkillController : MonoBehaviour
         if (isMelee)   //is melee
         {
             damage = gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
-            meleeAmount = baseMeleeAmount + gameplayManager.meleeAmountAdditive + addedMeleeAmount;
+            if (!fixedProjMelee)
+                meleeAmount = baseMeleeAmount + gameplayManager.meleeAmountAdditive + addedMeleeAmount;
+            else meleeAmount = baseMeleeAmount;
             combo = baseCombo + gameplayManager.comboAdditive + addedCombo;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.meleeAttackRangeMultiplier + addedAttackRange) / 100);
-            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
+            if (!fixedCooldown)
+                cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.meleeCooldownMultiplier + addedCooldown) / 100);
+            else cooldown = baseCooldown;
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive + addedCriticalDamage;
             size = gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize;
@@ -943,11 +1006,15 @@ public class SkillController : MonoBehaviour
         else //is projectile
         {
             damage = gameplayManager.damageMultiplier + gameplayManager.projectileDamageMultiplier + addedDamage;
-            projectileAmount = baseProjectileAmount + gameplayManager.projectileAmountAdditive + addedProjectileAmount;
+            if (!fixedProjMelee)
+                projectileAmount = baseProjectileAmount + gameplayManager.projectileAmountAdditive + addedProjectileAmount;
+            else projectileAmount = baseProjectileAmount;
             chain = baseChain + gameplayManager.chainAdditive + addedChain;
             pierce = basePierce + gameplayManager.pierceAdditive + addedPierce;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier + addedAttackRange) / 100);
-            cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier + addedCooldown) / 100);
+            if (!fixedCooldown)
+                cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier + addedCooldown) / 100);
+            else cooldown = baseCooldown;
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive + addedCriticalDamage;
             size = gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize;
@@ -971,34 +1038,34 @@ public class SkillController : MonoBehaviour
         duration = baseDuration * (1 + (gameplayManager.durationMultiplier  + addedCooldown / 100));
         knockBack = baseKnockBack + addedKnockBack;
         currentCooldown = 0;
-        if (orbitPoolList.Count > 0)
+        if (useOrbit)
         {
-            if (orbitPoolList.Count < projectileAmount + meleeAmount) //if proj/melee has increased, spawn more to pool.
+            if (stayOnPlayerPoolList.Count < projectileAmount + meleeAmount) //if proj/melee has increased, spawn more to pool.
             {
                 if (isMelee) //orbit melee, spawn orbiting weapons
                 {
-                    PopulatePool(meleeAmount - orbitPoolList.Count, meleeWeaponPrefab, followPlayerParent, orbitPoolList);
-                    OrbitBehavior(meleeAmount, followPlayerParent.transform, orbitPoolList);
+                    PopulatePool(meleeAmount - stayOnPlayerPoolList.Count, meleeWeaponPrefab, stayOnPlayerParent, stayOnPlayerPoolList);
+                    OrbitBehavior(meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
                 }
                 else //orbiting projectile
                 {
-                    PopulatePool(projectileAmount - orbitPoolList.Count, prefabBehavior, followPlayerParent, orbitPoolList);
-                    OrbitBehavior(projectileAmount, followPlayerParent.transform, orbitPoolList);
+                    PopulatePool(projectileAmount - stayOnPlayerPoolList.Count, prefabBehavior, stayOnPlayerParent, stayOnPlayerPoolList);
+                    OrbitBehavior(projectileAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
                 }
             }
-            else if (orbitPoolList.Count > projectileAmount + meleeAmount) //if decreased, delete behavior.
+            else if (stayOnPlayerPoolList.Count > projectileAmount + meleeAmount) //if decreased, delete behavior.
             {
-                int amountToDelete = orbitPoolList.Count - (projectileAmount + meleeAmount);
+                int amountToDelete = stayOnPlayerPoolList.Count - (projectileAmount + meleeAmount);
                 for (int i = 0; i < amountToDelete; i++)
                 {
-                    Destroy(orbitPoolList[^1].gameObject);
-                    orbitPoolList.RemoveAt(orbitPoolList.Count - 1);
+                    Destroy(stayOnPlayerPoolList[^1].gameObject);
+                    stayOnPlayerPoolList.RemoveAt(stayOnPlayerPoolList.Count - 1);
                 }
-                OrbitBehavior(projectileAmount + meleeAmount, followPlayerParent.transform, orbitPoolList);
+                OrbitBehavior(projectileAmount + meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
             }
-            for (int i = 0; i < orbitPoolList.Count; i++) //Set orbit behaviour pool stats.
+            for (int i = 0; i < stayOnPlayerPoolList.Count; i++) //Set orbit behaviour pool stats.
             {
-                SetBehavourStats(orbitPoolList[i]);
+                SetBehavourStats(stayOnPlayerPoolList[i]);
             }
         }
     }
@@ -1006,8 +1073,8 @@ public class SkillController : MonoBehaviour
     {
         if (isMelee && combo > 0 && comboMultiplier > 0)
         {
-            sb.SetStats((damageTypes[0] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[0] / 100), (damageTypes[1] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[1] / 100),
-                (damageTypes[2] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[2] / 100), (damageTypes[3] * (1 + (combo * 0.02f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size);
+            sb.SetStats((damageTypes[0] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[0] / 100), (damageTypes[1] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[1] / 100),
+                (damageTypes[2] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[2] / 100), (damageTypes[3] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size + (3f * comboMultiplier));
             return;
         }
         sb.SetStats(damageTypes[0] * (1 - gameplayManager.enemyReductions[0] / 100), damageTypes[1] * (1 - gameplayManager.enemyReductions[1] / 100),

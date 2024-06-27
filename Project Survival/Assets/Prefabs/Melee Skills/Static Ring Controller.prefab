@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 6986161325550505959}
   - component: {fileID: 7864732532003815873}
   m_Layer: 0
-  m_Name: Comet Controller
+  m_Name: Static Ring Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,9 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabBehavior: {fileID: -6595649996783161566, guid: 28658304712967048a79a400ac26eaa2, type: 3}
+  prefabBehavior: {fileID: -6595649996783161566, guid: c04b2a3666d9c77498e242c1de893b10, type: 3}
   meleeWeaponPrefab: {fileID: 0}
-  skillOrbDescription: {fileID: -6162699754021087771, guid: 25a5cc2cbee6e2044b205482ce076a88, type: 3}
+  skillOrbDescription: {fileID: -6162699754021087771, guid: d04453cc32f74ff4191346c7571d2b7e, type: 3}
   poolParent: {fileID: 1735531887519041077}
   stayOnPlayerParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
@@ -141,10 +141,10 @@ MonoBehaviour:
   level: 1
   exp: 0
   baseDamageTypes:
-  - 4
   - 0
   - 0
   - 0
+  - 6
   baseAilmentsChance:
   - 0
   - 0
@@ -155,22 +155,22 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseTravelSpeed: 10
-  baseAttackRange: 4
-  baseTravelRange: 10
+  baseTravelSpeed: 0
+  baseAttackRange: 0
+  baseTravelRange: 0
   baseDuration: 0
-  baseCooldown: 1
+  baseCooldown: 0.5
   baseKnockBack: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseMeleeAmount: 0
+  baseMeleeAmount: 1
   baseCombo: 0
-  baseProjectileAmount: 2
+  baseProjectileAmount: 0
   basePierce: 0
   baseChain: 0
-  despawnTime: 0
+  despawnTime: 0.6
   damageTypes:
   - 0
   - 0
@@ -203,6 +203,9 @@ MonoBehaviour:
   projectileAmount: 0
   pierce: 0
   chain: 0
+  hitboxColliderDuration: 0
+  fixedProjMelee: 1
+  fixedCooldown: 1
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -215,23 +218,25 @@ MonoBehaviour:
   targetPos: {x: 0, y: 0, z: 0}
   activateBarrage: 0
   autoUseSkill: 1
-  isMelee: 0
+  isMelee: 1
   useMultiTarget: 0
   useBarrage: 0
   useScatter: 0
   useSpread: 0
-  useOrbit: 1
+  useOrbit: 0
   useCircular: 0
   useLateral: 0
   useBurst: 0
+  useSimple: 1
   useOnTarget: 0
-  useSelfTarget: 0
+  useSelfTarget: 1
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
-  continuous: 1
-  stayOnPlayer: 0
+  continuous: 0
+  stayOnPlayer: 1
+  alwaysActivate: 1
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735531886693428290}
   m_Layer: 0
-  m_Name: FollowPlayer Pool
+  m_Name: StayOnPlayer Pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,10 +129,10 @@ MonoBehaviour:
   meleeWeaponPrefab: {fileID: -6595649996783161566, guid: 825b72de0a508864a8fc361043aed917, type: 3}
   skillOrbDescription: {fileID: -6162699754021087771, guid: 20c0e7200f9c96843b92122930c50ee4, type: 3}
   poolParent: {fileID: 1735531887519041077}
-  followPlayerParent: {fileID: 1735531886693428291}
+  stayOnPlayerParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
   poolList: []
-  orbitPoolList: []
+  stayOnPlayerPoolList: []
   enemiesInRange: []
   player: {fileID: 0}
   enemyManager: {fileID: 0}
@@ -224,13 +224,14 @@ MonoBehaviour:
   useCircular: 0
   useLateral: 0
   useBurst: 0
-  useThrowWeapon: 0
   useOnTarget: 0
   useSelfTarget: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
+  continuous: 0
+  stayOnPlayer: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

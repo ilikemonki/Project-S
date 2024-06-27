@@ -26,7 +26,7 @@ RectTransform:
   m_GameObject: {fileID: 894399823435802500}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6593507805115416358}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: -2123694131
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 223997eb6928af347af9230e7bcafbfe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 19b14fb108d8453428540f4e64332d8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,9 +100,9 @@ GameObject:
   - component: {fileID: 6593507805115416358}
   - component: {fileID: -6595649996783161566}
   - component: {fileID: 2398783455814874361}
-  - component: {fileID: 8107869552629071974}
+  - component: {fileID: 4637542314292023886}
   m_Layer: 12
-  m_Name: Comet Behavior
+  m_Name: Static Ring Behavior
   m_TagString: Player Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,7 +117,7 @@ RectTransform:
   m_GameObject: {fileID: 3139460322398848796}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7636711164442120139}
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 8107869552629071974}
+  hitboxCollider: {fileID: 4637542314292023886}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -158,7 +158,7 @@ MonoBehaviour:
   spriteRend: {fileID: 8558217897996643977}
   enemyChainList: []
   isOrbitSkill: 0
-  rotateSkill: 0
+  rotateSkill: 1
   returnSkill: 0
   isHoming: 0
   startingPos: {x: 0, y: 0, z: 0}
@@ -187,8 +187,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &8107869552629071974
-BoxCollider2D:
+--- !u!58 &4637542314292023886
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -201,18 +201,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 50, y: 45}
-  m_EdgeRadius: 0
+  m_Radius: 15
 --- !u!1 &7367343785020446495
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +220,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7291577732904821334
 RectTransform:
   m_ObjectHideFlags: 0
@@ -240,7 +230,7 @@ RectTransform:
   m_GameObject: {fileID: 7367343785020446495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6593507805115416358}
@@ -387,7 +377,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.95
+      scalar: 8.15
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1085,7 +1075,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 10
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -4979,7 +4969,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c1c672a657931bf4cab4ea74e04a9aa9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

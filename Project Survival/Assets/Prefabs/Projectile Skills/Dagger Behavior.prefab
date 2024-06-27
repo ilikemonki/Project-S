@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitboxCollider: {fileID: 8107869552629071974}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -151,7 +152,6 @@ MonoBehaviour:
   travelSpeed: 0
   pierce: 0
   chain: 0
-  despawnTime: 0
   target: {fileID: 0}
   rb: {fileID: 2398783455814874361}
   spriteRend: {fileID: 8558217897996643977}
@@ -159,10 +159,12 @@ MonoBehaviour:
   isOrbitSkill: 0
   rotateSkill: 0
   returnSkill: 0
-  isThrowWeapon: 0
   isHoming: 0
   startingPos: {x: 0, y: 0, z: 0}
   currentTravelRange: 0
+  currentDuration: 0
+  currentDespawnTime: 0
+  currenthitboxColliderTimer: 0
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4

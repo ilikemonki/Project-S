@@ -129,10 +129,10 @@ MonoBehaviour:
   meleeWeaponPrefab: {fileID: 0}
   skillOrbDescription: {fileID: -6162699754021087771, guid: 9ab27ddedc0990c4da53d0ad80aba806, type: 3}
   poolParent: {fileID: 1735531887519041077}
-  followPlayerParent: {fileID: 1735531886693428291}
+  stayOnPlayerParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
   poolList: []
-  orbitPoolList: []
+  stayOnPlayerPoolList: []
   enemiesInRange: []
   player: {fileID: 0}
   enemyManager: {fileID: 0}
@@ -224,13 +224,14 @@ MonoBehaviour:
   useCircular: 0
   useLateral: 0
   useBurst: 0
-  useThrowWeapon: 0
   useOnTarget: 0
   useSelfTarget: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
+  continuous: 0
+  stayOnPlayer: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

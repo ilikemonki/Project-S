@@ -129,10 +129,10 @@ MonoBehaviour:
   meleeWeaponPrefab: {fileID: 0}
   skillOrbDescription: {fileID: -6162699754021087771, guid: bc6cbd656055e5a42a5e3a65d250d5eb, type: 3}
   poolParent: {fileID: 1735531887519041077}
-  followPlayerParent: {fileID: 1735531886693428291}
+  stayOnPlayerParent: {fileID: 1735531887672982295}
   gameplayManager: {fileID: 0}
   poolList: []
-  orbitPoolList: []
+  stayOnPlayerPoolList: []
   enemiesInRange: []
   player: {fileID: 0}
   enemyManager: {fileID: 0}
@@ -168,7 +168,7 @@ MonoBehaviour:
   baseMeleeAmount: 0
   baseCombo: 0
   baseProjectileAmount: 1
-  basePierce: 4
+  basePierce: 1
   baseChain: 0
   despawnTime: 0
   damageTypes:
@@ -203,6 +203,9 @@ MonoBehaviour:
   projectileAmount: 0
   pierce: 0
   chain: 0
+  hitboxColliderDuration: 0
+  fixedProjMelee: 0
+  fixedCooldown: 0
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -224,13 +227,16 @@ MonoBehaviour:
   useCircular: 0
   useLateral: 1
   useBurst: 0
-  useThrowWeapon: 0
+  useSimple: 0
   useOnTarget: 0
-  useSelfTarget: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
+  continuous: 0
+  pierceAll: 1
+  stayOnPlayer: 0
+  alwaysActivate: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

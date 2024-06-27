@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class SkillBehavior : MonoBehaviour
 {
+    public Collider2D hitboxCollider;
     public SkillController skillController;
     public Vector3 direction;
     public List<float> damageTypes;
@@ -25,9 +26,12 @@ public class SkillBehavior : MonoBehaviour
     public float currentTravelRange; //travel
     public float currentDuration;
     public float currentDespawnTime;
+    public float currenthitboxColliderTimer;
 
     public void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
     {
+        if (!hitboxCollider.enabled) hitboxCollider.enabled = true;
+        currenthitboxColliderTimer = 0;
         currentDespawnTime = 0;
         currentDuration = 0;
         currentTravelRange = 0;
@@ -38,14 +42,26 @@ public class SkillBehavior : MonoBehaviour
         this.travelSpeed = travelSpeed;
         this.pierce = pierce;
         this.chain = chain;
-        transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x + (size / 100), skillController.prefabBehavior.transform.localScale.y + (size / 100), 1);
+        transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x * (1 + size / 100), skillController.prefabBehavior.transform.localScale.y * (1 + size / 100), 1);
     }
 
     protected virtual void Update()
     {
-        if (rotateSkill && travelSpeed > 0)
+        if (skillController.hitboxColliderDuration > 0 && hitboxCollider.enabled)
         {
-            transform.Rotate(new Vector3(0, 0, 160 + (travelSpeed * 8)) * Time.deltaTime);
+            currenthitboxColliderTimer += Time.deltaTime;
+            if (currenthitboxColliderTimer >= skillController.hitboxColliderDuration)
+            {
+                hitboxCollider.enabled = false;
+                currenthitboxColliderTimer = 0;
+            }
+        }
+        if (rotateSkill)
+        {
+            if (travelSpeed > 0)
+                transform.Rotate(new Vector3(0, 0, 160 + (travelSpeed * 8)) * Time.deltaTime);
+            else
+                transform.Rotate(new Vector3(0, 0, 160 + (8)) * Time.deltaTime);
         }
         if (target != null && target.gameObject.activeSelf && isHoming)     //Home on enemy.
         {
@@ -234,7 +250,7 @@ public class SkillBehavior : MonoBehaviour
     //How projectile act after hitting enemy
     void ProjectileBehavior()
     {
-        if (skillController.continuous) return;
+        if (skillController.continuous || skillController.pierceAll) return;
         if (pierce <= 0 && chain <= 0)
         {
             if (skillController.useReturnDirection)

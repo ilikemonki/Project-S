@@ -78,8 +78,8 @@ SpriteRenderer:
   m_SortingLayerID: -2123694131
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 4c54b9e8b63bcf043a8362b18fcd48f0, type: 3}
-  m_Color: {r: 1, g: 0.1830188, b: 0.1830188, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 88eced2c9dbb5494bb27a53017480115, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -117,7 +117,7 @@ RectTransform:
   m_GameObject: {fileID: 3139460322398848796}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4.02, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7636711164442120139}
@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitboxCollider: {fileID: 8107869552629071974}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -158,12 +159,12 @@ MonoBehaviour:
   isOrbitSkill: 0
   rotateSkill: 0
   returnSkill: 0
-  isThrowWeapon: 0
   isHoming: 0
   startingPos: {x: 0, y: 0, z: 0}
   currentTravelRange: 0
   currentDuration: 0
   currentDespawnTime: 0
+  currenthitboxColliderTimer: 0
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4
@@ -198,7 +199,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 19.57951, y: 0.04439807}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -209,5 +210,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 25, y: 5}
+  m_Size: {x: 19.405853, y: 7.2198987}
   m_EdgeRadius: 0
