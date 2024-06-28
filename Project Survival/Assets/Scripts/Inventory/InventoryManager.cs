@@ -382,7 +382,7 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (Skill skillSlot in activeSkillList) //Set skills in start.
         {
-            if (skillSlot.skillController != null)
+            if (skillSlot.skillController != null && !skillSlot.skillController.automaticOnly)
             {
                 if (skillSlot.autoToggle.isOn)
                 {

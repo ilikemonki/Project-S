@@ -18771,7 +18771,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &812340345
 RectTransform:
   m_ObjectHideFlags: 0
@@ -54512,7 +54512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5581394034326232521
 RectTransform:
   m_ObjectHideFlags: 0
@@ -54756,8 +54756,10 @@ MonoBehaviour:
   useReturnDirection: 0
   useRandomTargeting: 0
   continuous: 0
+  pierceAll: 0
   stayOnPlayer: 0
   alwaysActivate: 0
+  automaticOnly: 0
   skillTrigger: {fileID: 6986161326393925216}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

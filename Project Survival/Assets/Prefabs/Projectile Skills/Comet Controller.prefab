@@ -203,6 +203,9 @@ MonoBehaviour:
   projectileAmount: 0
   pierce: 0
   chain: 0
+  hitboxColliderDuration: 0
+  fixedProjMelee: 0
+  fixedCooldown: 0
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -224,14 +227,17 @@ MonoBehaviour:
   useCircular: 0
   useLateral: 0
   useBurst: 0
+  useSimple: 0
   useOnTarget: 0
-  useSelfTarget: 0
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
   continuous: 1
+  pierceAll: 0
   stayOnPlayer: 0
+  alwaysActivate: 0
+  automaticOnly: 1
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

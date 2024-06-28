@@ -92,6 +92,7 @@ public class SkillController : MonoBehaviour
     public bool pierceAll; //infinite pierce.
     public bool stayOnPlayer; //Skill will stay on player and move with player.
     public bool alwaysActivate; //Skill keeps running.
+    public bool automaticOnly; //Skill can only be automatic
     [Header("Trigger")]
     public SkillTrigger skillTrigger;
     public bool devOnlyCheckThis;

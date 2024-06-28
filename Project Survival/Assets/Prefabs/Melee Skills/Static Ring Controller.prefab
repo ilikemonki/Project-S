@@ -229,14 +229,15 @@ MonoBehaviour:
   useBurst: 0
   useSimple: 1
   useOnTarget: 0
-  useSelfTarget: 1
   useRandomDirection: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
   useRandomTargeting: 0
   continuous: 0
+  pierceAll: 0
   stayOnPlayer: 1
   alwaysActivate: 1
+  automaticOnly: 1
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

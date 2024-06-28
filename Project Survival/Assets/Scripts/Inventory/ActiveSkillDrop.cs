@@ -44,8 +44,10 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                                 UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, asd.frameImage, false);
                             }
                         }
-                        inventory.activeSkillList[activeSlotNum].autoToggle.isOn = true;
-                        inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(true);
+                        if (inventory.activeSkillList[activeSlotNum].skillController.automaticOnly)
+                            inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(false);
+                        else
+                            inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(true);
                     }
                     else
                     {
@@ -78,7 +80,10 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                         inventory.activeSkillList[activeSlotNum].skillController.autoUseSkill = true;
                         inventory.activeSkillList[activeSlotNum].skillController.CheckTargetless();
                         inventory.activeSkillList[activeSlotNum].autoToggle.isOn = true;
-                        inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(true);
+                        if (inventory.activeSkillList[activeSlotNum].skillController.automaticOnly)
+                            inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(false);
+                        else
+                            inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(true);
                         foreach (ActiveSkillDrop asd in inventory.activeSkillList[activeSlotNum].skillGemDropList) //Apply Gem Modifiers from new skill group
                         {
                             if (asd.draggableItem != null)
@@ -130,6 +135,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+        //Right click to send item to inventory from active skill slots
         if (draggableItem != null && eventData.button == PointerEventData.InputButton.Right && !Input.GetMouseButton(0))
         {
             if (draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
@@ -138,6 +144,8 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                 {
                     inventory.activeSkillList[activeSlotNum].skillGemDropList[i].frameImage.color = Color.white;
                 }
+                inventory.activeSkillList[activeSlotNum].autoToggle.isOn = true;
+                inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(false);
                 inventory.DropInInventory(draggableItem);
             }
             else
