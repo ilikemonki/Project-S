@@ -20,18 +20,21 @@ public class SkillBehavior : MonoBehaviour
     bool hasHitEnemy;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
-    public List<EnemyStats> enemyChainList;    //remember the index of enemies hit by chain, will not hit the same enemy again.
+    public List<EnemyStats> enemyChainList = new();    //remember the index of enemies hit by chain, will not hit the same enemy again.
+    public List<EnemyStats> rememberEnemyList = new();
     public bool isOrbitSkill, rotateSkill, returnSkill, isHoming;
     public Vector3 startingPos;
     public float currentTravelRange; //travel
     public float currentDuration;
     public float currentDespawnTime;
     public float currenthitboxColliderTimer;
+    public float currentDamageCooldownTimer;
 
     public void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
     {
         if (!hitboxCollider.enabled) hitboxCollider.enabled = true;
         currenthitboxColliderTimer = 0;
+        currentDamageCooldownTimer = 0;
         currentDespawnTime = 0;
         currentDuration = 0;
         currentTravelRange = 0;
@@ -47,12 +50,26 @@ public class SkillBehavior : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (rememberEnemyList.Count > 0)
+        {
+            currentDamageCooldownTimer += Time.deltaTime;
+            if (currentDamageCooldownTimer >= skillController.damageCooldown)
+            {
+                rememberEnemyList.Clear();
+                hitboxCollider.enabled = false;
+                hitboxCollider.enabled = true;
+                currentDamageCooldownTimer = 0;
+            }
+        }
         if (skillController.hitboxColliderDuration > 0 && hitboxCollider.enabled)
         {
             currenthitboxColliderTimer += Time.deltaTime;
             if (currenthitboxColliderTimer >= skillController.hitboxColliderDuration)
             {
-                hitboxCollider.enabled = false;
+                if (skillController.resetHitBoxCollider)
+                    hitboxCollider.enabled = true;
+                else
+                    hitboxCollider.enabled = false;
                 currenthitboxColliderTimer = 0;
             }
         }
@@ -173,6 +190,14 @@ public class SkillBehavior : MonoBehaviour
             }
         }
         enemy.TakeDamage(totalDamage, isCrit);
+        if (skillController.damageCooldown > 0)
+        {
+            rememberEnemyList.Add(enemy);
+        }
+        if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
+        {
+            enemy.KnockBack((enemy.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
+        }
         if (skillController.isMelee && skillController.combo > 1 && !hasHitEnemy && skillController.comboCounter < skillController.combo)
         {
             hasHitEnemy = true;
@@ -201,6 +226,10 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
         {
             EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null) return;
+            if (skillController.damageCooldown > 0)
+            {
+                if (rememberEnemyList.Contains(enemy)) return;
+            }
             if (returnSkill)
             {
                 DoDamage(enemy, 50);
@@ -225,10 +254,6 @@ public class SkillBehavior : MonoBehaviour
                 return;
             }
             DoDamage(enemy, 100);
-            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
-            {
-                enemy.KnockBack((col.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
-            }
             if ((pierce <= 0 && chain > 0 || skillController.isMelee)) //check if there are chains, add enemy to list to not chain again.
             {
                 if (!enemyChainList.Contains(enemy))    //if enemy is not in list, add it.
@@ -351,6 +376,7 @@ public class SkillBehavior : MonoBehaviour
     private void OnDisable()
     {
         enemyChainList.Clear();
+        rememberEnemyList.Clear();
         hasHitEnemy = false;
         target = null;
         returnSkill = false;

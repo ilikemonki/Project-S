@@ -29,6 +29,7 @@ public class EnemyStats : MonoBehaviour
     public bool knockedBack, knockBackImmune;
     public bool isSpawning; //check if enemy is beginning to spawn
     bool isDead, showDamageFlash;
+    public bool doNotMove;
     [Header("Attack")]
     public bool canAttack; //initialize in awake
     public bool spreadAttack, circleAttack, burstAttack;
@@ -132,6 +133,7 @@ public class EnemyStats : MonoBehaviour
         GameManager.totalKills++;
         enemyManager.enemiesAlive--;
         dropRate.DropLoot(transform);
+        enemyManager.enemyDetector.RemoveEnemyFromList(this);
         gameObject.SetActive(false);
     }
 
@@ -152,6 +154,8 @@ public class EnemyStats : MonoBehaviour
         damageFlashTimer = 0;
         burnedTimer = 0; chilledTimer = 0; shockedTimer = 0; bleedingTimer = 0;
         burnOneSecCounter = 0; bleedOneSecCounter = 0;
+        if (enemyManager != null)
+            enemyManager.enemyDetector.RemoveEnemyFromList(this);
     }
     protected virtual void OnEnable()
     {

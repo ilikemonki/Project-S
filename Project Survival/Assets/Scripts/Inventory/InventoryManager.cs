@@ -384,14 +384,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (skillSlot.skillController != null && !skillSlot.skillController.automaticOnly)
             {
-                if (skillSlot.autoToggle.isOn)
-                {
-                    skillSlot.skillController.autoUseSkill = true;
-                }
-                else
-                {
-                    skillSlot.skillController.autoUseSkill = false;
-                }
+                skillSlot.skillController.SetAutomatic(skillSlot.autoToggle.isOn);
                 skillSlot.skillController.CheckTargetless();
             }
         }

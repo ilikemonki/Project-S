@@ -11,7 +11,8 @@ public class EnemyMovement : MonoBehaviour
     }
     public void MoveEnemy()
     {
-        enemyStats.rb.MovePosition(transform.position + (enemyStats.moveSpeed * Time.fixedDeltaTime * (enemyStats.enemyManager.player.transform.position - transform.position).normalized));
+        if (!enemyStats.doNotMove)
+            enemyStats.rb.MovePosition(transform.position + (enemyStats.moveSpeed * Time.fixedDeltaTime * (enemyStats.enemyManager.player.transform.position - transform.position).normalized));
     }
 
     public void AlwaysFacePlayer()

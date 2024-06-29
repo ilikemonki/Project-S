@@ -58,7 +58,7 @@ public class PlayerCollector : MonoBehaviour
     }
     public void MagnetCollectible()
     {
-        magnet.radius = 400;
+        magnet.radius = 200;
         magnetTimer = 0;
         useMagnet = true;
     }

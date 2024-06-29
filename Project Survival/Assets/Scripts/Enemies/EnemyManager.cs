@@ -35,6 +35,7 @@ public class EnemyManager : MonoBehaviour
     public List<Round> rounds;
     public PlayerStats player;
     public EnemyController enemyController;
+    public EnemyDetector enemyDetector;
     public GameplayManager gameplayManager;
     public EnemyStats basePrefab;
     public SpawnMarks spawnMarks;

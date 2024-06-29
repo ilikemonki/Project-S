@@ -9,6 +9,7 @@ public class PlayerStats : MonoBehaviour
     public EnemyManager enemyManager;
     public GameplayManager gameplayManager;
     public PlayerCollector playerCollector;
+    public EnemyDetector enemyDetector;
     public Slider healthBar;
     public Image healthBarImage;
     public SpriteRenderer spriteRenderer;

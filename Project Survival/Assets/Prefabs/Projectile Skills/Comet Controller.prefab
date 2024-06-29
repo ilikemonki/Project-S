@@ -204,6 +204,8 @@ MonoBehaviour:
   pierce: 0
   chain: 0
   hitboxColliderDuration: 0
+  resetHitBoxCollider: 0
+  damageCooldown: 0
   fixedProjMelee: 0
   fixedCooldown: 0
   currentCooldown: 0
@@ -237,7 +239,7 @@ MonoBehaviour:
   pierceAll: 0
   stayOnPlayer: 0
   alwaysActivate: 0
-  automaticOnly: 1
+  automaticOnly: 0
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:

@@ -450,7 +450,7 @@ public class UpdateStats : MonoBehaviour
         if (sc.combo > 0)
             fullString += "Combo: " + sc.combo + "\n";
         if (sc.attackRange > 0)
-            fullString += "Attack Range: " + sc.attackRange + "%\n";
+            fullString += "Attack Range: " + sc.attackRange + "\n";
         for (int i = 0; i < sc.ailmentsChance.Count; i++)
         {
             if (sc.ailmentsChance[i] > 0)
@@ -494,7 +494,7 @@ public class UpdateStats : MonoBehaviour
         if (sc.knockBack > 0)
             fullString += "Knockback: " + sc.knockBack + "\n";
         if (sc.size > 0)
-            fullString += "Size: " + sc.size + "%\n";
+            fullString += "Size: +" + sc.size + "%\n";
 
         return fullString;
     }

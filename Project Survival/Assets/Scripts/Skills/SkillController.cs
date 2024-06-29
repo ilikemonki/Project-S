@@ -54,6 +54,8 @@ public class SkillController : MonoBehaviour
     public int meleeAmount, combo, projectileAmount, pierce, chain;
     [Header("Other Stats")]
     public float hitboxColliderDuration; //duration for hitbox to stay up.
+    public bool resetHitBoxCollider; //after hitbox duration, renable hitbox
+    public float damageCooldown; //CD for when enemies can be hit again.
     public bool fixedProjMelee; //Set a number here to set max proj/melee.
     public bool fixedCooldown; //Cannot modify cooldown
     public float currentCooldown;
@@ -76,7 +78,7 @@ public class SkillController : MonoBehaviour
     public bool useBarrage; //Use melee/projectile back to back on the same target/area.
     public bool useScatter; //Use melee/projectile back to back but has a uneven target/angle.
     public bool useSpread; //skill will evenly spread and angle itself.
-    public bool useOrbit; //targetless. Orbits around the player
+    public bool useOrbit; //targetless. Orbits around the player.
     public bool useCircular; //targetless. Skill will evenly spread itself around the player.
     public bool useLateral; //Skill will line itself up horizontally.
     public bool useBurst; //Use all melee/projectile at once but has uneven target/angle, long CD, Increased Stats.
@@ -135,21 +137,13 @@ public class SkillController : MonoBehaviour
         {
             UpdateSkillStats();
         }
-        PopulatePool(projectileAmount + meleeAmount, prefabBehavior, poolParent, poolList); //populate skill objects in regular pool.
-        if (isMelee && useOrbit) //orbit melee, spawn orbiting weapons
+        if (!useOrbit)
+            PopulatePool(projectileAmount + meleeAmount); //populate all needed objects to their pool list.
+        if (useOrbit) //orbit melee, spawn orbiting weapons
         {
-            PopulatePool(meleeAmount, meleeWeaponPrefab, stayOnPlayerParent, stayOnPlayerPoolList);
-            OrbitBehavior(meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
-        } 
-        else if (!isMelee && useOrbit) //orbiting projectile
-        {
-            PopulatePool(projectileAmount, prefabBehavior, stayOnPlayerParent, stayOnPlayerPoolList);
-            OrbitBehavior(projectileAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
+            OrbitBehavior(projectileAmount + meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
         }
-        else if (stayOnPlayer) //populate list.
-        {
-            PopulatePool(projectileAmount + meleeAmount, prefabBehavior, stayOnPlayerParent, stayOnPlayerPoolList);
-        }
+        player.enemyDetector.SetDetectorRange(attackRange);
     }
     // Update is called once per frame
     public virtual void Update()
@@ -339,7 +333,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > poolList.Count - 2)
             {
-                PopulatePool(meleeAmount + projectileAmount, prefabBehavior, poolParent, poolList);
+                PopulatePool(meleeAmount + projectileAmount);
             }
             if (!poolList[i].isActiveAndEnabled)
             {
@@ -375,7 +369,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > poolList.Count - 2)
             {
-                PopulatePool(meleeAmount + projectileAmount, prefabBehavior, poolParent, poolList);
+                PopulatePool(meleeAmount + projectileAmount);
             }
             if (!poolList[i].isActiveAndEnabled)
             {
@@ -416,7 +410,7 @@ public class SkillController : MonoBehaviour
             {
                 if (i > poolList.Count - 2)
                 {
-                    PopulatePool(numOfAttacks, prefabBehavior, poolParent, poolList);
+                    PopulatePool(numOfAttacks);
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
@@ -458,7 +452,7 @@ public class SkillController : MonoBehaviour
             {
                 if (i > pool.Count - 2)
                 {
-                    PopulatePool(numOfAttacks, prefabBehavior, stayOnPlayerParent, pool);
+                    PopulatePool(numOfAttacks);
                 }
                 if (!pool[i].isActiveAndEnabled)
                 {
@@ -495,23 +489,26 @@ public class SkillController : MonoBehaviour
         {
             stayOnPlayerParent.transform.Rotate(new Vector3(0, 0, -(60 + (travelSpeed * 10)) * Time.deltaTime)); //rotation speed
         }
-        else
+        else //manually move. Orbit behavior is automatic only but leave this here.
         {
             direction = gameplayManager.mousePos - stayOnPlayerParent.transform.position;
             stayOnPlayerParent.transform.rotation = Quaternion.RotateTowards(stayOnPlayerParent.transform.rotation, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), (60 + (travelSpeed * 10)) * Time.deltaTime);
         }
-        for (int i = 0; i < stayOnPlayerPoolList.Count; i++) //increment current CD to respawn the skill.
+        if (!continuous)
         {
-            if (!stayOnPlayerPoolList[i].isActiveAndEnabled)
+            for (int i = 0; i < stayOnPlayerPoolList.Count; i++) //increment current CD to respawn the skill.
             {
-                stayOnPlayerPoolList[i].currentDespawnTime += Time.deltaTime;
-                if (stayOnPlayerPoolList[i].currentDespawnTime >= cooldown) //used to be set to despawnTime
+                if (!stayOnPlayerPoolList[i].isActiveAndEnabled)
                 {
-                    stayOnPlayerPoolList[i].travelSpeed = travelSpeed;
-                    stayOnPlayerPoolList[i].pierce = pierce;
-                    stayOnPlayerPoolList[i].chain = chain;
-                    stayOnPlayerPoolList[i].currentDespawnTime = 0;
-                    stayOnPlayerPoolList[i].gameObject.SetActive(true);
+                    stayOnPlayerPoolList[i].currentDespawnTime += Time.deltaTime;
+                    if (stayOnPlayerPoolList[i].currentDespawnTime >= cooldown) //used to be set to despawnTime
+                    {
+                        stayOnPlayerPoolList[i].travelSpeed = travelSpeed;
+                        stayOnPlayerPoolList[i].pierce = pierce;
+                        stayOnPlayerPoolList[i].chain = chain;
+                        stayOnPlayerPoolList[i].currentDespawnTime = 0;
+                        stayOnPlayerPoolList[i].gameObject.SetActive(true);
+                    }
                 }
             }
         }
@@ -537,7 +534,7 @@ public class SkillController : MonoBehaviour
             {
                 if (i > poolList.Count - 2)
                 {
-                    PopulatePool(numOfAttacks, prefabBehavior, poolParent, poolList);
+                    PopulatePool(numOfAttacks);
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
@@ -598,7 +595,7 @@ public class SkillController : MonoBehaviour
             {
                 if (i > poolList.Count - 2)
                 {
-                    PopulatePool(numOfAttacks, prefabBehavior, poolParent, poolList);
+                    PopulatePool(numOfAttacks);
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
@@ -703,7 +700,7 @@ public class SkillController : MonoBehaviour
             {
                 if (i > poolList.Count - 2)
                 {
-                    PopulatePool(numOfAttacks, prefabBehavior, poolParent, poolList);
+                    PopulatePool(numOfAttacks);
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
@@ -795,7 +792,7 @@ public class SkillController : MonoBehaviour
             {
                 if (i > poolList.Count - 2)
                 {
-                    PopulatePool(numOfAttacks, prefabBehavior, poolParent, poolList);
+                    PopulatePool(numOfAttacks);
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
@@ -890,7 +887,7 @@ public class SkillController : MonoBehaviour
         {
             if (i > poolList.Count - 2)
             {
-                PopulatePool(projectileAmount, prefabBehavior, poolParent, poolList);
+                PopulatePool(projectileAmount);
             }
             if (!poolList[i].isActiveAndEnabled)
             {
@@ -939,11 +936,48 @@ public class SkillController : MonoBehaviour
             }
         }
     }
-    public virtual void PopulatePool(int spawnAmount, SkillBehavior prefab, GameObject parent, List<SkillBehavior> poolList)
+    public virtual void PopulatePool(int spawnAmount)
     {
-        for (int i = 0; i < spawnAmount; i++)
+        if (isMelee && useOrbit) //orbit melee. populate to stayOnPlayer list with melee weapon object.
         {
-            SkillBehavior skill = Instantiate(prefab, parent.transform);    //Spawn, add to list, and initialize prefabs
+            for (int i = 0; i < spawnAmount; i++)
+            {
+                SkillBehavior skill = Instantiate(meleeWeaponPrefab, stayOnPlayerParent.transform);    //Spawn, add to list, and initialize prefabs
+                skill.gameObject.SetActive(false);
+                skill.skillController = this;
+                skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+                stayOnPlayerPoolList.Add(skill);
+            }
+        }
+        else if ((!isMelee && useOrbit) || stayOnPlayer) //orbiting projectile. populate to stayOnPlayer list with skill object. 
+        {
+            for (int i = 0; i < spawnAmount; i++)
+            {
+                SkillBehavior skill = Instantiate(prefabBehavior, stayOnPlayerParent.transform);    //Spawn, add to list, and initialize prefabs
+                skill.gameObject.SetActive(false);
+                skill.skillController = this;
+                skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+                stayOnPlayerPoolList.Add(skill);
+            }
+        }
+        if (useOrbit || stayOnPlayer) //if orbit or stayonPlayer, check poolList if need to populate more.
+        {
+            if (stayOnPlayerPoolList.Count > poolList.Count)
+            {
+                for (int i = 0; i < stayOnPlayerPoolList.Count - poolList.Count; i++)
+                {
+                    SkillBehavior skill = Instantiate(prefabBehavior, poolParent.transform);    //Spawn, add to list, and initialize prefabs
+                    skill.gameObject.SetActive(false);
+                    skill.skillController = this;
+                    skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+                    poolList.Add(skill);
+                }
+            }
+            return;
+        }
+        for (int i = 0; i < spawnAmount; i++) //Normal populate to poolList
+        {
+            SkillBehavior skill = Instantiate(prefabBehavior, poolParent.transform);    //Spawn, add to list, and initialize prefabs
             skill.gameObject.SetActive(false);
             skill.skillController = this;
             skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
@@ -1045,12 +1079,12 @@ public class SkillController : MonoBehaviour
             {
                 if (isMelee) //orbit melee, spawn orbiting weapons
                 {
-                    PopulatePool(meleeAmount - stayOnPlayerPoolList.Count, meleeWeaponPrefab, stayOnPlayerParent, stayOnPlayerPoolList);
+                    PopulatePool(meleeAmount - stayOnPlayerPoolList.Count);
                     OrbitBehavior(meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
                 }
                 else //orbiting projectile
                 {
-                    PopulatePool(projectileAmount - stayOnPlayerPoolList.Count, prefabBehavior, stayOnPlayerParent, stayOnPlayerPoolList);
+                    PopulatePool(projectileAmount - stayOnPlayerPoolList.Count);
                     OrbitBehavior(projectileAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
                 }
             }
@@ -1080,5 +1114,25 @@ public class SkillController : MonoBehaviour
         }
         sb.SetStats(damageTypes[0] * (1 - gameplayManager.enemyReductions[0] / 100), damageTypes[1] * (1 - gameplayManager.enemyReductions[1] / 100),
             damageTypes[2] * (1 - gameplayManager.enemyReductions[2] / 100), damageTypes[3] * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size);
+    }
+
+    public void SetAutomatic(bool automatic)
+    {
+        if (automatic)
+        {
+            autoUseSkill = true;
+            if (useOrbit) //if useOrbit
+            {
+                damageCooldown = 0;
+            }
+        }
+        else //manual
+        {
+            autoUseSkill = false;
+            if (useOrbit) //if useOrbit, set damage cooldown.
+            {
+                damageCooldown = 1;
+            }
+        }
     }
 }
