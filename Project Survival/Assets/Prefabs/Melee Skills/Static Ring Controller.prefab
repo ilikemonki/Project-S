@@ -133,10 +133,8 @@ MonoBehaviour:
   gameplayManager: {fileID: 0}
   poolList: []
   stayOnPlayerPoolList: []
-  enemiesInRange: []
   player: {fileID: 0}
   enemyManager: {fileID: 0}
-  enemyDistances: {fileID: 0}
   levelUpgrades: {fileID: 7864732532003815873}
   level: 1
   exp: 0
@@ -204,6 +202,8 @@ MonoBehaviour:
   pierce: 0
   chain: 0
   hitboxColliderDuration: 0
+  resetHitBoxCollider: 0
+  damageCooldown: 0
   fixedProjMelee: 1
   fixedCooldown: 1
   currentCooldown: 0
@@ -230,9 +230,9 @@ MonoBehaviour:
   useSimple: 1
   useOnTarget: 0
   useRandomDirection: 0
+  useRandomTargeting: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
-  useRandomTargeting: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 1
@@ -317,19 +317,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 0400000001000000
+  - modifier: 2000000037000000
     amt:
-    - 10
-    - 1
-  - modifier: 0400000001000000
+    - 30
+    - 20
+  - modifier: 2000000037000000
     amt:
-    - 10
-    - 1
-  - modifier: 0400000001000000
+    - 30
+    - 20
+  - modifier: 2000000037000000
     amt:
-    - 10
-    - 1
-  - modifier: 0400000001000000
+    - 30
+    - 20
+  - modifier: 2000000037000000
     amt:
-    - 10
-    - 1
+    - 30
+    - 20

@@ -47,6 +47,14 @@ public class SkillBehavior : MonoBehaviour
         this.chain = chain;
         transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x * (1 + size / 100), skillController.prefabBehavior.transform.localScale.y * (1 + size / 100), 1);
     }
+    public void SetDirection(Vector3 dir) //set where the skill will go.
+    {
+        direction = dir;
+        if ((direction.normalized.x < 0 && transform.localScale.y > 0) || (direction.normalized.x > 0 && transform.localScale.y < 0))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, -transform.localScale.y, 1);
+        }
+    }
 
     protected virtual void Update()
     {
@@ -131,14 +139,6 @@ public class SkillBehavior : MonoBehaviour
         }
     }
 
-    public void SetDirection(Vector3 dir) //set where the skill will go.
-    {
-        direction = dir;
-        if ((direction.normalized.x < 0 && transform.localScale.y > 0) || (direction.normalized.x > 0 && transform.localScale.y < 0))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, -transform.localScale.y, 1);
-        }
-    }
 
     public void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {

@@ -21,7 +21,6 @@ public class InventoryManager : MonoBehaviour
     public GameObject skillPoolParent;
     public PlayerStats player;
     public EnemyManager enemyManager;
-    public EnemyDistances enemyDistances;
     public GameplayManager gameplayManager;
     public InventorySkillDrop inventoryOrbDrop, inventoryGemDrop;
     public ItemManager itemManager;
@@ -136,7 +135,6 @@ public class InventoryManager : MonoBehaviour
                     newItem.name = draggableItem.name;
                     newItem.itemDescription.itemName = draggableItem.itemDescription.itemName;
                     newItem.itemDescription.itemSprite = draggableItem.itemDescription.itemSprite;
-                    //newItem.itemDescription.upgrade = newItem.GetComponent<Upgrades>();
                     newItem.itemDescription.itemType = draggableItem.itemDescription.itemType;
                     newItem.itemDescription.quantityInInventory = draggableItem.itemDescription.quantityInInventory;
                     newItem.itemDescription.quantityInInventory--;
@@ -178,7 +176,6 @@ public class InventoryManager : MonoBehaviour
                     skill.poolParent.transform.SetParent(skillPoolParent.transform);
                     skill.player = player;
                     skill.enemyManager = enemyManager;
-                    skill.enemyDistances = enemyDistances;
                     skill.gameplayManager = gameplayManager;
                     if (!itemManager.skillExpDict.ContainsKey(skill.skillOrbDescription.itemName)) //if skill isn't saved to dictionary, add and save it.
                     {

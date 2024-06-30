@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735531886693428290}
   m_Layer: 0
-  m_Name: StayOnPlayer Pool
+  m_Name: FollowPlayer Pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 6986161325550505959}
   - component: {fileID: 7864732532003815873}
   m_Layer: 0
-  m_Name: Flying Slash Controller
+  m_Name: Lightning Strike Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,9 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabBehavior: {fileID: -6595649996783161566, guid: cafe278724dfca94ea475e0c1721a353, type: 3}
-  meleeWeaponPrefab: {fileID: -6595649996783161566, guid: 825b72de0a508864a8fc361043aed917, type: 3}
-  skillOrbDescription: {fileID: -6162699754021087771, guid: 20c0e7200f9c96843b92122930c50ee4, type: 3}
+  prefabBehavior: {fileID: -6595649996783161566, guid: 9e7f4726ed9015f4abbb0fbd104e2ac3, type: 3}
+  meleeWeaponPrefab: {fileID: 0}
+  skillOrbDescription: {fileID: -6162699754021087771, guid: 0e0cdeba29570d345b2de2dad4e1d256, type: 3}
   poolParent: {fileID: 1735531887519041077}
   stayOnPlayerParent: {fileID: 1735531886693428291}
   gameplayManager: {fileID: 0}
@@ -139,10 +139,10 @@ MonoBehaviour:
   level: 1
   exp: 0
   baseDamageTypes:
-  - 10
   - 0
   - 0
   - 0
+  - 8
   baseAilmentsChance:
   - 0
   - 0
@@ -153,9 +153,9 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseTravelSpeed: 6
-  baseAttackRange: 4
-  baseTravelRange: 6
+  baseTravelSpeed: 0
+  baseAttackRange: 5
+  baseTravelRange: 0
   baseDuration: 0
   baseCooldown: 1
   baseKnockBack: 0
@@ -163,12 +163,12 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseMeleeAmount: 1
+  baseMeleeAmount: 3
   baseCombo: 0
   baseProjectileAmount: 0
   basePierce: 0
   baseChain: 0
-  despawnTime: 0
+  despawnTime: 0.25
   damageTypes:
   - 0
   - 0
@@ -201,7 +201,7 @@ MonoBehaviour:
   projectileAmount: 0
   pierce: 0
   chain: 0
-  hitboxColliderDuration: 0
+  hitboxColliderDuration: 0.1
   resetHitBoxCollider: 0
   damageCooldown: 0
   fixedProjMelee: 0
@@ -219,25 +219,25 @@ MonoBehaviour:
   activateBarrage: 0
   autoUseSkill: 1
   isMelee: 1
-  useMultiTarget: 0
+  useMultiTarget: 1
   useBarrage: 0
-  useScatter: 1
+  useScatter: 0
   useSpread: 0
   useOrbit: 0
   useCircular: 0
   useLateral: 0
   useBurst: 0
   useSimple: 0
-  useOnTarget: 0
+  useOnTarget: 1
   useRandomDirection: 0
-  useRandomTargeting: 0
+  useRandomTargeting: 1
   useBackwardsDirection: 0
   useReturnDirection: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 0
   alwaysActivate: 0
-  automaticOnly: 0
+  automaticOnly: 1
   skillTrigger: {fileID: 6986161325550505959}
   devOnlyCheckThis: 0
   addedBaseDamageTypes:
@@ -317,19 +317,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 0500000000000000
+  - modifier: 080000003700000027000000
     amt:
     - 10
-    - 1
-  - modifier: 0500000000000000
+    - 10
+    - 20
+  - modifier: 080000003700000027000000
     amt:
     - 10
-    - 1
-  - modifier: 0500000000000000
+    - 10
+    - 20
+  - modifier: 080000003700000027000000
     amt:
     - 10
-    - 1
-  - modifier: 0500000000000000
+    - 10
+    - 20
+  - modifier: 080000003700000027000000
     amt:
     - 10
-    - 1
+    - 10
+    - 20

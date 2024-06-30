@@ -5400,13 +5400,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 1118641652}
     m_Modifications:
     - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: dropRate
+      value: 
+      objectReference: {fileID: 2135092638}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: doNotMove
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: maxHealth
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: enemyManager
       value: 
       objectReference: {fileID: 230398754}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: currentHealth
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 1273539247791564998, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: m_Name
       value: Enemy_1
@@ -6020,7 +6032,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 230398753}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbfea4bdf4406644e91511f6b1336ff1, type: 3}
   m_Name: 
@@ -9585,13 +9597,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 1118641652}
     m_Modifications:
     - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: dropRate
+      value: 
+      objectReference: {fileID: 2135092638}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: doNotMove
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: maxHealth
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: enemyManager
       value: 
       objectReference: {fileID: 230398754}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: currentHealth
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 1273539247791564998, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: m_Name
       value: Enemy_2
@@ -20128,6 +20152,7 @@ MonoBehaviour:
   - {fileID: -8080742769469004546, guid: 69398bf9af102b64da3598a6577c54d9, type: 3}
   - {fileID: -8080742769469004546, guid: 44c51cca96f095c41b2282af4e14ce0b, type: 3}
   - {fileID: -8080742769469004546, guid: 6124d6185f404164ca5ed4df037c072a, type: 3}
+  - {fileID: -8080742769469004546, guid: 9362dd80ff9a32b459189b332bd78987, type: 3}
   orbPrefabList:
   - {fileID: 7327212868577625715, guid: 9ab27ddedc0990c4da53d0ad80aba806, type: 3}
   - {fileID: 7327212868577625715, guid: 20c0e7200f9c96843b92122930c50ee4, type: 3}
@@ -20135,6 +20160,7 @@ MonoBehaviour:
   - {fileID: 7327212868577625715, guid: bc6cbd656055e5a42a5e3a65d250d5eb, type: 3}
   - {fileID: 7327212868577625715, guid: 25a5cc2cbee6e2044b205482ce076a88, type: 3}
   - {fileID: 7327212868577625715, guid: d04453cc32f74ff4191346c7571d2b7e, type: 3}
+  - {fileID: 7327212868577625715, guid: 0e0cdeba29570d345b2de2dad4e1d256, type: 3}
   t1GemPrefabList:
   - {fileID: 7689257177180367149, guid: 6360014830cef3349b4879926e6cd308, type: 3}
   - {fileID: 7689257177180367149, guid: 41b750dc24f15d84fa39adb169105505, type: 3}
@@ -30678,7 +30704,6 @@ MonoBehaviour:
   skillPoolParent: {fileID: 1485570788}
   player: {fileID: 177331393}
   enemyManager: {fileID: 230398754}
-  enemyDistances: {fileID: 230398756}
   gameplayManager: {fileID: 944733854}
   inventoryOrbDrop: {fileID: 1576538277}
   inventoryGemDrop: {fileID: 444453434}
@@ -35969,13 +35994,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 1118641652}
     m_Modifications:
     - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: dropRate
+      value: 
+      objectReference: {fileID: 2135092638}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: doNotMove
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: maxHealth
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: enemyManager
       value: 
       objectReference: {fileID: 230398754}
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: currentHealth
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 1273539247791564998, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -47607,7 +47644,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 4
 --- !u!114 &1879265019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55108,10 +55145,8 @@ MonoBehaviour:
   gameplayManager: {fileID: 944733854}
   poolList: []
   stayOnPlayerPoolList: []
-  enemiesInRange: []
   player: {fileID: 0}
   enemyManager: {fileID: 0}
-  enemyDistances: {fileID: 0}
   levelUpgrades: {fileID: 7864732532779077702}
   level: 0
   exp: 0
@@ -55207,9 +55242,9 @@ MonoBehaviour:
   useSimple: 0
   useOnTarget: 0
   useRandomDirection: 0
+  useRandomTargeting: 0
   useBackwardsDirection: 0
   useReturnDirection: 0
-  useRandomTargeting: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 0

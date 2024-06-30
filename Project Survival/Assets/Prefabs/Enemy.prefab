@@ -99,6 +99,7 @@ MonoBehaviour:
   knockedBack: 0
   knockBackImmune: 0
   isSpawning: 0
+  doNotMove: 0
   canAttack: 0
   spreadAttack: 0
   circleAttack: 0

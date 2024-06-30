@@ -13,15 +13,13 @@ public class SkillController : MonoBehaviour
     public GameplayManager gameplayManager;
     public List<SkillBehavior> poolList = new();
     public List<SkillBehavior> stayOnPlayerPoolList = new();
-    List<EnemyStats> rememberEnemiesList = new();
-    public List<EnemyStats> enemiesInRange = new();
+    List<EnemyStats> multiTargetList = new(); //Used in multitarget behavior to remember enemies targeted.
     public PlayerStats player;
     public EnemyManager enemyManager;
-    public EnemyDistances enemyDistances;
     public Upgrades levelUpgrades;
     public int level;
     public float exp;
-    EnemyStats nearestEnemy;
+    EnemyStats enemyTarget;
     float shortestDistance, distanceToEnemy;
     [Header("Base Stats")]
     public List<float> baseDamageTypes; //[0]physical,[1]fire,[2]cold,[3]lightning
@@ -85,10 +83,10 @@ public class SkillController : MonoBehaviour
     public bool useSimple;
     [Header("Secondary Behaviors")]
     public bool useOnTarget;    //Spawns on enemies. If false, spawns on player.
-    public bool useRandomDirection; //targetless, is automatic, cannot be manual. Turn off autoUseSkill.
+    public bool useRandomDirection; //targetless, is automatic, cannot be manual. Automatic.
+    public bool useRandomTargeting; //Randomly targets an enemy in range. Automatic.
     public bool useBackwardsDirection; //Shoots from behind.
     public bool useReturnDirection; //projectiles only.
-    public bool useRandomTargeting; //Randomly targets an enemy in range. Targetless/Manual does nothing.
     [Header("Other Behaviors")]
     public bool continuous; //doesn't despawn.
     public bool pierceAll; //infinite pierce.
@@ -143,7 +141,6 @@ public class SkillController : MonoBehaviour
         {
             OrbitBehavior(projectileAmount + meleeAmount, stayOnPlayerParent.transform, stayOnPlayerPoolList);
         }
-        player.enemyDetector.SetDetectorRange(attackRange);
     }
     // Update is called once per frame
     public virtual void Update()
@@ -188,10 +185,11 @@ public class SkillController : MonoBehaviour
     }
     public void UseSkill()
     {
-        if ((enemyDistances.closestEnemyList.Count <= 0 || enemyDistances.updatingInProgress) && !targetless && !alwaysActivate) return; //if no enemies alive, return.
-        if (!targetless && !alwaysActivate)   //Return if auto and not in attack range.
+        if ((player.enemyDetector.enemyDetectorList.Count <= 0) && !targetless && !alwaysActivate) return; //if no enemies detected, return.
+        if (!targetless && !alwaysActivate)   //Return if automatic and no enemy in attack range.
         {
-            if (Vector3.Distance(transform.position, enemyDistances.closestEnemyList[0].transform.position) > attackRange)
+            enemyTarget = player.enemyDetector.FindNearestTarget(); //Get the nearest enemy
+            if (Vector3.Distance(transform.position, enemyTarget.transform.position) > attackRange)
             {
                 return;
             }
@@ -202,16 +200,11 @@ public class SkillController : MonoBehaviour
         }
         if (useRandomTargeting)
         {
-            GetEnemiesInRangeUnsorted(transform);
-            nearestEnemy = enemiesInRange[Random.Range(0, enemiesInRange.Count)];
-        }
-        else if (!targetless && !alwaysActivate)
-        {
-            nearestEnemy = enemyDistances.closestEnemyList[0];
+            enemyTarget = player.enemyDetector.FindRandomTarget();
         }
         stopFiring = true;
         currentCooldown = 0;
-        if (combo > 0 && isMelee)
+        if (combo > 0 && isMelee) //combo
         {
             if (comboCounter >= combo) 
             { 
@@ -227,7 +220,7 @@ public class SkillController : MonoBehaviour
             if (targetless)
                 targetPos = gameplayManager.mousePos;
             else
-                targetPos = nearestEnemy.transform.position;
+                targetPos = enemyTarget.transform.position;
         }
         else if (useScatter)
         {
@@ -235,7 +228,7 @@ public class SkillController : MonoBehaviour
             if (targetless)
                 targetPos = gameplayManager.mousePos;
             else
-                targetPos = nearestEnemy.transform.position;
+                targetPos = enemyTarget.transform.position;
             if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
             else if (autoUseSkill) direction = targetPos - transform.position;
             else direction = targetPos - transform.position;
@@ -245,7 +238,7 @@ public class SkillController : MonoBehaviour
             if (targetless)
                 BurstBehavior(meleeAmount + projectileAmount, null, transform);
             else
-                BurstBehavior(meleeAmount + projectileAmount, nearestEnemy.transform, transform);
+                BurstBehavior(meleeAmount + projectileAmount, enemyTarget.transform, transform);
         }
         else if (useSpread)
         {
@@ -260,8 +253,8 @@ public class SkillController : MonoBehaviour
                 }
                 else
                 {
-                    SpreadBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), maxSpreadAngle, nearestEnemy.transform, transform, false);
-                    SpreadBehavior((meleeAmount + projectileAmount) / 2, maxSpreadAngle, nearestEnemy.transform, transform, true);
+                    SpreadBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), maxSpreadAngle, enemyTarget.transform, transform, false);
+                    SpreadBehavior((meleeAmount + projectileAmount) / 2, maxSpreadAngle, enemyTarget.transform, transform, true);
                 }
             }
             else
@@ -269,7 +262,7 @@ public class SkillController : MonoBehaviour
                 if (targetless)
                     SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, null, transform, false);
                 else
-                    SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, nearestEnemy.transform, transform, false);
+                    SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, enemyTarget.transform, transform, false);
             }
         }
         else if (useLateral)
@@ -285,8 +278,8 @@ public class SkillController : MonoBehaviour
                 }
                 else
                 {
-                    LateralBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, false);
-                    LateralBehavior((meleeAmount + projectileAmount) / 2, poolList[0].transform.localScale.x - lateralOffset, nearestEnemy.transform, transform, true);
+                    LateralBehavior((meleeAmount + projectileAmount) - ((meleeAmount + projectileAmount) / 2), poolList[0].transform.localScale.x - lateralOffset, enemyTarget.transform, transform, false);
+                    LateralBehavior((meleeAmount + projectileAmount) / 2, poolList[0].transform.localScale.x - lateralOffset, enemyTarget.transform, transform, true);
                 }
             }
             else
@@ -294,7 +287,7 @@ public class SkillController : MonoBehaviour
                 if (targetless)
                     LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x * (1 - lateralOffset), null, transform, false);
                 else
-                    LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x * (1 - lateralOffset), nearestEnemy.transform, transform, false);
+                    LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x * (1 - lateralOffset), enemyTarget.transform, transform, false);
             }
         }
         else if (useCircular)
@@ -307,8 +300,8 @@ public class SkillController : MonoBehaviour
         }
         else if (useMultiTarget)
         {
-            if (enemyDistances.closestEnemyList.Count > 0)
-                MultiTargetBehavior(meleeAmount + projectileAmount, transform, enemyDistances.closestEnemyList);
+            if (player.enemyDetector.enemyDetectorList.Count > 0)
+                MultiTargetBehavior(meleeAmount + projectileAmount, transform);
         }
         foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check use trigger skill condition
         {
@@ -782,12 +775,21 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void MultiTargetBehavior(int numOfAttacks, Transform spawnPos, List<EnemyStats> closestEnemyList)       //Targets multiple mobs at once. Only automatic. Null closestEnemyList == doesn't spawn from player
+    public void MultiTargetBehavior(int numOfAttacks, Transform spawnPos) //Targets multiple mobs at once. Only automatic. Null closestEnemyList == doesn't spawn from player
     {
-        rememberEnemiesList.Clear();
-        if (useRandomTargeting) GetEnemiesInRangeUnsorted(spawnPos);
+        FindMultiTargets(); //Get all possible targets into a multi target list
         for (int t = 0; t < numOfAttacks; t++)
         {
+            if (multiTargetList.Count <= 0) //stop targeting if list has less than num of attacks or is zero
+            {
+                stopFiring = false;
+                return;
+            }
+            if (useRandomTargeting) enemyTarget = multiTargetList[Random.Range(0, multiTargetList.Count)];
+            else enemyTarget = FindNearestMultiTarget(); //get nearest target
+            if (enemyTarget == null) return;
+            if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+            else direction = enemyTarget.transform.position - spawnPos.position;
             for (int i = 0; i < poolList.Count; i++)
             {
                 if (i > poolList.Count - 2)
@@ -796,91 +798,65 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useRandomDirection)
+                    if (useRandomDirection && isMelee)
                     {
-                        direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
                         poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
-                    } 
-                    else if (!autoUseSkill && t == 0 ) //manual and first melee hits at mouse pos. Remove this later. Cannot be manual.
-                    {
-                        counter = 1;
-                        direction = gameplayManager.mousePos - spawnPos.position;
-                        if (direction.magnitude < attackRange)
-                            poolList[i].transform.position = gameplayManager.mousePos;
-                        else poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange;
                     }
-                    else if (useRandomTargeting) //get random enemy from spawnPos
+                    else if (useOnTarget)
                     {
-                        if (enemiesInRange.Count > 0)
-                        {
-                            nearestEnemy = enemiesInRange[Random.Range(0, enemiesInRange.Count)];
-                            enemiesInRange.Remove(nearestEnemy);
-                            direction = nearestEnemy.transform.position - spawnPos.position;
-                            poolList[i].transform.position = nearestEnemy.transform.position;
-                        }
-                        else
-                        {
-                            stopFiring = false;
-                            return;
-                        }
+                        poolList[i].transform.position = enemyTarget.transform.position;    //set starting position on target
                     }
-                    else //target enemy
-                    {
-                        if (closestEnemyList == null)   //skill used from another source other than player
-                        {
-                            nearestEnemy = FindNearestEnemy(spawnPos);
-                            if (nearestEnemy != null)
-                            {
-                                rememberEnemiesList.Add(nearestEnemy);
-                                direction = nearestEnemy.transform.position - spawnPos.position;
-                                poolList[i].transform.position = nearestEnemy.transform.position;
-                            }
-                            else
-                            {
-                                stopFiring = false;
-                                return;
-                            }
-                        }
-                        else //skill used from player
-                        {
-                            if (closestEnemyList.Count < t || closestEnemyList.Count <= 0)
-                            {
-                                stopFiring = false;
-                                return;
-                            }
-                            try //getting errors because the index is out of range.
-                            {
-                                direction = closestEnemyList[t].transform.position - spawnPos.position;
-                            }
-                            catch
-                            {
-                                Debug.Log("Multi Target Error: Did not find target.");
-                                stopFiring = false;
-                                return;
-                            }
-                            if (direction.magnitude <= attackRange)
-                                poolList[i].transform.position = closestEnemyList[t].transform.position;
-                            else
-                            {
-                                stopFiring = false;
-                                return;
-                            }
-                        }
-                    }
+                    else
+                        poolList[i].transform.position = spawnPos.position;    //set starting position on player
+                    SetBehavourStats(poolList[i]);
                     if (!isMelee)
                     {
-                        poolList[i].transform.position = spawnPos.position;
+                        poolList[i].SetDirection((direction).normalized);
+                        poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
                     }
-                    SetBehavourStats(poolList[i]);
-                    poolList[i].SetDirection((direction).normalized);   //Set direction
-                    poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                    else poolList[i].transform.rotation = Quaternion.Euler(0, 0, 0);
                     poolList[i].gameObject.SetActive(true);
+                    multiTargetList.Remove(enemyTarget);
                     break;
                 }
             }
         }
         stopFiring = false;
     }
+    public void FindMultiTargets() //Find all multi targets within attack range, add to list
+    {
+        multiTargetList.Clear();
+        multiTargetList.AddRange(player.enemyDetector.enemyDetectorList);
+        for (int i = 0; i < multiTargetList.Count; i++) //Remove enemy from list if not in attack range
+        {
+            if (Vector3.Distance(transform.position, player.enemyDetector.enemyDetectorList[i].transform.position) > attackRange)
+            {
+                multiTargetList.Remove(player.enemyDetector.enemyDetectorList[i]);
+            }
+        }
+    }
+    public EnemyStats FindNearestMultiTarget()
+    {
+        if (multiTargetList.Count <= 0) return null;
+        float shortestDistance = Mathf.Infinity;
+        float distanceToEnemy;
+        EnemyStats nearestEnemy = null;
+        for (int i = 0; i < multiTargetList.Count; i++) //search all mobs for nearest distance
+        {
+            if (multiTargetList[i].isActiveAndEnabled)
+            {
+                distanceToEnemy = Vector3.Distance(transform.position, multiTargetList[i].transform.position);
+                if (distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    nearestEnemy = multiTargetList[i];
+                }
+            }
+        }
+        if (nearestEnemy != null) return nearestEnemy;
+        else return null;
+    }
+    //Used for when orbit projectile has chain. Orbit proj will despawn and spawn a new projectile to chain.
     public void SpawnChainProjectile(List<EnemyStats> chainList, Transform target, Transform spawnPos)
     {
         for (int i = 0; i < poolList.Count; i++)
@@ -900,39 +876,6 @@ public class SkillController : MonoBehaviour
                 poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); //set angle
                 poolList[i].gameObject.SetActive(true);
                 return;
-            }
-        }
-    }
-    public EnemyStats FindNearestEnemy(Transform spawnPos)
-    {
-        nearestEnemy = null;
-        shortestDistance = Mathf.Infinity;
-        for (int e = 0; e < enemyManager.enemyList.Count; e++)  //find target in normal enemy list
-        {
-            if (enemyManager.enemyList[e].isActiveAndEnabled && !rememberEnemiesList.Contains(enemyManager.enemyList[e]))
-            {
-                distanceToEnemy = Vector3.Distance(spawnPos.position, enemyManager.enemyList[e].transform.position);
-                if (distanceToEnemy < shortestDistance && distanceToEnemy <= attackRange)
-                {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemyManager.enemyList[e];
-                }
-            }
-        }
-        return nearestEnemy;
-    }
-    public void GetEnemiesInRangeUnsorted(Transform spawnPos)
-    {
-        enemiesInRange.Clear();
-        for (int e = 0; e < enemyManager.enemyList.Count; e++)  //find target in normal enemy list
-        {
-            if (enemyManager.enemyList[e].isActiveAndEnabled && !enemiesInRange.Contains(enemyManager.enemyList[e]))
-            {
-                distanceToEnemy = Vector3.Distance(spawnPos.position, enemyManager.enemyList[e].transform.position);
-                if (distanceToEnemy <= attackRange)
-                {
-                    enemiesInRange.Add(enemyManager.enemyList[e]);
-                }
             }
         }
     }
@@ -1058,9 +1001,10 @@ public class SkillController : MonoBehaviour
             travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultiplier + gameplayManager.projectileTravelSpeedMultiplier + addedTravelSpeed) / 100);
             travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultiplier + gameplayManager.projectileTravelRangeMultiplier + addedTravelRange) / 100);
         }
-        if (gameplayManager.furthestAttackRange < attackRange)
+        if (gameplayManager.furthestAttackRange <= attackRange)
         {
             gameplayManager.furthestAttackRange = attackRange;
+            if (player != null) player.enemyDetector.SetDetectorRange(gameplayManager.furthestAttackRange);
         }
         for (int i = 0; i < baseDamageTypes.Count; i++) //Calculate damage with enemy's resistance.
         {

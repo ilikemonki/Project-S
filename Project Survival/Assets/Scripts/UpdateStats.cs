@@ -138,6 +138,11 @@ public class UpdateStats : MonoBehaviour
     //Upgrade skill when it levels.
     public static void ApplySkillUpgrades(Upgrades upgrade, SkillController skill, int level)
     {
+        if (upgrade.levelModifiersList.Count < level) 
+        {
+            Debug.Log("Skill Level UP doesn't exist at level " + level);
+            return;
+        }
         for (int i = 0; i < upgrade.levelModifiersList[level].modifier.Count; i++)
         {
             switch (upgrade.levelModifiersList[level].modifier[i])
