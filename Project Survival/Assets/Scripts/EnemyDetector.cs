@@ -31,7 +31,6 @@ public class EnemyDetector : MonoBehaviour
     }
     public void SetDetectorRange(float newRange)
     {
-        Debug.Log(detectorCollider.radius);
         detectorCollider.radius = newRange;
     }
     public void RemoveEnemyFromList(EnemyStats enemy)

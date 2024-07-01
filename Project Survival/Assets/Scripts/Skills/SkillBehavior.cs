@@ -29,15 +29,18 @@ public class SkillBehavior : MonoBehaviour
     public float currentDespawnTime;
     public float currenthitboxColliderTimer;
     public float currentDamageCooldownTimer;
+    public float currentHomingTimer; //After a certain time, isHoming is activated.
 
     public void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
     {
+        //if (skillController.useHoming) isHoming = true;
         if (!hitboxCollider.enabled) hitboxCollider.enabled = true;
         currenthitboxColliderTimer = 0;
         currentDamageCooldownTimer = 0;
         currentDespawnTime = 0;
         currentDuration = 0;
         currentTravelRange = 0;
+        currentHomingTimer = 0;
         this.damageTypes[0] = physical;
         this.damageTypes[1] = fire;
         this.damageTypes[2] = cold;
@@ -58,7 +61,16 @@ public class SkillBehavior : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (rememberEnemyList.Count > 0)
+        if (skillController.useHoming && currentHomingTimer < (100 / travelSpeed) * 0.01 && !isHoming) //Activate homing
+        {
+            currentHomingTimer += Time.deltaTime;
+            if (currentHomingTimer >= (100 / travelSpeed) * 0.01)
+            {
+                target = FindTarget(true);
+                isHoming = true;
+            }
+        }
+        if (rememberEnemyList.Count > 0 && skillController.damageCooldown > 0) //For damage cooldown
         {
             currentDamageCooldownTimer += Time.deltaTime;
             if (currentDamageCooldownTimer >= skillController.damageCooldown)
@@ -69,7 +81,7 @@ public class SkillBehavior : MonoBehaviour
                 currentDamageCooldownTimer = 0;
             }
         }
-        if (skillController.hitboxColliderDuration > 0 && hitboxCollider.enabled)
+        if (skillController.hitboxColliderDuration > 0 && hitboxCollider.enabled) //hitbox collider
         {
             currenthitboxColliderTimer += Time.deltaTime;
             if (currenthitboxColliderTimer >= skillController.hitboxColliderDuration)
@@ -81,14 +93,14 @@ public class SkillBehavior : MonoBehaviour
                 currenthitboxColliderTimer = 0;
             }
         }
-        if (rotateSkill)
+        if (rotateSkill) //Rotate skill object
         {
             if (travelSpeed > 0)
                 transform.Rotate(new Vector3(0, 0, 160 + (travelSpeed * 8)) * Time.deltaTime);
             else
                 transform.Rotate(new Vector3(0, 0, 160 + (8)) * Time.deltaTime);
         }
-        if (target != null && target.gameObject.activeSelf && isHoming)     //Home on enemy.
+        if (target != null && target.gameObject.activeSelf && isHoming)     //Home on target.
         {
             direction = (target.position - transform.position).normalized;
             if (!rotateSkill)
@@ -114,19 +126,25 @@ public class SkillBehavior : MonoBehaviour
                         gameObject.SetActive(false);
                     }
                 }
-                else if (travelSpeed > 0) //skills that travel range will check the distance traveled.
+                else if (skillController.travelRange > 0) //skills that travel range will check the distance traveled.
                 {
                     currentTravelRange = Vector3.Distance(transform.position, startingPos);
-                    if (currentTravelRange >= skillController.travelRange)
+                    if (currentTravelRange >= skillController.travelRange) //reached max range
                     {
-                        if (skillController.useReturnDirection && !skillController.isMelee) //At end of travel, return projectile.
+                        if (skillController.useReturn) //At end of travel, return projectile or despawn.
                         {
-                            returnSkill = true;
-                            target = skillController.player.transform;
+                            SetReturn();
                         }
                         else
                             gameObject.SetActive(false);
                     }
+                }
+            }
+            else if (returnSkill && !skillController.useHomingReturn)
+            {
+                if (Vector3.Distance(transform.position, startingPos) >= currentTravelRange)
+                {
+                    gameObject.SetActive(false);
                 }
             }
         }
@@ -232,7 +250,7 @@ public class SkillBehavior : MonoBehaviour
             }
             if (returnSkill)
             {
-                DoDamage(enemy, 50);
+                DoDamage(enemy, 100);
                 return;
             }
             if (skillController.useOrbit && isOrbitSkill && gameObject.activeSelf)   //Object is a weapon and using orbit behavior
@@ -278,10 +296,9 @@ public class SkillBehavior : MonoBehaviour
         if (skillController.continuous || skillController.pierceAll) return;
         if (pierce <= 0 && chain <= 0)
         {
-            if (skillController.useReturnDirection)
+            if (skillController.useReturn)
             {
-                returnSkill = true;
-                target = skillController.player.transform;
+                SetReturn();
             }
             else
                 gameObject.SetActive(false);
@@ -319,17 +336,16 @@ public class SkillBehavior : MonoBehaviour
         }
         else
         {
-            if (skillController.useReturnDirection)
+            if (skillController.useReturn)
             {
-                returnSkill = true;
-                target = skillController.player.transform;
+                SetReturn();
             }
             else
                 gameObject.SetActive(false);    //despawn if no targets found
         }
     }
 
-    public Transform FindTarget(bool closest)
+    public Transform FindTarget(bool closest) //if false, find furthest
     {
         if (closest) shortestDistance = Mathf.Infinity;
         else shortestDistance = 0;
@@ -352,13 +368,13 @@ public class SkillBehavior : MonoBehaviour
                     distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
                     if (!closest)
                     {
-                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange)
+                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
                         {
                             shortestDistance = distanceToEnemy;
                             nearestEnemy = skillController.enemyManager.enemyList[i];
                         }
                     }
-                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange)
+                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
                     {
                         shortestDistance = distanceToEnemy;
                         nearestEnemy = skillController.enemyManager.enemyList[i];
@@ -372,7 +388,32 @@ public class SkillBehavior : MonoBehaviour
         }
         else return null;
     }
-
+    public void SetReturn()
+    {
+        if (!skillController.useHomingReturn)
+        {
+            isHoming = false;
+        }
+        travelSpeed *= 1.5f;
+        currentDuration = 0;
+        currentDespawnTime = 0;
+        startingPos = transform.position;
+        returnSkill = true;
+        target = skillController.player.transform;
+        currentTravelRange = Vector3.Distance(skillController.player.transform.position, startingPos);
+        SetDirection((target.position - transform.position).normalized);
+        transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+    }
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        if (returnSkill)
+        {
+            if (collision.CompareTag("Player"))
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
     private void OnDisable()
     {
         enemyChainList.Clear();

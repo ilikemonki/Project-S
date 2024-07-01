@@ -82,11 +82,12 @@ public class SkillController : MonoBehaviour
     public bool useBurst; //Use all melee/projectile at once but has uneven target/angle, long CD, Increased Stats.
     public bool useSimple;
     [Header("Secondary Behaviors")]
-    public bool useOnTarget;    //Spawns on enemies. If false, spawns on player.
-    public bool useRandomDirection; //targetless, is automatic, cannot be manual. Automatic.
-    public bool useRandomTargeting; //Randomly targets an enemy in range. Automatic.
-    public bool useBackwardsDirection; //Shoots from behind.
-    public bool useReturnDirection; //projectiles only.
+    public bool useOnTarget;    //Spawns on enemies. If false, spawns on player. Non-Gem
+    public bool useRandomTargetless; //targetless, cannot be manual. Automatic.
+    public bool useRandomTarget; //Randomly targets an enemy in range. Automatic.
+    public bool useBackwardSplit; //Half of proj/melee is used in the opposite direction
+    public bool useReturn; //Travel skills only.
+    public bool useHoming, useHomingReturn; //Homes onto target. Return homes to player. Travel skills only.
     [Header("Other Behaviors")]
     public bool continuous; //doesn't despawn.
     public bool pierceAll; //infinite pierce.
@@ -120,7 +121,7 @@ public class SkillController : MonoBehaviour
     }
     public void CheckTargetless()
     {
-        if (useOrbit || useRandomDirection || useCircular || !autoUseSkill)
+        if (useOrbit || useRandomTargetless || useCircular || !autoUseSkill)
             targetless = true;
         else targetless = false;
     }
@@ -198,7 +199,7 @@ public class SkillController : MonoBehaviour
         {
             if (!skillTrigger.CheckTriggerCondition()) return;
         }
-        if (useRandomTargeting)
+        if (useRandomTarget)
         {
             enemyTarget = player.enemyDetector.FindRandomTarget();
         }
@@ -229,7 +230,7 @@ public class SkillController : MonoBehaviour
                 targetPos = gameplayManager.mousePos;
             else
                 targetPos = enemyTarget.transform.position;
-            if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+            if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
             else if (autoUseSkill) direction = targetPos - transform.position;
             else direction = targetPos - transform.position;
         }
@@ -242,9 +243,9 @@ public class SkillController : MonoBehaviour
         }
         else if (useSpread)
         {
-            if (useRandomDirection)
+            if (useRandomTargetless)
                 SpreadBehavior(meleeAmount + projectileAmount, maxSpreadAngle, null, transform, false);
-            else if (useBackwardsDirection)
+            else if (useBackwardSplit)
             {
                 if (targetless)
                 {
@@ -267,9 +268,9 @@ public class SkillController : MonoBehaviour
         }
         else if (useLateral)
         {
-            if (useRandomDirection)
+            if (useRandomTargetless)
                 LateralBehavior(meleeAmount + projectileAmount, poolList[0].transform.localScale.x - lateralOffset, null, transform, false);
-            else if (useBackwardsDirection)
+            else if (useBackwardSplit)
             {
                 if (targetless)
                 {
@@ -319,7 +320,7 @@ public class SkillController : MonoBehaviour
     }
     public void BarrageBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.
     {
-        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if (autoUseSkill) direction = target - transform.position;
         else direction = target - transform.position;
         for (int i = 0; i < poolList.Count; i++)
@@ -345,7 +346,7 @@ public class SkillController : MonoBehaviour
                     poolList[i].transform.position = spawnPos.position;    //set starting position on player
                 SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((direction).normalized);   //Set direction
-                if (useBackwardsDirection && barrageCounter % 2 == 1) //reverse direction.
+                if (useBackwardSplit && barrageCounter % 2 == 1) //reverse direction.
                 {
                     poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                 }
@@ -381,7 +382,7 @@ public class SkillController : MonoBehaviour
                     poolList[i].transform.position = spawnPos.position;    //set starting position on player
                 SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
-                if (useBackwardsDirection && barrageCounter % 2 == 1)
+                if (useBackwardSplit && barrageCounter % 2 == 1)
                 {
                     poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                 }
@@ -394,7 +395,7 @@ public class SkillController : MonoBehaviour
     }
     public void BurstBehavior(int numOfAttacks, Transform target, Transform spawnPos)
     {
-        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if (autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         for (int p = 0; p < numOfAttacks; p++)
@@ -422,7 +423,7 @@ public class SkillController : MonoBehaviour
                         poolList[i].transform.position = spawnPos.position;    //set starting position on player
                     SetBehavourStats(poolList[i]);
                     poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
-                    if (useBackwardsDirection && p % 2 == 1)
+                    if (useBackwardSplit && p % 2 == 1)
                     {
                         poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                     }
@@ -436,7 +437,7 @@ public class SkillController : MonoBehaviour
     }
     public void SimpleBehavior(int numOfAttacks, Transform target, Transform spawnPos, List<SkillBehavior> pool)
     {
-        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if (autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         for (int p = 0; p < numOfAttacks; p++)
@@ -464,7 +465,7 @@ public class SkillController : MonoBehaviour
                         pool[i].transform.position = spawnPos.position;    //set starting position on player
                     SetBehavourStats(pool[i]);
                     pool[i].SetDirection((direction).normalized);
-                    if (useBackwardsDirection && p % 2 == 1)
+                    if (useBackwardSplit && p % 2 == 1)
                     {
                         pool[i].SetDirection((-pool[i].direction).normalized);   //Set direction
                     }
@@ -518,7 +519,7 @@ public class SkillController : MonoBehaviour
         }
         stopFiring = false;
     }
-    public void CircularBehavior(int numOfAttacks, Transform spawnPos)
+    public void CircularBehavior(int numOfAttacks, Transform spawnPos) //targetless
     {
         spreadAngle = 360 / numOfAttacks;
         for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/melee
@@ -574,7 +575,7 @@ public class SkillController : MonoBehaviour
     {
         counter = 0;
         spreadAngle = maxAngle / numOfAttacks;
-        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if(autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         if (useBackwards)
@@ -679,7 +680,7 @@ public class SkillController : MonoBehaviour
     public void LateralBehavior(int numOfAttacks, float distanceApart, Transform target, Transform spawnPos, bool useBackwards)
     {
         counter = 0;
-        if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         else if (autoUseSkill) direction = target.position - spawnPos.position;
         else direction = gameplayManager.mousePos - spawnPos.position;
         if (useBackwards)
@@ -785,10 +786,10 @@ public class SkillController : MonoBehaviour
                 stopFiring = false;
                 return;
             }
-            if (useRandomTargeting) enemyTarget = multiTargetList[Random.Range(0, multiTargetList.Count)];
+            if (useRandomTarget) enemyTarget = multiTargetList[Random.Range(0, multiTargetList.Count)];
             else enemyTarget = FindNearestMultiTarget(); //get nearest target
             if (enemyTarget == null) return;
-            if (useRandomDirection) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+            if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
             else direction = enemyTarget.transform.position - spawnPos.position;
             for (int i = 0; i < poolList.Count; i++)
             {
@@ -798,7 +799,7 @@ public class SkillController : MonoBehaviour
                 }
                 if (!poolList[i].isActiveAndEnabled)
                 {
-                    if (useRandomDirection && isMelee)
+                    if (useRandomTargetless && isMelee)
                     {
                         poolList[i].transform.position = new Vector3(spawnPos.position.x + Random.Range(-attackRange, attackRange), spawnPos.position.y + Random.Range(-attackRange, attackRange), 0);
                     }
@@ -815,6 +816,7 @@ public class SkillController : MonoBehaviour
                         poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
                     }
                     else poolList[i].transform.rotation = Quaternion.Euler(0, 0, 0);
+                    poolList[i].target = enemyTarget.transform;
                     poolList[i].gameObject.SetActive(true);
                     multiTargetList.Remove(enemyTarget);
                     break;

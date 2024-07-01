@@ -6032,7 +6032,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 230398753}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbfea4bdf4406644e91511f6b1336ff1, type: 3}
   m_Name: 
@@ -20153,6 +20153,8 @@ MonoBehaviour:
   - {fileID: -8080742769469004546, guid: 44c51cca96f095c41b2282af4e14ce0b, type: 3}
   - {fileID: -8080742769469004546, guid: 6124d6185f404164ca5ed4df037c072a, type: 3}
   - {fileID: -8080742769469004546, guid: 9362dd80ff9a32b459189b332bd78987, type: 3}
+  - {fileID: -8080742769469004546, guid: 9635dfc23bc97c149aa3ce8def6cb064, type: 3}
+  - {fileID: -8080742769469004546, guid: c282d142338dca64aa1107c519d97acd, type: 3}
   orbPrefabList:
   - {fileID: 7327212868577625715, guid: 9ab27ddedc0990c4da53d0ad80aba806, type: 3}
   - {fileID: 7327212868577625715, guid: 20c0e7200f9c96843b92122930c50ee4, type: 3}
@@ -20161,6 +20163,8 @@ MonoBehaviour:
   - {fileID: 7327212868577625715, guid: 25a5cc2cbee6e2044b205482ce076a88, type: 3}
   - {fileID: 7327212868577625715, guid: d04453cc32f74ff4191346c7571d2b7e, type: 3}
   - {fileID: 7327212868577625715, guid: 0e0cdeba29570d345b2de2dad4e1d256, type: 3}
+  - {fileID: 7327212868577625715, guid: 7cd4f103a66a03644a06fee83b609e0e, type: 3}
+  - {fileID: 7327212868577625715, guid: 82ced1049b46d1044a63f778fbf1c9c6, type: 3}
   t1GemPrefabList:
   - {fileID: 7689257177180367149, guid: 6360014830cef3349b4879926e6cd308, type: 3}
   - {fileID: 7689257177180367149, guid: 41b750dc24f15d84fa39adb169105505, type: 3}
@@ -55241,10 +55245,12 @@ MonoBehaviour:
   useBurst: 0
   useSimple: 0
   useOnTarget: 0
-  useRandomDirection: 0
-  useRandomTargeting: 0
-  useBackwardsDirection: 0
-  useReturnDirection: 0
+  useRandomTargetless: 0
+  useRandomTarget: 0
+  useBackwardSplit: 0
+  useReturn: 0
+  useHoming: 0
+  useHomingReturn: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 0

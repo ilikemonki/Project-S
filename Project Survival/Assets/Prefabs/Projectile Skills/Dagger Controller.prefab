@@ -153,7 +153,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseTravelSpeed: 10
+  baseTravelSpeed: 6
   baseAttackRange: 6
   baseTravelRange: 10
   baseDuration: 0
@@ -229,10 +229,12 @@ MonoBehaviour:
   useBurst: 0
   useSimple: 0
   useOnTarget: 0
-  useRandomDirection: 0
-  useRandomTargeting: 0
-  useBackwardsDirection: 0
-  useReturnDirection: 0
+  useRandomTargetless: 0
+  useRandomTarget: 0
+  useBackwardSplit: 0
+  useReturn: 0
+  useHoming: 0
+  useHomingReturn: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 0

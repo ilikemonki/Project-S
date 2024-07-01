@@ -8,7 +8,7 @@ public class UpdateStats : MonoBehaviour
 {
     public enum Modifier
     {
-        //additive
+        //additives
         melee_amount, projectile_amount, pierce, chain, combo,
         base_physical_damage, base_fire_damage, base_cold_damage, base_lightning_damage,
         critical_chance, projectile_critical_chance, melee_critical_chance, critical_damage, projectile_critical_damage, melee_critical_damage,
@@ -16,7 +16,7 @@ public class UpdateStats : MonoBehaviour
         bleed_chance, burn_chance, chill_chance, shock_chance,
         bleed_effect, burn_effect, chill_effect, shock_effect,
         knockback,
-        //multiplier
+        //multipliers
         damage, projectile_damage, melee_damage, physical_damage, fire_damage, cold_damage, lightning_damage,
         attack_range, projectile_attack_range, melee_attack_range,
         travel_range, projectile_travel_range, melee_travel_range,
@@ -27,7 +27,11 @@ public class UpdateStats : MonoBehaviour
         defense,
         magnet_range,
         size, projectile_size, melee_size,
-    }
+        //behaviors
+        backward_split,
+        return_,
+        pierce_all,
+}
     public enum EnemyModifier
     {
         move_speed, max_health, damage, attack_cooldown, projectile, projectile_travel_speed, projectile_size,
@@ -255,6 +259,9 @@ public class UpdateStats : MonoBehaviour
                     case Modifier.melee_travel_speed: skill.addedTravelSpeed += x; break;
                     case Modifier.projectile_travel_range: skill.addedTravelRange += x; break;
                     case Modifier.projectile_travel_speed: skill.addedTravelSpeed += x; break;
+                    case Modifier.backward_split: skill.useBackwardSplit = true; break;
+                    case Modifier.return_: skill.useReturn = true; break;
+                    case Modifier.pierce_all: skill.pierceAll = true; break;
                     default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[0].modifier[i]); break;
                 }
                 if (unapplyUpgrades) Debug.Log("Unapplying Gem : " + upgrade.name);
