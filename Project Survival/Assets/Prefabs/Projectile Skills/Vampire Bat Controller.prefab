@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabBehavior: {fileID: -6595649996783161566, guid: 12ef453be78d0274ba7943a355374f95, type: 3}
+  prefabBehavior: {fileID: 1967917224844929494, guid: 12ef453be78d0274ba7943a355374f95, type: 3}
   meleeWeaponPrefab: {fileID: 0}
   skillOrbDescription: {fileID: -6162699754021087771, guid: 82ced1049b46d1044a63f778fbf1c9c6, type: 3}
   poolParent: {fileID: 1735531887519041077}
@@ -157,7 +157,7 @@ MonoBehaviour:
   baseAttackRange: 10
   baseTravelRange: 10
   baseDuration: 0
-  baseCooldown: 1
+  baseCooldown: 2
   baseKnockBack: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
   baseLifeSteal: 1
   baseMeleeAmount: 0
   baseCombo: 0
-  baseProjectileAmount: 1
+  baseProjectileAmount: 3
   basePierce: 0
   baseChain: 0
   despawnTime: 0
@@ -206,6 +206,8 @@ MonoBehaviour:
   damageCooldown: 0
   fixedProjMelee: 0
   fixedCooldown: 0
+  cannotPierce: 0
+  cannotChain: 0
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -219,6 +221,7 @@ MonoBehaviour:
   activateBarrage: 0
   autoUseSkill: 1
   isMelee: 0
+  isSummon: 1
   useMultiTarget: 1
   useBarrage: 0
   useScatter: 0
@@ -319,23 +322,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 050000000100000003000000
+  - modifier: 2d00000014000000
     amt:
-    - 10
-    - 1
-    - 1
-  - modifier: 050000000100000003000000
+    - 20
+    - 2
+  - modifier: 2d00000014000000
     amt:
-    - 10
-    - 1
-    - 1
-  - modifier: 050000000100000003000000
+    - 20
+    - 2
+  - modifier: 2d00000014000000
     amt:
-    - 10
-    - 1
-    - 1
-  - modifier: 050000000100000003000000
+    - 20
+    - 2
+  - modifier: 2d00000014000000
     amt:
-    - 10
-    - 1
-    - 1
+    - 20
+    - 2

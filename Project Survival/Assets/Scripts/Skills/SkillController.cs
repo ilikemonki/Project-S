@@ -56,6 +56,7 @@ public class SkillController : MonoBehaviour
     public float damageCooldown; //CD for when enemies can be hit again.
     public bool fixedProjMelee; //Set a number here to set max proj/melee.
     public bool fixedCooldown; //Cannot modify cooldown
+    public bool cannotPierce, cannotChain; //Projectiles that cannot pierce or chain.
     public float currentCooldown;
     int counter;    //Used in spread skill
     Vector3 direction;
@@ -344,13 +345,13 @@ public class SkillController : MonoBehaviour
                 }
                 else
                     poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((direction).normalized);   //Set direction
                 if (useBackwardSplit && barrageCounter % 2 == 1) //reverse direction.
                 {
                     poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                 }
                 poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                SetBehavourStats(poolList[i]);
                 poolList[i].gameObject.SetActive(true);
                 break;
             }
@@ -380,13 +381,13 @@ public class SkillController : MonoBehaviour
                 }
                 else
                     poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
                 if (useBackwardSplit && barrageCounter % 2 == 1)
                 {
                     poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                 }
                 poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                SetBehavourStats(poolList[i]);
                 poolList[i].gameObject.SetActive(true);
                 break;
             }
@@ -421,13 +422,13 @@ public class SkillController : MonoBehaviour
                     }
                     else
                         poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                    SetBehavourStats(poolList[i]);
                     poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
                     if (useBackwardSplit && p % 2 == 1)
                     {
                         poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
                     }
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                    SetBehavourStats(poolList[i]);
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -463,13 +464,13 @@ public class SkillController : MonoBehaviour
                     }
                     else
                         pool[i].transform.position = spawnPos.position;    //set starting position on player
-                    SetBehavourStats(pool[i]);
                     pool[i].SetDirection((direction).normalized);
                     if (useBackwardSplit && p % 2 == 1)
                     {
                         pool[i].SetDirection((-pool[i].direction).normalized);   //Set direction
                     }
                     //pool[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(pool[i].direction.y, pool[i].direction.x) * Mathf.Rad2Deg); //set angle
+                    SetBehavourStats(poolList[i]);
                     pool[i].gameObject.SetActive(true);
                     break;
                 }
@@ -669,6 +670,8 @@ public class SkillController : MonoBehaviour
                             poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg);
                         }
                     }
+                    if (!targetless)
+                        poolList[i].target = enemyTarget.transform;
                     SetBehavourStats(poolList[i]);
                     poolList[i].gameObject.SetActive(true);
                     break;
@@ -766,9 +769,11 @@ public class SkillController : MonoBehaviour
                             poolList[i].transform.position = new Vector3(spawnPos.position.x - (direction.normalized.y * (counter * distanceApart)), spawnPos.position.y + (direction.normalized.x * (counter * distanceApart)), 0);
                         }
                     }
-                    SetBehavourStats(poolList[i]);
                     poolList[i].SetDirection((direction).normalized);   //Set direction
                     poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg);
+                    if (!targetless)
+                        poolList[i].target = enemyTarget.transform;
+                    SetBehavourStats(poolList[i]);
                     poolList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -809,14 +814,15 @@ public class SkillController : MonoBehaviour
                     }
                     else
                         poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                    SetBehavourStats(poolList[i]);
                     if (!isMelee)
                     {
                         poolList[i].SetDirection((direction).normalized);
                         poolList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(poolList[i].direction.y, poolList[i].direction.x) * Mathf.Rad2Deg); //set angle
                     }
                     else poolList[i].transform.rotation = Quaternion.Euler(0, 0, 0);
-                    poolList[i].target = enemyTarget.transform;
+                    if (!targetless)
+                        poolList[i].target = enemyTarget.transform;
+                    SetBehavourStats(poolList[i]);
                     poolList[i].gameObject.SetActive(true);
                     multiTargetList.Remove(enemyTarget);
                     break;
@@ -989,8 +995,12 @@ public class SkillController : MonoBehaviour
             if (!fixedProjMelee)
                 projectileAmount = baseProjectileAmount + gameplayManager.projectileAmountAdditive + addedProjectileAmount;
             else projectileAmount = baseProjectileAmount;
-            chain = baseChain + gameplayManager.chainAdditive + addedChain;
-            pierce = basePierce + gameplayManager.pierceAdditive + addedPierce;
+            if (!cannotChain)
+                chain = baseChain + gameplayManager.chainAdditive + addedChain;
+            else chain = 0;
+            if (!cannotPierce)
+                pierce = basePierce + gameplayManager.pierceAdditive + addedPierce;
+            else pierce = 0;
             attackRange = baseAttackRange * (1 + (gameplayManager.attackRangeMultiplier + gameplayManager.projectileAttackRangeMultiplier + addedAttackRange) / 100);
             if (!fixedCooldown)
                 cooldown = baseCooldown * (1 - (gameplayManager.cooldownMultiplier + gameplayManager.projectileCooldownMultiplier + addedCooldown) / 100);

@@ -15,13 +15,14 @@ public class SkillBehavior : MonoBehaviour
     protected EnemyStats nearestEnemy;
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
-    float totalDamage;
-    bool isCrit, hitOnceOnly;
-    bool hasHitEnemy;
+    public float totalDamage;
+    public bool isCrit, hitOnceOnly;
+    public bool hasHitEnemy;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
     public List<EnemyStats> enemyChainList = new();    //remember the index of enemies hit by chain, will not hit the same enemy again.
     public List<EnemyStats> rememberEnemyList = new();
+    public bool stayUpRightOnly;
     public bool isOrbitSkill, rotateSkill, returnSkill, isHoming;
     public Vector3 startingPos;
     public float currentTravelRange; //travel
@@ -33,7 +34,9 @@ public class SkillBehavior : MonoBehaviour
 
     public void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
     {
-        //if (skillController.useHoming) isHoming = true;
+        if (skillController.useHoming && !skillController.useMultiTarget) target = null;
+        if (stayUpRightOnly)
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         if (!hitboxCollider.enabled) hitboxCollider.enabled = true;
         currenthitboxColliderTimer = 0;
         currentDamageCooldownTimer = 0;
@@ -53,21 +56,30 @@ public class SkillBehavior : MonoBehaviour
     public void SetDirection(Vector3 dir) //set where the skill will go.
     {
         direction = dir;
-        if ((direction.normalized.x < 0 && transform.localScale.y > 0) || (direction.normalized.x > 0 && transform.localScale.y < 0))
+        if (!stayUpRightOnly && (direction.normalized.x < 0 && transform.localScale.y > 0) || (direction.normalized.x > 0 && transform.localScale.y < 0))
         {
             transform.localScale = new Vector3(transform.localScale.x, -transform.localScale.y, 1);
         }
     }
 
-    protected virtual void Update()
+    public virtual void Update()
     {
-        if (skillController.useHoming && currentHomingTimer < (100 / travelSpeed) * 0.01 && !isHoming) //Activate homing
+        if (stayUpRightOnly && target != null) //FlipX only if stayUpRight is true
+        {
+            if (target.transform.position.x > transform.position.x)
+            {
+                spriteRend.flipX = false;
+            }
+            else spriteRend.flipX = true;
+        }
+        if (skillController.useHoming && !isHoming) //Activate homing
         {
             currentHomingTimer += Time.deltaTime;
             if (currentHomingTimer >= (100 / travelSpeed) * 0.01)
             {
                 target = FindTarget(true);
-                isHoming = true;
+                isHoming = true; 
+                hitboxCollider.enabled = true;
             }
         }
         if (rememberEnemyList.Count > 0 && skillController.damageCooldown > 0) //For damage cooldown
@@ -103,7 +115,7 @@ public class SkillBehavior : MonoBehaviour
         if (target != null && target.gameObject.activeSelf && isHoming)     //Home on target.
         {
             direction = (target.position - transform.position).normalized;
-            if (!rotateSkill)
+            if (!stayUpRightOnly && !rotateSkill)
                 transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
         if (!isOrbitSkill)
@@ -158,7 +170,7 @@ public class SkillBehavior : MonoBehaviour
     }
 
 
-    public void DoDamage(EnemyStats enemy, float damageEffectiveness)
+    public virtual void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
         isCrit = false;
@@ -218,9 +230,9 @@ public class SkillBehavior : MonoBehaviour
         }
         if (skillController.isMelee && skillController.combo > 1 && !hasHitEnemy && skillController.comboCounter < skillController.combo)
         {
-            hasHitEnemy = true;
             skillController.comboCounter++;
         }
+        hasHitEnemy = true;
         if (isCrit)
         {
             foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
@@ -238,12 +250,12 @@ public class SkillBehavior : MonoBehaviour
         }
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D col)
+    public virtual void OnTriggerEnter2D(Collider2D col)
     {
         if (hitOnceOnly) return;
-        if (col.CompareTag("Enemy") || col.CompareTag("Rare Enemy"))
+        if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null) return;
+            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.isActiveAndEnabled) return;
             if (skillController.damageCooldown > 0)
             {
                 if (rememberEnemyList.Contains(enemy)) return;
@@ -332,7 +344,8 @@ public class SkillBehavior : MonoBehaviour
         {
             startingPos = transform.position;
             SetDirection((target.position - transform.position).normalized); //if target is found, set direction
-            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            if(!stayUpRightOnly)
+                transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
         else
         {
@@ -394,17 +407,18 @@ public class SkillBehavior : MonoBehaviour
         {
             isHoming = false;
         }
+        target = skillController.player.transform;
+        SetDirection((target.position - transform.position).normalized);
         travelSpeed *= 1.5f;
         currentDuration = 0;
         currentDespawnTime = 0;
         startingPos = transform.position;
         returnSkill = true;
-        target = skillController.player.transform;
         currentTravelRange = Vector3.Distance(skillController.player.transform.position, startingPos);
-        SetDirection((target.position - transform.position).normalized);
-        transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+        if (!stayUpRightOnly)
+            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
     }
-    public void OnTriggerStay2D(Collider2D collision)
+    public virtual void OnTriggerStay2D(Collider2D collision)
     {
         if (returnSkill)
         {
@@ -414,7 +428,7 @@ public class SkillBehavior : MonoBehaviour
             }
         }
     }
-    private void OnDisable()
+    public virtual void OnDisable()
     {
         enemyChainList.Clear();
         rememberEnemyList.Clear();
