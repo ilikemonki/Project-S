@@ -153,7 +153,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  baseTravelSpeed: 6
+  baseTravelSpeed: 3.5
   baseAttackRange: 10
   baseTravelRange: 10
   baseDuration: 0
@@ -206,8 +206,9 @@ MonoBehaviour:
   damageCooldown: 0
   fixedProjMelee: 0
   fixedCooldown: 0
-  cannotPierce: 0
-  cannotChain: 0
+  cannotPierce: 1
+  cannotChain: 1
+  limitAmountAtATime: 1
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -221,7 +222,6 @@ MonoBehaviour:
   activateBarrage: 0
   autoUseSkill: 1
   isMelee: 0
-  isSummon: 1
   useMultiTarget: 1
   useBarrage: 0
   useScatter: 0

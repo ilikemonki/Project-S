@@ -72,6 +72,13 @@ public class SkillBehavior : MonoBehaviour
             }
             else spriteRend.flipX = true;
         }
+        if (isHoming && target != null) //If homing and no target, find new target.
+        {
+            if (!target.gameObject.activeSelf)
+            {
+                target = FindTarget(true);
+            }
+        }
         if (skillController.useHoming && !isHoming) //Activate homing
         {
             currentHomingTimer += Time.deltaTime;
@@ -112,11 +119,14 @@ public class SkillBehavior : MonoBehaviour
             else
                 transform.Rotate(new Vector3(0, 0, 160 + (8)) * Time.deltaTime);
         }
-        if (target != null && target.gameObject.activeSelf && isHoming)     //Home on target.
+        if (target != null && isHoming)     //Home on target.
         {
-            direction = (target.position - transform.position).normalized;
-            if (!stayUpRightOnly && !rotateSkill)
-                transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            if (target.gameObject.activeSelf)
+            {
+                direction = (target.position - transform.position).normalized;
+                if (!stayUpRightOnly && !rotateSkill)
+                    transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            }
         }
         if (!isOrbitSkill)
         {
@@ -166,6 +176,7 @@ public class SkillBehavior : MonoBehaviour
         if (travelSpeed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
         {
             rb.MovePosition(transform.position + (travelSpeed * Time.fixedDeltaTime * direction));
+            if (returnSkill && target.Equals(skillController.player.transform)) travelSpeed += 0.01f;
         }
     }
 
@@ -305,7 +316,7 @@ public class SkillBehavior : MonoBehaviour
     //How projectile act after hitting enemy
     void ProjectileBehavior()
     {
-        if (skillController.continuous || skillController.pierceAll) return;
+        if (skillController.continuous || skillController.pierceAll || skillController.cannotChain || skillController.cannotPierce) return;
         if (pierce <= 0 && chain <= 0)
         {
             if (skillController.useReturn)
@@ -422,6 +433,7 @@ public class SkillBehavior : MonoBehaviour
     {
         if (returnSkill)
         {
+            if (!target.Equals(skillController.player.transform)) SetReturn();
             if (collision.CompareTag("Player"))
             {
                 gameObject.SetActive(false);

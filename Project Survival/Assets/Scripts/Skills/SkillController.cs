@@ -57,6 +57,8 @@ public class SkillController : MonoBehaviour
     public bool fixedProjMelee; //Set a number here to set max proj/melee.
     public bool fixedCooldown; //Cannot modify cooldown
     public bool cannotPierce, cannotChain; //Projectiles that cannot pierce or chain.
+    public bool limitAmountAtATime; //There can only be the max proj/melee at a time enabled.
+    int numberOfSkillObjectsEnabled; //num of skill objects currently enabled.
     public float currentCooldown;
     int counter;    //Used in spread skill
     Vector3 direction;
@@ -156,7 +158,7 @@ public class SkillController : MonoBehaviour
             currentCooldown += Time.deltaTime;
             if (currentCooldown >= cooldown)
             {
-                if (skillTrigger.isTriggerSkill == false)   //Use skill if it is not a skill trigger
+                if (!skillTrigger.isTriggerSkill)   //Use skill if it is not a skill trigger
                 {
                     UseSkill();
                 }
@@ -783,6 +785,17 @@ public class SkillController : MonoBehaviour
     }
     public void MultiTargetBehavior(int numOfAttacks, Transform spawnPos) //Targets multiple mobs at once. Only automatic. Null closestEnemyList == doesn't spawn from player
     {
+        if (limitAmountAtATime)
+        {
+            CheckLimitAmountAtATime();
+            numOfAttacks -= numberOfSkillObjectsEnabled;
+            if (numOfAttacks <= 0) //reset cd
+            {
+                currentCooldown = cooldown - 0.5f;
+                stopFiring = false;
+                return;
+            }
+        }
         FindMultiTargets(); //Get all possible targets into a multi target list
         for (int t = 0; t < numOfAttacks; t++)
         {
@@ -863,6 +876,18 @@ public class SkillController : MonoBehaviour
         }
         if (nearestEnemy != null) return nearestEnemy;
         else return null;
+    }
+    public void CheckLimitAmountAtATime() //Check the num of objects enabled.
+    {
+        numberOfSkillObjectsEnabled = 0;
+        for (int i = 0; i < poolList.Count; i++)
+        {
+            if (poolList[i].isActiveAndEnabled)
+            {
+                numberOfSkillObjectsEnabled++;
+                if (numberOfSkillObjectsEnabled == (projectileAmount + meleeAmount)) break;
+            }
+        }
     }
     //Used for when orbit projectile has chain. Orbit proj will despawn and spawn a new projectile to chain.
     public void SpawnChainProjectile(List<EnemyStats> chainList, Transform target, Transform spawnPos)

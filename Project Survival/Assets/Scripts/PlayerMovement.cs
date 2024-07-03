@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     float moveX, moveY, dashDirectionX, dashDirectionY;
     public float timer;
     private Vector3 smoothInput, smoothVelocity;
+    public float afterIFrames; //the time the IFrame to stay for after dash ends
+    public bool dashEnds, inIFrames;
 
     private void Start()
     {
@@ -40,6 +42,16 @@ public class PlayerMovement : MonoBehaviour
                     {
                         player.gameplayManager.dashTimerText.text = "";
                     }
+                }
+            }
+            if (dashEnds)
+            {
+                afterIFrames += Time.deltaTime;
+                if (afterIFrames >= 0.15)
+                {
+                    dashEnds = false;
+                    inIFrames = false;
+                    afterIFrames = 0;
                 }
             }
         }
@@ -95,9 +107,12 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+        dashEnds = false;
+        afterIFrames = 0;
         currentCharges--;
         player.gameplayManager.UpdateDashText();
         isDashing = true;
+        inIFrames = true;
         trailRend.emitting = true;
         if (moveDirection.x > 0)
             dashDirectionX = player.moveSpeed;
@@ -111,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
         else dashDirectionY = 0;
         rb.velocity = new Vector2(moveDirection.x * dashPower + dashDirectionX, moveDirection.y * dashPower + dashDirectionY);
         yield return Timing.WaitForSeconds(dashIFrameSeconds);
+        dashEnds = true;
         isDashing = false;
         trailRend.emitting = false;
         player.dodgeList.Clear();

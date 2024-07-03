@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class VampireBatBehavior : SkillBehavior
 {
-
+    public override void Update()
+    {
+        base.Update();
+    }
     public override void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
@@ -91,6 +94,10 @@ public class VampireBatBehavior : SkillBehavior
     }
     public override void OnTriggerStay2D(Collider2D collision)
     {
+        if (returnSkill && !target.Equals(skillController.player.transform))
+        {
+            SetReturn();
+        }
         if (collision.CompareTag("Player") && returnSkill)
         {
             if (Random.Range(1, 101) <= skillController.lifeStealChance && hasHitEnemy)  //Life Steal

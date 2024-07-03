@@ -114,8 +114,8 @@ MonoBehaviour:
   itemType: 1
   itemName: Vampire Bat Orb
   itemTags: Projectile, Physical, Summon
-  description: Summon a vampire bat to attack enemies. Vampire bats return to you,
-    granting life steal.
+  description: 'Summon a vampire bat to attack a random enemy. Vampire bat returns
+    to you, granting life steal. Can only have max projectile amount at a time. '
   itemSprite: {fileID: 21300000, guid: e305f713d6c1c864ab068b7749f77c69, type: 3}
   maxQuantity: 0
   rarity: 1

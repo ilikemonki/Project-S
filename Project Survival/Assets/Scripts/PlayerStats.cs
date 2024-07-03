@@ -79,7 +79,7 @@ public class PlayerStats : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (playerMovement.isDashing)
+        if (playerMovement.inIFrames)
         {
             if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Enemy Projectile"))
             {
