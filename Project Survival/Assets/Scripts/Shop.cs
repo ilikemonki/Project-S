@@ -13,10 +13,10 @@ public class Shop : MonoBehaviour
     public class ItemUI
     {
         public ItemDescription itemDesc;
-        public TextMeshProUGUI nameText, tagText, descriptionText, priceText, quantityText;
+        public TextMeshProUGUI nameText, tagText, behaviorText, descriptionText, priceText, quantityText;
         public Image itemImage;
         public Toggle lockToggle;
-        public GameObject itemUIGameObject;
+        public GameObject itemUIGameObject, newGameObject;
     }
     public List<ItemUI> itemUIList;
     public float rerollPrice, rerollIncrement; //Reroll price keeps incrementing and doesn't reset. Used for all shops.
@@ -248,7 +248,11 @@ public class Shop : MonoBehaviour
                 itemUIList[i].nameText.text = pItemShopList[i].itemName;
                 itemUIList[i].tagText.text = pItemShopList[i].itemTags;
                 itemUIList[i].priceText.text = pItemShopList[i].price.ToString();
-                itemUIList[i].quantityText.text = pItemShopList[i].quantityInInventory.ToString() + "/" + pItemShopList[i].maxQuantity;
+                itemUIList[i].quantityText.text = "Qty: " + pItemShopList[i].quantityInInventory.ToString() + "/" + pItemShopList[i].maxQuantity;
+                if (pItemShopList[i].quantityInInventory == 0)
+                {
+                    itemUIList[i].newGameObject.SetActive(true);
+                }
                 if (string.IsNullOrWhiteSpace(pItemShopList[i].description))
                     itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
                 else
@@ -282,18 +286,20 @@ public class Shop : MonoBehaviour
                 itemUIList[i].itemImage.sprite = orbShopList[i].itemSprite;
                 itemUIList[i].nameText.text = orbShopList[i].itemName;
                 itemUIList[i].tagText.text = orbShopList[i].itemTags;
+                itemUIList[i].behaviorText.text = "Behavior: " + orbShopList[i].behavior;
                 itemUIList[i].priceText.text = orbShopList[i].price.ToString(); 
                 foreach (DraggableItem dItem in itemManager.skillOrbList.Keys) //if orb exist, show exp orb gained.
                 {
                     if (dItem.itemDescription.itemName.Equals(orbShopList[i].itemName))
                     {
-                        itemUIList[i].quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " Exp";
+                        itemUIList[i].quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " e" +
+                            "xp to skill.";
                         break;
                     }
                 }
                 if (string.IsNullOrWhiteSpace(itemUIList[i].quantityText.text))
                 {
-                    itemUIList[i].quantityText.text = "New";
+                    itemUIList[i].newGameObject.SetActive(true);
                 }
                 itemUIList[i].descriptionText.text = orbShopList[i].description + "\n\n";
                 itemUIList[i].itemUIGameObject.SetActive(true);
@@ -320,13 +326,14 @@ public class Shop : MonoBehaviour
                 {
                     if (dItem.itemDescription.itemName.Equals(gemShopList[i].itemName))
                     {
-                        itemUIList[i].quantityText.text = (itemManager.skillGemList[dItem]).ToString();
+                        itemUIList[i].quantityText.text = "Qty: " + (itemManager.skillGemList[dItem]).ToString();
                         break;
                     }
                 }
                 if (string.IsNullOrWhiteSpace(itemUIList[i].quantityText.text))
                 {
-                    itemUIList[i].quantityText.text = "0";
+                    itemUIList[i].quantityText.text = "Qty: 0";
+                    itemUIList[i].newGameObject.SetActive(true);
                 }
                 if (string.IsNullOrWhiteSpace(gemShopList[i].description))
                     itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(gemShopList[i].upgrade.levelModifiersList[gemShopList[i].upgrade.itemDescription.currentLevel - 1]);
@@ -340,8 +347,10 @@ public class Shop : MonoBehaviour
     {
         for (int i = 0; i < itemUIList.Count; i++)
         {
+            itemUIList[i].newGameObject.SetActive(false);
             itemUIList[i].nameText.text = "";
             itemUIList[i].tagText.text = "";
+            itemUIList[i].behaviorText.text = "";
             itemUIList[i].priceText.text = "";
             itemUIList[i].quantityText.text = "";
             itemUIList[i].descriptionText.text = "";
@@ -354,6 +363,7 @@ public class Shop : MonoBehaviour
         {
             gameplayManager.coins -= item.price;
             coinText.text = gameplayManager.coins.ToString();
+            itemUI.newGameObject.SetActive(false);
             itemUI.priceText.text = "Sold";
             itemUI.lockToggle.interactable = false;
             itemUI.lockToggle.isOn = false;
@@ -363,6 +373,13 @@ public class Shop : MonoBehaviour
                 if (!itemManager.pItemInventoryList.Contains(item)) //add item to inventory list
                 {
                     itemManager.pItemInventoryList.Add(item);
+
+                    if (item.gameObject.TryGetComponent<PassiveItemEffect>(out PassiveItemEffect effect)) //if has passive effect
+                    {
+                        PassiveItemEffect pItem = Instantiate(effect, itemManager.pItemParent.transform);
+                        pItem.gameplayManager = gameplayManager;
+                        PItemEffectManager.AddToList(pItem);
+                    }
                     UpdateStats.ApplyGlobalUpgrades(item.upgrade, false); //apply the pItem upgrade
                 }
                 else //if item is already in inventory, apply the upgrades.
@@ -378,7 +395,7 @@ public class Shop : MonoBehaviour
                     itemManager.availablePItemList.Remove(item);
                 }
                 inventoryManager.UpdatePassiveItemsInventory(item); //Adds item to Passive Items Inventory UI or updates it.
-                itemUI.quantityText.text = item.quantityInInventory.ToString() + "/" + item.maxQuantity;
+                itemUI.quantityText.text = "Qty: " + item.quantityInInventory.ToString() + "/" + item.maxQuantity;
             }
             else //Send gem and orb to inventory
             {
@@ -389,13 +406,13 @@ public class Shop : MonoBehaviour
                     {
                         if (dItem.itemDescription.itemName.Equals(item.itemName))
                         {
-                            itemUI.quantityText.text = (itemManager.skillGemList[dItem]).ToString();
+                            itemUI.quantityText.text = "Qty: " + (itemManager.skillGemList[dItem]).ToString();
                             break;
                         }
                     }
                 }
                 else
-                    itemUI.quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " Exp";
+                    itemUI.quantityText.text = "+" + gameplayManager.expOrbBonus.ToString() + " exp to skill.";
             }
         }
         UpdateStats.FormatPlayerStatsToString();

@@ -154,10 +154,15 @@ MonoBehaviour:
   pierce: 0
   chain: 0
   target: {fileID: 0}
+  totalDamage: 0
+  isCrit: 0
+  hitOnceOnly: 0
+  hasHitEnemy: 0
   rb: {fileID: 2398783455814874361}
   spriteRend: {fileID: 8558217897996643977}
   enemyChainList: []
   rememberEnemyList: []
+  stayUpRightOnly: 1
   isOrbitSkill: 0
   rotateSkill: 0
   returnSkill: 0
@@ -168,6 +173,7 @@ MonoBehaviour:
   currentDespawnTime: 0
   currenthitboxColliderTimer: 0
   currentDamageCooldownTimer: 0
+  currentHomingTimer: 0
 --- !u!50 &2398783455814874361
 Rigidbody2D:
   serializedVersion: 4

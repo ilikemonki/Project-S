@@ -151,7 +151,7 @@ public class PlayerStats : MonoBehaviour
         if (isDead) return;
         for (int i = 0; i < dmgType.Count; i++)
         {
-            if(dmgType[i] > 0)
+            if(dmgType[i] > 0) //Enemies only deals one damage type. No need to check the rest.
             {
                 float totalDamage = Mathf.Round((dmgType[i] - defense) * (1 - reductions[i] / 100));
                 if (totalDamage <= 0)
@@ -193,6 +193,7 @@ public class PlayerStats : MonoBehaviour
                         }
                     }
                 }
+                PItemEffectManager.CheckAllPItemCondition(totalDamage, PItemEffectManager.ConditionTag.DamageTaken);
                 break;
             }
         }

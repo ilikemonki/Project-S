@@ -38,6 +38,10 @@ public class ToolTipManager : MonoBehaviour
         instance.ClearToolTip();
         instance.nameText.text = itemDesc.itemName;
         instance.tagText.text = itemDesc.itemTags;
+        if (!string.IsNullOrWhiteSpace(itemDesc.behavior))
+        {
+            instance.tagText.text += "\nBehavior: " + itemDesc.behavior;
+        }
         instance.descriptionText.text = itemDesc.description;
         if (itemDesc.itemType == ItemDescription.ItemType.PassiveItem || itemDesc.itemType == ItemDescription.ItemType.SkillGem)
         {

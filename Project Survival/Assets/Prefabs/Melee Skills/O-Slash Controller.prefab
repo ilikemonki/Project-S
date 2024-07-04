@@ -206,6 +206,9 @@ MonoBehaviour:
   damageCooldown: 0
   fixedProjMelee: 0
   fixedCooldown: 0
+  cannotPierce: 0
+  cannotChain: 0
+  limitAmountAtATime: 0
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -219,20 +222,22 @@ MonoBehaviour:
   activateBarrage: 0
   autoUseSkill: 1
   isMelee: 1
-  useMultiTarget: 1
+  useMultiTarget: 0
   useBarrage: 0
   useScatter: 0
-  useSpread: 0
+  useSpread: 1
   useOrbit: 0
   useCircular: 0
   useLateral: 0
   useBurst: 0
   useSimple: 0
   useOnTarget: 1
-  useRandomDirection: 0
-  useRandomTargeting: 0
-  useBackwardsDirection: 0
-  useReturnDirection: 0
+  useRandomTargetless: 0
+  useRandomTarget: 0
+  useBackwardSplit: 0
+  useReturn: 0
+  useHoming: 0
+  useHomingReturn: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 0

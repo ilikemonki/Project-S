@@ -46,14 +46,21 @@ public class EnemyDetector : MonoBehaviour
         EnemyStats nearestEnemy = null;
         for (int i = 0; i < enemyDetectorList.Count; i++) //search all mobs for nearest distance
         {
-            if (enemyDetectorList[i].isActiveAndEnabled)
+            try
             {
-                distanceToEnemy = Vector3.Distance(transform.position, enemyDetectorList[i].transform.position);
-                if (distanceToEnemy < shortestDistance)
+                if (enemyDetectorList[i].isActiveAndEnabled)
                 {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemyDetectorList[i];
+                    distanceToEnemy = Vector3.Distance(transform.position, enemyDetectorList[i].transform.position);
+                    if (distanceToEnemy < shortestDistance)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = enemyDetectorList[i];
+                    }
                 }
+            }
+            catch
+            {
+                return null;
             }
         }
         if (nearestEnemy != null) return nearestEnemy;
@@ -62,6 +69,16 @@ public class EnemyDetector : MonoBehaviour
     public EnemyStats FindRandomTarget()
     {
         if (enemyDetectorList.Count <= 0) return null;
-        return enemyDetectorList[Random.Range(0, enemyDetectorList.Count)];
+        else
+        {
+            try
+            {
+                return enemyDetectorList[Random.Range(0, enemyDetectorList.Count)];
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

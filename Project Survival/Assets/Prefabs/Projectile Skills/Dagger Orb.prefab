@@ -113,7 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: Dagger Orb
-  itemTags: Projectile, Travel, Physical
+  itemTags: Projectile, <color=grey>Physical</color>
+  behavior: Scatter
   description: Throws daggers at enemies.
   itemSprite: {fileID: 21300000, guid: e305f713d6c1c864ab068b7749f77c69, type: 3}
   maxQuantity: 0

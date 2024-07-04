@@ -163,7 +163,7 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseLifeStealChance: 0
   baseLifeSteal: 0
-  baseMeleeAmount: 1
+  baseMeleeAmount: 6
   baseCombo: 0
   baseProjectileAmount: 0
   basePierce: 0
@@ -206,6 +206,9 @@ MonoBehaviour:
   damageCooldown: 0
   fixedProjMelee: 0
   fixedCooldown: 0
+  cannotPierce: 0
+  cannotChain: 0
+  limitAmountAtATime: 0
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0
@@ -233,6 +236,8 @@ MonoBehaviour:
   useRandomTarget: 0
   useBackwardSplit: 0
   useReturn: 1
+  useHoming: 0
+  useHomingReturn: 0
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 0

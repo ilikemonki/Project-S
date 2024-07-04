@@ -206,6 +206,9 @@ MonoBehaviour:
   damageCooldown: 0
   fixedProjMelee: 0
   fixedCooldown: 0
+  cannotPierce: 0
+  cannotChain: 0
+  limitAmountAtATime: 0
   currentCooldown: 0
   comboCounter: 0
   comboMultiplier: 0

@@ -113,7 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: Comet Orb
-  itemTags: Projectile, Travel, Fire
+  itemTags: Projectile, <color=red>Fire</color>
+  behavior: Orbit
   description: Orbits around player.
   itemSprite: {fileID: 21300000, guid: 223997eb6928af347af9230e7bcafbfe, type: 3}
   maxQuantity: 0

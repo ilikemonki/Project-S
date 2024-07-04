@@ -169,7 +169,7 @@ public class SkillController : MonoBehaviour
             if (barrageCounter < meleeAmount + projectileAmount) //fires the amount of attacks
             {
                 barrageCooldown += Time.deltaTime;
-                if (barrageCooldown >= 0.15f) //firing interval here.
+                if (barrageCooldown >= 0.10f) //firing interval here.
                 {
                     if (useBarrage)
                         BarrageBehavior(targetPos, transform, null);
@@ -193,6 +193,7 @@ public class SkillController : MonoBehaviour
         if (!targetless && !alwaysActivate)   //Return if automatic and no enemy in attack range.
         {
             enemyTarget = player.enemyDetector.FindNearestTarget(); //Get the nearest enemy
+            if (enemyTarget == null) return;
             if (Vector3.Distance(transform.position, enemyTarget.transform.position) > attackRange)
             {
                 return;
@@ -205,6 +206,7 @@ public class SkillController : MonoBehaviour
         if (useRandomTarget)
         {
             enemyTarget = player.enemyDetector.FindRandomTarget();
+            if (enemyTarget == null) return;
         }
         stopFiring = true;
         currentCooldown = 0;
@@ -304,8 +306,7 @@ public class SkillController : MonoBehaviour
         }
         else if (useMultiTarget)
         {
-            if (player.enemyDetector.enemyDetectorList.Count > 0)
-                MultiTargetBehavior(meleeAmount + projectileAmount, transform);
+            MultiTargetBehavior(meleeAmount + projectileAmount, transform);
         }
         foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check use trigger skill condition
         {
@@ -373,17 +374,17 @@ public class SkillController : MonoBehaviour
                 if (useOnTarget)
                 {
                     if (autoUseSkill)
-                        poolList[i].transform.position = target + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);    //set starting position on target
+                        poolList[i].transform.position = target + new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0);    //set starting position on target
                     else
                     {
                         if (direction.magnitude < attackRange)
-                            poolList[i].transform.position = gameplayManager.mousePos + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
-                        else poolList[i].transform.position = (spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange) + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
+                            poolList[i].transform.position = gameplayManager.mousePos + new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0);
+                        else poolList[i].transform.position = (spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg), Vector3.forward) * Vector3.right * attackRange) + new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0);
                     }
                 }
                 else
-                    poolList[i].transform.position = spawnPos.position;    //set starting position on player
-                poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-30, 31), Vector3.forward) * direction).normalized);
+                    poolList[i].transform.position = spawnPos.position + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);    //set starting position on player
+                poolList[i].SetDirection((Quaternion.AngleAxis(Random.Range(-15, 15), Vector3.forward) * direction).normalized); //scatter angle
                 if (useBackwardSplit && barrageCounter % 2 == 1)
                 {
                     poolList[i].SetDirection((-poolList[i].direction).normalized);   //Set direction
@@ -801,12 +802,11 @@ public class SkillController : MonoBehaviour
         {
             if (multiTargetList.Count <= 0) //stop targeting if list has less than num of attacks or is zero
             {
-                stopFiring = false;
-                return;
+                break;
             }
             if (useRandomTarget) enemyTarget = multiTargetList[Random.Range(0, multiTargetList.Count)];
             else enemyTarget = FindNearestMultiTarget(); //get nearest target
-            if (enemyTarget == null) return;
+            if (enemyTarget == null) break;
             if (useRandomTargetless) direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
             else direction = enemyTarget.transform.position - spawnPos.position;
             for (int i = 0; i < poolList.Count; i++)
@@ -993,7 +993,7 @@ public class SkillController : MonoBehaviour
         }
         for (int i = 0; i < ailmentsEffect.Count; i++)
         {
-            ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) * (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
+            ailmentsEffect[i] = baseAilmentsEffect[i] * (1 + (gameplayManager.baseAilmentsEffect[i] + gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
         }
         if (isMelee)   //is melee
         {

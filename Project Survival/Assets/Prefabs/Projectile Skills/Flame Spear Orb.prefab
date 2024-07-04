@@ -113,7 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: Flame Spear Orb
-  itemTags: Projectile, Travel, Fire
+  itemTags: Projectile, <color=red>Fire</color>
+  behavior: Lateral
   description: Fire flame spears that can pierce and burn enemies.
   itemSprite: {fileID: 21300000, guid: 88eced2c9dbb5494bb27a53017480115, type: 3}
   maxQuantity: 0

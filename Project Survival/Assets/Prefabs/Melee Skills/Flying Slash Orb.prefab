@@ -113,7 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: Flying Slash Orb
-  itemTags: Melee, Travel, Physical
+  itemTags: Melee,  <color=grey>Physical</color>
+  behavior: Scatter
   description: Swing a flying slash piercing enemies.
   itemSprite: {fileID: 21300000, guid: e305f713d6c1c864ab068b7749f77c69, type: 3}
   maxQuantity: 0

@@ -72,7 +72,7 @@ public class LevelUpManager : MonoBehaviour
         if (freeReroll > 0)
             rerollText.text = freeReroll + " Free Reroll";
         else
-            rerollText.text = rerollPrice + "\n Reroll"; 
+            rerollText.text = rerollPrice + "\n Reroll";
         if (levelUpUI.activeSelf == false)
         {
             GameManager.PauseGame();
@@ -159,7 +159,8 @@ public class LevelUpManager : MonoBehaviour
         //Modifiers that can't be chosen.
         if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectile_amount || mod == UpdateStats.Modifier.combo
             || mod == UpdateStats.Modifier.melee_amount || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.base_cold_damage
-            || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage || mod == UpdateStats.Modifier.base_physical_damage)
+            || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage || mod == UpdateStats.Modifier.base_physical_damage
+            || mod == UpdateStats.Modifier.return_|| mod == UpdateStats.Modifier.backward_split|| mod == UpdateStats.Modifier.pierce_all)
         {
             return false;
         }

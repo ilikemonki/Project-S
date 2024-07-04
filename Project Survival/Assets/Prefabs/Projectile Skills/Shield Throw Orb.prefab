@@ -113,7 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: Shield Throw Orb
-  itemTags: Projectile, Physical
+  itemTags: Projectile, <color=grey>Physical</color>
+  behavior: Spread
   description: Throws a shield that chains to enemies and returns back to player.
   itemSprite: {fileID: 21300000, guid: e305f713d6c1c864ab068b7749f77c69, type: 3}
   maxQuantity: 0

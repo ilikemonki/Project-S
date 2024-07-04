@@ -11,19 +11,11 @@ public class ItemManager : MonoBehaviour
     public List<ItemDescription> availablePItemList = new(); //Passive Item shop inventory. Item is removed from list when there is no more quantity left.
     public List<ItemDescription> pItemInventoryList = new(); //Player's Current Passive Item inventory
 
+    public List<ItemDescription> pItemPrefabList = new();
     public List<SkillController> skillControllerPrefabsList = new();
     public List<DraggableItem> orbPrefabList = new();
     public List<DraggableItem> t1GemPrefabList = new(), t2GemPrefabList = new(), t3GemPrefabList = new();
 
     public Transform pItemParent;
 
-    public void Start()
-    {
-        foreach (Transform child in pItemParent)
-        {
-            ItemDescription pItem = child.GetComponent<ItemDescription>();
-            availablePItemList.Add(pItem);
-        }
-        pItemParent.gameObject.SetActive(false);
-    }
 }

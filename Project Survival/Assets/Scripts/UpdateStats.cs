@@ -183,6 +183,9 @@ public class UpdateStats : MonoBehaviour
                 case Modifier.melee_amount: skill.addedMeleeAmount += (int)upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.travel_range: skill.addedTravelRange += upgrade.levelModifiersList[level].amt[i]; break;
                 case Modifier.travel_speed: skill.addedTravelSpeed += upgrade.levelModifiersList[level].amt[i]; break;
+                case Modifier.backward_split: skill.useBackwardSplit = true; break;
+                case Modifier.return_: skill.useReturn = true; break;
+                case Modifier.pierce_all: skill.pierceAll = true; break;
                 default: Debug.Log("ApplySkillMod has no switch case for " + upgrade.levelModifiersList[level].modifier[i]); break;
             }
         }
@@ -435,7 +438,7 @@ public class UpdateStats : MonoBehaviour
             if (sc.damageTypes[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "Physical Damage: " + (sc.damageTypes[i]) + "\n";
+                    fullString += "<color=grey>Physical Damage</color>: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Fire Damage</color>: " + (sc.damageTypes[i]) + "\n";
                 else if (i == 2) //cold damage
@@ -537,7 +540,7 @@ public class UpdateStats : MonoBehaviour
             if (instance.gameplayManager.baseDamageTypeAdditive[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "Base Physical Damage: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                    fullString += "<color=grey>Base Physical Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Base Fire Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
                 else if (i == 2) //cold damage
@@ -557,7 +560,7 @@ public class UpdateStats : MonoBehaviour
             if (instance.gameplayManager.damageTypeMultiplier[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "Physical Damage: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
+                    fullString += "<color=grey>Physical Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Fire Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
                 else if (i == 2) //cold damage
@@ -670,7 +673,7 @@ public class UpdateStats : MonoBehaviour
             if (instance.gameplayManager.enemyReductions[i] > 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "Physical Resistance: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
+                    fullString += "<color=grey>Physical Damage</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
                 else if (i == 1) //Fire damage
                     fullString += "<color=red>Fire Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
                 else if (i == 2) //cold damage

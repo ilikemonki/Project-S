@@ -11,8 +11,9 @@ public class ItemDescription : MonoBehaviour
         SkillOrb,
         SkillGem,
     }
+        // Tags: Melee, Projectile, Physical, Fire, Cold, Lightning, Duration, Trigger, Buff, Debuff, Summon
     public ItemType itemType;
-    public string itemName, itemTags, description;
+    public string itemName, itemTags, behavior, description;
     public Sprite itemSprite;
     public int maxQuantity, rarity;
     public int currentLevel; //Used for gem tiers as well
@@ -43,6 +44,7 @@ public class ItemDescription : MonoBehaviour
         itemType = cloneFrom.itemType;
         itemName = cloneFrom.itemName;
         itemTags = cloneFrom.itemTags;
+        behavior = cloneFrom.behavior;
         description = cloneFrom.description;
         maxQuantity = cloneFrom.maxQuantity;
         rarity = cloneFrom.rarity;
