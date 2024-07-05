@@ -13,6 +13,7 @@ public class Shop : MonoBehaviour
     public class ItemUI
     {
         public ItemDescription itemDesc;
+        public PassiveItemEffect pItemEffect;
         public TextMeshProUGUI nameText, tagText, behaviorText, descriptionText, priceText, quantityText;
         public Image itemImage;
         public Toggle lockToggle;
@@ -26,6 +27,7 @@ public class Shop : MonoBehaviour
     public List<ItemDescription> pItemShopList; //Current pItem shop items
     public List<ItemDescription> orbShopList; //Current orb shop items
     public List<ItemDescription> gemShopList; //Current gem shop items
+
     public bool isPItemShop, isOrbShop, isGemShop;
     public int freeReroll;
     public void Start()
@@ -243,7 +245,7 @@ public class Shop : MonoBehaviour
                         itemUIList[i].lockToggle.isOn = false;
                     itemUIList[i].lockToggle.interactable = true;
                 }
-                itemUIList[i].itemDesc.Clone(pItemShopList[i]);
+                itemUIList[i].itemDesc.Clone(pItemShopList[i]); 
                 itemUIList[i].itemImage.sprite = pItemShopList[i].itemSprite;
                 itemUIList[i].nameText.text = pItemShopList[i].itemName;
                 itemUIList[i].tagText.text = pItemShopList[i].itemTags;
@@ -253,10 +255,17 @@ public class Shop : MonoBehaviour
                 {
                     itemUIList[i].newGameObject.SetActive(true);
                 }
-                if (string.IsNullOrWhiteSpace(pItemShopList[i].description))
-                    itemUIList[i].descriptionText.text = UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
-                else
-                    itemUIList[i].descriptionText.text = pItemShopList[i].description + "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
+                if (!string.IsNullOrWhiteSpace(pItemShopList[i].description)) //if there is description.
+                    itemUIList[i].descriptionText.text += pItemShopList[i].description;
+                if (pItemShopList[i].pItemEffect != null) //if has passive effect
+                {
+                    itemUIList[i].pItemEffect.cooldown = pItemShopList[i].pItemEffect.cooldown;
+                    if (pItemShopList[i].pItemEffect.cooldown > 0)
+                        itemUIList[i].descriptionText.text += "\n<color=orange>Cooldown: </color>" + pItemShopList[i].pItemEffect.cooldown + "s";
+                }
+                if (pItemShopList[i].upgrade.levelModifiersList.Count > 0) //if there are modifiers
+                    itemUIList[i].descriptionText.text += "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
+
                 itemUIList[i].itemUIGameObject.SetActive(true);
             }
             if (pItemShopList.Count < itemUIList.Count) //deactivate other itemUI's that is not used.
@@ -354,6 +363,7 @@ public class Shop : MonoBehaviour
             itemUIList[i].priceText.text = "";
             itemUIList[i].quantityText.text = "";
             itemUIList[i].descriptionText.text = "";
+            itemUIList[i].pItemEffect.cooldown = 0;
         }
     }
 
@@ -373,20 +383,17 @@ public class Shop : MonoBehaviour
                 if (!itemManager.pItemInventoryList.Contains(item)) //add item to inventory list
                 {
                     itemManager.pItemInventoryList.Add(item);
-
-                    if (item.gameObject.TryGetComponent<PassiveItemEffect>(out PassiveItemEffect effect)) //if has passive effect
+                    if (item.pItemEffect != null) //if has passive effect
                     {
-                        PassiveItemEffect pItem = Instantiate(effect, itemManager.pItemParent.transform);
-                        pItem.gameplayManager = gameplayManager;
-                        PItemEffectManager.AddToList(pItem);
+                        PItemEffectManager.AddToList(item.pItemEffect);
                     }
                     UpdateStats.ApplyGlobalUpgrades(item.upgrade, false); //apply the pItem upgrade
                 }
                 else //if item is already in inventory, apply the upgrades.
                 {
-                    if (item.pItemSlotUI.quantityDisabled > 0) //if item is disabled, adjust imageDisable fill amount
+                    if (item.pItemSlotUI.itemDescription.quantityDisabledInInventory > 0) //if item is disabled, adjust imageDisable fill amount
                     {
-                        item.pItemSlotUI.imageDisable.fillAmount = (float)item.pItemSlotUI.quantityDisabled / (float)item.quantityInInventory;
+                        item.pItemSlotUI.imageDisable.fillAmount = (float)item.pItemSlotUI.itemDescription.quantityDisabledInInventory / (float)item.quantityInInventory;
                     }
                     UpdateStats.ApplyGlobalUpgrades(item.upgrade, false);
                 }
@@ -396,6 +403,7 @@ public class Shop : MonoBehaviour
                 }
                 inventoryManager.UpdatePassiveItemsInventory(item); //Adds item to Passive Items Inventory UI or updates it.
                 itemUI.quantityText.text = "Qty: " + item.quantityInInventory.ToString() + "/" + item.maxQuantity;
+                PItemEffectManager.CheckAllPItemCondition(0, PItemEffectManager.ConditionTag.AfterAcquiring, false);
             }
             else //Send gem and orb to inventory
             {

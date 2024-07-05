@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PItemEffectManager : MonoBehaviour
 {
     public enum ConditionTag
     {
-        DamageTaken, Heal
+        DamageTaken, Heal, AfterAcquiring,
     }
     public static PItemEffectManager instance;
     public List<PassiveItemEffect> pItemEffectList;
+    public GameObject pItemCDEffectUIPrefab; //Prefab to instantiate
+    public GameObject pItemCDEffectParent; //Where to instantiate
 
     public void Awake()
     {
@@ -25,18 +29,30 @@ public class PItemEffectManager : MonoBehaviour
             }
         }
     }
-    public static void CheckAllPItemCondition(float valueToCheck, ConditionTag condTag) //Go through list and check conditionTag with the other
+    public static void CheckAllPItemCondition(float valueToCheck, ConditionTag condTag, bool checkValue) //Go through list and check conditionTag with the other
     {
         for(int i = 0; i < instance.pItemEffectList.Count; i++)
         {
-            if (instance.pItemEffectList[i].conditionTag.Equals(condTag))
+            if (instance.pItemEffectList[i].conditionTag.Equals(condTag) && instance.pItemEffectList[i].checkCondition)
             {
-                instance.pItemEffectList[i].CheckCondition(valueToCheck);
+                if (checkValue)
+                    instance.pItemEffectList[i].CheckCondition(valueToCheck);
+                else
+                    instance.pItemEffectList[i].CheckCondition();
             }
         }
     }
     public static void AddToList(PassiveItemEffect p)
     {
         instance.pItemEffectList.Add(p);
+        if (p.cooldown > 0) //Add pItem to CDEffectUI if it has cooldown.
+        {
+            GameObject objUI = Instantiate(instance.pItemCDEffectUIPrefab, instance.pItemCDEffectParent.transform);
+            if (objUI.TryGetComponent<Image>(out Image img))
+            {
+                img.sprite = p.itemDesc.itemSprite;
+                p.cdText = objUI.GetComponentInChildren<TextMeshProUGUI>();
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3874828088311150403
+--- !u!1 &524292256968221799
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3874828088311150402}
-  - component: {fileID: 3874828088311150400}
-  - component: {fileID: 3874828088311150401}
+  - component: {fileID: 524292256968221798}
+  - component: {fileID: 524292256968221796}
+  - component: {fileID: 524292256968221797}
+  - component: {fileID: 2626188683811646478}
   m_Layer: 0
-  m_Name: Surprised Face-Mask
+  m_Name: Four-Heart Clover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &3874828088311150402
+--- !u!4 &524292256968221798
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3874828088311150403}
+  m_GameObject: {fileID: 524292256968221799}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,47 +34,65 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3874828088311150400
+--- !u!114 &524292256968221796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3874828088311150403}
+  m_GameObject: {fileID: 524292256968221799}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aac80314bb7d8b640a080f630b0fa563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDescription: {fileID: 3874828088311150401}
-  levelModifiersList:
-  - modifier: 1e0000001a000000
-    amt:
-    - 30
-    - 30
---- !u!114 &3874828088311150401
+  itemDescription: {fileID: 524292256968221797}
+  levelModifiersList: []
+--- !u!114 &524292256968221797
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3874828088311150403}
+  m_GameObject: {fileID: 524292256968221799}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6912fdd674bbe547bc8776136bd3c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
-  itemName: Surprised Face-Mask
+  itemName: Four-Heart Clover
   itemTags: Passive Item
   behavior: 
-  description: Wearing it tingles your face.
-  itemSprite: {fileID: 21300000, guid: 7ffc8f310c89c47679285e29d8583529, type: 3}
+  description: '<color=orange>Effect: </color>When damage taken is 25% of max health
+    or more that would kill you, set life to 1.'
+  itemSprite: {fileID: 21300000, guid: 8f13574547c35fc4480b4c4a9f85abc8, type: 3}
   maxQuantity: 1
   rarity: 1
   currentLevel: 0
   price: 4
   quantityInInventory: 0
-  upgrade: {fileID: 3874828088311150400}
+  upgrade: {fileID: 524292256968221796}
   pItemSlotUI: {fileID: 0}
   shopLock: 0
+--- !u!114 &2626188683811646478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524292256968221799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a39caaac1024a4e9f7a06ab258fd8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDesc: {fileID: 524292256968221797}
+  gameplayManager: {fileID: 0}
+  conditionTag: 0
+  cooldown: 5
+  currentCD: 0
+  checkCondition: 1
+  activateEffect: 0
+  totalRecorded: 0
+  cdText: {fileID: 0}

@@ -176,7 +176,7 @@ public class SkillBehavior : MonoBehaviour
         if (travelSpeed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
         {
             rb.MovePosition(transform.position + (travelSpeed * Time.fixedDeltaTime * direction));
-            if (returnSkill && target.Equals(skillController.player.transform)) travelSpeed += 0.01f;
+            if (isHoming) travelSpeed += 0.01f;
         }
     }
 

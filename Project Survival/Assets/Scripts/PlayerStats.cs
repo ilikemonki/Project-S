@@ -193,7 +193,7 @@ public class PlayerStats : MonoBehaviour
                         }
                     }
                 }
-                PItemEffectManager.CheckAllPItemCondition(totalDamage, PItemEffectManager.ConditionTag.DamageTaken);
+                PItemEffectManager.CheckAllPItemCondition(totalDamage, PItemEffectManager.ConditionTag.DamageTaken, true);
                 break;
             }
         }

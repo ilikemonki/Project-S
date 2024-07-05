@@ -48,6 +48,7 @@ public class UpdateStats : MonoBehaviour
     }
     public static void ApplyGlobalUpgrades(Upgrades upgrade, bool unapplyUpgrades)
     {
+        if (upgrade.levelModifiersList.Count <= 0) return;
         float x;
         int lv;
         if (upgrade.itemDescription != null)
@@ -408,7 +409,7 @@ public class UpdateStats : MonoBehaviour
                     }
                     else
                     {
-                        fullString = statNameString + ": " + "<color=red>" + stats.amt[i] + "</color>";
+                        fullString = statNameString + ": " + "<color=red>" + stats.amt[i] + "%</color>";
                     }
                 }
                 else
@@ -517,7 +518,7 @@ public class UpdateStats : MonoBehaviour
     {
         instance.inventoryManager.playerStats1Text.text = string.Empty;
         string fullString = "";
-        fullString += "Health: " + instance.gameplayManager.player.currentHealth + "/" + instance.gameplayManager.player.maxHealth + " (+" + instance.gameplayManager.maxHealthMultiplier + "%)\n";
+        fullString += "Health: " + instance.gameplayManager.player.currentHealth + "/" + instance.gameplayManager.player.maxHealth + " (" + (instance.gameplayManager.maxHealthMultiplier >= 0 ? "+" + instance.gameplayManager.maxHealthMultiplier : instance.gameplayManager.maxHealthMultiplier) + "%)\n";
         fullString += "Level: " + instance.gameplayManager.level + "\n";
         fullString += "Defense: " + instance.gameplayManager.player.defense + " (+" + instance.gameplayManager.defenseMultiplier + "%)\n";
         fullString += "Regen: " + instance.gameplayManager.player.regen + "\n";

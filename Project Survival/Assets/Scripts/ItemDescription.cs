@@ -18,9 +18,10 @@ public class ItemDescription : MonoBehaviour
     public int maxQuantity, rarity;
     public int currentLevel; //Used for gem tiers as well
     public int price;
-    public int quantityInInventory;
+    public int quantityInInventory, quantityDisabledInInventory;
     public Upgrades upgrade;
     public PItemSlotUI pItemSlotUI; //only for passive item
+    public PassiveItemEffect pItemEffect;
     public bool shopLock;
 
     public void Awake()

@@ -9,41 +9,60 @@ public class PItemSlotUI : MonoBehaviour
     public ItemDescription itemDescription;
     public Image image, imageDisable;
     public TextMeshProUGUI quanityText;
-    public int quantityDisabled; //number of quantity disabled.
     public void TogglePItem()
     {
         if (itemDescription.quantityInInventory == 1)
         {
-            if (quantityDisabled == 0) //Disable pItem and unapply upgrades.
+            if (itemDescription.quantityDisabledInInventory == 0) //Disable pItem and unapply upgrades.
             {
-                quantityDisabled++;
+                itemDescription.quantityDisabledInInventory++;
                 imageDisable.gameObject.SetActive(true);
                 UpdateStats.ApplyGlobalUpgrades(itemDescription.upgrade, true);
+                if (itemDescription.pItemEffect != null)
+                {
+                    itemDescription.pItemEffect.RemoveEffect();
+                    itemDescription.pItemEffect.checkCondition = false;
+                }
             }
             else //Enable pItem and apply upgrades.
             {
-                quantityDisabled--;
+                itemDescription.quantityDisabledInInventory--;
                 imageDisable.gameObject.SetActive(false);
                 UpdateStats.ApplyGlobalUpgrades(itemDescription.upgrade, false);
+                if (itemDescription.pItemEffect != null)
+                {
+                    itemDescription.pItemEffect.checkCondition = true;
+                    itemDescription.pItemEffect.CheckCondition();
+                }
             }
         }
         else //more than one pItem
         {
-            if (quantityDisabled < itemDescription.quantityInInventory) //disable till you hit the max.
+            if (itemDescription.quantityDisabledInInventory < itemDescription.quantityInInventory) //disable till you hit the max.
             {
-                quantityDisabled++;
-                imageDisable.fillAmount = (float)quantityDisabled / (float)itemDescription.quantityInInventory;
+                itemDescription.quantityDisabledInInventory++;
+                imageDisable.fillAmount = (float)itemDescription.quantityDisabledInInventory / (float)itemDescription.quantityInInventory;
                 imageDisable.gameObject.SetActive(true);
                 UpdateStats.ApplyGlobalUpgrades(itemDescription.upgrade, true);
+                if (itemDescription.pItemEffect != null)
+                {
+                    itemDescription.pItemEffect.RemoveEffect();
+                    itemDescription.pItemEffect.checkCondition = false;
+                }
             }
-            else //maxed reached
+            else //maxed reached, reset and apply all upgrades.
             {
-                quantityDisabled = 0;
+                itemDescription.quantityDisabledInInventory = 0;
                 imageDisable.fillAmount = 0;
                 imageDisable.gameObject.SetActive(false);
                 for (int i = 0; i < itemDescription.quantityInInventory; i++)
                 {
                     UpdateStats.ApplyGlobalUpgrades(itemDescription.upgrade, false);
+                }
+                if (itemDescription.pItemEffect != null)
+                {
+                    itemDescription.pItemEffect.checkCondition = true;
+                    itemDescription.pItemEffect.CheckCondition();
                 }
             }
         }

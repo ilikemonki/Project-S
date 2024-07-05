@@ -45,9 +45,23 @@ public class ToolTipManager : MonoBehaviour
         instance.descriptionText.text = itemDesc.description;
         if (itemDesc.itemType == ItemDescription.ItemType.PassiveItem || itemDesc.itemType == ItemDescription.ItemType.SkillGem)
         {
-            instance.layoutElement1.enabled = false;
-            instance.layoutElement2.enabled = false;
-            instance.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[0]);
+            if (itemDesc.pItemEffect != null) //if has passive effect
+            {
+                if (itemDesc.pItemEffect.cooldown > 0)
+                    instance.descriptionText.text += "\n<color=orange>Cooldown: </color>" + itemDesc.pItemEffect.cooldown + "s";
+            }
+            if (itemDesc.description.Length >= 40) //if description is 40+ length, limit window
+            {
+                instance.layoutElement1.enabled = true;
+                instance.layoutElement2.enabled = true;
+            }
+            else
+            {
+                instance.layoutElement1.enabled = false;
+                instance.layoutElement2.enabled = false;
+            }
+            if (itemDesc.upgrade.levelModifiersList.Count > 0)
+                instance.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[0]);
         }
         else if (itemDesc.itemType == ItemDescription.ItemType.SkillOrb) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {

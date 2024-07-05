@@ -8,7 +8,7 @@ public class ExpBandageEffect : PassiveItemEffect
     public float expAmount;
     public override void CheckCondition(float valueToCheck)
     {
-        if (!activateEffect)
+        if (!effectActivated && checkCondition)
         {
             expAmount = valueToCheck;
             ActivateEffect();
@@ -18,7 +18,8 @@ public class ExpBandageEffect : PassiveItemEffect
     public override void ActivateEffect()
     {
         gameplayManager.GainExp(expAmount);
-        FloatingTextController.DisplayPlayerText(transform, " +" + expAmount +" Exp", Color.white, 0.7f);
+        FloatingTextController.DisplayPlayerText(gameplayManager.player.transform, " +" + expAmount.ToString() +" Exp", Color.yellow, 1f);
+        totalRecorded += expAmount;
         base.ActivateEffect();
     }
 }
