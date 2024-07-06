@@ -29,7 +29,7 @@ public class PlayerCollector : MonoBehaviour
         if (useMagnet)
         {
             magnetTimer += Time.deltaTime;
-            if (magnetTimer >= 0.5f)
+            if (magnetTimer >= 0.2f)
             {
                 useMagnet = false;
                 magnetTimer = 0;
@@ -56,9 +56,9 @@ public class PlayerCollector : MonoBehaviour
     {
         magnet.radius = magnetRange;
     }
-    public void MagnetCollectible()
+    public void MagnetCollectible(float maxRadius)
     {
-        magnet.radius = 200;
+        magnet.radius = maxRadius;
         magnetTimer = 0;
         useMagnet = true;
     }

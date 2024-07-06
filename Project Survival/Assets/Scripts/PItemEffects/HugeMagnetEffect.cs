@@ -2,35 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExpBandageEffect : PassiveItemEffect
+public class HugeMagnetEffect : PassiveItemEffect
 {
-    //Gain exp per damage taken
-    public float expAmount;
-    public override void CheckCondition(float valueToCheck)
+    //you will draw all coins within a 3x radius of magnet range. CD
+    public override void CheckCondition()
     {
         if (!effectActivated && checkCondition)
         {
-            expAmount = valueToCheck;
             ActivateEffect();
         }
-        //base.CheckCondition(valueToCheck);
     }
     public override void ActivateEffect()
     {
-        gameplayManager.GainExp(expAmount);
-        FloatingTextController.DisplayPlayerText(gameplayManager.player.transform, " +" + expAmount.ToString() +" Exp", Color.yellow, 1f);
-        totalRecorded += expAmount;
+        gameplayManager.player.playerCollector.MagnetCollectible(gameplayManager.player.magnetRange * 3);
         base.ActivateEffect();
     }
     public override void RemoveEffect()
     {
         pItemCDEffectUI.SetActive(false);
+        effectActivated = false;
         checkCondition = false;
     }
     public override void WhenAcquired()
     {
         if (pItemCDEffectUI != null)
             pItemCDEffectUI.SetActive(true);
+        effectActivated = true;
         checkCondition = true;
         currentCD = cooldown;
     }

@@ -8,7 +8,7 @@ public class LevelUpManager : MonoBehaviour
 {
     public bool stopLevelUp;
     public int rerollPrice, rerollIncrement, freeReroll;
-    public TextMeshProUGUI rerollText;
+    public TextMeshProUGUI rerollText, numOfLevelUpsText;
     public GameObject levelUpUI;
     public GameplayManager gameplayManager;
     int randModifiers;
@@ -16,6 +16,7 @@ public class LevelUpManager : MonoBehaviour
     public List<UpgradeUI> upgradeUIList;
     public Upgrades tempUpgrades;
     List<int> modifierList = new();
+    public float numberOfLevelUps;
     public void PopulateLevelUpGrowthStats()
     {
         for (int u = 0; u < upgradeUIList.Count; u++)
@@ -68,6 +69,7 @@ public class LevelUpManager : MonoBehaviour
 
     public void OpenUI()
     {
+        numOfLevelUpsText.text = numberOfLevelUps.ToString();
         freeReroll = gameplayManager.freeLevelupRerollAdditive;
         if (freeReroll > 0)
             rerollText.text = freeReroll + " Free Reroll";
@@ -78,6 +80,10 @@ public class LevelUpManager : MonoBehaviour
             GameManager.PauseGame();
             PopulateLevelUpGrowthStats();
             levelUpUI.SetActive(true);
+        }
+        else
+        {
+            PopulateLevelUpGrowthStats();
         }
     }
     public void CloseUI()

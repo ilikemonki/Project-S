@@ -33,11 +33,13 @@ public class PlayerStats : MonoBehaviour
     public List<float> reductions;
     //I-Frames
     public float iFrameDuration;
-    float iFrameTimer;
+    public float iFrameTimer;
     public bool isInvincible;
     public List<GameObject> dodgeList; 
     float damageFlashTimer;
     bool showDamageFlash;
+    [Header("Other Modifiers")]
+    public bool regenIsZero;
     private void Awake()
     {
         defaultMaterial = spriteRenderer.material;
@@ -127,6 +129,7 @@ public class PlayerStats : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             gameplayManager.GainCoins(collectible.coinAmount);
+            PItemEffectManager.CheckAllPItemCondition(0, PItemEffectManager.ConditionTag.CoinCollect, false);
         }
         else if (collision.CompareTag("Health Potion"))
         {
@@ -136,7 +139,7 @@ public class PlayerStats : MonoBehaviour
         else if (collision.CompareTag("Magnet"))
         {
             collision.gameObject.SetActive(false);
-            playerCollector.MagnetCollectible();
+            playerCollector.MagnetCollectible(200);
         }
         else if (collision.CompareTag("Skill Orb") || collision.CompareTag("Skill Gem"))
         {
@@ -206,6 +209,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (isDead) return;
         currentHealth -= dmg;
+        PItemEffectManager.CheckAllPItemCondition(dmg, PItemEffectManager.ConditionTag.Degen, true);
         UpdateHealthBar();
         GameManager.totalDamageTaken += dmg;
         foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
@@ -383,7 +387,8 @@ public class PlayerStats : MonoBehaviour
         {
             reductions[i] = baseReductions[i] + gameplayManager.reductionsAdditive[i];
         }
-        regen = baseRegen + gameplayManager.regenAdditive;
+        if (regenIsZero) regen = 0;
+        else regen = baseRegen + gameplayManager.regenAdditive;
         degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100);
         playerCollector.SetMagnetRange(magnetRange);

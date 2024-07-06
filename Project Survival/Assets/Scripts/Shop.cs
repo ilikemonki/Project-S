@@ -256,12 +256,18 @@ public class Shop : MonoBehaviour
                     itemUIList[i].newGameObject.SetActive(true);
                 }
                 if (!string.IsNullOrWhiteSpace(pItemShopList[i].description)) //if there is description.
-                    itemUIList[i].descriptionText.text += pItemShopList[i].description;
+                    itemUIList[i].descriptionText.text = pItemShopList[i].description;
                 if (pItemShopList[i].pItemEffect != null) //if has passive effect
                 {
                     itemUIList[i].pItemEffect.cooldown = pItemShopList[i].pItemEffect.cooldown;
-                    if (pItemShopList[i].pItemEffect.cooldown > 0)
-                        itemUIList[i].descriptionText.text += "\n<color=orange>Cooldown: </color>" + pItemShopList[i].pItemEffect.cooldown + "s";
+                    itemUIList[i].pItemEffect.chance = pItemShopList[i].pItemEffect.chance;
+                    itemUIList[i].pItemEffect.totalrecordedString = pItemShopList[i].pItemEffect.totalrecordedString;
+                    if (itemUIList[i].pItemEffect.chance > 0)
+                        itemUIList[i].descriptionText.text += "\n<color=orange>Chance: </color>" + itemUIList[i].pItemEffect.chance + "%";
+                    if (itemUIList[i].pItemEffect.cooldown > 0)
+                        itemUIList[i].descriptionText.text += "\n<color=orange>Cooldown: </color>" + itemUIList[i].pItemEffect.cooldown + "s";
+                    if (!string.IsNullOrWhiteSpace(itemUIList[i].pItemEffect.totalrecordedString))
+                        itemUIList[i].descriptionText.text += "\n\n" + itemUIList[i].pItemEffect.totalrecordedString + " " + itemUIList[i].pItemEffect.totalRecorded.ToString();
                 }
                 if (pItemShopList[i].upgrade.levelModifiersList.Count > 0) //if there are modifiers
                     itemUIList[i].descriptionText.text += "\n\n" + UpdateStats.FormatItemUpgradeStatsToString(pItemShopList[i].upgrade.levelModifiersList[0]);
@@ -364,6 +370,8 @@ public class Shop : MonoBehaviour
             itemUIList[i].quantityText.text = "";
             itemUIList[i].descriptionText.text = "";
             itemUIList[i].pItemEffect.cooldown = 0;
+            itemUIList[i].pItemEffect.chance = 0;
+            itemUIList[i].pItemEffect.totalrecordedString = "";
         }
     }
 
@@ -383,10 +391,6 @@ public class Shop : MonoBehaviour
                 if (!itemManager.pItemInventoryList.Contains(item)) //add item to inventory list
                 {
                     itemManager.pItemInventoryList.Add(item);
-                    if (item.pItemEffect != null) //if has passive effect
-                    {
-                        PItemEffectManager.AddToList(item.pItemEffect);
-                    }
                     UpdateStats.ApplyGlobalUpgrades(item.upgrade, false); //apply the pItem upgrade
                 }
                 else //if item is already in inventory, apply the upgrades.
@@ -397,13 +401,16 @@ public class Shop : MonoBehaviour
                     }
                     UpdateStats.ApplyGlobalUpgrades(item.upgrade, false);
                 }
+                if (item.pItemEffect != null) //if has passive effect
+                {
+                    PItemEffectManager.AcquireItem(item.pItemEffect);
+                }
                 if (item.quantityInInventory >= item.maxQuantity) //Remove item from available shop item list
                 {
                     itemManager.availablePItemList.Remove(item);
                 }
                 inventoryManager.UpdatePassiveItemsInventory(item); //Adds item to Passive Items Inventory UI or updates it.
                 itemUI.quantityText.text = "Qty: " + item.quantityInInventory.ToString() + "/" + item.maxQuantity;
-                PItemEffectManager.CheckAllPItemCondition(0, PItemEffectManager.ConditionTag.AfterAcquiring, false);
             }
             else //Send gem and orb to inventory
             {

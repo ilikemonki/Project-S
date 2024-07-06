@@ -17,7 +17,15 @@ public class UpgradeUI : MonoBehaviour
         if (upgrade != null)
         {
             UpdateStats.ApplyGlobalUpgrades(upgrade, false);
-            levelupManager.CloseUI();
+            levelupManager.numberOfLevelUps--;
+            if (levelupManager.numberOfLevelUps > 0)
+            {
+                levelupManager.OpenUI();
+            }
+            else
+            {
+                levelupManager.CloseUI();
+            }
         }
         else if (enemyUpgrade != null)
         {

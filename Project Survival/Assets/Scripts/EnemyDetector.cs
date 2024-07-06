@@ -7,6 +7,7 @@ public class EnemyDetector : MonoBehaviour
     public CircleCollider2D detectorCollider;
     public List<EnemyStats> enemyDetectorList;
 
+
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
@@ -46,6 +47,8 @@ public class EnemyDetector : MonoBehaviour
         EnemyStats nearestEnemy = null;
         for (int i = 0; i < enemyDetectorList.Count; i++) //search all mobs for nearest distance
         {
+            if (enemyDetectorList[i] == null)
+                enemyDetectorList.Remove(enemyDetectorList[i]);
             try
             {
                 if (enemyDetectorList[i].isActiveAndEnabled)
@@ -57,6 +60,9 @@ public class EnemyDetector : MonoBehaviour
                         nearestEnemy = enemyDetectorList[i];
                     }
                 }
+                else
+                    enemyDetectorList.Remove(enemyDetectorList[i]);
+
             }
             catch
             {
@@ -73,7 +79,12 @@ public class EnemyDetector : MonoBehaviour
         {
             try
             {
-                return enemyDetectorList[Random.Range(0, enemyDetectorList.Count)];
+
+                int rand = Random.Range(0, enemyDetectorList.Count);
+                if (enemyDetectorList[rand].isActiveAndEnabled)
+                    return enemyDetectorList[rand];
+                else
+                    return null;
             }
             catch
             {

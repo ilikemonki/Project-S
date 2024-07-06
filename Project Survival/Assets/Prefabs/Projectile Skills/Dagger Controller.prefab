@@ -322,12 +322,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 20000000090000000c0000003b000000
+  - modifier: 20000000090000000c000000
     amt:
     - 20
     - 10
     - 20
-    - 1
   - modifier: 20000000090000000c000000
     amt:
     - 20

@@ -21,7 +21,6 @@ public class PItemSlotUI : MonoBehaviour
                 if (itemDescription.pItemEffect != null)
                 {
                     itemDescription.pItemEffect.RemoveEffect();
-                    itemDescription.pItemEffect.checkCondition = false;
                 }
             }
             else //Enable pItem and apply upgrades.
@@ -31,8 +30,7 @@ public class PItemSlotUI : MonoBehaviour
                 UpdateStats.ApplyGlobalUpgrades(itemDescription.upgrade, false);
                 if (itemDescription.pItemEffect != null)
                 {
-                    itemDescription.pItemEffect.checkCondition = true;
-                    itemDescription.pItemEffect.CheckCondition();
+                    itemDescription.pItemEffect.WhenAcquired();
                 }
             }
         }
@@ -47,7 +45,6 @@ public class PItemSlotUI : MonoBehaviour
                 if (itemDescription.pItemEffect != null)
                 {
                     itemDescription.pItemEffect.RemoveEffect();
-                    itemDescription.pItemEffect.checkCondition = false;
                 }
             }
             else //maxed reached, reset and apply all upgrades.
@@ -61,8 +58,7 @@ public class PItemSlotUI : MonoBehaviour
                 }
                 if (itemDescription.pItemEffect != null)
                 {
-                    itemDescription.pItemEffect.checkCondition = true;
-                    itemDescription.pItemEffect.CheckCondition();
+                    itemDescription.pItemEffect.WhenAcquired();
                 }
             }
         }

@@ -21,4 +21,16 @@ public class FourHeartCloverEffect : PassiveItemEffect
         totalRecorded++; //Saves
         base.ActivateEffect();
     }
+    public override void RemoveEffect()
+    {
+        pItemCDEffectUI.SetActive(false);
+        checkCondition = false;
+    }
+    public override void WhenAcquired()
+    {
+        if (pItemCDEffectUI != null)
+            pItemCDEffectUI.SetActive(true);
+        checkCondition = true;
+        currentCD = cooldown;
+    }
 }

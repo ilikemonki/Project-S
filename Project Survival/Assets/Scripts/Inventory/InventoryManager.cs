@@ -81,6 +81,7 @@ public class InventoryManager : MonoBehaviour
             Destroy(draggableItem.skillController.stayOnPlayerParent);
             Destroy(draggableItem.skillController.gameObject);
             draggableItem.skillController = null;
+            PItemEffectManager.CheckAllPItemCondition(0, PItemEffectManager.ConditionTag.ActiveSkill, false);
         }
         else
         {
@@ -162,6 +163,7 @@ public class InventoryManager : MonoBehaviour
             draggableItem.slotUI.inUseText.gameObject.SetActive(true);
         }
         InstantiateSkill(draggableItem);
+        PItemEffectManager.CheckAllPItemCondition(0, PItemEffectManager.ConditionTag.ActiveSkill, false);
     }
     public void InstantiateSkill(DraggableItem dragItem) //Add skill to gameplay
     {

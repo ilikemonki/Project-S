@@ -111,13 +111,23 @@ public class GameplayManager : MonoBehaviour
         GameManager.totalExp += amt;
         if (exp >= expCap)  //Level UP
         {
+            player.iFrameTimer = 1; //Set iFrames when level up.
+            player.isInvincible = true;
             if (expSliderParticle != null) expSliderParticle.Play();
-            level++;
+            do
+            {
+                level++;
+                levelUpManager.numberOfLevelUps++;
+                exp -= expCap;
+                expCap += expCapIncrease;
+            }
+            while (exp >= expCap);
             UpdateLevelText();
-            exp -= expCap;
-            expCap += expCapIncrease;
             expSlider.maxValue = expCap;
-            if (!levelUpManager.stopLevelUp) levelUpManager.OpenUI();
+            if (!levelUpManager.stopLevelUp)
+            {
+                levelUpManager.OpenUI();
+            }
         }
         UpdateExpBar();
         //Add exp to active skill
@@ -135,6 +145,7 @@ public class GameplayManager : MonoBehaviour
         UpdateLevelText();
         expCap += expCapIncrease;
         expSlider.maxValue = expCap;
+        UpdateExpBar();
         levelUpManager.OpenUI();
 
     }

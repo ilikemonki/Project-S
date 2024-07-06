@@ -125,13 +125,7 @@ public class UpdateStats : MonoBehaviour
             }
         }
         instance.gameplayManager.player.UpdatePlayerStats();
-        for (int i = 0; i < instance.gameplayManager.inventory.activeSkillList.Count; i++) //update all active skills
-        {
-            if (instance.gameplayManager.inventory.activeSkillList[i].skillController != null)
-            {
-                instance.gameplayManager.inventory.activeSkillList[i].skillController.UpdateSkillStats();
-            }
-        }
+        UpdateAllActiveSkills();
         if (instance.currentMaxHP != instance.gameplayManager.player.maxHealth) //if hp is upgraded, update current hp.
         {
             instance.gameplayManager.player.currentHealth += instance.gameplayManager.player.maxHealth - instance.currentMaxHP;
@@ -715,6 +709,16 @@ public class UpdateStats : MonoBehaviour
             }
         }
         return fullString;
+    }
+    public static void UpdateAllActiveSkills()
+    {
+        for (int i = 0; i < instance.gameplayManager.inventory.activeSkillList.Count; i++) //update all active skills
+        {
+            if (instance.gameplayManager.inventory.activeSkillList[i].skillController != null)
+            {
+                instance.gameplayManager.inventory.activeSkillList[i].skillController.UpdateSkillStats();
+            }
+        }
     }
     public bool CheckPercentModifier(Modifier mod) //Check if modifier is percent or flat value
     {

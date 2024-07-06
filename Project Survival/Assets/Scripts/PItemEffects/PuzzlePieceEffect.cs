@@ -26,11 +26,17 @@ public class PuzzlePieceEffect : PassiveItemEffect
     {
         if (itemDesc.quantityDisabledInInventory > 0 && !effectRemoved && effectActivated)
         {
+            checkCondition = false;
             effectActivated = false;
             effectRemoved = true;
             gameplayManager.projectileAmountAdditive -= 1;
             gameplayManager.meleeAmountAdditive -= 1;
+            base.RemoveEffect();
         }
-        base.RemoveEffect();
+    }
+    public override void WhenAcquired()
+    {
+        checkCondition = true;
+        CheckCondition();
     }
 }

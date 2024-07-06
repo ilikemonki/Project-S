@@ -47,8 +47,12 @@ public class ToolTipManager : MonoBehaviour
         {
             if (itemDesc.pItemEffect != null) //if has passive effect
             {
+                if (itemDesc.pItemEffect.chance > 0)
+                    instance.descriptionText.text += "\n<color=orange>Chance: </color>" + itemDesc.pItemEffect.chance + "%";
                 if (itemDesc.pItemEffect.cooldown > 0)
                     instance.descriptionText.text += "\n<color=orange>Cooldown: </color>" + itemDesc.pItemEffect.cooldown + "s";
+                if (!string.IsNullOrWhiteSpace(itemDesc.pItemEffect.totalrecordedString))
+                    instance.descriptionText.text += "\n\n" + itemDesc.pItemEffect.totalrecordedString + " " + itemDesc.pItemEffect.totalRecorded.ToString();
             }
             if (itemDesc.description.Length >= 40) //if description is 40+ length, limit window
             {

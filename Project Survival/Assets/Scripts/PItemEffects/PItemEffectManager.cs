@@ -8,7 +8,7 @@ public class PItemEffectManager : MonoBehaviour
 {
     public enum ConditionTag
     {
-        DamageTaken, Heal, AfterAcquiring,
+        DamageTaken, Heal, WhenAcquired, Degen, CoinCollect, ActiveSkill, EndOfCooldown
     }
     public static PItemEffectManager instance;
     public List<PassiveItemEffect> pItemEffectList;
@@ -21,11 +21,12 @@ public class PItemEffectManager : MonoBehaviour
     }
     public void Update()
     {
-        if (instance.pItemEffectList.Count > 0)
+        if (instance.pItemEffectList.Count > 0 && Time.timeScale > 0)
         {
-            for (int i = 0; i < instance.pItemEffectList.Count; i++)
+            for (int i = 0; i < instance.pItemEffectList.Count; i++) //update cooldowns for all effects.
             {
-                instance.pItemEffectList[i].UpdateCooldown();
+                if (pItemEffectList[i].cooldown > 0)
+                    instance.pItemEffectList[i].UpdateCooldown();
             }
         }
     }
@@ -42,16 +43,21 @@ public class PItemEffectManager : MonoBehaviour
             }
         }
     }
-    public static void AddToList(PassiveItemEffect p)
+    public static void AcquireItem(PassiveItemEffect p)
     {
-        instance.pItemEffectList.Add(p);
-        if (p.cooldown > 0) //Add pItem to CDEffectUI if it has cooldown.
+        p.WhenAcquired();
+        if (!instance.pItemEffectList.Contains(p))
         {
-            GameObject objUI = Instantiate(instance.pItemCDEffectUIPrefab, instance.pItemCDEffectParent.transform);
-            if (objUI.TryGetComponent<Image>(out Image img))
+            instance.pItemEffectList.Add(p);
+            if (p.cooldown > 0) //Add pItem to CDEffectUI if it has cooldown.
             {
-                img.sprite = p.itemDesc.itemSprite;
-                p.cdText = objUI.GetComponentInChildren<TextMeshProUGUI>();
+                GameObject objUI = Instantiate(instance.pItemCDEffectUIPrefab, instance.pItemCDEffectParent.transform);
+                p.pItemCDEffectUI = objUI;
+                if (objUI.TryGetComponent<Image>(out Image img))
+                {
+                    img.sprite = p.itemDesc.itemSprite;
+                    p.cdText = objUI.GetComponentInChildren<TextMeshProUGUI>();
+                }
             }
         }
     }

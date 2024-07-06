@@ -154,8 +154,8 @@ MonoBehaviour:
   - 0
   - 0
   baseTravelSpeed: 6
-  baseAttackRange: 4
-  baseTravelRange: 6
+  baseAttackRange: 3.5
+  baseTravelRange: 4
   baseDuration: 0
   baseCooldown: 1
   baseKnockBack: 0
