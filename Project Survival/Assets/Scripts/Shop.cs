@@ -259,9 +259,12 @@ public class Shop : MonoBehaviour
                     itemUIList[i].descriptionText.text = pItemShopList[i].description;
                 if (pItemShopList[i].pItemEffect != null) //if has passive effect
                 {
+                    itemUIList[i].pItemEffect.damage = pItemShopList[i].pItemEffect.damage;
                     itemUIList[i].pItemEffect.cooldown = pItemShopList[i].pItemEffect.cooldown;
                     itemUIList[i].pItemEffect.chance = pItemShopList[i].pItemEffect.chance;
                     itemUIList[i].pItemEffect.totalrecordedString = pItemShopList[i].pItemEffect.totalrecordedString;
+                    if (itemUIList[i].pItemEffect.damage > 0)
+                        itemUIList[i].descriptionText.text += "\n<color=orange>Damage: </color>" + itemUIList[i].pItemEffect.damage;
                     if (itemUIList[i].pItemEffect.chance > 0)
                         itemUIList[i].descriptionText.text += "\n<color=orange>Chance: </color>" + itemUIList[i].pItemEffect.chance + "%";
                     if (itemUIList[i].pItemEffect.cooldown > 0)
@@ -369,6 +372,7 @@ public class Shop : MonoBehaviour
             itemUIList[i].priceText.text = "";
             itemUIList[i].quantityText.text = "";
             itemUIList[i].descriptionText.text = "";
+            itemUIList[i].pItemEffect.damage = 0;
             itemUIList[i].pItemEffect.cooldown = 0;
             itemUIList[i].pItemEffect.chance = 0;
             itemUIList[i].pItemEffect.totalrecordedString = "";

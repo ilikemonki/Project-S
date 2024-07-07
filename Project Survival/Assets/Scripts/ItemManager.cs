@@ -16,11 +16,15 @@ public class ItemManager : MonoBehaviour
     public List<DraggableItem> t1GemPrefabList = new(), t2GemPrefabList = new(), t3GemPrefabList = new();
 
     public Transform pItemParent;
-    public void Start()
+    public void Awake()
     {
         foreach (Transform child in pItemParent)
         {
             ItemDescription pItem = child.GetComponent<ItemDescription>();
+            if (pItem.pItemEffect != null)
+            {
+                pItem.pItemEffect.UpdateItemStats();
+            }
             availablePItemList.Add(pItem);
         }
     }

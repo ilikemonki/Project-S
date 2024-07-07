@@ -119,8 +119,8 @@ public class PlayerStats : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy Projectile"))
         {
             if (isInvincible) return;
-            EnemyProjectile enemyProj = collision.GetComponent<EnemyProjectile>();
-            TakeDamage(enemyProj.enemyStats.damageTypes, false); //Do damage to player
+            SimpleProjectile enemyProj = collision.GetComponent<SimpleProjectile>();
+            TakeDamage(enemyProj.damageTypes, false); //Do damage to player
             enemyProj.gameObject.SetActive(false);
             return;
         }
@@ -129,7 +129,7 @@ public class PlayerStats : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             gameplayManager.GainCoins(collectible.coinAmount);
-            PItemEffectManager.CheckAllPItemCondition(0, PItemEffectManager.ConditionTag.CoinCollect, false);
+            PItemEffectManager.CheckAllPItemCondition(PItemEffectManager.ConditionTag.CoinCollect);
         }
         else if (collision.CompareTag("Health Potion"))
         {
@@ -196,7 +196,7 @@ public class PlayerStats : MonoBehaviour
                         }
                     }
                 }
-                PItemEffectManager.CheckAllPItemCondition(totalDamage, PItemEffectManager.ConditionTag.DamageTaken, true);
+                PItemEffectManager.CheckAllPItemCondition(totalDamage, PItemEffectManager.ConditionTag.DamageTaken);
                 break;
             }
         }
@@ -209,7 +209,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (isDead) return;
         currentHealth -= dmg;
-        PItemEffectManager.CheckAllPItemCondition(dmg, PItemEffectManager.ConditionTag.Degen, true);
+        PItemEffectManager.CheckAllPItemCondition(dmg, PItemEffectManager.ConditionTag.Degen);
         UpdateHealthBar();
         GameManager.totalDamageTaken += dmg;
         foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition

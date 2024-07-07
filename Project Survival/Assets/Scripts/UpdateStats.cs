@@ -126,6 +126,7 @@ public class UpdateStats : MonoBehaviour
         }
         instance.gameplayManager.player.UpdatePlayerStats();
         UpdateAllActiveSkills();
+        PItemEffectManager.UpdateAllPItemStats();
         if (instance.currentMaxHP != instance.gameplayManager.player.maxHealth) //if hp is upgraded, update current hp.
         {
             instance.gameplayManager.player.currentHealth += instance.gameplayManager.player.maxHealth - instance.currentMaxHP;

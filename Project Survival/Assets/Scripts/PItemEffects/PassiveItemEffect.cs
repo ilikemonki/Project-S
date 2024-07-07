@@ -9,12 +9,16 @@ public class PassiveItemEffect : MonoBehaviour
     public GameplayManager gameplayManager;
     public GameObject pItemCDEffectUI; //if effect has cd and on ui screen, set this to the ui.
     public PItemEffectManager.ConditionTag conditionTag;
-    public float cooldown, currentCD, chance;
+    public float cooldown, currentCD, chance, baseDamage, damage;
     public bool checkCondition, effectActivated;
     public float totalRecorded;
     public string totalrecordedString;
     public TextMeshProUGUI cdText;
-    public virtual void CheckCondition(float valueToCheck)
+    public virtual void CheckCondition(float value)
+    {
+
+    }
+    public virtual void CheckCondition(GameObject obj)
     {
 
     }
@@ -71,5 +75,9 @@ public class PassiveItemEffect : MonoBehaviour
                 CheckCondition();
             }
         }
+    }
+    public virtual void UpdateItemStats() //Called when player stats are updated
+    {
+
     }
 }

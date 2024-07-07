@@ -134,6 +134,7 @@ public class EnemyStats : MonoBehaviour
         enemyManager.enemiesAlive--;
         dropRate.DropLoot(transform);
         enemyManager.enemyDetector.RemoveEnemyFromList(this);
+        PItemEffectManager.CheckAllPItemCondition(gameObject, PItemEffectManager.ConditionTag.EnemyKilled);
         gameObject.SetActive(false);
     }
 

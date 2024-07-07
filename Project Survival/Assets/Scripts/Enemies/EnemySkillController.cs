@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemySkillController : MonoBehaviour
 {
-    public EnemyProjectile prefab;
-    public List<EnemyProjectile> projectileList;
+    public SimpleProjectile prefab;
+    public List<SimpleProjectile> projectileList;
     int counter;
     float spreadAngle;
     Vector3 direction;
@@ -20,11 +20,11 @@ public class EnemySkillController : MonoBehaviour
             if (projectileList[i].isActiveAndEnabled)
             {
                 projectileList[i].currentRange = Vector3.Distance(projectileList[i].transform.position, projectileList[i].startingPos);
-                if (projectileList[i].currentRange >= projectileList[i].enemyStats.projectileRange)
+                if (projectileList[i].currentRange >= projectileList[i].travelRange)
                 {
                     projectileList[i].gameObject.SetActive(false);
                 }
-                projectileList[i].rb.MovePosition(projectileList[i].transform.position + (projectileList[i].enemyStats.projectileSpeed * Time.fixedDeltaTime * projectileList[i].direction));
+                projectileList[i].rb.MovePosition(projectileList[i].transform.position + (projectileList[i].travelSpeed * Time.fixedDeltaTime * projectileList[i].direction));
             }
         }
     }
@@ -59,7 +59,7 @@ public class EnemySkillController : MonoBehaviour
                         projectileList[i].direction = (Quaternion.AngleAxis(-spreadAngle * (p - counter), Vector3.forward) * direction).normalized;
                     }
                     projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg);
-                    projectileList[i].enemyStats = enemy;
+                    SetProjectileStats(projectileList[i], enemy);
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -82,7 +82,7 @@ public class EnemySkillController : MonoBehaviour
                     projectileList[i].transform.position = enemy.transform.position;
                     projectileList[i].direction = (Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right).normalized;   //Set direction
                     projectileList[i].transform.eulerAngles = new Vector3(0, 0, spreadAngle * p);
-                    projectileList[i].enemyStats = enemy;
+                    SetProjectileStats(projectileList[i], enemy);
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -105,19 +105,26 @@ public class EnemySkillController : MonoBehaviour
                     projectileList[i].transform.position = enemy.transform.position;    //set starting position on player
                     projectileList[i].direction = (Quaternion.AngleAxis(Random.Range(-30, 30), Vector3.forward) * direction).normalized;
                     projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg); //set angle
-                    projectileList[i].enemyStats = enemy;
+                    SetProjectileStats(projectileList[i], enemy);
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
             }
         }
     }
+    public void SetProjectileStats(SimpleProjectile proj, EnemyStats enemy)
+    {
+        proj.damageTypes.Clear();
+        proj.damageTypes.AddRange(enemy.damageTypes);
+        proj.travelRange = enemy.projectileRange;
+        proj.travelSpeed = enemy.projectileSpeed;
+    }
 
     public void PopulatePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
         {
-            EnemyProjectile projectile = Instantiate(prefab, transform);    //Spawn, add to list, and initialize prefabs
+            SimpleProjectile projectile = Instantiate(prefab, transform);    //Spawn, add to list, and initialize prefabs
             projectile.gameObject.SetActive(false);
             projectileList.Add(projectile);
         }

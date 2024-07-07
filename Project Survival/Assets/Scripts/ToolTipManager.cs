@@ -47,6 +47,8 @@ public class ToolTipManager : MonoBehaviour
         {
             if (itemDesc.pItemEffect != null) //if has passive effect
             {
+                if (itemDesc.pItemEffect.damage > 0)
+                    instance.descriptionText.text += "\n<color=orange>Damage: </color>" + itemDesc.pItemEffect.damage;
                 if (itemDesc.pItemEffect.chance > 0)
                     instance.descriptionText.text += "\n<color=orange>Chance: </color>" + itemDesc.pItemEffect.chance + "%";
                 if (itemDesc.pItemEffect.cooldown > 0)
