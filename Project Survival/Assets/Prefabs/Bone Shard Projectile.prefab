@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: -2123694131
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f17490ee08445754094d4dd825d12684, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb3a5d5fe62eb1f4dad109e500736d18, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 6593507805115416358}
   - component: {fileID: 2398783455814874361}
   - component: {fileID: 2168682402148296050}
-  - component: {fileID: 3127882506053086636}
+  - component: {fileID: 6527312973477231168}
   m_Layer: 12
   m_Name: Bone Shard Projectile
   m_TagString: Player Skill
@@ -117,7 +117,7 @@ RectTransform:
   m_GameObject: {fileID: 3139460322398848796}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7636711164442120139}
@@ -171,8 +171,9 @@ MonoBehaviour:
   currentRange: 0
   travelRange: 0
   travelSpeed: 0
---- !u!58 &3127882506053086636
-CircleCollider2D:
+  passiveItemEffect: {fileID: 0}
+--- !u!61 &6527312973477231168
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -185,8 +186,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 13
+  m_Size: {x: 15, y: 3}
+  m_EdgeRadius: 0
 --- !u!1 &4942288216049738221
 GameObject:
   m_ObjectHideFlags: 0

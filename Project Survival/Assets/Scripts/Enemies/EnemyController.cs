@@ -53,25 +53,55 @@ public class EnemyController : MonoBehaviour
                     enemyList[i].attackTimer -= Time.deltaTime;
                     if (enemyList[i].attackTimer <= 0.5f && enemyList[i].attackImage.activeSelf == false)
                     {
-                        enemyList[i].attackImage.SetActive(true);
+                        if (enemyList[i].barrageAttack && enemyList[i].barrageCounter <= 0) 
+                            enemyList[i].attackImage.SetActive(true);
+                        else
+                            enemyList[i].attackImage.SetActive(true);
                     }
                     if (enemyList[i].attackTimer <= 0f)
                     {
                         if (enemyList[i].spreadAttack)
                         {
                             enemyProjectilePool.SpreadBehavior(enemyList[i], enemyManager.player.transform);
+                            enemyList[i].attackTimer = enemyList[i].attackCooldown;
+                            enemyList[i].attackImage.SetActive(false);
+                            enemyList[i].isAttacking = false;
                         }
                         else if (enemyList[i].circleAttack)
                         {
                             enemyProjectilePool.CircleBehavior(enemyList[i]);
+                            enemyList[i].attackTimer = enemyList[i].attackCooldown;
+                            enemyList[i].attackImage.SetActive(false);
+                            enemyList[i].isAttacking = false;
                         }
                         else if (enemyList[i].burstAttack)
                         {
                             enemyProjectilePool.BurstBehavior(enemyList[i], enemyManager.player.transform);
+                            enemyList[i].attackTimer = enemyList[i].attackCooldown;
+                            enemyList[i].attackImage.SetActive(false);
+                            enemyList[i].isAttacking = false;
                         }
-                        enemyList[i].attackTimer = enemyList[i].attackCooldown;
-                        enemyList[i].attackImage.SetActive(false); 
-                        enemyList[i].isAttacking = false;
+                        else if (enemyList[i].barrageAttack)
+                        {
+                                if (enemyList[i].barrageCounter < enemyList[i].projectile) //fires the amount of attacks
+                                {
+                                    enemyList[i].barrageCooldown += Time.deltaTime;
+                                    if (enemyList[i].barrageCooldown >= 0.10f) //firing interval here.
+                                    {
+                                        if (enemyList[i].barrageAttack)
+                                            enemyProjectilePool.BarrageBehavior(enemyList[i], enemyManager.player.transform);
+                                        enemyList[i].barrageCounter++;
+                                        enemyList[i].barrageCooldown = 0;
+                                    }
+                                }
+                                else if (enemyList[i].barrageCounter >= enemyList[i].projectile)
+                                {
+                                    enemyList[i].barrageCounter = 0;
+                                enemyList[i].attackTimer = enemyList[i].attackCooldown;
+                                enemyList[i].attackImage.SetActive(false);
+                                enemyList[i].isAttacking = false;
+                            }
+                        }
                     }
                 }
             }

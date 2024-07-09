@@ -21,15 +21,16 @@ public class EnemyManager : MonoBehaviour
         public int whenToSpawn;   //start spawning when spawner reach the amount of mobs spawned
         public int currentSpawned;
         //Make changes to these stats only when enemy stat changes happen. This way we don't need to keep calculating their stats everytime an enemy spawns.
-        public List<float> damageTypes; //manually set to 4 in inspector
-        public List<float> reductions;
-        public float maxHealth;
-        public float moveSpeed;
-        public float exp;
-        public float attackCooldown;
-        public float projectile;
-        public float projectileTravelSpeed;
-        public float projectileSize;
+        //public List<float> damageTypes; //manually set to 4 in inspector
+        //public List<float> reductions;
+        //public float maxHealth;
+        //public float moveSpeed;
+        //public float exp;
+        //public float attackCooldown;
+        //public float projectile;
+        //public float projectileTravelSpeed;
+        //public float projectileSize;
+        public EnemyStats enemyStat;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -48,6 +49,7 @@ public class EnemyManager : MonoBehaviour
     Vector2 spawnPos;
     private void Start()
     {
+        
         PopulatePool(40);
         CalculateTotalEnemiesInRound();
         UpdateAllEnemyStats();
@@ -160,9 +162,7 @@ public class EnemyManager : MonoBehaviour
         {
             enemy.topAilmentsEffect[i] = 0;
         }
-        enemy.SetNonModifiedStats(enemyGroup.enemyPrefab.attackRange, enemyGroup.enemyPrefab.projectileRange, enemyGroup.enemyPrefab.spreadAttack, enemyGroup.enemyPrefab.circleAttack, enemyGroup.enemyPrefab.burstAttack);
-        enemy.SetStats(enemyGroup.moveSpeed, enemyGroup.maxHealth, enemyGroup.damageTypes, enemyGroup.reductions,
-            enemyGroup.exp, enemyGroup.attackCooldown, enemyGroup.projectile, enemyGroup.projectileTravelSpeed, enemyGroup.projectileSize);   //Set new stats to enemy
+        enemy.SetStats(enemyGroup.enemyStat);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
         if (enemy.burned)
             Debug.Log(enemy + "is spawned Burned");
@@ -176,24 +176,24 @@ public class EnemyManager : MonoBehaviour
                 for (int j = 0; j < gameplayManager.damageTypeMultiplier.Count; j++)
                 {
                     if (eGroup.enemyPrefab.damageTypes[j] > 0)
-                        eGroup.damageTypes[j] = eGroup.enemyPrefab.damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
-                    eGroup.reductions[j] = eGroup.enemyPrefab.reductions[j] + gameplayManager.enemyReductions[j];
+                        eGroup.enemyStat.damageTypes[j] = eGroup.enemyPrefab.damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
+                    eGroup.enemyStat.reductions[j] = eGroup.enemyPrefab.reductions[j] + gameplayManager.enemyReductions[j];
                 }
-                eGroup.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
-                eGroup.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
-                eGroup.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.expMultiplier / 100);
-                eGroup.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
+                eGroup.enemyStat.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
+                eGroup.enemyStat.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
+                eGroup.enemyStat.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.expMultiplier / 100);
+                eGroup.enemyStat.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
                 if (eGroup.enemyPrefab.canAttack == true)
                 {
-                    eGroup.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
-                    eGroup.projectileTravelSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
-                    eGroup.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
+                    eGroup.enemyStat.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
+                    eGroup.enemyStat.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
+                    eGroup.enemyStat.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
                 }
                 else
                 {
-                    eGroup.projectile = 0;
-                    eGroup.projectileTravelSpeed = 0;
-                    eGroup.projectileSize = 0;
+                    eGroup.enemyStat.projectile = 0;
+                    eGroup.enemyStat.projectileSpeed = 0;
+                    eGroup.enemyStat.projectileSize = 0;
                 }
             }
         }

@@ -473,7 +473,7 @@ public class SkillController : MonoBehaviour
                         pool[i].SetDirection((-pool[i].direction).normalized);   //Set direction
                     }
                     //pool[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(pool[i].direction.y, pool[i].direction.x) * Mathf.Rad2Deg); //set angle
-                    SetBehavourStats(poolList[i]);
+                    SetBehavourStats(pool[i]);
                     pool[i].gameObject.SetActive(true);
                     break;
                 }

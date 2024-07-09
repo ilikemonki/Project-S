@@ -150,12 +150,14 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  applyAilment: 00000000
   travelSpeed: 0
   pierce: 0
   chain: 0
   target: {fileID: 0}
   totalDamage: 0
-  isCrit: 0
+  applyCrit: 0
+  applyLifeSteal: 0
   hitOnceOnly: 0
   hasHitEnemy: 0
   rb: {fileID: 2398783455814874361}

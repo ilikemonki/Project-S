@@ -12,41 +12,39 @@ public class VampireBatBehavior : SkillBehavior
     public override void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
-        isCrit = false;
-        if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
+        if (applyCrit)  //Crit damage
         {
-            isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
         }
-        if (skillController.highestDamageType.Equals(1))    //fire, burn
+        if (applyLifeSteal)  //Life Steal
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[1])
+            if (skillController.player.currentHealth < skillController.player.maxHealth)
             {
-                enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
+                skillController.player.Heal(skillController.lifeSteal, true);
+                GameManager.totalLifeStealProc++;
+                if (skillController.lifeSteal + skillController.player.currentHealth > skillController.player.maxHealth)
+                    GameManager.totalLifeSteal += skillController.player.maxHealth - skillController.player.currentHealth;
+                else
+                    GameManager.totalLifeSteal += skillController.lifeSteal;
             }
         }
-        else if (skillController.highestDamageType.Equals(2))   //cold, chill
+        if (applyAilment[1])    //fire, burn
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[2])
-            {
-                enemy.ApplyChill(skillController.ailmentsEffect[2]);
-            }
+            enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
         }
-        else if (skillController.highestDamageType.Equals(3))   //lightning, shock
+        else if (applyAilment[2])   //cold, chill
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[3])
-            {
-                enemy.ApplyShock(skillController.ailmentsEffect[3]);
-            }
+            enemy.ApplyChill(skillController.ailmentsEffect[2]);
         }
-        else //physical, bleed
+        else if (applyAilment[3])   //lightning, shock
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[0])
-            {
-                enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
-            }
+            enemy.ApplyShock(skillController.ailmentsEffect[3]);
         }
-        enemy.TakeDamage(totalDamage, isCrit);
+        else if (applyAilment[0]) //physical, bleed
+        {
+            enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
+        }
+        enemy.TakeDamage(totalDamage, applyCrit);
         if (skillController.damageCooldown > 0)
         {
             rememberEnemyList.Add(enemy);
@@ -60,7 +58,7 @@ public class VampireBatBehavior : SkillBehavior
             skillController.comboCounter++;
         }
         hasHitEnemy = true;
-        if (isCrit)
+        if (applyCrit)
         {
             foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
             {

@@ -25,11 +25,13 @@ public class BoneShardEffect : PassiveItemEffect
                     if (!boneList[j].isActiveAndEnabled)
                     {
                         //Set bone shard info
-                        boneList[j].direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
+                        boneList[j].transform.position = deadEnemyList[i].transform.position;
+                        boneList[j].direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+                        boneList[j].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(boneList[j].direction.y, boneList[j].direction.x) * Mathf.Rad2Deg);
+                        boneList[j].SetDirection(boneList[j].direction.normalized);
                         boneList[j].damageTypes[0] = damage;
                         boneList[j].travelRange = 3;
                         boneList[j].travelSpeed = 8;
-                        boneList[j].transform.position = deadEnemyList[i].transform.position;
                         boneList[j].gameObject.SetActive(true);
                         count++;
                     }

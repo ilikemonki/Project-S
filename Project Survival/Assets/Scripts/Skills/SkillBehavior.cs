@@ -10,13 +10,14 @@ public class SkillBehavior : MonoBehaviour
     public SkillController skillController;
     public Vector3 direction;
     public List<float> damageTypes;
+    public List<bool> applyAilment;
     public float travelSpeed;
     public int pierce, chain;
     protected EnemyStats nearestEnemy;
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
     public float totalDamage;
-    public bool isCrit, hitOnceOnly;
+    public bool applyCrit, applyLifeSteal, hitOnceOnly;
     public bool hasHitEnemy;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
@@ -51,6 +52,7 @@ public class SkillBehavior : MonoBehaviour
         this.travelSpeed = travelSpeed;
         this.pierce = pierce;
         this.chain = chain;
+        CheckChances();
         transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x * (1 + size / 100), skillController.prefabBehavior.transform.localScale.y * (1 + size / 100), 1);
     }
     public void SetDirection(Vector3 dir) //set where the skill will go.
@@ -106,10 +108,12 @@ public class SkillBehavior : MonoBehaviour
             if (currenthitboxColliderTimer >= skillController.hitboxColliderDuration)
             {
                 if (skillController.resetHitBoxCollider)
+                {
                     hitboxCollider.enabled = true;
+                    currenthitboxColliderTimer = 0;
+                }
                 else
                     hitboxCollider.enabled = false;
-                currenthitboxColliderTimer = 0;
             }
         }
         if (rotateSkill) //Rotate skill object
@@ -184,13 +188,11 @@ public class SkillBehavior : MonoBehaviour
     public virtual void DoDamage(EnemyStats enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
-        isCrit = false;
-        if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
+        if (applyCrit)  //Crit damage
         {
-            isCrit = true;
             totalDamage *= (skillController.criticalDamage / 100);
         }
-        if (Random.Range(1, 101) <= skillController.lifeStealChance)  //Life Steal
+        if (applyLifeSteal)  //Life Steal
         {
             if (skillController.player.currentHealth < skillController.player.maxHealth)
             {
@@ -202,35 +204,23 @@ public class SkillBehavior : MonoBehaviour
                     GameManager.totalLifeSteal += skillController.lifeSteal;
             }
         }
-        if (skillController.highestDamageType.Equals(1))    //fire, burn
+        if (applyAilment[1])    //fire, burn
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[1])
-            {
-                enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
-            }
+            enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
         }
-        else if (skillController.highestDamageType.Equals(2))   //cold, chill
+        else if (applyAilment[2])   //cold, chill
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[2])
-            {
-                enemy.ApplyChill(skillController.ailmentsEffect[2]);
-            }
+            enemy.ApplyChill(skillController.ailmentsEffect[2]);
         }
-        else if (skillController.highestDamageType.Equals(3))   //lightning, shock
+        else if (applyAilment[3])   //lightning, shock
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[3])
-            {
-                enemy.ApplyShock(skillController.ailmentsEffect[3]);
-            }
+            enemy.ApplyShock(skillController.ailmentsEffect[3]);
         }
-        else //physical, bleed
+        else if (applyAilment[0]) //physical, bleed
         {
-            if (Random.Range(1, 101) <= skillController.ailmentsChance[0])
-            {
-                enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
-            }
+            enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
         }
-        enemy.TakeDamage(totalDamage, isCrit);
+        enemy.TakeDamage(totalDamage, applyCrit);
         if (skillController.damageCooldown > 0)
         {
             rememberEnemyList.Add(enemy);
@@ -244,7 +234,7 @@ public class SkillBehavior : MonoBehaviour
             skillController.comboCounter++;
         }
         hasHitEnemy = true;
-        if (isCrit)
+        if (applyCrit)
         {
             foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
             {
@@ -452,6 +442,57 @@ public class SkillBehavior : MonoBehaviour
     private void OnEnable()
     {
         startingPos = transform.position;
+    }
+    public void CheckChances()
+    {
+        applyCrit = false;
+        applyLifeSteal = false;
+        applyAilment[0] = false;
+        applyAilment[1] = false;
+        applyAilment[2] = false;
+        applyAilment[3] = false;
+        if (skillController.criticalChance > 0)
+        {
+            if (Random.Range(1, 101) <= skillController.criticalChance)  //Crit damage
+            {
+                applyCrit = true;
+            }
+        }
+        if (skillController.lifeStealChance > 0)
+        {
+            if (Random.Range(1, 101) <= skillController.lifeStealChance)  //Life Steal
+            {
+                applyLifeSteal = true;
+            }
+        }
+        if (skillController.highestDamageType.Equals(1))    //fire, burn
+        {
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[1])
+            {
+                applyAilment[1] = true;
+            }
+        }
+        else if (skillController.highestDamageType.Equals(2))   //cold, chill
+        {
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[2])
+            {
+                applyAilment[2] = true;
+            }
+        }
+        else if (skillController.highestDamageType.Equals(3))   //lightning, shock
+        {
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[3])
+            {
+                applyAilment[3] = true;
+            }
+        }
+        else //physical, bleed
+        {
+            if (Random.Range(1, 101) <= skillController.ailmentsChance[0])
+            {
+                applyAilment[0] = true;
+            }
+        }
     }
 
 }

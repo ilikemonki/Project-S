@@ -28,6 +28,26 @@ public class EnemySkillController : MonoBehaviour
             }
         }
     }
+    public void BarrageBehavior(EnemyStats enemy, Transform playerPos)       //Spawn/Activate skill. Projectiles barrages.
+    {
+        direction = playerPos.position - enemy.transform.position;
+        for (int i = 0; i < projectileList.Count; i++)
+        {
+            if (i > projectileList.Count - 2)
+            {
+                PopulatePool(10);
+            }
+            if (!projectileList[i].isActiveAndEnabled)
+            {
+                projectileList[i].transform.position = enemy.transform.position;    //set starting position on player
+                projectileList[i].direction = direction.normalized;
+                projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg); //set angle
+                SetProjectileStats(projectileList[i], enemy);
+                projectileList[i].gameObject.SetActive(true);
+                break;
+            }
+        }
+    }
     public void SpreadBehavior(EnemyStats enemy, Transform playerPos)       //Spawn/Activate skill. Projectiles spread.
     {
         counter = 0;

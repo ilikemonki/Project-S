@@ -168,7 +168,7 @@ MonoBehaviour:
   baseProjectileAmount: 0
   basePierce: 0
   baseChain: 0
-  despawnTime: 0.4
+  despawnTime: 0.6
   damageTypes:
   - 0
   - 0
@@ -201,7 +201,7 @@ MonoBehaviour:
   projectileAmount: 0
   pierce: 0
   chain: 0
-  hitboxColliderDuration: 0
+  hitboxColliderDuration: 0.1
   resetHitBoxCollider: 0
   damageCooldown: 0
   fixedProjMelee: 1

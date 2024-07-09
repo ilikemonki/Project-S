@@ -70,7 +70,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 15
   damageTypes:
-  - 40
+  - 22
   - 0
   - 0
   - 0
@@ -79,7 +79,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  moveSpeed: 0
+  moveSpeed: 3
   baseMoveSpeed: 3
   exp: 1
   chilled: 0
@@ -104,11 +104,14 @@ MonoBehaviour:
   spreadAttack: 0
   circleAttack: 0
   burstAttack: 0
-  attackCooldown: 2
+  barrageAttack: 0
+  barrageCooldown: 0
+  barrageCounter: 0
+  attackCooldown: 1
   attackTimer: 0
   attackRange: 6
-  projectile: 1
-  projectileSpeed: 5
+  projectile: 4
+  projectileSpeed: 10
   projectileRange: 10
   projectileSize: 0
   isAttacking: 0

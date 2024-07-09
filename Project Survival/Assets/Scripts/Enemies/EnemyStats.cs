@@ -32,7 +32,8 @@ public class EnemyStats : MonoBehaviour
     public bool doNotMove;
     [Header("Attack")]
     public bool canAttack; //initialize in awake
-    public bool spreadAttack, circleAttack, burstAttack;
+    public bool spreadAttack, circleAttack, burstAttack, barrageAttack;
+    public float barrageCooldown, barrageCounter; //For barrage
     public float attackCooldown, attackTimer, attackRange;
     public float projectile;
     public float projectileSpeed;
@@ -50,32 +51,37 @@ public class EnemyStats : MonoBehaviour
         defaultMaterial = spriteRenderer.material;
         CheckAttack();
     }
-    public void SetStats(float baseMoveSpeed, float maxHealth, List<float> damageTypes, List<float> reductions, float exp, float attackCooldown, float projectile, float projectileSpeed, float projectileSize)
+    public void SetStats(EnemyStats enemy)
     {
-        this.baseMoveSpeed = baseMoveSpeed;
-        moveSpeed = baseMoveSpeed;
-        this.maxHealth = maxHealth;
-        currentHealth = maxHealth;
-        this.damageTypes.AddRange(damageTypes);
-        this.reductions.AddRange(reductions);
-        this.exp = exp;
-        this.attackCooldown = attackCooldown;
-        this.projectile = projectile;
-        this.projectileSpeed = projectileSpeed;
-        this.projectileSize = projectileSize;
-    }
-    public void SetNonModifiedStats(float attackRange, float projectileRange, bool spreadAttack, bool circleAttack, bool burstAttack)
-    {
-        this.attackRange = attackRange;
-        this.projectileRange = projectileRange;
-        this.spreadAttack = spreadAttack;
-        this.circleAttack = circleAttack;
-        this.burstAttack = burstAttack;
+        this.baseMoveSpeed = enemy.baseMoveSpeed;
+        moveSpeed = enemy.moveSpeed;
+        this.maxHealth = enemy.maxHealth;
+        currentHealth = enemy.maxHealth;
+        for (int i = 0; i < 4; i++)
+        {
+            this.damageTypes[i] = enemy.damageTypes[i];
+            this.reductions[i] = enemy.reductions[i];
+        }
+        this.exp = enemy.exp;
+        this.attackCooldown = enemy.attackCooldown;
+        this.projectile = enemy.projectile;
+        this.projectileSpeed = enemy.projectileSpeed;
+        this.projectileSize = enemy.projectileSize;
+        this.attackRange = enemy.attackRange;
+        this.projectileRange = enemy.projectileRange;
+        this.spreadAttack = enemy.spreadAttack;
+        this.circleAttack = enemy.circleAttack;
+        this.burstAttack = enemy.burstAttack;
+        this.barrageAttack = enemy.barrageAttack;
+
         CheckAttack();
+    }
+    public void SetNonModifiedStats(EnemyStats enemyPrefab)
+    {
     }
     public void CheckAttack()
     {
-        if (spreadAttack || circleAttack || burstAttack)
+        if (spreadAttack || circleAttack || burstAttack || barrageAttack)
         {
             canAttack = true;
         }
@@ -154,7 +160,11 @@ public class EnemyStats : MonoBehaviour
         attackTimer = attackCooldown;
         damageFlashTimer = 0;
         burnedTimer = 0; chilledTimer = 0; shockedTimer = 0; bleedingTimer = 0;
-        burnOneSecCounter = 0; bleedOneSecCounter = 0;
+        burnOneSecCounter = 0; bleedOneSecCounter = 0; 
+        if (barrageAttack)
+        {
+            barrageCooldown = 0; barrageCounter = 0;
+        }
         if (enemyManager != null)
             enemyManager.enemyDetector.RemoveEnemyFromList(this);
     }
