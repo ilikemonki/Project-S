@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -177,7 +178,13 @@ public class GameplayManager : MonoBehaviour
     }
     public void UpdateDashText()
     {
-        dashText.text = player.playerMovement.currentCharges.ToString();
+        dashText.text = player.playerMovement.currentDashCharges.ToString();
+    }
+    public void UpdateRegenText()
+    {
+        if (player.regen - player.degen == 0) regenText.text = "";
+        else if (player.regen - player.degen < 0) regenText.text = "<color=red> -" + (player.regen - player.degen).ToString() + "<color=white> HP/s";
+        else regenText.text = "<color=green> +" + (player.regen - player.degen).ToString() + "<color=white> HP/s";
     }
     public void UpdateDashTime(float timer)
     {

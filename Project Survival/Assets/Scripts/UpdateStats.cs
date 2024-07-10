@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Mono.Cecil.Cil;
 
 public class UpdateStats : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class UpdateStats : MonoBehaviour
     public GameplayManager gameplayManager;
     public InventoryManager inventoryManager;
     public EnemyManager enemyManager;
+    public PlayerStats player;
     float currentMaxHP;
     public void Awake()
     {
@@ -55,7 +57,7 @@ public class UpdateStats : MonoBehaviour
             lv = upgrade.itemDescription.currentLevel;
         else
             lv = 0;
-        instance.currentMaxHP = instance.gameplayManager.player.maxHealth;
+        instance.currentMaxHP = instance.player.maxHealth;
         for (int i = 0; i < upgrade.levelModifiersList[lv].modifier.Count; i++)
         {
             if (unapplyUpgrades)
@@ -124,13 +126,13 @@ public class UpdateStats : MonoBehaviour
                 default: Debug.Log("ApplyGemMod has no switch case for " + upgrade.levelModifiersList[lv].modifier[i]); break;
             }
         }
-        instance.gameplayManager.player.UpdatePlayerStats();
+        instance.player.UpdatePlayerStats();
         UpdateAllActiveSkills();
         PItemEffectManager.UpdateAllPItemStats();
-        if (instance.currentMaxHP != instance.gameplayManager.player.maxHealth) //if hp is upgraded, update current hp.
+        if (instance.currentMaxHP != instance.player.maxHealth) //if hp is upgraded, update current hp.
         {
-            instance.gameplayManager.player.currentHealth += instance.gameplayManager.player.maxHealth - instance.currentMaxHP;
-            instance.gameplayManager.player.UpdateHealthBar();
+            instance.player.currentHealth += instance.player.maxHealth - instance.currentMaxHP;
+            instance.player.UpdateHealthBar();
         }
         FormatPlayerStatsToString();
         FormatEnemyStatsToString();
@@ -513,149 +515,202 @@ public class UpdateStats : MonoBehaviour
     {
         instance.inventoryManager.playerStats1Text.text = string.Empty;
         string fullString = "";
-        fullString += "Health: " + instance.gameplayManager.player.currentHealth + "/" + instance.gameplayManager.player.maxHealth + " (" + (instance.gameplayManager.maxHealthMultiplier >= 0 ? "+" + instance.gameplayManager.maxHealthMultiplier : instance.gameplayManager.maxHealthMultiplier) + "%)\n";
+        fullString += "Health: " + instance.player.currentHealth + "/" + instance.player.maxHealth + " (" + (instance.gameplayManager.maxHealthMultiplier >= 0 ? "+" + instance.gameplayManager.maxHealthMultiplier : instance.gameplayManager.maxHealthMultiplier) + "%)\n";
         fullString += "Level: " + instance.gameplayManager.level + "\n";
-        fullString += "Defense: " + instance.gameplayManager.player.defense + " (+" + instance.gameplayManager.defenseMultiplier + "%)\n";
-        fullString += "Regen: " + instance.gameplayManager.player.regen + "\n";
-        fullString += "Degen: " + instance.gameplayManager.player.degen + "\n";
-        fullString += "Movement Speed: " + instance.gameplayManager.player.moveSpeed + " (+" + instance.gameplayManager.moveSpeedMultiplier + "%)\n";
-        fullString += "Dash: " + instance.gameplayManager.player.playerMovement.maxCharges + " (+" + instance.gameplayManager.dashChargesAdditive + ")\n";
-        fullString += "Dash Cooldown: " + instance.gameplayManager.player.playerMovement.dashCooldown + " (+" + instance.gameplayManager.dashCooldownMultiplier + "%)\n";
-        fullString += "Dash Power: " + instance.gameplayManager.player.playerMovement.dashPower + " (+" + instance.gameplayManager.dashPowerMultiplier + "%)\n";
-        fullString += "Magnet Range: " + instance.gameplayManager.player.magnetRange + " (+" + instance.gameplayManager.magnetRangeMultiplier + "%)\n";
-        fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + " (+" + instance.gameplayManager.expMultiplier + "%)\n";
-        if (instance.gameplayManager.coinDropChanceMultiplier > 0)
-            fullString += "Coin Drop Chance: +" + instance.gameplayManager.coinDropChanceMultiplier + "%\n";
-        if (instance.gameplayManager.dropChanceMultiplier > 0)
-            fullString += "Drop Chance: +" + instance.gameplayManager.dropChanceMultiplier + "%\n";
+        if (instance.gameplayManager.defenseMultiplier != 0)
+            fullString += "Defense: " + instance.player.defense + " (" + (instance.gameplayManager.defenseMultiplier > 0 ? "+" + instance.gameplayManager.defenseMultiplier : instance.gameplayManager.defenseMultiplier) + "%)\n";
+        else
+            fullString += "Defense: " + instance.player.defense + "\n";
+        for (int i = 0; i < instance.gameplayManager.reductionsAdditive.Count; i++)
+        {
+            if (instance.gameplayManager.reductionsAdditive[i] != 0)
+            {
+                if (i == 0) //physical
+                    fullString += "<color=grey>Physical Reduction</color>: " + (instance.gameplayManager.reductionsAdditive[i] > 0 ? "+" + instance.gameplayManager.reductionsAdditive[i] : instance.gameplayManager.reductionsAdditive[i]) + "\n";
+                else if (i == 1) //Fire 
+                    fullString += "<color=red>Fire Reduction</color>: " + (instance.gameplayManager.reductionsAdditive[i] > 0 ? "+" + instance.gameplayManager.reductionsAdditive[i] : instance.gameplayManager.reductionsAdditive[i]) + "\n";
+                else if (i == 2) //cold
+                    fullString += "<color=blue>Cold Reduction</color>: " + (instance.gameplayManager.reductionsAdditive[i] > 0 ? "+" + instance.gameplayManager.reductionsAdditive[i] : instance.gameplayManager.reductionsAdditive[i]) + "\n";
+                else if (i == 3) //lightning
+                    fullString += "<color=yellow>Lightning Reduction</color>: " + (instance.gameplayManager.reductionsAdditive[i] > 0 ? "+" + instance.gameplayManager.reductionsAdditive[i] : instance.gameplayManager.reductionsAdditive[i]) + "\n";
+            }
+        }
+        if (instance.player.regen <= 0 && (instance.player.baseRegen + instance.gameplayManager.regenAdditive) != 0)
+            fullString += "Regen: " + instance.player.regen + " (" + ((instance.player.baseRegen + instance.gameplayManager.regenAdditive) > 0 ? "+" + (instance.player.baseRegen + instance.gameplayManager.regenAdditive) : (instance.player.baseRegen + instance.gameplayManager.regenAdditive)) + ")\n";
+        else 
+            fullString += "Regen: " + instance.player.regen + "\n"; 
+        if (instance.player.degen <= 0 && (instance.player.baseDegen + instance.gameplayManager.degenAdditive) != 0)
+            fullString += "Degen: " + instance.player.degen + " (" + ((instance.player.baseDegen + instance.gameplayManager.degenAdditive) > 0 ? "+" + (instance.player.baseRegen + instance.gameplayManager.regenAdditive) : (instance.player.baseRegen + instance.gameplayManager.regenAdditive)) + ")\n";
+        else
+            fullString += "Degen: " + instance.player.degen + "\n";
+        if (instance.gameplayManager.moveSpeedMultiplier != 0)
+            fullString += "Movement Speed: " + instance.player.moveSpeed + " (" + (instance.gameplayManager.moveSpeedMultiplier > 0 ? "+" + instance.gameplayManager.moveSpeedMultiplier : instance.gameplayManager.moveSpeedMultiplier) + "%)\n";
+        else
+            fullString += "Movement Speed: " + instance.player.moveSpeed + "\n";
+        if (instance.gameplayManager.dashChargesAdditive != 0)
+            fullString += "Dash: " + instance.player.playerMovement.maxDashCharges + " (" + (instance.gameplayManager.dashChargesAdditive > 0 ? "+" + instance.gameplayManager.dashChargesAdditive : instance.gameplayManager.dashChargesAdditive) + ")\n";
+        else
+            fullString += "Dash: " + instance.player.playerMovement.maxDashCharges + "\n";
+        if (instance.gameplayManager.dashCooldownMultiplier != 0)
+            fullString += "Dash Cooldown: " + instance.player.playerMovement.dashCooldown + " (" + (instance.gameplayManager.dashCooldownMultiplier > 0 ? "+" + instance.gameplayManager.dashCooldownMultiplier : instance.gameplayManager.dashCooldownMultiplier) + "%)\n";
+        else
+            fullString += "Dash Cooldown: " + instance.player.playerMovement.dashCooldown + "\n";
+        if (instance.gameplayManager.dashPowerMultiplier != 0)
+            fullString += "Dash Power: " + instance.player.playerMovement.dashPower + " (" + (instance.gameplayManager.dashPowerMultiplier > 0 ? "+" + instance.gameplayManager.dashPowerMultiplier : instance.gameplayManager.dashPowerMultiplier) + "%)\n";
+        else
+            fullString += "Dash Power: " + instance.player.playerMovement.dashPower + "\n";
+        if (instance.gameplayManager.magnetRangeMultiplier != 0)
+            fullString += "Magnet Range: " + instance.player.magnetRange + " (" + (instance.gameplayManager.magnetRangeMultiplier > 0 ? "+" + instance.gameplayManager.magnetRangeMultiplier : instance.gameplayManager.magnetRangeMultiplier) + "%)\n";
+        else
+            fullString += "Magnet Range: " + instance.player.magnetRange + "\n";
+        if (instance.gameplayManager.expMultiplier != 0)
+            fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + " (" + (instance.gameplayManager.expMultiplier > 0 ? "+" + instance.gameplayManager.expMultiplier : instance.gameplayManager.expMultiplier) + "%)\n";
+        else
+            fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + "\n";
+        if (instance.gameplayManager.coinDropChanceMultiplier != 0)
+            fullString += "Coin Drop Chance: " + (instance.gameplayManager.coinDropChanceMultiplier > 0 ? "+" + instance.gameplayManager.coinDropChanceMultiplier : instance.gameplayManager.coinDropChanceMultiplier) + "%\n";
+        if (instance.gameplayManager.dropChanceMultiplier != 0)
+            fullString += "Drop Chance: " + (instance.gameplayManager.dropChanceMultiplier > 0 ? "+" + instance.gameplayManager.dropChanceMultiplier : instance.gameplayManager.dropChanceMultiplier) + "%\n";
         instance.inventoryManager.playerStats1Text.text = fullString;
         fullString = string.Empty;
         //Second stats
         for (int i = 0; i < instance.gameplayManager.baseDamageTypeAdditive.Count; i++)
         {
-            if (instance.gameplayManager.baseDamageTypeAdditive[i] > 0)
+            if (instance.gameplayManager.baseDamageTypeAdditive[i] != 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "<color=grey>Base Physical Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                    fullString += "<color=grey>Base Physical Damage</color>: " + (instance.gameplayManager.baseDamageTypeAdditive[i] > 0 ? "+" + instance.gameplayManager.baseDamageTypeAdditive[i] : instance.gameplayManager.baseDamageTypeAdditive[i]) + "\n";
                 else if (i == 1) //Fire damage
-                    fullString += "<color=red>Base Fire Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                    fullString += "<color=red>Base Fire Damage</color>: " + (instance.gameplayManager.baseDamageTypeAdditive[i] > 0 ? "+" + instance.gameplayManager.baseDamageTypeAdditive[i] : instance.gameplayManager.baseDamageTypeAdditive[i]) + "\n";
                 else if (i == 2) //cold damage
-                    fullString += "<color=blue>Base Cold Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                    fullString += "<color=blue>Base Cold Damage</color>: " + (instance.gameplayManager.baseDamageTypeAdditive[i] > 0 ? "+" + instance.gameplayManager.baseDamageTypeAdditive[i] : instance.gameplayManager.baseDamageTypeAdditive[i]) + "\n";
                 else if (i == 3) //lightning damage
-                    fullString += "<color=yellow>Base Lightning Damage</color>: +" + instance.gameplayManager.baseDamageTypeAdditive[i] + "\n";
+                    fullString += "<color=yellow>Base Lightning Damage</color>: " + (instance.gameplayManager.baseDamageTypeAdditive[i] > 0 ? "+" + instance.gameplayManager.baseDamageTypeAdditive[i] : instance.gameplayManager.baseDamageTypeAdditive[i]) + "\n";
             }
         }
-        if (instance.gameplayManager.damageMultiplier > 0)
-            fullString += "Damage: +" + instance.gameplayManager.damageMultiplier + "%\n";
-        if (instance.gameplayManager.projectileDamageMultiplier > 0)
-            fullString += "Projectile Damage: +" + instance.gameplayManager.projectileDamageMultiplier + "%\n";
-        if (instance.gameplayManager.meleeDamageMultiplier > 0)
-            fullString += "Melee Damage: +" + instance.gameplayManager.meleeDamageMultiplier + "%\n";
+        if (instance.gameplayManager.damageMultiplier != 0)
+            fullString += "Damage: " + (instance.gameplayManager.damageMultiplier > 0 ? "+" + instance.gameplayManager.damageMultiplier : instance.gameplayManager.damageMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileDamageMultiplier != 0)
+            fullString += "Projectile Damage: " + (instance.gameplayManager.projectileDamageMultiplier > 0 ? "+" + instance.gameplayManager.projectileDamageMultiplier : instance.gameplayManager.projectileDamageMultiplier) + "%\n";
+        if (instance.gameplayManager.meleeDamageMultiplier != 0)
+            fullString += "Melee Damage: " + (instance.gameplayManager.meleeDamageMultiplier > 0 ? "+" + instance.gameplayManager.meleeDamageMultiplier : instance.gameplayManager.meleeDamageMultiplier) + "%\n";
         for (int i = 0; i < instance.gameplayManager.damageTypeMultiplier.Count; i++)
         {
-            if (instance.gameplayManager.damageTypeMultiplier[i] > 0)
+            if (instance.gameplayManager.damageTypeMultiplier[i] != 0)
             {
                 if (i == 0) //physical damage
-                    fullString += "<color=grey>Physical Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
+                    fullString += "<color=grey>Physical Damage</color>: " + (instance.gameplayManager.damageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.damageTypeMultiplier[i] : instance.gameplayManager.damageTypeMultiplier[i]) + "%\n";
                 else if (i == 1) //Fire damage
-                    fullString += "<color=red>Fire Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
+                    fullString += "<color=red>Fire Damage</color>: " + (instance.gameplayManager.damageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.damageTypeMultiplier[i] : instance.gameplayManager.damageTypeMultiplier[i]) + "%\n";
                 else if (i == 2) //cold damage
-                    fullString += "<color=blue>Cold Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
+                    fullString += "<color=blue>Cold Damage</color>: " + (instance.gameplayManager.damageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.damageTypeMultiplier[i] : instance.gameplayManager.damageTypeMultiplier[i]) + "%\n";
                 else if (i == 3) //lightning damage
-                    fullString += "<color=yellow>Lightning Damage</color>: +" + instance.gameplayManager.damageTypeMultiplier[i] + "%\n";
+                    fullString += "<color=yellow>Lightning Damage</color>: " + (instance.gameplayManager.damageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.damageTypeMultiplier[i] : instance.gameplayManager.damageTypeMultiplier[i]) + "%\n";
             }
         }
-        if (instance.gameplayManager.criticalChanceAdditive > 0)
-            fullString += "Critical Chance: +" + instance.gameplayManager.criticalChanceAdditive + "%\n";
-        if (instance.gameplayManager.projectileCriticalChanceAdditive > 0)
-            fullString += "Projectile Critical Chance: +" + instance.gameplayManager.projectileCriticalChanceAdditive + "%\n";
-        if (instance.gameplayManager.meleeCriticalChanceAdditive > 0)
-            fullString += "Melee Critical Chance: +" + instance.gameplayManager.meleeCriticalChanceAdditive + "%\n";
-        if (instance.gameplayManager.criticalDamageAdditive > 0)
-            fullString += "Critical Damage: +" + instance.gameplayManager.criticalDamageAdditive + "%\n";
-        if (instance.gameplayManager.projectileCriticalDamageAdditive > 0)
-            fullString += "Projectile Critical Damage: +" + instance.gameplayManager.projectileCriticalDamageAdditive + "%\n";
-        if (instance.gameplayManager.meleeCriticalDamageAdditive > 0)
-            fullString += "Melee Critical Damage: +" + instance.gameplayManager.meleeCriticalDamageAdditive + "%\n";
-        if (instance.gameplayManager.cooldownMultiplier > 0)
-            fullString += "Cooldown: +" + instance.gameplayManager.cooldownMultiplier + "%\n";
-        if (instance.gameplayManager.projectileCooldownMultiplier > 0)
-            fullString += "Projectile Cooldown: +" + instance.gameplayManager.projectileCooldownMultiplier + "%\n";
-        if (instance.gameplayManager.meleeCooldownMultiplier > 0)
-            fullString += "Melee Cooldown: +" + instance.gameplayManager.meleeCooldownMultiplier + "%\n";
-        if (instance.gameplayManager.projectileAmountAdditive > 0)
-            fullString += "Projectile Amount: +" + instance.gameplayManager.projectileAmountAdditive + "\n";
-        if (instance.gameplayManager.pierceAdditive > 0)
-            fullString += "Pierce: +" + instance.gameplayManager.pierceAdditive + "\n";
-        if (instance.gameplayManager.chainAdditive > 0)
-            fullString += "Chain: +" + instance.gameplayManager.chainAdditive + "\n";
-        if (instance.gameplayManager.meleeAmountAdditive > 0)
-            fullString += "Melee Amount: +" + instance.gameplayManager.meleeAmountAdditive + "\n";
-        if (instance.gameplayManager.comboAdditive > 0)
-            fullString += "Combo: +" + instance.gameplayManager.comboAdditive + "\n";
-        if (instance.gameplayManager.attackRangeMultiplier > 0)
-            fullString += "Attack Range: +" + instance.gameplayManager.attackRangeMultiplier + "%\n";
-        if (instance.gameplayManager.projectileAttackRangeMultiplier > 0)
-            fullString += "Projectile Attack Range: +" + instance.gameplayManager.projectileAttackRangeMultiplier + "%\n";
-        if (instance.gameplayManager.meleeAttackRangeMultiplier > 0)
-            fullString += "Melee Attack Range: +" + instance.gameplayManager.meleeAttackRangeMultiplier + "%\n";
+        if (instance.gameplayManager.criticalChanceAdditive != 0)
+            fullString += "Critical Chance: " + (instance.gameplayManager.criticalChanceAdditive > 0 ? "+" + instance.gameplayManager.criticalChanceAdditive : instance.gameplayManager.criticalChanceAdditive) + "%\n";
+        if (instance.gameplayManager.projectileCriticalChanceAdditive != 0)
+            fullString += "Projectile Critical Chance: " + (instance.gameplayManager.projectileCriticalChanceAdditive > 0 ? "+" + instance.gameplayManager.projectileCriticalChanceAdditive : instance.gameplayManager.projectileCriticalChanceAdditive) + "%\n";
+        if (instance.gameplayManager.meleeCriticalChanceAdditive != 0)
+            fullString += "Melee Critical Chance: " + (instance.gameplayManager.meleeCriticalChanceAdditive > 0 ? "+" + instance.gameplayManager.meleeCriticalChanceAdditive : instance.gameplayManager.meleeCriticalChanceAdditive) + "%\n";
+        if (instance.gameplayManager.criticalDamageAdditive != 0)
+            fullString += "Critical Damage: " + (instance.gameplayManager.criticalDamageAdditive > 0 ? "+" + instance.gameplayManager.criticalDamageAdditive : instance.gameplayManager.criticalDamageAdditive) + "%\n";
+        if (instance.gameplayManager.projectileCriticalDamageAdditive != 0)
+            fullString += "Projectile Critical Damage: " + (instance.gameplayManager.projectileCriticalDamageAdditive > 0 ? "+" + instance.gameplayManager.projectileCriticalDamageAdditive : instance.gameplayManager.projectileCriticalDamageAdditive) + "%\n";
+        if (instance.gameplayManager.meleeCriticalDamageAdditive != 0)
+            fullString += "Melee Critical Damage: " + (instance.gameplayManager.meleeCriticalDamageAdditive > 0 ? "+" + instance.gameplayManager.meleeCriticalDamageAdditive : instance.gameplayManager.meleeCriticalDamageAdditive) + "%\n";
+        if (instance.gameplayManager.cooldownMultiplier != 0)
+            fullString += "Cooldown: " + (instance.gameplayManager.cooldownMultiplier > 0 ? "+" + instance.gameplayManager.cooldownMultiplier : instance.gameplayManager.cooldownMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileCooldownMultiplier != 0)
+            fullString += "Projectile Cooldown: " + (instance.gameplayManager.projectileCooldownMultiplier > 0 ? "+" + instance.gameplayManager.projectileCooldownMultiplier : instance.gameplayManager.projectileCooldownMultiplier) + "%\n";
+        if (instance.gameplayManager.meleeCooldownMultiplier != 0)
+            fullString += "Melee Cooldown: " + (instance.gameplayManager.meleeCooldownMultiplier > 0 ? "+" + instance.gameplayManager.meleeCooldownMultiplier : instance.gameplayManager.meleeCooldownMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileAmountAdditive != 0)
+            fullString += "Projectile Amount: " + (instance.gameplayManager.projectileAmountAdditive > 0 ? "+" + instance.gameplayManager.projectileAmountAdditive : instance.gameplayManager.projectileAmountAdditive) + "\n";
+        if (instance.gameplayManager.pierceAdditive != 0)
+            fullString += "Pierce: " + (instance.gameplayManager.pierceAdditive > 0 ? "+" + instance.gameplayManager.pierceAdditive : instance.gameplayManager.pierceAdditive) + "\n";
+        if (instance.gameplayManager.chainAdditive != 0)
+            fullString += "Chain: " + (instance.gameplayManager.chainAdditive > 0 ? "+" + instance.gameplayManager.chainAdditive : instance.gameplayManager.chainAdditive) + "\n";
+        if (instance.gameplayManager.meleeAmountAdditive != 0)
+            fullString += "Melee Amount: " + (instance.gameplayManager.meleeAmountAdditive > 0 ? "+" + instance.gameplayManager.meleeAmountAdditive : instance.gameplayManager.meleeAmountAdditive) + "\n";
+        if (instance.gameplayManager.comboAdditive != 0)
+            fullString += "Combo: " + (instance.gameplayManager.comboAdditive > 0 ? "+" + instance.gameplayManager.comboAdditive : instance.gameplayManager.comboAdditive) + "\n";
+        if (instance.gameplayManager.attackRangeMultiplier != 0)
+            fullString += "Attack Range: " + (instance.gameplayManager.attackRangeMultiplier > 0 ? "+" + instance.gameplayManager.attackRangeMultiplier : instance.gameplayManager.attackRangeMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileAttackRangeMultiplier != 0)
+            fullString += "Projectile Attack Range: " + (instance.gameplayManager.projectileAttackRangeMultiplier > 0 ? "+" + instance.gameplayManager.projectileAttackRangeMultiplier : instance.gameplayManager.projectileAttackRangeMultiplier) + "%\n";
+        if (instance.gameplayManager.meleeAttackRangeMultiplier != 0)
+            fullString += "Melee Attack Range: " + (instance.gameplayManager.meleeAttackRangeMultiplier > 0 ? "+" + instance.gameplayManager.meleeAttackRangeMultiplier : instance.gameplayManager.meleeAttackRangeMultiplier) + "%\n";
         for (int i = 0; i < instance.gameplayManager.ailmentsChanceAdditive.Count; i++)
         {
             if (i == 0) //physical damage
             {
-                if (instance.gameplayManager.ailmentsChanceAdditive[i] > 0)
-                    fullString += "Bleed Chance: +" + instance.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Bleed Effect: +" + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + instance.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
+                if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
+                    fullString += "Bleed Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
+                if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
+                    fullString += "Bleed Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                else
+                    fullString += "Bleed Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
             }
             else if (i == 1) //Fire damage
             {
-                if (instance.gameplayManager.ailmentsChanceAdditive[i] > 0)
-                    fullString += "Burn Chance: +" + instance.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Burn Effect: +" + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + instance.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
+                if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
+                    fullString += "Burn Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
+                if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
+                    fullString += "Burn Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                else
+                    fullString += "Burn Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
             }
             else if (i == 2) //cold damage
             {
-                if (instance.gameplayManager.ailmentsChanceAdditive[i] > 0)
-                    fullString += "Chill Chance: +" + instance.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Chill Effect: +" + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + instance.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
+                if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
+                    fullString += "Chill Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
+                if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
+                    fullString += "Chill Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                else
+                    fullString += "Chill Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
             }
             else if (i == 3) //lightning damage
             {
-                if (instance.gameplayManager.ailmentsChanceAdditive[i] > 0)
-                    fullString += "Shock Chance: +" + instance.gameplayManager.ailmentsChanceAdditive[i] + "%\n";
-                fullString += "Shock Effect: +" + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (+" + instance.gameplayManager.ailmentsEffectMultiplier[i] + "%)\n";
+                if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
+                    fullString += "Shock Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
+                if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
+                    fullString += "Shock Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                else
+                    fullString += "Shock Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
             }
         }
-        if (instance.gameplayManager.lifeStealChanceAdditive > 0)
-            fullString += "Lifesteal Chance: +" + instance.gameplayManager.lifeStealChanceAdditive + "%\n";
-        if (instance.gameplayManager.projectileLifeStealChanceAdditive > 0)
-            fullString += "Projectile Lifesteal Chance: +" + instance.gameplayManager.projectileLifeStealChanceAdditive + "%\n";
-        if (instance.gameplayManager.meleeLifeStealChanceAdditive > 0)
-            fullString += "Melee Lifesteal Chance: +" + instance.gameplayManager.meleeLifeStealChanceAdditive + "%\n";
-        if (instance.gameplayManager.lifeStealAdditive > 0)
-            fullString += "Lifesteal: +" + instance.gameplayManager.lifeStealAdditive + "\n";
-        if (instance.gameplayManager.projectileLifeStealAdditive > 0)
-            fullString += "Projectile Lifesteal: +" + instance.gameplayManager.projectileLifeStealAdditive + "\n";
-        if (instance.gameplayManager.meleeLifeStealAdditive > 0)
-            fullString += "Melee Lifesteal: +" + instance.gameplayManager.meleeLifeStealAdditive + "\n";
-        if (instance.gameplayManager.travelRangeMultiplier > 0)
-            fullString += "Travel Range: +" + instance.gameplayManager.travelRangeMultiplier + "%\n";
-        if (instance.gameplayManager.projectileTravelRangeMultiplier > 0)
-            fullString += "Projectile Travel Range: +" + instance.gameplayManager.projectileTravelRangeMultiplier + "%\n";
-        if (instance.gameplayManager.meleeTravelRangeMultiplier > 0)
-            fullString += "Melee Travel Range: +" + instance.gameplayManager.meleeTravelRangeMultiplier + "%\n";
-        if (instance.gameplayManager.travelSpeedMultiplier > 0)
-            fullString += "Travel Speed: +" + instance.gameplayManager.travelSpeedMultiplier + "%\n";
-        if (instance.gameplayManager.projectileTravelSpeedMultiplier > 0)
-            fullString += "Projectile Travel Speed: +" + instance.gameplayManager.projectileTravelSpeedMultiplier + "%\n";
-        if (instance.gameplayManager.meleeTravelSpeedMultiplier > 0)
-            fullString += "Melee Travel Speed: +" + instance.gameplayManager.meleeTravelSpeedMultiplier + "%\n";
-        if (instance.gameplayManager.sizeMultiplier > 0)
-            fullString += "Size: +" + instance.gameplayManager.sizeMultiplier + "%\n";
-        if (instance.gameplayManager.projectileSizeMultiplier > 0)
-            fullString += "Projectile Size: +" + instance.gameplayManager.projectileSizeMultiplier + "%\n";
-        if (instance.gameplayManager.meleeSizeMultiplier > 0)
-            fullString += "Melee Size: +" + instance.gameplayManager.meleeSizeMultiplier + "%\n";
+        if (instance.gameplayManager.lifeStealChanceAdditive != 0)
+            fullString += "LifeSteal Chance: " + (instance.gameplayManager.lifeStealChanceAdditive > 0 ? "+" + instance.gameplayManager.lifeStealChanceAdditive : instance.gameplayManager.lifeStealChanceAdditive) + "%\n";
+        if (instance.gameplayManager.projectileLifeStealChanceAdditive != 0)
+            fullString += "Projectile LifeSteal Chance: " + (instance.gameplayManager.projectileLifeStealChanceAdditive > 0 ? "+" + instance.gameplayManager.projectileLifeStealChanceAdditive : instance.gameplayManager.projectileLifeStealChanceAdditive) + "%\n";
+        if (instance.gameplayManager.meleeLifeStealChanceAdditive != 0)
+            fullString += "Melee LifeSteal Chance: " + (instance.gameplayManager.meleeLifeStealChanceAdditive > 0 ? "+" + instance.gameplayManager.meleeLifeStealChanceAdditive : instance.gameplayManager.meleeLifeStealChanceAdditive) + "%\n";
+        if (instance.gameplayManager.lifeStealAdditive != 0)
+            fullString += "LifeSteal: " + (instance.gameplayManager.lifeStealAdditive > 0 ? "+" + instance.gameplayManager.lifeStealAdditive : instance.gameplayManager.lifeStealAdditive) + "\n";
+        if (instance.gameplayManager.projectileLifeStealAdditive != 0)
+            fullString += "Projectile LifeSteal: " + (instance.gameplayManager.projectileLifeStealAdditive > 0 ? "+" + instance.gameplayManager.projectileLifeStealAdditive : instance.gameplayManager.projectileLifeStealAdditive) + "\n";
+        if (instance.gameplayManager.meleeLifeStealAdditive != 0)
+            fullString += "Melee LifeSteal: " + (instance.gameplayManager.meleeLifeStealAdditive > 0 ? "+" + instance.gameplayManager.meleeLifeStealAdditive : instance.gameplayManager.meleeLifeStealAdditive) + "\n";
+        if (instance.gameplayManager.travelRangeMultiplier != 0)
+            fullString += "Travel Range: " + (instance.gameplayManager.travelRangeMultiplier > 0 ? "+" + instance.gameplayManager.travelRangeMultiplier : instance.gameplayManager.travelRangeMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileTravelRangeMultiplier != 0)
+            fullString += "Projectile Travel Range: " + (instance.gameplayManager.projectileTravelRangeMultiplier > 0 ? "+" + instance.gameplayManager.projectileTravelRangeMultiplier : instance.gameplayManager.projectileTravelRangeMultiplier) + "%\n";
+        if (instance.gameplayManager.meleeTravelRangeMultiplier != 0)
+            fullString += "Melee Travel Range: " + (instance.gameplayManager.meleeTravelRangeMultiplier > 0 ? "+" + instance.gameplayManager.meleeTravelRangeMultiplier : instance.gameplayManager.meleeTravelRangeMultiplier) + "%\n";
+        if (instance.gameplayManager.travelSpeedMultiplier != 0)
+            fullString += "Travel Speed: " + (instance.gameplayManager.travelSpeedMultiplier > 0 ? "+" + instance.gameplayManager.travelSpeedMultiplier : instance.gameplayManager.travelSpeedMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileTravelSpeedMultiplier != 0)
+            fullString += "Projectile Travel Range: " + (instance.gameplayManager.projectileTravelSpeedMultiplier > 0 ? "+" + instance.gameplayManager.projectileTravelSpeedMultiplier : instance.gameplayManager.projectileTravelSpeedMultiplier) + "%\n";
+        if (instance.gameplayManager.meleeTravelSpeedMultiplier != 0)
+            fullString += "Melee Travel Range: " + (instance.gameplayManager.meleeTravelSpeedMultiplier > 0 ? "+" + instance.gameplayManager.meleeTravelSpeedMultiplier : instance.gameplayManager.meleeTravelSpeedMultiplier) + "%\n";
+        if (instance.gameplayManager.sizeMultiplier != 0)
+            fullString += "Size: " + (instance.gameplayManager.sizeMultiplier > 0 ? "+" + instance.gameplayManager.sizeMultiplier : instance.gameplayManager.sizeMultiplier) + "%\n";
+        if (instance.gameplayManager.projectileSizeMultiplier != 0)
+            fullString += "Projectile Size: " + (instance.gameplayManager.projectileSizeMultiplier > 0 ? "+" + instance.gameplayManager.projectileSizeMultiplier : instance.gameplayManager.projectileSizeMultiplier) + "%\n";
+        if (instance.gameplayManager.meleeSizeMultiplier != 0)
+            fullString += "Melee Size: " + (instance.gameplayManager.meleeSizeMultiplier > 0 ? "+" + instance.gameplayManager.meleeSizeMultiplier : instance.gameplayManager.meleeSizeMultiplier) + "%\n";
         instance.inventoryManager.playerStats2Text.text = fullString;
     }
 
@@ -663,28 +718,52 @@ public class UpdateStats : MonoBehaviour
     {
         instance.inventoryManager.enemyStatsText.text = string.Empty;
         string fullString = "";
-        fullString += "Max Health: +" + instance.gameplayManager.enemyMaxHealthMultiplier + "%\n";
+        fullString += "Max Health: " + (instance.gameplayManager.enemyMaxHealthMultiplier > 0 ? "+" + instance.gameplayManager.enemyMaxHealthMultiplier : instance.gameplayManager.enemyMaxHealthMultiplier) + "%\n";
         for (int i = 0; i < instance.gameplayManager.enemyReductions.Count; i++)
         {
-            if (instance.gameplayManager.enemyReductions[i] > 0)
+            if (i == 0) //physical Reduction
             {
-                if (i == 0) //physical damage
-                    fullString += "<color=grey>Physical Damage</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
-                else if (i == 1) //Fire damage
-                    fullString += "<color=red>Fire Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
-                else if (i == 2) //cold damage
-                    fullString += "<color=blue>Cold Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
-                else if (i == 3) //lightning damage
-                    fullString += "<color=yellow>Lightning Resistance</color>: +" + instance.gameplayManager.enemyReductions[i] + "%\n";
+                fullString += "<color=grey>Physical Reduction</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
+            }
+            else if (i == 1) //Fire Reduction
+            {
+                fullString += "<color=red>Fire Reduction</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
+            }
+            else if (i == 2) //cold Reduction
+            {
+                fullString += "<color=blue>Cold Resistance</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
+            }
+            else if (i == 3) //lightning Reduction
+            {
+                fullString += "<color=yellow>Lightning Resistance</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
             }
         }
-        fullString += "Damage: +" + instance.gameplayManager.enemyDamageMultiplier + "%\n";
-        fullString += "Movement Speed: +" + instance.gameplayManager.enemyMoveSpeedMultiplier + "%\n";
-        fullString += "Attack Cooldown: +" + instance.gameplayManager.enemyAttackCooldownMultiplier + "%\n";
-        fullString += "Projectile: +" + instance.gameplayManager.enemyProjectileAdditive + "\n";
-        fullString += "Projectile Size: +" + instance.gameplayManager.enemyProjectileSizeMultiplier + "%\n";
-        //fullString += "Projectile Travel Range: +" + instance.gameplayManager.enemyProjectileTravelRangeMultiplier + "%\n";
-        fullString += "Projectile Travel Speed: +" + instance.gameplayManager.enemyProjectileTravelSpeedMultiplier + "%\n";
+        fullString += "Damage: " + (instance.gameplayManager.enemyDamageMultiplier > 0 ? "+" + instance.gameplayManager.enemyDamageMultiplier : instance.gameplayManager.enemyDamageMultiplier) + "%\n";
+        for (int i = 0; i < instance.gameplayManager.enemyDamageTypeMultiplier.Count; i++)
+        {
+            if (i == 0) //physical damage
+            {
+                fullString += "<color=grey>Physical Damage</color>: " + (instance.gameplayManager.enemyDamageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.enemyDamageTypeMultiplier[i] : instance.gameplayManager.enemyDamageTypeMultiplier[i]) + "%\n";
+            }
+            else if (i == 1) //Fire damage
+            {
+                fullString += "<color=red>Fire Damage</color>: " + (instance.gameplayManager.enemyDamageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.enemyDamageTypeMultiplier[i] : instance.gameplayManager.enemyDamageTypeMultiplier[i]) + "%\n";
+            }
+            else if (i == 2) //cold damage
+            {
+                fullString += "<color=blue>Cold Damage</color>: " + (instance.gameplayManager.enemyDamageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.enemyDamageTypeMultiplier[i] : instance.gameplayManager.enemyDamageTypeMultiplier[i]) + "%\n";
+            }
+            else if (i == 3) //lightning damage
+            {
+                fullString += "<color=yellow>Lightning Damage</color>: " + (instance.gameplayManager.enemyDamageTypeMultiplier[i] > 0 ? "+" + instance.gameplayManager.enemyDamageTypeMultiplier[i] : instance.gameplayManager.enemyDamageTypeMultiplier[i]) + "%\n";
+            }
+        }
+        fullString += "Movement Speed: " + (instance.gameplayManager.enemyMoveSpeedMultiplier > 0 ? "+" + instance.gameplayManager.enemyMoveSpeedMultiplier : instance.gameplayManager.enemyMoveSpeedMultiplier) + "%\n";
+        fullString += "Attack Cooldown: " + (instance.gameplayManager.enemyAttackCooldownMultiplier > 0 ? "+" + instance.gameplayManager.enemyAttackCooldownMultiplier : instance.gameplayManager.enemyAttackCooldownMultiplier) + "%\n";
+        fullString += "Projectile: " + (instance.gameplayManager.enemyProjectileAdditive > 0 ? "+" + instance.gameplayManager.enemyProjectileAdditive : instance.gameplayManager.enemyProjectileAdditive) + "%\n";
+        fullString += "Projectile Size: " + (instance.gameplayManager.enemyProjectileSizeMultiplier > 0 ? "+" + instance.gameplayManager.enemyProjectileSizeMultiplier : instance.gameplayManager.enemyProjectileSizeMultiplier) + "%\n";
+        //fullString += "Projectile Travel Range: " + instance.gameplayManager.enemyProjectileTravelRangeMultiplier + "%\n";
+        fullString += "Projectile Travel Speed: " + (instance.gameplayManager.enemyProjectileTravelSpeedMultiplier > 0 ? "+" + instance.gameplayManager.enemyProjectileTravelSpeedMultiplier : instance.gameplayManager.enemyProjectileTravelSpeedMultiplier) + "%\n";
         instance.inventoryManager.enemyStatsText.text = fullString;
     }
     public static string FormatEnemyUpgradeToString(EnemyUpgradeManager.EnemyUpgrades mod)

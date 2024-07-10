@@ -116,15 +116,17 @@ MonoBehaviour:
   itemTags: Projectile, <color=grey>Physical</color>, Summon
   behavior: Multi-Target
   description: 'Summon a vampire bat to attack a random enemy. Vampire bat returns
-    to you, granting life steal. Can only have max projectile amount at a time. '
+    to you, granting life steal. Can only have max projectile amount up at a time. '
   itemSprite: {fileID: 21300000, guid: e305f713d6c1c864ab068b7749f77c69, type: 3}
   maxQuantity: 0
   rarity: 1
   currentLevel: 1
   price: 20
   quantityInInventory: 0
+  quantityDisabledInInventory: 0
   upgrade: {fileID: 0}
   pItemSlotUI: {fileID: 0}
+  pItemEffect: {fileID: 0}
   shopLock: 0
 --- !u!114 &-8850347610926983175
 MonoBehaviour:

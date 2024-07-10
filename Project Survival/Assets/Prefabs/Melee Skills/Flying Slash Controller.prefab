@@ -235,7 +235,7 @@ MonoBehaviour:
   useRandomTargetless: 0
   useRandomTarget: 0
   useBackwardSplit: 0
-  useReturn: 1
+  useReturn: 0
   useHoming: 0
   useHomingReturn: 0
   continuous: 0

@@ -9,7 +9,7 @@ public class PItemEffectManager : MonoBehaviour
 {
     public enum ConditionTag
     {
-        DamageTaken, Heal, WhenAcquired, Degen, CoinCollect, ActiveSkill, EndOfCooldown, EnemyKilled,
+        DamageTaken, Heal, WhenAcquired, Degen, CoinCollect, ActiveSkill, EndOfCooldown, EnemyKilled, UpdatingStats,
     }
     public static PItemEffectManager instance;
     public List<PassiveItemEffect> pItemEffectList;

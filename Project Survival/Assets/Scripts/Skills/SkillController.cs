@@ -517,7 +517,10 @@ public class SkillController : MonoBehaviour
         for (int p = 0; p < numOfAttacks; p++)    //number of projectiles/melee
         {
             pList[p].isOrbitSkill = true;
-            pList[p].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * (attackRange * 0.5f); 
+            pList[p].transform.position = spawnPos.position + Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right * (attackRange * 0.5f);
+            direction = pList[p].transform.position - spawnPos.position;
+            if (isMelee) pList[p].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            else pList[p].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90);
             SetBehavourStats(stayOnPlayerPoolList[p]);
             pList[p].gameObject.SetActive(true);
         }
@@ -993,7 +996,7 @@ public class SkillController : MonoBehaviour
         }
         for (int i = 0; i < ailmentsEffect.Count; i++)
         {
-            ailmentsEffect[i] = baseAilmentsEffect[i] * (1 + (gameplayManager.baseAilmentsEffect[i] + gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
+            ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) * (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
         }
         if (isMelee)   //is melee
         {
@@ -1043,11 +1046,12 @@ public class SkillController : MonoBehaviour
             gameplayManager.furthestAttackRange = attackRange;
             if (player != null) player.enemyDetector.SetDetectorRange(gameplayManager.furthestAttackRange);
         }
-        for (int i = 0; i < baseDamageTypes.Count; i++) //Calculate damage with enemy's resistance.
+        for (int i = 0; i < baseDamageTypes.Count; i++) //Calculate damage
         {
-            if (baseDamageTypes[i] + addedBaseDamageTypes[i] + gameplayManager.baseDamageTypeAdditive[i] > 0)
+            if (baseDamageTypes[i] > 0)
             {
                 damageTypes[i] = (baseDamageTypes[i] + gameplayManager.baseDamageTypeAdditive[i] + addedBaseDamageTypes[i]) * (1 + (gameplayManager.damageTypeMultiplier[i] + damage + addedDamageTypes[i]) / 100);
+                break;
             }
         }
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.

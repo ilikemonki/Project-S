@@ -392,10 +392,10 @@ public class PlayerStats : MonoBehaviour
         degen = baseDegen + gameplayManager.degenAdditive;
         magnetRange = baseMagnetRange * (1 + gameplayManager.magnetRangeMultiplier / 100);
         playerCollector.SetMagnetRange(magnetRange);
+        PItemEffectManager.CheckAllPItemCondition(PItemEffectManager.ConditionTag.UpdatingStats);
+
         UpdateMaxHealthBar();
-        if (regen - degen == 0) gameplayManager.regenText.text = "";
-        else if (regen - degen < 0) gameplayManager.regenText.text = "<color=red> -" + (regen - degen).ToString() + "<color=white> HP/s";
-        else gameplayManager.regenText.text = "<color=green> +" + (regen - degen).ToString() + "<color=white> HP/s";
+        gameplayManager.UpdateRegenText();
     }
     public void DamageFlash() //Flash color when hit
     {

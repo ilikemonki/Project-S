@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 moveDirection;
     public float dashIFrameSeconds, baseDashCooldown, dashCooldown;
     public float baseDashPower, dashPower;
-    public int baseCharges, maxCharges, currentCharges;
+    public int baseDashCharges, maxDashCharges, currentDashCharges;
     public bool isDashing;
     float moveX, moveY, dashDirectionX, dashDirectionY;
     public float timer;
@@ -29,16 +29,16 @@ public class PlayerMovement : MonoBehaviour
         if (Time.timeScale >= 1)
         {
             InputManagement();
-            if (currentCharges < maxCharges)
+            if (currentDashCharges < maxDashCharges)
             {
                 timer -= Time.deltaTime;
                 player.gameplayManager.UpdateDashTime(timer);
                 if (timer <= 0)
                 {
-                    currentCharges++;
+                    currentDashCharges++;
                     player.gameplayManager.UpdateDashText();
                     timer = dashCooldown;
-                    if (currentCharges == maxCharges)
+                    if (currentDashCharges == maxDashCharges)
                     {
                         player.gameplayManager.dashTimerText.text = "";
                     }
@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.flipX = true;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!isDashing && currentCharges > 0)
+            if (!isDashing && currentDashCharges > 0)
             {
                 if (moveX == 0 && moveY == 0)   //do not dash when standing still
                 {
@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         }
         dashEnds = false;
         afterIFrames = 0;
-        currentCharges--;
+        currentDashCharges--;
         player.gameplayManager.UpdateDashText();
         isDashing = true;
         inIFrames = true;
@@ -134,8 +134,8 @@ public class PlayerMovement : MonoBehaviour
     public void UpdateDashStats()
     {
         dashPower = baseDashPower * (1 + (player.gameplayManager.dashPowerMultiplier / 100)); ;
-        maxCharges = baseCharges + player.gameplayManager.dashChargesAdditive;
-        currentCharges = maxCharges;
+        maxDashCharges = baseDashCharges + player.gameplayManager.dashChargesAdditive;
+        currentDashCharges = maxDashCharges;
         dashCooldown = baseDashCooldown * (1 + (player.gameplayManager.dashCooldownMultiplier / 100));
         timer = dashCooldown;
     }
