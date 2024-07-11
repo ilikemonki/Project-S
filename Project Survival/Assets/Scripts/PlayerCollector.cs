@@ -22,7 +22,7 @@ public class PlayerCollector : MonoBehaviour
                 }
                 else
                 {
-                    collectiblesList[i].PullCollectible(player.moveSpeed + 3f, player.transform);
+                    collectiblesList[i].PullCollectible(player.transform);
                 }
             }
         }
@@ -47,7 +47,7 @@ public class PlayerCollector : MonoBehaviour
             {
                 collectibles.isCollecting = true;
                 collectiblesList.Add(collectibles);
-                collectibles.PullCollectible(player.moveSpeed + 3f, player.transform);
+                collectibles.PullCollectible(player.transform);
             }
 
         }

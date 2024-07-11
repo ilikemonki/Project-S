@@ -4864,7 +4864,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1024639458}
   damageFlashMaterial: {fileID: 2100000, guid: 2794776eaed512f4aa5c6ae8adc47295, type: 2}
   isDead: 0
-  baseMoveSpeed: 5
+  baseMoveSpeed: 10
   baseMaxHealth: 100
   baseDefense: 0
   baseRegen: 1
@@ -28645,8 +28645,10 @@ MonoBehaviour:
   descriptionText: {fileID: 1944214161}
   statText: {fileID: 136625336}
   skillUpgradesText: {fileID: 1264305601}
+  showBaseStatsText: {fileID: 0}
   layoutElement1: {fileID: 1612699604}
   layoutElement2: {fileID: 1220744655}
+  showBaseStats: 0
 --- !u!1 &1165038066
 GameObject:
   m_ObjectHideFlags: 0

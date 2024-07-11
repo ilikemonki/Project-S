@@ -13,8 +13,10 @@ public class ToolTipManager : MonoBehaviour
     [Header("Item Tool Tip")]
     public GameObject itemToolTipWindow;
     public RectTransform rectTransformWindow;
-    public TextMeshProUGUI nameText, tagText, descriptionText, statText, skillUpgradesText;
+    public TextMeshProUGUI nameText, tagText, descriptionText, statText, skillUpgradesText, showBaseStatsText;
     public LayoutElement layoutElement1, layoutElement2;
+    public bool showBaseStats;
+    ItemDescription itemDescription;
     Vector2 anchorPos;
     public void Awake()
     {
@@ -31,10 +33,17 @@ public class ToolTipManager : MonoBehaviour
             if (anchorPos.y < rectTransformWindow.rect.height)
                 anchorPos.y = rectTransformWindow.rect.height;
             rectTransformWindow.anchoredPosition = anchorPos;
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                if (ToolTipManager.instance.showBaseStats) ToolTipManager.instance.showBaseStats = false;
+                else ToolTipManager.instance.showBaseStats = true;
+                ShowItemToolTip(itemDescription);
+            }
         }
     }
     public static void ShowItemToolTip(ItemDescription itemDesc)
     {
+        instance.itemDescription = itemDesc;
         instance.ClearToolTip();
         instance.nameText.text = itemDesc.itemName;
         instance.tagText.text = itemDesc.itemTags;

@@ -126,7 +126,6 @@ MonoBehaviour:
   hasHitEnemy: 0
   rb: {fileID: 5043445816700823471}
   spriteRend: {fileID: 5043445816700823441}
-  enemyChainList: []
   rememberEnemyList: []
   stayUpRightOnly: 0
   isOrbitSkill: 0

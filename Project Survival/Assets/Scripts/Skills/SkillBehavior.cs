@@ -39,7 +39,7 @@ public class SkillBehavior : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, 0);
         if (!this.enabled) this.enabled = true;
         if (!hitboxCollider.enabled) hitboxCollider.enabled = true;
-        if (!spriteRend.enabled) spriteRend.enabled = true;
+        if (spriteRend != null) spriteRend.enabled = true;
         currenthitboxColliderTimer = 0;
         currentDamageCooldownTimer = 0;
         currentDespawnTime = 0;

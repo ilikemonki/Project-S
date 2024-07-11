@@ -9,10 +9,12 @@ public class ICollectibles : MonoBehaviour
     public TextMeshProUGUI text;
     public bool isCollecting;
     public SpriteRenderer spriteRenderer;
+    public float pullSpeed;
 
-    public void PullCollectible(float pullspeed, Transform moveTo)
+    public void PullCollectible(Transform moveTo)
     {
-        rb.MovePosition(transform.position + (pullspeed * Time.fixedDeltaTime * (moveTo.position - transform.position).normalized));
+        pullSpeed += 0.1f;
+        rb.MovePosition(transform.position + (pullSpeed * Time.fixedDeltaTime * (moveTo.position - transform.position).normalized));
     }
     public IEnumerator StartCountdown()
     {
@@ -27,6 +29,7 @@ public class ICollectibles : MonoBehaviour
     }
     public void OnEnable()
     {
+        pullSpeed = 4;
         isCollecting = false;
     }
 

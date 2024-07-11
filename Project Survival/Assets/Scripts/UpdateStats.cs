@@ -436,13 +436,21 @@ public class UpdateStats : MonoBehaviour
             if (sc.damageTypes[i] > 0)
             {
                 if (i == 0) //physical damage
+                {
                     fullString += "<color=grey>Physical Damage</color>: " + (sc.damageTypes[i]) + "\n";
+                }
                 else if (i == 1) //Fire damage
+                {
                     fullString += "<color=red>Fire Damage</color>: " + (sc.damageTypes[i]) + "\n";
+                }
                 else if (i == 2) //cold damage
+                {
                     fullString += "<color=blue>Cold Damage</color>: " + (sc.damageTypes[i]) + "\n";
+                }
                 else if (i == 3) //lightning damage
+                {
                     fullString += "<color=yellow>Lightning Damage</color>: " + (sc.damageTypes[i]) + "\n";
+                }
             }
         }
         if (sc.criticalChance > 0)
