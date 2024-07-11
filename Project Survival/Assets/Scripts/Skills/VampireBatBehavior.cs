@@ -16,18 +16,6 @@ public class VampireBatBehavior : SkillBehavior
         {
             totalDamage *= (skillController.criticalDamage / 100);
         }
-        if (applyLifeSteal)  //Life Steal
-        {
-            if (skillController.player.currentHealth < skillController.player.maxHealth)
-            {
-                skillController.player.Heal(skillController.lifeSteal, true);
-                GameManager.totalLifeStealProc++;
-                if (skillController.lifeSteal + skillController.player.currentHealth > skillController.player.maxHealth)
-                    GameManager.totalLifeSteal += skillController.player.maxHealth - skillController.player.currentHealth;
-                else
-                    GameManager.totalLifeSteal += skillController.lifeSteal;
-            }
-        }
         if (applyAilment[1])    //fire, burn
         {
             enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
@@ -78,7 +66,7 @@ public class VampireBatBehavior : SkillBehavior
     {
         if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.isActiveAndEnabled) return;
+            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
             //Will damage the target only.
             if (hasHitEnemy) return;
             if (enemy.transform.Equals(target))
@@ -112,9 +100,5 @@ public class VampireBatBehavior : SkillBehavior
             }
             gameObject.SetActive(false);
         }
-    }
-    public override void OnDisable()
-    {
-        base.OnDisable();
     }
 }

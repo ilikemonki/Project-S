@@ -22,7 +22,7 @@ public class BoneShardEffect : PassiveItemEffect
                     {
                         PopulatePool(20);
                     }
-                    if (!boneList[j].isActiveAndEnabled)
+                    if (!boneList[j].gameObject.activeSelf)
                     {
                         //Set bone shard info
                         boneList[j].transform.position = deadEnemyList[i].transform.position;
@@ -45,7 +45,7 @@ public class BoneShardEffect : PassiveItemEffect
     {
         for (int i = 0; i < boneList.Count; i++)  //Loop through all projectiles and move them.
         {
-            if (boneList[i].isActiveAndEnabled)
+            if (boneList[i].gameObject.activeSelf)
             {
                 boneList[i].currentRange = Vector3.Distance(boneList[i].transform.position, boneList[i].startingPos);
                 if (boneList[i].currentRange >= boneList[i].travelRange)

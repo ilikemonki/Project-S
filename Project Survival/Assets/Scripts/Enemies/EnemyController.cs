@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     {
         for (int i = 0; i < enemyList.Count; ++i)   //Move all enemies
         {
-            if (enemyList[i].isActiveAndEnabled)
+            if (enemyList[i].gameObject.activeSelf)
             {
                 distanceToPlayer = Vector3.Distance(enemyList[i].transform.position, enemyManager.player.transform.position);
                 if (!enemyList[i].isAttacking)

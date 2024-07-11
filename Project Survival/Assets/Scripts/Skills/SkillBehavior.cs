@@ -21,8 +21,7 @@ public class SkillBehavior : MonoBehaviour
     public bool hasHitEnemy;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
-    public List<EnemyStats> enemyChainList = new();    //remember the index of enemies hit by chain, will not hit the same enemy again.
-    public List<EnemyStats> rememberEnemyList = new();
+    public List<EnemyStats> rememberEnemyList = new(); //remember the enemies hit, will not hit the same enemy again. Cannot chain at same target
     public bool stayUpRightOnly;
     public bool isOrbitSkill, rotateSkill, returnSkill, isHoming;
     public Vector3 startingPos;
@@ -33,12 +32,14 @@ public class SkillBehavior : MonoBehaviour
     public float currentDamageCooldownTimer;
     public float currentHomingTimer; //After a certain time, isHoming is activated.
 
-    public void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
+    public virtual void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
     {
         if (skillController.useHoming && !skillController.useMultiTarget) target = null;
         if (stayUpRightOnly)
             transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (!this.enabled) this.enabled = true;
         if (!hitboxCollider.enabled) hitboxCollider.enabled = true;
+        if (!spriteRend.enabled) spriteRend.enabled = true;
         currenthitboxColliderTimer = 0;
         currentDamageCooldownTimer = 0;
         currentDespawnTime = 0;
@@ -74,14 +75,14 @@ public class SkillBehavior : MonoBehaviour
             }
             else spriteRend.flipX = true;
         }
-        if (isHoming && target != null) //If homing and no target, find new target.
+        if (isHoming && target != null && !skillController.isMelee) //If homing and no target, find new target.
         {
             if (!target.gameObject.activeSelf)
             {
                 target = FindTarget(true);
             }
         }
-        if (skillController.useHoming && !isHoming) //Activate homing
+        if (skillController.useHoming && !isHoming && !skillController.isMelee) //Activate homing
         {
             currentHomingTimer += Time.deltaTime;
             if (currentHomingTimer >= (100 / travelSpeed) * 0.01)
@@ -123,7 +124,7 @@ public class SkillBehavior : MonoBehaviour
             else
                 transform.Rotate(new Vector3(0, 0, 160 + (8)) * Time.deltaTime);
         }
-        if (target != null && isHoming)     //Home on target.
+        if (target != null && isHoming && !skillController.isMelee)     //Home on target.
         {
             if (target.gameObject.activeSelf)
             {
@@ -136,7 +137,7 @@ public class SkillBehavior : MonoBehaviour
         {
             if (!returnSkill)
             {
-                if (travelSpeed <= 0 && skillController.duration <= 0) //skills that doesn't travel or have duration will despawn
+                if (skillController.despawnTime > 0) //skills with despawn timer
                 {
                     currentDespawnTime += Time.deltaTime;
                     if (currentDespawnTime >= skillController.despawnTime)
@@ -162,7 +163,9 @@ public class SkillBehavior : MonoBehaviour
                             SetReturn();
                         }
                         else
+                        {
                             gameObject.SetActive(false);
+                        }
                     }
                 }
             }
@@ -256,7 +259,7 @@ public class SkillBehavior : MonoBehaviour
         if (hitOnceOnly) return;
         if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.isActiveAndEnabled) return;
+            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
             if (skillController.damageCooldown > 0)
             {
                 if (rememberEnemyList.Contains(enemy)) return;
@@ -280,17 +283,14 @@ public class SkillBehavior : MonoBehaviour
                 }
             }
 
-            if ((skillController.isMelee || pierce <= 0) && enemyChainList.Contains(enemy)) //Melee and chain will hit enemies only once
+            if ((skillController.isMelee || pierce <= 0) && rememberEnemyList.Contains(enemy)) //Melee and chain will hit enemies only once
             {
                 return;
             }
             DoDamage(enemy, 100);
-            if ((pierce <= 0 && chain > 0 || skillController.isMelee)) //check if there are chains, add enemy to list to not chain again.
+            if (!rememberEnemyList.Contains(enemy))    //if enemy is not in list, add it.
             {
-                if (!enemyChainList.Contains(enemy))    //if enemy is not in list, add it.
-                {
-                    enemyChainList.Add(enemy);
-                }
+                rememberEnemyList.Add(enemy);
             }
             if (!skillController.isMelee)   //For projectiles only
             {
@@ -304,7 +304,7 @@ public class SkillBehavior : MonoBehaviour
     }
 
     //How projectile act after hitting enemy
-    void ProjectileBehavior()
+    public virtual void ProjectileBehavior()
     {
         if (skillController.continuous || skillController.pierceAll || skillController.cannotChain || skillController.cannotPierce) return;
         if (pierce <= 0 && chain <= 0)
@@ -314,7 +314,9 @@ public class SkillBehavior : MonoBehaviour
                 SetReturn();
             }
             else
+            {
                 gameObject.SetActive(false);
+            }
             return;
         }
         if (pierce > 0)  //behavior for pierce
@@ -328,7 +330,7 @@ public class SkillBehavior : MonoBehaviour
                 target = FindTarget(true);
                 if (target != null)
                 {
-                    skillController.SpawnChainProjectile(enemyChainList, target, transform);
+                    skillController.SpawnChainProjectile(rememberEnemyList, target, transform);
                 }
                 gameObject.SetActive(false);
                 return;
@@ -338,7 +340,7 @@ public class SkillBehavior : MonoBehaviour
         }
     }
     //Find new enemy to target.
-    void  ChainToEnemy()
+    public void  ChainToEnemy()
     {
         target = FindTarget(true);
         if (target != null)
@@ -355,7 +357,9 @@ public class SkillBehavior : MonoBehaviour
                 SetReturn();
             }
             else
+            {
                 gameObject.SetActive(false);    //despawn if no targets found
+            }
         }
     }
 
@@ -367,11 +371,11 @@ public class SkillBehavior : MonoBehaviour
         for (int i = 0; i < skillController.enemyManager.enemyList.Count; i++)  //find target in normal enemy list
         {
             bool dontChain = false;
-            if (skillController.enemyManager.enemyList[i].isActiveAndEnabled)
+            if (skillController.enemyManager.enemyList[i].gameObject.activeSelf)
             {
-                for (int j = 0; j < enemyChainList.Count; j++)
+                for (int j = 0; j < rememberEnemyList.Count; j++)
                 {
-                    if (enemyChainList.Contains(skillController.enemyManager.enemyList[i]))
+                    if (rememberEnemyList.Contains(skillController.enemyManager.enemyList[i]))
                     {
                         dontChain = true;
                         break;
@@ -432,7 +436,6 @@ public class SkillBehavior : MonoBehaviour
     }
     public virtual void OnDisable()
     {
-        enemyChainList.Clear();
         rememberEnemyList.Clear();
         hasHitEnemy = false;
         target = null;

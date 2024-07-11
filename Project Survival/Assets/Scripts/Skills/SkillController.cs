@@ -333,7 +333,7 @@ public class SkillController : MonoBehaviour
             {
                 PopulatePool(meleeAmount + projectileAmount);
             }
-            if (!poolList[i].isActiveAndEnabled)
+            if (!poolList[i].gameObject.activeSelf)
             {
                 if (useOnTarget)
                 {
@@ -369,7 +369,7 @@ public class SkillController : MonoBehaviour
             {
                 PopulatePool(meleeAmount + projectileAmount);
             }
-            if (!poolList[i].isActiveAndEnabled)
+            if (!poolList[i].gameObject.activeSelf)
             {
                 if (useOnTarget)
                 {
@@ -410,7 +410,7 @@ public class SkillController : MonoBehaviour
                 {
                     PopulatePool(numOfAttacks);
                 }
-                if (!poolList[i].isActiveAndEnabled)
+                if (!poolList[i].gameObject.activeSelf)
                 {
                     if (useOnTarget)
                     {
@@ -452,7 +452,7 @@ public class SkillController : MonoBehaviour
                 {
                     PopulatePool(numOfAttacks);
                 }
-                if (!pool[i].isActiveAndEnabled)
+                if (!pool[i].gameObject.activeSelf)
                 {
                     if (useOnTarget)
                     {
@@ -496,7 +496,7 @@ public class SkillController : MonoBehaviour
         {
             for (int i = 0; i < stayOnPlayerPoolList.Count; i++) //increment current CD to respawn the skill.
             {
-                if (!stayOnPlayerPoolList[i].isActiveAndEnabled)
+                if (!stayOnPlayerPoolList[i].gameObject.activeSelf)
                 {
                     stayOnPlayerPoolList[i].currentDespawnTime += Time.deltaTime;
                     if (stayOnPlayerPoolList[i].currentDespawnTime >= cooldown) //used to be set to despawnTime
@@ -537,7 +537,7 @@ public class SkillController : MonoBehaviour
                 {
                     PopulatePool(numOfAttacks);
                 }
-                if (!poolList[i].isActiveAndEnabled)
+                if (!poolList[i].gameObject.activeSelf)
                 {
                     if (useOnTarget) 
                     {
@@ -598,7 +598,7 @@ public class SkillController : MonoBehaviour
                 {
                     PopulatePool(numOfAttacks);
                 }
-                if (!poolList[i].isActiveAndEnabled)
+                if (!poolList[i].gameObject.activeSelf)
                 {
                     if (useOnTarget && !useOrbit)
                     {
@@ -705,7 +705,7 @@ public class SkillController : MonoBehaviour
                 {
                     PopulatePool(numOfAttacks);
                 }
-                if (!poolList[i].isActiveAndEnabled)
+                if (!poolList[i].gameObject.activeSelf)
                 {
                     if (useOnTarget)
                     {
@@ -818,7 +818,7 @@ public class SkillController : MonoBehaviour
                 {
                     PopulatePool(numOfAttacks);
                 }
-                if (!poolList[i].isActiveAndEnabled)
+                if (!poolList[i].gameObject.activeSelf)
                 {
                     if (useRandomTargetless && isMelee)
                     {
@@ -867,7 +867,7 @@ public class SkillController : MonoBehaviour
         EnemyStats nearestEnemy = null;
         for (int i = 0; i < multiTargetList.Count; i++) //search all mobs for nearest distance
         {
-            if (multiTargetList[i].isActiveAndEnabled)
+            if (multiTargetList[i].gameObject.activeSelf)
             {
                 distanceToEnemy = Vector3.Distance(transform.position, multiTargetList[i].transform.position);
                 if (distanceToEnemy < shortestDistance)
@@ -885,7 +885,7 @@ public class SkillController : MonoBehaviour
         numberOfSkillObjectsEnabled = 0;
         for (int i = 0; i < poolList.Count; i++)
         {
-            if (poolList[i].isActiveAndEnabled)
+            if (poolList[i].gameObject.activeSelf)
             {
                 numberOfSkillObjectsEnabled++;
                 if (numberOfSkillObjectsEnabled == (projectileAmount + meleeAmount)) break;
@@ -901,11 +901,11 @@ public class SkillController : MonoBehaviour
             {
                 PopulatePool(projectileAmount);
             }
-            if (!poolList[i].isActiveAndEnabled)
+            if (!poolList[i].gameObject.activeSelf)
             {
                 direction = target.position - spawnPos.position; 
                 poolList[i].transform.position = spawnPos.position;
-                poolList[i].enemyChainList.AddRange(chainList);
+                poolList[i].rememberEnemyList.AddRange(chainList);
                 poolList[i].target = target;
                 SetBehavourStats(poolList[i]);
                 poolList[i].SetDirection((direction).normalized);   //Set direction

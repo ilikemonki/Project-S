@@ -108,7 +108,7 @@ public class EnemyManager : MonoBehaviour
                         {
                             PopulatePool(5);
                         }
-                        if (!enemyList[i].isActiveAndEnabled && !enemyList[i].isSpawning)
+                        if (!enemyList[i].gameObject.activeSelf && !enemyList[i].isSpawning)
                         {
                             SpawnMarkAndEnemy(enemyList[i], eGroup, false);
                             eGroup.currentSpawned++;

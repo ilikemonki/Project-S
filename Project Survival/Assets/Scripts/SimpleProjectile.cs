@@ -20,7 +20,7 @@ public class SimpleProjectile : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            EnemyStats enemy = collision.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.isActiveAndEnabled) return;
+            EnemyStats enemy = collision.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
             enemy.TakeDamage(damageTypes.Sum(), false);
             if (passiveItemEffect != null)
             {

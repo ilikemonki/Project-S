@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 6986161325550505959}
   - component: {fileID: 7864732532003815873}
   m_Layer: 0
-  m_Name: Flame Spear Controller
+  m_Name: Fireball Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,9 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5193ed8024ec084b9eb134e31a1e938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabBehavior: {fileID: -6595649996783161566, guid: d8d49d07a41b6ee4d8883920f1205e9c, type: 3}
+  prefabBehavior: {fileID: 6476299053214260335, guid: 556efcadd53a6ac4f9b610a107511c7f, type: 3}
   meleeWeaponPrefab: {fileID: 0}
-  skillOrbDescription: {fileID: -6162699754021087771, guid: bc6cbd656055e5a42a5e3a65d250d5eb, type: 3}
+  skillOrbDescription: {fileID: -6162699754021087771, guid: 97f207336cabd394fa136eaa220d463f, type: 3}
   poolParent: {fileID: 1735531887519041077}
   stayOnPlayerParent: {fileID: 1735531887672982295}
   gameplayManager: {fileID: 0}
@@ -140,7 +140,7 @@ MonoBehaviour:
   exp: 0
   baseDamageTypes:
   - 0
-  - 12
+  - 8
   - 0
   - 0
   baseAilmentsChance:
@@ -153,11 +153,11 @@ MonoBehaviour:
   - 20
   - 0
   - 0
-  baseTravelSpeed: 10
+  baseTravelSpeed: 8
   baseAttackRange: 8
-  baseTravelRange: 12
+  baseTravelRange: 8
   baseDuration: 0
-  baseCooldown: 2
+  baseCooldown: 1
   baseKnockBack: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
@@ -165,8 +165,8 @@ MonoBehaviour:
   baseLifeSteal: 0
   baseMeleeAmount: 0
   baseCombo: 0
-  baseProjectileAmount: 1
-  basePierce: 1
+  baseProjectileAmount: 3
+  basePierce: 0
   baseChain: 0
   despawnTime: 0
   damageTypes:
@@ -225,10 +225,10 @@ MonoBehaviour:
   useMultiTarget: 0
   useBarrage: 0
   useScatter: 0
-  useSpread: 0
+  useSpread: 1
   useOrbit: 0
   useCircular: 0
-  useLateral: 1
+  useLateral: 0
   useBurst: 0
   useSimple: 0
   useOnTarget: 0
@@ -239,7 +239,7 @@ MonoBehaviour:
   useHoming: 0
   useHomingReturn: 0
   continuous: 0
-  pierceAll: 1
+  pierceAll: 0
   stayOnPlayer: 0
   alwaysActivate: 0
   automaticOnly: 0
@@ -322,23 +322,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDescription: {fileID: 0}
   levelModifiersList:
-  - modifier: 06000000010000002d000000
+  - modifier: 06000000180000001c000000
     amt:
     - 10
-    - 1
     - 20
-  - modifier: 06000000010000002d000000
-    amt:
-    - 10
-    - 1
     - 20
-  - modifier: 06000000010000002d000000
+  - modifier: 06000000180000001c000000
     amt:
     - 10
-    - 1
     - 20
-  - modifier: 06000000010000002d000000
+    - 20
+  - modifier: 06000000180000001c000000
     amt:
     - 10
-    - 1
+    - 20
+    - 20
+  - modifier: 06000000180000001c000000
+    amt:
+    - 10
+    - 20
     - 20

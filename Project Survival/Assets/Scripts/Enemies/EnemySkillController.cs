@@ -17,7 +17,7 @@ public class EnemySkillController : MonoBehaviour
     {
         for (int i = 0; i < projectileList.Count; i++)  //Loop through all projectiles and move them.
         {
-            if (projectileList[i].isActiveAndEnabled)
+            if (projectileList[i].gameObject.activeSelf)
             {
                 projectileList[i].currentRange = Vector3.Distance(projectileList[i].transform.position, projectileList[i].startingPos);
                 if (projectileList[i].currentRange >= projectileList[i].travelRange)
@@ -37,7 +37,7 @@ public class EnemySkillController : MonoBehaviour
             {
                 PopulatePool(10);
             }
-            if (!projectileList[i].isActiveAndEnabled)
+            if (!projectileList[i].gameObject.activeSelf)
             {
                 projectileList[i].transform.position = enemy.transform.position;    //set starting position on player
                 projectileList[i].direction = direction.normalized;
@@ -62,7 +62,7 @@ public class EnemySkillController : MonoBehaviour
                 {
                     PopulatePool(10);
                 }
-                if (!projectileList[i].isActiveAndEnabled)
+                if (!projectileList[i].gameObject.activeSelf)
                 {
                     projectileList[i].transform.position = enemy.transform.position;    //set starting position
                     if (p == 0)
@@ -97,7 +97,7 @@ public class EnemySkillController : MonoBehaviour
                 {
                     PopulatePool(10);
                 }
-                if (!projectileList[i].isActiveAndEnabled)
+                if (!projectileList[i].gameObject.activeSelf)
                 {
                     projectileList[i].transform.position = enemy.transform.position;
                     projectileList[i].direction = (Quaternion.AngleAxis(spreadAngle * p, Vector3.forward) * Vector3.right).normalized;   //Set direction
@@ -120,7 +120,7 @@ public class EnemySkillController : MonoBehaviour
                 {
                     PopulatePool(10);
                 }
-                if (!projectileList[i].isActiveAndEnabled)
+                if (!projectileList[i].gameObject.activeSelf)
                 {
                     projectileList[i].transform.position = enemy.transform.position;    //set starting position on player
                     projectileList[i].direction = (Quaternion.AngleAxis(Random.Range(-30, 30), Vector3.forward) * direction).normalized;
