@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 public class ToolTipManager : MonoBehaviour
 {
@@ -33,10 +34,18 @@ public class ToolTipManager : MonoBehaviour
             if (anchorPos.y < rectTransformWindow.rect.height)
                 anchorPos.y = rectTransformWindow.rect.height;
             rectTransformWindow.anchoredPosition = anchorPos;
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (ToolTipManager.instance.showBaseStats) ToolTipManager.instance.showBaseStats = false;
-                else ToolTipManager.instance.showBaseStats = true;
+                if (ToolTipManager.instance.showBaseStats)
+                {
+                    showBaseStatsText.text = "Press 'Tab' to show base stats.";
+                    ToolTipManager.instance.showBaseStats = false;
+                }
+                else
+                {
+                    showBaseStatsText.text = "Press 'Tab' to show modified stats.";
+                    ToolTipManager.instance.showBaseStats = true;
+                }
                 ShowItemToolTip(itemDescription);
             }
         }
@@ -54,6 +63,7 @@ public class ToolTipManager : MonoBehaviour
         instance.descriptionText.text = itemDesc.description;
         if (itemDesc.itemType == ItemDescription.ItemType.PassiveItem || itemDesc.itemType == ItemDescription.ItemType.SkillGem)
         {
+            instance.showBaseStatsText.text = "";
             if (itemDesc.pItemEffect != null) //if has passive effect
             {
                 if (itemDesc.pItemEffect.damage > 0)
@@ -80,13 +90,20 @@ public class ToolTipManager : MonoBehaviour
         }
         else if (itemDesc.itemType == ItemDescription.ItemType.SkillOrb) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {
+            if (ToolTipManager.instance.showBaseStats)
+                instance.showBaseStatsText.text = "Press 'Tab' to show modified stats.";
+            else
+                instance.showBaseStatsText.text = "Press 'Tab' to show base stats.";
             instance.layoutElement1.enabled = true;
             instance.layoutElement2.enabled = true;
             DraggableItem dragItem = itemDesc.gameObject.GetComponent<DraggableItem>();
             if (dragItem == null) //when item is in shop.
             {
                 instance.CalculateSkillControllerPrefabStats(itemDesc);
-                instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
+                if (instance.showBaseStats)
+                    instance.statText.text = UpdateStats.FormatBaseSkillStatsToString(instance.skillControllerToolTip);
+                else
+                    instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
                 instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(instance.skillControllerToolTip.levelUpgrades);
             }
             else
@@ -99,7 +116,10 @@ public class ToolTipManager : MonoBehaviour
                 else // if skill isn't equipped, get it from the prefab, set it to scToolTip, calculate its stats, then set as text.
                 {
                     instance.CalculateSkillControllerPrefabStats(itemDesc);
-                    instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
+                    if (instance.showBaseStats)
+                        instance.statText.text = UpdateStats.FormatBaseSkillStatsToString(instance.skillControllerToolTip);
+                    else
+                        instance.statText.text = UpdateStats.FormatSkillStatsToString(instance.skillControllerToolTip);
                     instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(instance.skillControllerToolTip.levelUpgrades);
                 }
             }
@@ -175,6 +195,33 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.addedMeleeAmount = prefab.addedMeleeAmount;
                 skillControllerToolTip.addedTravelRange = prefab.addedTravelRange;
                 skillControllerToolTip.addedTravelSpeed = prefab.addedTravelSpeed;
+                if (showBaseStats)
+                {
+                    for (int i = 0; i < skillControllerToolTip.damageTypes.Count; i++)
+                    {
+                        skillControllerToolTip.addedAilmentsChance[i] = 0;
+                        skillControllerToolTip.addedAilmentsEffect[i] = 0;
+                        skillControllerToolTip.addedBaseDamageTypes[i] = 0;
+                        skillControllerToolTip.addedDamageTypes[i] = 0;
+                    }
+                    skillControllerToolTip.addedAttackRange = 0;
+                    skillControllerToolTip.addedChain = 0;
+                    skillControllerToolTip.addedCombo = 0;
+                    skillControllerToolTip.addedCooldown = 0;
+                    skillControllerToolTip.addedCriticalChance = 0;
+                    skillControllerToolTip.addedCriticalDamage = 0;
+                    skillControllerToolTip.addedDamage = 0;
+                    skillControllerToolTip.addedDuration = 0;
+                    skillControllerToolTip.addedKnockBack = 0;
+                    skillControllerToolTip.addedLifeSteal = 0;
+                    skillControllerToolTip.addedLifeStealChance = 0;
+                    skillControllerToolTip.addedPierce = 0;
+                    skillControllerToolTip.addedProjectileAmount = 0;
+                    skillControllerToolTip.addedSize = 0;
+                    skillControllerToolTip.addedMeleeAmount = 0;
+                    skillControllerToolTip.addedTravelRange = 0;
+                    skillControllerToolTip.addedTravelSpeed = 0;
+                }
                 skillControllerToolTip.levelUpgrades.levelModifiersList.AddRange(prefab.levelUpgrades.levelModifiersList);
                 if (itemManager.skillLevelDict.ContainsKey(itemDesc.itemName))
                 {

@@ -990,14 +990,6 @@ public class SkillController : MonoBehaviour
     }
     public void UpdateSkillStats() //Uses base stats and global multipliers to create stats
     {
-        for (int i = 0; i < ailmentsChance.Count; i++)
-        {
-            ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i] + addedAilmentsChance[i];
-        }
-        for (int i = 0; i < ailmentsEffect.Count; i++)
-        {
-            ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) * (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
-        }
         if (isMelee)   //is melee
         {
             damage = gameplayManager.damageMultiplier + gameplayManager.meleeDamageMultiplier + addedDamage;
@@ -1051,6 +1043,8 @@ public class SkillController : MonoBehaviour
             if (baseDamageTypes[i] > 0)
             {
                 damageTypes[i] = (baseDamageTypes[i] + gameplayManager.baseDamageTypeAdditive[i] + addedBaseDamageTypes[i]) * (1 + (gameplayManager.damageTypeMultiplier[i] + damage + addedDamageTypes[i]) / 100);
+                ailmentsChance[i] = baseAilmentsChance[i] + gameplayManager.ailmentsChanceAdditive[i] + addedAilmentsChance[i];
+                ailmentsEffect[i] = (baseAilmentsEffect[i] + gameplayManager.baseAilmentsEffect[i]) * (1 + (gameplayManager.ailmentsEffectMultiplier[i] + addedAilmentsEffect[i]) / 100);
                 break;
             }
         }
