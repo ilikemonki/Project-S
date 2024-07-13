@@ -5,14 +5,14 @@ using UnityEngine;
 public class FireballBehavior : SkillBehavior
 {
     public SkillBehavior secondarySkillBehavior; //second effect. Ex) Fireball explosion.
-
-    public override void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
+    public override void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float aoe)
     {
         this.enabled = true;
-        base.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, size);
+        base.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, aoe); 
+        transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x, skillController.prefabBehavior.transform.localScale.y, 1);
         //set up secondary behavior
         secondarySkillBehavior.skillController = skillController;
-        secondarySkillBehavior.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, size);
+        secondarySkillBehavior.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, aoe);
     }
     public override void Update()
     {

@@ -41,6 +41,7 @@ public class EnemyManager : MonoBehaviour
     public EnemyStats basePrefab;
     public SpawnMarks spawnMarks;
     public DropRate dropRate;
+    public RectTransform backGroundRect;
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
@@ -128,28 +129,28 @@ public class EnemyManager : MonoBehaviour
     public void SpawnMarkAndEnemy(EnemyStats enemy, EnemyGroup enemyGroup, bool isRare)
     {
         enemy.isSpawning = true;
-        spawnPosX = Random.Range(-1000f, 1001f);
-        spawnPosY = Random.Range(-1000f, 1001f);
-        if (spawnPosX > -100 && spawnPosX < 100)
-        {
-            if (spawnPosX > 0)
-                spawnPosX += 100;
-            else spawnPosX -= 100;
-        }
-        if (spawnPosY > -100 && spawnPosY < 100)
-        {
-            if (spawnPosY > 0)
-                spawnPosY += 100;
-            else spawnPosY -= 100;
-        }
-        if (player.transform.localPosition.x + spawnPosX > 1950 || player.transform.localPosition.x + spawnPosX < -1950)
-            spawnPosX = player.transform.localPosition.x + (-1 * spawnPosX);
-        else
-            spawnPosX = player.transform.localPosition.x + spawnPosX;
-        if (player.transform.localPosition.y + spawnPosY > 1400 || player.transform.localPosition.y + spawnPosY < -1400)
-            spawnPosY = player.transform.localPosition.y + (-1 * spawnPosY);
-        else
-            spawnPosY = player.transform.localPosition.y + spawnPosY;
+        spawnPosX = Random.Range(-backGroundRect.rect.width * 0.5f, backGroundRect.rect.width * 0.5f);
+        spawnPosY = Random.Range(-backGroundRect.rect.height * 0.5f, backGroundRect.rect.height * 0.5f);
+        //if (spawnPosX > -100 && spawnPosX < 100)
+        //{
+        //    if (spawnPosX > 0)
+        //        spawnPosX += 100;
+        //    else spawnPosX -= 100;
+        //}
+        //if (spawnPosY > -100 && spawnPosY < 100)
+        //{
+        //    if (spawnPosY > 0)
+        //        spawnPosY += 100;
+        //    else spawnPosY -= 100;
+        //}
+        //if (player.transform.localPosition.x + spawnPosX > 1950 || player.transform.localPosition.x + spawnPosX < -1950)
+        //    spawnPosX = player.transform.localPosition.x + (-1 * spawnPosX);
+        //else
+        //    spawnPosX = player.transform.localPosition.x + spawnPosX;
+        //if (player.transform.localPosition.y + spawnPosY > 1400 || player.transform.localPosition.y + spawnPosY < -1400)
+        //    spawnPosY = player.transform.localPosition.y + (-1 * spawnPosY);
+        //else
+        //    spawnPosY = player.transform.localPosition.y + spawnPosY;
         spawnPos = new Vector2(spawnPosX, spawnPosY);
         enemy.transform.localPosition = spawnPos;    //set starting position when spawn
         enemy.spriteRenderer.sprite = enemyGroup.enemyPrefab.spriteRenderer.sprite;
@@ -187,7 +188,7 @@ public class EnemyManager : MonoBehaviour
                 {
                     eGroup.enemyStat.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
                     eGroup.enemyStat.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
-                    eGroup.enemyStat.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
+                    //eGroup.enemyStat.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
                 }
                 else
                 {

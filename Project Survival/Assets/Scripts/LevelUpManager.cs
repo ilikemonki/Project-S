@@ -99,63 +99,63 @@ public class LevelUpManager : MonoBehaviour
         returnValue = 0;
         switch (mod)
         {
-            case UpdateStats.Modifier.attack_range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.base_cold_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.base_fire_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.base_lightning_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.base_physical_damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.bleed_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.bleed_effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.burn_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.burn_effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Attack_Range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Base_Cold_Damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Base_Fire_Damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Base_Lightning_Damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Base_Physical_Damage: returnValue = 2; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Bleed_Chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Bleed_Effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Burn_Chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Burn_Effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
             //case UpdateStats.Modifier.chain: returnValue = ; if (randModifiers <= 2) returnValue += ; else if (randModifiers <= 3) returnValue += ; break;
-            case UpdateStats.Modifier.chill_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.chill_effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.cold_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            case UpdateStats.Modifier.Chill_Chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Chill_Effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Cold_Damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
             //case UpdateStats.Modifier.combo: returnValue = ; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.cooldown: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.critical_chance: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.critical_damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.damage: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
-            case UpdateStats.Modifier.defense: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
-            case UpdateStats.Modifier.degen: returnValue = 1; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.fire_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
-            case UpdateStats.Modifier.life_steal: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
-            case UpdateStats.Modifier.life_steal_chance: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
-            case UpdateStats.Modifier.lightning_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
-            case UpdateStats.Modifier.magnet_range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.max_health: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
-            case UpdateStats.Modifier.melee_attack_range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_cooldown: returnValue = 4; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_critical_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_critical_damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
-            case UpdateStats.Modifier.melee_life_steal: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.melee_life_steal_chance: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.melee_size: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_travel_range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.melee_travel_speed: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.movement_speed: returnValue = 5; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.physical_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            case UpdateStats.Modifier.Cooldown: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Critical_Chance: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Critical_Damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Damage: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
+            case UpdateStats.Modifier.Defense: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
+            case UpdateStats.Modifier.Degen: returnValue = 1; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Fire_Damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            case UpdateStats.Modifier.Life_Steal: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
+            case UpdateStats.Modifier.Life_Steal_Chance: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
+            case UpdateStats.Modifier.Lightning_Damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            case UpdateStats.Modifier.Magnet_Range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Max_Health: returnValue = 10; if (randModifiers <= 2) returnValue += 5; else if (randModifiers <= 3) returnValue += 2; break;
+            case UpdateStats.Modifier.Melee_Attack_Range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Melee_Cooldown: returnValue = 4; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Melee_Critical_Chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Melee_Critical_Damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Melee_Damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            case UpdateStats.Modifier.Melee_Life_Steal: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Melee_Life_Steal_Chance: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Melee_AoE: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Melee_Travel_Range: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Melee_Travel_Speed: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Movement_Speed: returnValue = 5; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Physical_Damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
             //case UpdateStats.Modifier.pierce: returnValue = ; if (randModifiers <= 2) returnValue += ; else if (randModifiers <= 3) returnValue += ; break;
             //case UpdateStats.Modifier.projectile: returnValue = ; if (randModifiers <= 2) returnValue += ; else if (randModifiers <= 3) returnValue += ; break;
-            case UpdateStats.Modifier.projectile_attack_range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_cooldown: returnValue = 4; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_critical_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_critical_damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
-            case UpdateStats.Modifier.projectile_life_steal: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
-            case UpdateStats.Modifier.projectile_life_steal_chance: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
-            case UpdateStats.Modifier.projectile_size: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_travel_range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.projectile_travel_speed: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.regen: returnValue = 1; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.shock_chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.shock_effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
-            case UpdateStats.Modifier.size: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Projectile_Attack_Range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Projectile_Cooldown: returnValue = 4; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Projectile_Critical_Chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Projectile_Critical_Damage: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Projectile_Damage: returnValue = 20; if (randModifiers <= 2) returnValue += 10; else if (randModifiers <= 3) returnValue += 5; break;
+            case UpdateStats.Modifier.Projectile_Life_Steal: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
+            case UpdateStats.Modifier.Projectile_Life_Steal_Chance: returnValue = 1; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break; //rare
+            case UpdateStats.Modifier.Projectile_AoE: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Projectile_Travel_Range: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Projectile_Travel_Speed: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Regen: returnValue = 1; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Shock_Chance: returnValue = 3; if (randModifiers <= 2) returnValue += 2; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.Shock_Effect: returnValue = 5; if (randModifiers <= 2) returnValue += 3; else if (randModifiers <= 3) returnValue += 1; break;
+            case UpdateStats.Modifier.AoE: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             //case UpdateStats.Modifier.strike: returnValue = ; if (randModifiers <= 2) returnValue += ; else if (randModifiers <= 3) returnValue += ; break;
-            case UpdateStats.Modifier.travel_range: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
-            case UpdateStats.Modifier.travel_speed: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Travel_Range: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
+            case UpdateStats.Modifier.Travel_Speed: returnValue = 2; if (randModifiers <= 2) returnValue += 1; else if (randModifiers <= 3) returnValue += 0; break;
             default: Debug.Log("GetModifierValue has no switch case for " + mod); break;
         }
         return returnValue;
@@ -163,10 +163,10 @@ public class LevelUpManager : MonoBehaviour
     public bool CheckModifier(UpdateStats.Modifier mod) //Check modifier if they can be chosen
     {
         //Modifiers that can't be chosen.
-        if (mod == UpdateStats.Modifier.pierce || mod == UpdateStats.Modifier.chain || mod == UpdateStats.Modifier.projectile_amount || mod == UpdateStats.Modifier.combo
-            || mod == UpdateStats.Modifier.melee_amount || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.base_cold_damage
-            || mod == UpdateStats.Modifier.base_fire_damage || mod == UpdateStats.Modifier.base_lightning_damage || mod == UpdateStats.Modifier.base_physical_damage
-            || mod == UpdateStats.Modifier.return_|| mod == UpdateStats.Modifier.backward_split|| mod == UpdateStats.Modifier.pierce_all)
+        if (mod == UpdateStats.Modifier.Pierce || mod == UpdateStats.Modifier.Chain || mod == UpdateStats.Modifier.Projectile_Amount || mod == UpdateStats.Modifier.Combo
+            || mod == UpdateStats.Modifier.Melee_Amount || mod == UpdateStats.Modifier.knockback || mod == UpdateStats.Modifier.Base_Cold_Damage
+            || mod == UpdateStats.Modifier.Base_Fire_Damage || mod == UpdateStats.Modifier.Base_Lightning_Damage || mod == UpdateStats.Modifier.Base_Physical_Damage
+            || mod == UpdateStats.Modifier.Return_|| mod == UpdateStats.Modifier.Backward_Split|| mod == UpdateStats.Modifier.Pierce_All)
         {
             return false;
         }

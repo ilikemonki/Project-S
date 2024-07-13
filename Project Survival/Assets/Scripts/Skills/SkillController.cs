@@ -47,7 +47,7 @@ public class SkillController : MonoBehaviour
     public float cooldown;
     public float knockBack;
     public float criticalChance, criticalDamage;
-    public float size;
+    public float aoe;
     public float lifeStealChance, lifeSteal;
     public int meleeAmount, combo, projectileAmount, pierce, chain;
     [Header("Other Stats")]
@@ -92,6 +92,7 @@ public class SkillController : MonoBehaviour
     public bool useReturn; //Travel skills only.
     public bool useHoming, useHomingReturn; //Homes onto target. Return homes to player. Travel skills only.
     [Header("Other Behaviors")]
+    public bool isAoe;
     public bool continuous; //doesn't despawn.
     public bool pierceAll; //infinite pierce.
     public bool stayOnPlayer; //Skill will stay on player and move with player.
@@ -113,7 +114,7 @@ public class SkillController : MonoBehaviour
     [HideInInspector] public float addedCooldown;
     [HideInInspector] public float addedKnockBack;
     [HideInInspector] public float addedCriticalChance, addedCriticalDamage;
-    [HideInInspector] public float addedSize;
+    [HideInInspector] public float addedAoe;
     [HideInInspector] public float addedLifeStealChance, addedLifeSteal;
     [HideInInspector] public int addedMeleeAmount, addedCombo, addedProjectileAmount, addedPierce, addedChain;
 
@@ -924,7 +925,7 @@ public class SkillController : MonoBehaviour
                 SkillBehavior skill = Instantiate(meleeWeaponPrefab, stayOnPlayerParent.transform);    //Spawn, add to list, and initialize prefabs
                 skill.gameObject.SetActive(false);
                 skill.skillController = this;
-                skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+                skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, aoe);
                 stayOnPlayerPoolList.Add(skill);
             }
         }
@@ -935,7 +936,7 @@ public class SkillController : MonoBehaviour
                 SkillBehavior skill = Instantiate(prefabBehavior, stayOnPlayerParent.transform);    //Spawn, add to list, and initialize prefabs
                 skill.gameObject.SetActive(false);
                 skill.skillController = this;
-                skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+                skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, aoe);
                 stayOnPlayerPoolList.Add(skill);
             }
         }
@@ -948,7 +949,7 @@ public class SkillController : MonoBehaviour
                     SkillBehavior skill = Instantiate(prefabBehavior, poolParent.transform);    //Spawn, add to list, and initialize prefabs
                     skill.gameObject.SetActive(false);
                     skill.skillController = this;
-                    skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+                    skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, aoe);
                     poolList.Add(skill);
                 }
             }
@@ -959,7 +960,7 @@ public class SkillController : MonoBehaviour
             SkillBehavior skill = Instantiate(prefabBehavior, poolParent.transform);    //Spawn, add to list, and initialize prefabs
             skill.gameObject.SetActive(false);
             skill.skillController = this;
-            skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, size);
+            skill.SetStats(damageTypes[0], damageTypes[1], damageTypes[2], damageTypes[3], travelSpeed, pierce, chain, aoe);
             poolList.Add(skill);
         }
     }
@@ -1003,11 +1004,14 @@ public class SkillController : MonoBehaviour
             else cooldown = baseCooldown;
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.meleeCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.meleeCriticalDamageAdditive + addedCriticalDamage;
-            size = gameplayManager.sizeMultiplier + gameplayManager.meleeSizeMultiplier + addedSize;
             lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.meleeLifeStealChanceAdditive + addedLifeStealChance;
             lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.meleeLifeStealAdditive + addedLifeSteal;
             travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultiplier + gameplayManager.meleeTravelSpeedMultiplier + addedTravelSpeed) / 100);
             travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultiplier + gameplayManager.meleeTravelRangeMultiplier + addedTravelRange) / 100);
+            if (isAoe)
+            {
+                aoe = gameplayManager.aoeMultiplier + gameplayManager.meleeAoeMultiplier + addedAoe;
+            }
         }
         else //is projectile
         {
@@ -1027,11 +1031,14 @@ public class SkillController : MonoBehaviour
             else cooldown = baseCooldown;
             criticalChance = baseCriticalChance + gameplayManager.criticalChanceAdditive + gameplayManager.projectileCriticalChanceAdditive + addedCriticalChance;
             criticalDamage = baseCriticalDamage + gameplayManager.criticalDamageAdditive + gameplayManager.projectileCriticalDamageAdditive + addedCriticalDamage;
-            size = gameplayManager.sizeMultiplier + gameplayManager.projectileSizeMultiplier + addedSize;
             lifeStealChance = baseLifeStealChance + gameplayManager.lifeStealChanceAdditive + gameplayManager.projectileLifeStealChanceAdditive + addedLifeStealChance;
             lifeSteal = baseLifeSteal + gameplayManager.lifeStealAdditive + gameplayManager.projectileLifeStealAdditive + addedLifeSteal;
             travelSpeed = baseTravelSpeed * (1 + (gameplayManager.travelSpeedMultiplier + gameplayManager.projectileTravelSpeedMultiplier + addedTravelSpeed) / 100);
-            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultiplier + gameplayManager.projectileTravelRangeMultiplier + addedTravelRange) / 100);
+            travelRange = baseTravelRange * (1 + (gameplayManager.travelRangeMultiplier + gameplayManager.projectileTravelRangeMultiplier + addedTravelRange) / 100); 
+            if (isAoe)
+            {
+                aoe = gameplayManager.aoeMultiplier + gameplayManager.meleeAoeMultiplier + addedAoe;
+            }
         }
         if (gameplayManager.furthestAttackRange <= attackRange)
         {
@@ -1088,11 +1095,11 @@ public class SkillController : MonoBehaviour
         if (isMelee && combo > 0 && comboMultiplier > 0)
         {
             sb.SetStats((damageTypes[0] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[0] / 100), (damageTypes[1] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[1] / 100),
-                (damageTypes[2] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[2] / 100), (damageTypes[3] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size + (3f * comboMultiplier));
+                (damageTypes[2] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[2] / 100), (damageTypes[3] * (1 + (0.03f * comboMultiplier))) * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, aoe + (3f * comboMultiplier));
             return;
         }
         sb.SetStats(damageTypes[0] * (1 - gameplayManager.enemyReductions[0] / 100), damageTypes[1] * (1 - gameplayManager.enemyReductions[1] / 100),
-            damageTypes[2] * (1 - gameplayManager.enemyReductions[2] / 100), damageTypes[3] * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, size);
+            damageTypes[2] * (1 - gameplayManager.enemyReductions[2] / 100), damageTypes[3] * (1 - gameplayManager.enemyReductions[3] / 100), travelSpeed, pierce, chain, aoe);
     }
 
     public void SetAutomatic(bool automatic)

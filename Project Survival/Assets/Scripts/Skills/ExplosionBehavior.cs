@@ -6,10 +6,15 @@ public class ExplosionBehavior : SkillBehavior
 {
     public SkillBehavior mainBehavior;
     public float hitboxColliderDuration, despawnTime;
-    public override void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
+    public Vector3 baseLocalScale;
+    public void Awake()
+    {
+        baseLocalScale = transform.localScale;
+    }
+    public override void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float aoe)
     {
         this.enabled = false;
-        base.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, size);
+        base.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, aoe);
         gameObject.SetActive(false);
         this.travelSpeed = 0;
         this.pierce = 0;
@@ -18,7 +23,7 @@ public class ExplosionBehavior : SkillBehavior
         this.applyLifeSteal = mainBehavior.applyLifeSteal;
         this.applyAilment.Clear();
         this.applyAilment.AddRange(mainBehavior.applyAilment); 
-        transform.localScale = new Vector3(10 * (1 + size / 100), 10 * (1 + size / 100), 1);
+        transform.localScale = new Vector3(baseLocalScale.x * (1 + aoe / 100), baseLocalScale.y * (1 + aoe / 100), 1);
     }
     public override void Update()
     {

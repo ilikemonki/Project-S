@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 6593507805115416358}
   - component: {fileID: -6595649996783161566}
   - component: {fileID: 2398783455814874361}
-  - component: {fileID: 1588367952072488330}
+  - component: {fileID: 6094342600968760105}
   m_Layer: 12
   m_Name: Flying Slash Behavior
   m_TagString: Player Skill
@@ -117,7 +117,7 @@ RectTransform:
   m_GameObject: {fileID: 3139460322398848796}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7636711164442120139}
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 1588367952072488330}
+  hitboxCollider: {fileID: 6094342600968760105}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -161,7 +161,6 @@ MonoBehaviour:
   hasHitEnemy: 0
   rb: {fileID: 2398783455814874361}
   spriteRend: {fileID: 8558217897996643977}
-  enemyChainList: []
   rememberEnemyList: []
   stayUpRightOnly: 0
   isOrbitSkill: 0
@@ -196,8 +195,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &1588367952072488330
-PolygonCollider2D:
+--- !u!61 &6094342600968760105
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -209,7 +208,7 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 14.6, y: 0}
+  m_Offset: {x: 0.21, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -219,14 +218,6 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -5.3720665, y: 29.659224}
-      - {x: -27.283089, y: 27.78784}
-      - {x: -10.529852, y: 8.16615}
-      - {x: -8.263454, y: -2.0309505}
-      - {x: -27.836708, y: -27.717949}
-      - {x: -7.168944, y: -30.497358}
-      - {x: 9.401821, y: -20.424568}
-      - {x: 15.657757, y: -1.2174236}
-      - {x: 12.184633, y: 17.850681}
+  serializedVersion: 2
+  m_Size: {x: 1.1, y: 1.61}
+  m_EdgeRadius: 0

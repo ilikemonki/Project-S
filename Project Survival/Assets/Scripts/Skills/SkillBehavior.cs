@@ -32,7 +32,7 @@ public class SkillBehavior : MonoBehaviour
     public float currentDamageCooldownTimer;
     public float currentHomingTimer; //After a certain time, isHoming is activated.
 
-    public virtual void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float size)
+    public virtual void SetStats(float physical, float fire, float cold, float lightning, float travelSpeed, int pierce, int chain, float aoe)
     {
         if (skillController.useHoming && !skillController.useMultiTarget) target = null;
         if (stayUpRightOnly)
@@ -54,7 +54,8 @@ public class SkillBehavior : MonoBehaviour
         this.pierce = pierce;
         this.chain = chain;
         CheckChances();
-        transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x * (1 + size / 100), skillController.prefabBehavior.transform.localScale.y * (1 + size / 100), 1);
+        if (skillController.isAoe)
+            transform.localScale = new Vector3(skillController.prefabBehavior.transform.localScale.x * (1 + aoe / 100), skillController.prefabBehavior.transform.localScale.y * (1 + aoe / 100), 1);
     }
     public void SetDirection(Vector3 dir) //set where the skill will go.
     {
@@ -224,11 +225,14 @@ public class SkillBehavior : MonoBehaviour
             enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
         }
         enemy.TakeDamage(totalDamage, applyCrit);
-        if (skillController.damageCooldown > 0)
+        if ((!isOrbitSkill && skillController.damageCooldown <= 0) || skillController.damageCooldown > 0)
         {
-            rememberEnemyList.Add(enemy);
+            if (!rememberEnemyList.Contains(enemy))
+            {
+                rememberEnemyList.Add(enemy);
+            }
         }
-        if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
+            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
         {
             enemy.KnockBack((enemy.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
         }
@@ -260,7 +264,7 @@ public class SkillBehavior : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
-            if (skillController.damageCooldown > 0)
+            if (rememberEnemyList.Count > 0)
             {
                 if (rememberEnemyList.Contains(enemy)) return;
             }
@@ -282,16 +286,7 @@ public class SkillBehavior : MonoBehaviour
                     return;
                 }
             }
-
-            if ((skillController.isMelee || pierce <= 0) && rememberEnemyList.Contains(enemy)) //Melee and chain will hit enemies only once
-            {
-                return;
-            }
             DoDamage(enemy, 100);
-            if (!rememberEnemyList.Contains(enemy))    //if enemy is not in list, add it.
-            {
-                rememberEnemyList.Add(enemy);
-            }
             if (!skillController.isMelee)   //For projectiles only
             {
                 ProjectileBehavior();
@@ -412,6 +407,7 @@ public class SkillBehavior : MonoBehaviour
         {
             isHoming = false;
         }
+        rememberEnemyList.Clear();
         target = skillController.player.transform;
         SetDirection((target.position - transform.position).normalized);
         travelSpeed *= 1.5f;

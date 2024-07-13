@@ -45,7 +45,7 @@ public class GameplayManager : MonoBehaviour
     public float maxHealthMultiplier;
     public float defenseMultiplier;
     public float criticalChanceAdditive, projectileCriticalChanceAdditive, meleeCriticalChanceAdditive, criticalDamageAdditive, projectileCriticalDamageAdditive, meleeCriticalDamageAdditive;
-    public float sizeMultiplier, projectileSizeMultiplier, meleeSizeMultiplier;
+    public float aoeMultiplier, projectileAoeMultiplier, meleeAoeMultiplier;
     public float regenAdditive, degenAdditive, lifeStealChanceAdditive, meleeLifeStealChanceAdditive, projectileLifeStealChanceAdditive, lifeStealAdditive, meleeLifeStealAdditive, projectileLifeStealAdditive;
     public float magnetRangeMultiplier;
     public List<float> ailmentsChanceAdditive;
@@ -68,7 +68,6 @@ public class GameplayManager : MonoBehaviour
     public float enemyProjectileAdditive;
     public float enemyProjectileTravelSpeedMultiplier;
     //public float enemyProjectileTravelRangeMultiplier;
-    public float enemyProjectileSizeMultiplier;
     public List<float> enemyReductions;//[0]physical,[1]fire,[2]cold,[3]lightning
     //add enemy spawn rate
 

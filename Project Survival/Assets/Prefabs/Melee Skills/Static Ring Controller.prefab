@@ -193,7 +193,7 @@ MonoBehaviour:
   knockBack: 0
   criticalChance: 0
   criticalDamage: 0
-  size: 0
+  aoe: 0
   lifeStealChance: 0
   lifeSteal: 0
   meleeAmount: 0
@@ -238,6 +238,7 @@ MonoBehaviour:
   useReturn: 0
   useHoming: 0
   useHomingReturn: 0
+  isAoe: 1
   continuous: 0
   pierceAll: 0
   stayOnPlayer: 1
@@ -274,7 +275,7 @@ MonoBehaviour:
   addedKnockBack: 0
   addedCriticalChance: 0
   addedCriticalDamage: 0
-  addedSize: 0
+  addedAoe: 0
   addedLifeStealChance: 0
   addedLifeSteal: 0
   addedMeleeAmount: 0

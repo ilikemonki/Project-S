@@ -36,17 +36,23 @@ public class ToolTipManager : MonoBehaviour
             rectTransformWindow.anchoredPosition = anchorPos;
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (ToolTipManager.instance.showBaseStats)
+                if (instance.itemDescription!= null)
                 {
-                    showBaseStatsText.text = "Press 'Tab' to show base stats.";
-                    ToolTipManager.instance.showBaseStats = false;
+                    if (instance.itemDescription.itemType.Equals(ItemDescription.ItemType.SkillOrb))
+                    {
+                        if (instance.showBaseStats)
+                        {
+                            showBaseStatsText.text = "Press 'Tab' to show base stats.";
+                            instance.showBaseStats = false;
+                        }
+                        else
+                        {
+                            showBaseStatsText.text = "Press 'Tab' to show modified stats.";
+                            instance.showBaseStats = true;
+                        }
+                        ShowItemToolTip(itemDescription);
+                    }
                 }
-                else
-                {
-                    showBaseStatsText.text = "Press 'Tab' to show modified stats.";
-                    ToolTipManager.instance.showBaseStats = true;
-                }
-                ShowItemToolTip(itemDescription);
             }
         }
     }
@@ -61,7 +67,7 @@ public class ToolTipManager : MonoBehaviour
             instance.tagText.text += "\nBehavior: " + itemDesc.behavior;
         }
         instance.descriptionText.text = itemDesc.description;
-        if (itemDesc.itemType == ItemDescription.ItemType.PassiveItem || itemDesc.itemType == ItemDescription.ItemType.SkillGem)
+        if (itemDesc.itemType.Equals(ItemDescription.ItemType.PassiveItem)|| itemDesc.itemType.Equals(ItemDescription.ItemType.SkillGem))
         {
             instance.showBaseStatsText.text = "";
             if (itemDesc.pItemEffect != null) //if has passive effect
@@ -88,9 +94,9 @@ public class ToolTipManager : MonoBehaviour
             if (itemDesc.upgrade.levelModifiersList.Count > 0)
                 instance.statText.text = UpdateStats.FormatItemUpgradeStatsToString(itemDesc.upgrade.levelModifiersList[0]);
         }
-        else if (itemDesc.itemType == ItemDescription.ItemType.SkillOrb) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
+        else if (itemDesc.itemType.Equals(ItemDescription.ItemType.SkillOrb)) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {
-            if (ToolTipManager.instance.showBaseStats)
+            if (instance.showBaseStats)
                 instance.showBaseStatsText.text = "Press 'Tab' to show modified stats.";
             else
                 instance.showBaseStatsText.text = "Press 'Tab' to show base stats.";
@@ -110,8 +116,17 @@ public class ToolTipManager : MonoBehaviour
             {
                 if (dragItem.skillController != null) //if Orb's skill is equiped and exist, Get those stats and set as text.
                 {
-                    instance.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
-                    instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
+                    instance.CalculateSkillControllerPrefabStats(itemDesc);
+                    if (instance.showBaseStats)
+                    {
+                        instance.statText.text = UpdateStats.FormatBaseSkillStatsToString(instance.skillControllerToolTip);
+                        instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(instance.skillControllerToolTip.levelUpgrades);
+                    }
+                    else
+                    {
+                        instance.statText.text = UpdateStats.FormatSkillStatsToString(dragItem.skillController);
+                        instance.skillUpgradesText.text = UpdateStats.FormatSkillUpgradesToString(dragItem.skillController.levelUpgrades);
+                    }
                 }
                 else // if skill isn't equipped, get it from the prefab, set it to scToolTip, calculate its stats, then set as text.
                 {
@@ -170,7 +185,7 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.baseLifeStealChance = prefab.baseLifeStealChance;
                 skillControllerToolTip.basePierce = prefab.basePierce;
                 skillControllerToolTip.baseProjectileAmount = prefab.baseProjectileAmount;
-                skillControllerToolTip.size = prefab.size;
+                skillControllerToolTip.aoe = prefab.aoe;
                 skillControllerToolTip.baseMeleeAmount = prefab.baseMeleeAmount;
                 skillControllerToolTip.baseTravelRange = prefab.baseTravelRange;
                 skillControllerToolTip.baseTravelSpeed = prefab.baseTravelSpeed;
@@ -191,7 +206,7 @@ public class ToolTipManager : MonoBehaviour
                 skillControllerToolTip.addedLifeStealChance = prefab.addedLifeStealChance;
                 skillControllerToolTip.addedPierce = prefab.addedPierce;
                 skillControllerToolTip.addedProjectileAmount = prefab.addedProjectileAmount;
-                skillControllerToolTip.addedSize = prefab.addedSize;
+                skillControllerToolTip.addedAoe = prefab.addedAoe;
                 skillControllerToolTip.addedMeleeAmount = prefab.addedMeleeAmount;
                 skillControllerToolTip.addedTravelRange = prefab.addedTravelRange;
                 skillControllerToolTip.addedTravelSpeed = prefab.addedTravelSpeed;
@@ -217,7 +232,7 @@ public class ToolTipManager : MonoBehaviour
                     skillControllerToolTip.addedLifeStealChance = 0;
                     skillControllerToolTip.addedPierce = 0;
                     skillControllerToolTip.addedProjectileAmount = 0;
-                    skillControllerToolTip.addedSize = 0;
+                    skillControllerToolTip.addedAoe = 0;
                     skillControllerToolTip.addedMeleeAmount = 0;
                     skillControllerToolTip.addedTravelRange = 0;
                     skillControllerToolTip.addedTravelSpeed = 0;
@@ -260,7 +275,7 @@ public class ToolTipManager : MonoBehaviour
         skillControllerToolTip.knockBack = 0;
         skillControllerToolTip.criticalChance = 0; 
         skillControllerToolTip.criticalDamage = 0;
-        skillControllerToolTip.size = 0;
+        skillControllerToolTip.aoe = 0;
         skillControllerToolTip.lifeStealChance = 0; 
         skillControllerToolTip.lifeSteal = 0;
         skillControllerToolTip.meleeAmount = 0;

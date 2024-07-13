@@ -52,10 +52,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a1026c0cfc7cd4f958f7282f5294d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinAmount: 0
   rb: {fileID: 5043445816700823471}
   text: {fileID: 0}
   isCollecting: 0
   spriteRenderer: {fileID: 5043445816700823441}
+  pullSpeed: 0
 --- !u!212 &5043445816700823441
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -123,7 +125,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 6
+  m_Radius: 0.25
 --- !u!50 &5043445816700823471
 Rigidbody2D:
   serializedVersion: 4

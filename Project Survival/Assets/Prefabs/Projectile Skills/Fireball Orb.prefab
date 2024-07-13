@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: Fireball Orb
-  itemTags: Projectile, <color=red>Fire</color>
+  itemTags: Projectile, <color=red>Fire</color>, AoE
   behavior: Spread
   description: Shoot fireball that explode on last collision.
   itemSprite: {fileID: 21300000, guid: f17490ee08445754094d4dd825d12684, type: 3}
