@@ -1,17 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySkillController : MonoBehaviour
 {
     public SimpleProjectile prefab;
+    public DamageIndicator damageIndicatorPrefab;
     public List<SimpleProjectile> projectileList;
+    public List<DamageIndicator> damageIndicatorList;
+    public GameObject damageIndicatorParent;
+
     int counter;
     float spreadAngle;
     Vector3 direction;
     private void Start()
     {
-        PopulatePool(20);
+        PopulateProjectilePool(20);
+        PopulateIndicatorPool(10);
     }
     private void FixedUpdate()
     {
@@ -28,14 +32,30 @@ public class EnemySkillController : MonoBehaviour
             }
         }
     }
-    public void BarrageBehavior(EnemyStats enemy, Transform playerPos)       //Spawn/Activate skill. Projectiles barrages.
+    public void SpawnDamageIndicator(SimpleProjectile proj, Transform targetPos)
     {
-        direction = playerPos.position - enemy.transform.position;
+        proj.hitBoxCollider.gameObject.layer = LayerMask.NameToLayer("Ignore All");
+        for (int i = 0; i < damageIndicatorList.Count; i++)
+        {
+            if (i > damageIndicatorList.Count - 2)
+            {
+                PopulateIndicatorPool(10);
+            }
+            if (!damageIndicatorList[i].gameObject.activeSelf)
+            {
+                damageIndicatorList[i].SetIndicator(proj, targetPos);
+                break;
+            }
+        }
+    }
+    public void BarrageBehavior(EnemyStats enemy, Transform targetPos)       //Spawn/Activate skill. Projectiles barrages.
+    {
+        direction = targetPos.position - enemy.transform.position;
         for (int i = 0; i < projectileList.Count; i++)
         {
             if (i > projectileList.Count - 2)
             {
-                PopulatePool(10);
+                PopulateProjectilePool(10);
             }
             if (!projectileList[i].gameObject.activeSelf)
             {
@@ -48,11 +68,11 @@ public class EnemySkillController : MonoBehaviour
             }
         }
     }
-    public void SpreadBehavior(EnemyStats enemy, Transform playerPos)       //Spawn/Activate skill. Projectiles spread.
+    public void SpreadBehavior(EnemyStats enemy, Transform targetPos)       //Spawn/Activate skill. Projectiles spread.
     {
         counter = 0;
         spreadAngle = 90 / enemy.projectile;
-        direction = playerPos.position - enemy.transform.position;
+        direction = targetPos.position - enemy.transform.position;
         for (int p = 0; p < enemy.projectile; p++)    //number of projectiles
         {
             if (p != 0) counter++;
@@ -60,7 +80,7 @@ public class EnemySkillController : MonoBehaviour
             {
                 if (i > projectileList.Count - 2)
                 {
-                    PopulatePool(10);
+                    PopulateProjectilePool(10);
                 }
                 if (!projectileList[i].gameObject.activeSelf)
                 {
@@ -80,6 +100,7 @@ public class EnemySkillController : MonoBehaviour
                     }
                     projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg);
                     SetProjectileStats(projectileList[i], enemy);
+                    SpawnDamageIndicator(projectileList[i], targetPos);
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -95,7 +116,7 @@ public class EnemySkillController : MonoBehaviour
             {
                 if (i > projectileList.Count - 2)
                 {
-                    PopulatePool(10);
+                    PopulateProjectilePool(10);
                 }
                 if (!projectileList[i].gameObject.activeSelf)
                 {
@@ -109,16 +130,16 @@ public class EnemySkillController : MonoBehaviour
             }
         }
     }
-    public void BurstBehavior(EnemyStats enemy, Transform playerPos)
+    public void BurstBehavior(EnemyStats enemy, Transform targetPos)
     {
-        direction = playerPos.position - enemy.transform.position;
+        direction = targetPos.position - enemy.transform.position;
         for (int p = 0; p < enemy.projectile; p++)    //number of projectiles
         {
             for (int i = 0; i < projectileList.Count; i++)
             {
                 if (i > projectileList.Count - 2)
                 {
-                    PopulatePool(10);
+                    PopulateProjectilePool(10);
                 }
                 if (!projectileList[i].gameObject.activeSelf)
                 {
@@ -132,6 +153,7 @@ public class EnemySkillController : MonoBehaviour
             }
         }
     }
+
     public void SetProjectileStats(SimpleProjectile proj, EnemyStats enemy)
     {
         proj.damageTypes.Clear();
@@ -140,13 +162,22 @@ public class EnemySkillController : MonoBehaviour
         proj.travelSpeed = enemy.projectileSpeed;
     }
 
-    public void PopulatePool(int spawnAmount)
+    public void PopulateProjectilePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
         {
             SimpleProjectile projectile = Instantiate(prefab, transform);    //Spawn, add to list, and initialize prefabs
             projectile.gameObject.SetActive(false);
             projectileList.Add(projectile);
+        }
+    }
+    public void PopulateIndicatorPool(int spawnAmount)
+    {
+        for (int i = 0; i < spawnAmount; i++)
+        {
+            DamageIndicator di = Instantiate(damageIndicatorPrefab, damageIndicatorParent.transform);    //Spawn, add to list, and initialize prefabs
+            di.gameObject.SetActive(false);
+            damageIndicatorList.Add(di);
         }
     }
 }

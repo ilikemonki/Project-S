@@ -47,7 +47,7 @@ public class ToolTipManager : MonoBehaviour
                         }
                         else
                         {
-                            showBaseStatsText.text = "Press 'Tab' to show modified stats.";
+                            showBaseStatsText.text = "Press 'Tab' to show total stats.";
                             instance.showBaseStats = true;
                         }
                         ShowItemToolTip(itemDescription);
@@ -60,7 +60,10 @@ public class ToolTipManager : MonoBehaviour
     {
         instance.itemDescription = itemDesc;
         instance.ClearToolTip();
-        instance.nameText.text = itemDesc.itemName;
+        if (instance.showBaseStats)
+            instance.nameText.text = itemDesc.itemName + " (Base)";
+        else
+            instance.nameText.text = itemDesc.itemName;
         instance.tagText.text = itemDesc.itemTags;
         if (!string.IsNullOrWhiteSpace(itemDesc.behavior))
         {
@@ -97,7 +100,7 @@ public class ToolTipManager : MonoBehaviour
         else if (itemDesc.itemType.Equals(ItemDescription.ItemType.SkillOrb)) //skillorb's itemDesc doesn't have upgrade variable. Get from dragItem
         {
             if (instance.showBaseStats)
-                instance.showBaseStatsText.text = "Press 'Tab' to show modified stats.";
+                instance.showBaseStatsText.text = "Press 'Tab' to show total stats.";
             else
                 instance.showBaseStatsText.text = "Press 'Tab' to show base stats.";
             instance.layoutElement1.enabled = true;

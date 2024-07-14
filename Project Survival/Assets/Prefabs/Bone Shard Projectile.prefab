@@ -128,7 +128,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -2.2666974, y: 1.3605523}
-  m_SizeDelta: {x: 64, y: 64}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!50 &2398783455814874361
 Rigidbody2D:
@@ -163,11 +163,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e07489beaf1801448fafcedc5e44415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayerProjectile: 0
   rb: {fileID: 2398783455814874361}
   trailRend: {fileID: 2664521967084729575}
   direction: {x: 0, y: 0, z: 0}
   startingPos: {x: 0, y: 0, z: 0}
   damageTypes: []
+  applyAilment: 
+  applyCrit: 0
+  applyLifeSteal: 0
   currentRange: 0
   travelRange: 0
   travelSpeed: 0
@@ -196,7 +200,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 15, y: 3}
+  m_Size: {x: 0.4, y: 0.1}
   m_EdgeRadius: 0
 --- !u!1 &4942288216049738221
 GameObject:

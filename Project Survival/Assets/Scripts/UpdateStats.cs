@@ -480,7 +480,7 @@ public class UpdateStats : MonoBehaviour
                     if ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) != 0)
                         fullString += "Bleed Effect: " + (sc.ailmentsEffect[i]) + " (" + ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) > 0 ? "+" + (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) : (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i])) + "%)\n";
                     else
-                        fullString += "Bleed Effect: " + (sc.ailmentsEffect[i]) + "%\n";
+                        fullString += "Bleed Effect: " + (sc.ailmentsEffect[i]) + "\n";
                     if (sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) >= 1)
                         fullString += "Bleed Damage: " + sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) + "\n";
                     else
@@ -492,7 +492,7 @@ public class UpdateStats : MonoBehaviour
                     if ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) != 0)
                         fullString += "Burn Effect: " + (sc.ailmentsEffect[i]) + " (" + ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) > 0 ? "+" + (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) : (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i])) + "%)\n";
                     else
-                        fullString += "Burn Effect: " + (sc.ailmentsEffect[i]) + "%\n";
+                        fullString += "Burn Effect: " + (sc.ailmentsEffect[i]) + "\n";
                     if (sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) >= 1)
                         fullString += "Burn Damage: " + sc.damageTypes[i] * (sc.ailmentsEffect[i] / 100) + "\n";
                     else
@@ -504,7 +504,7 @@ public class UpdateStats : MonoBehaviour
                     if ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) != 0)
                         fullString += "Chill Effect: " + (sc.ailmentsEffect[i]) + " (" + ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) > 0 ? "+" + (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) : (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i])) + "%)\n";
                     else
-                        fullString += "Chill Effect: " + (sc.ailmentsEffect[i]) + "%\n";
+                        fullString += "Chill Effect: " + (sc.ailmentsEffect[i]) + "\n";
                 }
                 else if (i == 3) //lightning damage
                 {
@@ -512,7 +512,7 @@ public class UpdateStats : MonoBehaviour
                     if ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) != 0)
                         fullString += "Shock Effect: " + (sc.ailmentsEffect[i]) + " (" + ((instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) > 0 ? "+" + (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i]) : (instance.gameplayManager.ailmentsEffectMultiplier[i] + sc.addedAilmentsEffect[i])) + "%)\n";
                     else
-                        fullString += "Shock Effect: " + (sc.ailmentsEffect[i]) + "%\n";
+                        fullString += "Shock Effect: " + (sc.ailmentsEffect[i]) + "\n";
                 }
             }
         }
@@ -551,7 +551,7 @@ public class UpdateStats : MonoBehaviour
         if (sc.lifeStealChance > 0)
             fullString += "Lifesteal Chance: " + sc.lifeStealChance + "%\n";
         if (sc.lifeSteal > 0)
-            fullString += "Lifesteal: " + sc.lifeSteal + "\n";
+            fullString += "Lifesteal Amount: " + sc.lifeSteal + "\n";
         if (sc.attackRange > 0)
         {
             if (sc.isMelee)
@@ -613,41 +613,59 @@ public class UpdateStats : MonoBehaviour
     public static string FormatBaseSkillStatsToString(SkillController sc) //Return stats of the skill controller as string.
     {
         string fullString = "";
-        if (sc.level == 5)
-            fullString += "Level: " + sc.level + " (max)\n";
+        if (sc.level > 1)
+            fullString += "Level: 1 (+" + (sc.level - 1) + ")\n";
         else
-            fullString += "Level: " + sc.level + "\n";
-        fullString += "Exp: " + sc.exp + "/" + instance.gameplayManager.skillExpCapList[sc.level - 1] + "\n";
+            fullString += "Level: 1" + "\n";
+        fullString += "Exp: 0" + "/" + instance.gameplayManager.skillExpCapList[0] + "\n";
         for (int i = 0; i < sc.baseDamageTypes.Count; i++)
         {
-            if ((sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) > 0)
+            if ((sc.baseDamageTypes[i]) > 0)
             {
                 if (i == 0) //physical damage
                 {
-                    fullString += "<color=grey>Base Physical Damage</color>: " + (sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) + "\n";
+                    if (sc.addedBaseDamageTypes[i] != 0)
+                        fullString += "<color=grey>Base Physical Damage</color>: " + sc.baseDamageTypes[i] + " (" + (sc.addedBaseDamageTypes[i] > 0 ? "+" + sc.addedBaseDamageTypes[i] : sc.addedBaseDamageTypes[i]) + ")\n";
+                    else
+                        fullString += "<color=grey>Base Physical Damage</color>: " + sc.baseDamageTypes[i] + "\n";
                 }
                 else if (i == 1) //Fire damage
                 {
-                    fullString += "<color=red>Base Fire Damage</color>: " + (sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) + "\n";
+                    if (sc.addedBaseDamageTypes[i] != 0)
+                        fullString += "<color=red>Base Fire Damage</color>: " + sc.baseDamageTypes[i] + " (" + (sc.addedBaseDamageTypes[i] > 0 ? "+" + sc.addedBaseDamageTypes[i] : sc.addedBaseDamageTypes[i]) + ")\n";
+                    else
+                        fullString += "<color=red>Base Fire Damage</color>: " + sc.baseDamageTypes[i] + "\n";
                 }
                 else if (i == 2) //cold damage
                 {
-                    fullString += "<color=blue>Base Cold Damage</color>: " + (sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) + "\n";
+                    if (sc.addedBaseDamageTypes[i] != 0)
+                        fullString += "<color=blue>Base Cold Damage</color>: " + sc.baseDamageTypes[i] + " (" + (sc.addedBaseDamageTypes[i] > 0 ? "+" + sc.addedBaseDamageTypes[i] : sc.addedBaseDamageTypes[i]) + ")\n";
+                    else
+                        fullString += "<color=blue>Base Cold Damage</color>: " + sc.baseDamageTypes[i] + "\n";
                 }
                 else if (i == 3) //lightning damage
                 {
-                    fullString += "<color=yellow>Base Lightning Damage</color>: " + (sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) + "\n";
+                    if (sc.addedBaseDamageTypes[i] != 0)
+                        fullString += "<color=yellow>Base Lightning Damage</color>: " + sc.baseDamageTypes[i] + " (" + (sc.addedBaseDamageTypes[i] > 0 ? "+" + sc.addedBaseDamageTypes[i] : sc.addedBaseDamageTypes[i]) + ")\n";
+                    else
+                        fullString += "<color=yellow>Base Lightning Damage</color>: " + sc.baseDamageTypes[i] + "\n";
                 }
             }
         }
         for (int i = 0; i < sc.baseAilmentsChance.Count; i++)
         {
-            if ((sc.baseAilmentsChance[i] + sc.addedAilmentsChance[i]) > 0)
+            if ((sc.baseAilmentsChance[i]) > 0)
             {
                 if (i == 0) //physical damage
                 {
-                    fullString += "Bleed Chance: " + (sc.baseAilmentsChance[i] + sc.addedAilmentsChance[i]) + "%\n";
-                    fullString += "Bleed Effect: +" + (sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) + "%\n";
+                    if ((sc.addedAilmentsChance[i]) != 0)
+                        fullString += "Bleed Chance: +" + (sc.baseAilmentsChance[i]) + "% (" + (sc.addedAilmentsChance[i] > 0 ? "+" + sc.addedAilmentsChance[i] : sc.addedAilmentsChance[i]) + "%)\n";
+                    else
+                        fullString += "Bleed Chance: +" + (sc.baseAilmentsChance[i]) + "%\n";
+                    if ((sc.addedAilmentsEffect[i]) != 0)
+                        fullString += "Base Bleed Effect: +" + (sc.baseAilmentsEffect[i]) + " (" + (sc.addedAilmentsEffect[i] > 0 ? "+" + sc.addedAilmentsEffect[i] : sc.addedAilmentsEffect[i]) + "%)\n";
+                    else if (sc.baseAilmentsEffect[i] > 0)
+                        fullString += "Base Bleed Effect: +" + (sc.baseAilmentsEffect[i]) + "\n";
                     if ((sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) * (1 + (sc.addedDamage + sc.addedDamageTypes[i]) / 100) * ((sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) / 100) >= 1)
                         fullString += "Bleed Damage: " + (sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) * (1 + (sc.addedDamage + sc.addedDamageTypes[i]) / 100) * ((sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) / 100) + "\n";
                     else
@@ -655,8 +673,14 @@ public class UpdateStats : MonoBehaviour
                 }
                 else if (i == 1) //Fire damage
                 {
-                    fullString += "Burn Chance: " + (sc.baseAilmentsChance[i] + sc.addedAilmentsChance[i]) + "%\n";
-                    fullString += "Burn Effect: +" + (sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) + "%\n";
+                    if ((sc.addedAilmentsChance[i]) != 0)
+                        fullString += "Burn Chance: +" + (sc.baseAilmentsChance[i]) + "% (" + (sc.addedAilmentsChance[i] > 0 ? "+" + sc.addedAilmentsChance[i] : sc.addedAilmentsChance[i]) + "%)\n";
+                    else
+                        fullString += "Burn Chance: +" + (sc.baseAilmentsChance[i]) + "%\n";
+                    if ((sc.addedAilmentsEffect[i]) != 0)
+                        fullString += "Base Burn Effect: +" + (sc.baseAilmentsEffect[i]) + " (" + (sc.addedAilmentsEffect[i] > 0 ? "+" + sc.addedAilmentsEffect[i] : sc.addedAilmentsEffect[i]) + "%)\n";
+                    else if (sc.baseAilmentsEffect[i] > 0)
+                        fullString += "Base Burn Effect: +" + (sc.baseAilmentsEffect[i]) + "\n";
                     if ((sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) * (1 + (sc.addedDamage + sc.addedDamageTypes[i]) / 100) * ((sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) / 100) >= 1)
                         fullString += "Burn Damage: " + (sc.baseDamageTypes[i] + sc.addedBaseDamageTypes[i]) * (1 + (sc.addedDamage + sc.addedDamageTypes[i]) / 100) * ((sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) / 100) + "\n";
                     else
@@ -664,47 +688,128 @@ public class UpdateStats : MonoBehaviour
                 }
                 else if (i == 2) //cold damage
                 {
-                    fullString += "Chill Chance: " + (sc.baseAilmentsChance[i] + sc.addedAilmentsChance[i]) + "%\n";
-                    fullString += "Chill Effect: +" + (sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) + "%\n";
+                    if ((sc.addedAilmentsChance[i]) != 0)
+                        fullString += "Chill Chance: +" + (sc.baseAilmentsChance[i]) + "% (" + (sc.addedAilmentsChance[i] > 0 ? "+" + sc.addedAilmentsChance[i] : sc.addedAilmentsChance[i]) + "%)\n";
+                    else
+                        fullString += "Chill Chance: +" + (sc.baseAilmentsChance[i]) + "%\n";
+                    if ((sc.addedAilmentsEffect[i]) != 0)
+                        fullString += "Base Chill Effect: +" + (sc.baseAilmentsEffect[i]) + " (" + (sc.addedAilmentsEffect[i] > 0 ? "+" + sc.addedAilmentsEffect[i] : sc.addedAilmentsEffect[i]) + "%)\n";
+                    else if (sc.baseAilmentsEffect[i] > 0)
+                        fullString += "Base Chill Effect: +" + (sc.baseAilmentsEffect[i]) + "\n";
                 }
                 else if (i == 3) //lightning damage
                 {
-                    fullString += "Shock Chance: " + (sc.baseAilmentsChance[i] + sc.addedAilmentsChance[i]) + "%\n";
-                    fullString += "Shock Effect: +" + (sc.baseAilmentsEffect[i] + sc.addedAilmentsEffect[i]) + "%\n";
+                    if ((sc.addedAilmentsChance[i]) != 0)
+                        fullString += "Shock Chance: +" + (sc.baseAilmentsChance[i]) + "% (" + (sc.addedAilmentsChance[i] > 0 ? "+" + sc.addedAilmentsChance[i] : sc.addedAilmentsChance[i]) + "%)\n";
+                    else
+                        fullString += "Shock Chance: +" + (sc.baseAilmentsChance[i]) + "%\n";
+                    if ((sc.addedAilmentsEffect[i]) != 0)
+                        fullString += "Base Shock Effect: +" + (sc.baseAilmentsEffect[i]) + " (" + (sc.addedAilmentsEffect[i] > 0 ? "+" + sc.addedAilmentsEffect[i] : sc.addedAilmentsEffect[i]) + "%)\n";
+                    else if (sc.baseAilmentsEffect[i] > 0)
+                        fullString += "Base Shock Effect: +" + (sc.baseAilmentsEffect[i]) + "\n";
                 }
             }
         }
-        if ((sc.baseCriticalChance + sc.addedCriticalChance) > 0)
+        if ((sc.baseCriticalChance) > 0)
         {
-            fullString += "Critical Chance: " + (sc.baseCriticalChance + sc.addedCriticalChance) + "%\n";
-            fullString += "Critical Damage: +" + (sc.baseCriticalDamage + sc.addedCriticalDamage) + "%\n";
+            if ((sc.addedCriticalChance) != 0)
+                fullString += "Critical Chance: +" + (sc.baseCriticalChance) + "% (" + (sc.addedCriticalChance > 0 ? "+" + sc.addedCriticalChance : sc.addedCriticalChance) + "%)\n";
+            else
+                fullString += "Critical Chance: +" + (sc.baseCriticalChance) + "%\n";
         }
-        if ((sc.baseCooldown + sc.addedCooldown) > 0)
-            fullString += "Cooldown: " + (sc.baseCooldown + sc.addedCooldown) + "s\n";
-        if ((sc.baseProjectileAmount + sc.addedProjectileAmount) > 0)
-            fullString += "Projectile Amount: " + (sc.baseProjectileAmount + sc.addedProjectileAmount) + "\n";
-        if ((sc.basePierce + sc.addedPierce) > 0)
-            fullString += "Pierce: " + (sc.basePierce + sc.addedPierce) + "\n";
-        if ((sc.baseChain + sc.addedChain) > 0)
-            fullString += "Chain: " + (sc.baseChain + sc.addedChain) + "\n";
-        if ((sc.baseMeleeAmount + sc.addedMeleeAmount) > 0)
-            fullString += "Melee Amount: " + (sc.baseMeleeAmount + sc.addedMeleeAmount) + "\n";
-        if ((sc.baseCombo + sc.addedCombo) > 0)
-            fullString += "Combo: " + (sc.baseCombo + sc.addedCombo) + "\n";
-        if ((sc.baseLifeStealChance + sc.addedLifeStealChance) > 0)
-            fullString += "Lifesteal Chance: " + (sc.baseLifeStealChance + sc.addedLifeStealChance) + "%\n";
-        if ((sc.baseLifeSteal + sc.addedLifeSteal) > 0)
-            fullString += "Lifesteal: " + (sc.baseLifeSteal + sc.addedLifeSteal) + "\n";
-        if ((sc.baseAttackRange + sc.addedAttackRange) > 0)
-            fullString += "Attack Range: " + (sc.baseAttackRange + sc.addedAttackRange) + "\n";
-        if ((sc.baseTravelRange + sc.addedTravelRange) > 0)
-            fullString += "Travel Range: " + (sc.baseTravelRange + sc.addedTravelRange) + "\n";
-        if ((sc.baseTravelSpeed + sc.addedTravelSpeed) > 0)
-            fullString += "Travel Speed: " + (sc.baseTravelSpeed + sc.addedTravelSpeed) + "\n";
-        if ((sc.baseKnockBack + sc.addedKnockBack) > 0)
-            fullString += "Knockback: " + (sc.baseKnockBack + sc.addedKnockBack) + "\n";
-        if ((sc.addedAoe) > 0)
-            fullString += "Size: +" + sc.addedAoe + "%\n";
+        if (sc.baseCriticalDamage > 0)
+        {
+            if ((sc.addedCriticalDamage) != 0)
+                fullString += "Critical Damage: +" + (sc.baseCriticalDamage) + "% (" + (sc.addedCriticalDamage > 0 ? "+" + sc.addedCriticalDamage : sc.addedCriticalDamage) + "%)\n";
+            else
+                fullString += "Critical Damage: +" + (sc.baseCriticalDamage) + "%\n";
+        }
+        if ((sc.baseCooldown) > 0)
+        {
+            if ((sc.addedCooldown) != 0)
+                fullString += "Base Cooldown: " + (sc.baseCooldown) + "s (" + (sc.addedCooldown > 0 ? "+" + sc.addedCooldown : sc.addedCooldown) + "%)\n";
+            else
+                fullString += "Base Cooldown: " + (sc.baseCooldown) + "s\n";
+        }
+        if ((sc.baseProjectileAmount) > 0)
+        {
+            if ((sc.addedProjectileAmount) != 0)
+                fullString += "Projectile Amount: " + (sc.baseProjectileAmount) + " (" + (sc.addedProjectileAmount > 0 ? "+" + sc.addedProjectileAmount : sc.addedProjectileAmount) + ")\n";
+            else
+                fullString += "Projectile Amount: " + (sc.baseProjectileAmount) + "\n";
+        }
+        if ((sc.basePierce) > 0)
+        {
+            if ((sc.addedPierce) != 0)
+                fullString += "Pierce: " + (sc.basePierce) + " (" + (sc.addedPierce > 0 ? "+" + sc.addedPierce : sc.addedPierce) + ")\n";
+            else
+                fullString += "Pierce: " + (sc.basePierce) + "\n";
+        }
+        if ((sc.baseChain) > 0)
+        {
+            if ((sc.addedChain) != 0)
+                fullString += "Chain: " + (sc.baseChain) + " (" + (sc.addedChain > 0 ? "+" + sc.addedChain : sc.addedChain) + ")\n";
+            else
+                fullString += "Chain: " + (sc.baseChain) + "\n";
+        }
+        if ((sc.baseMeleeAmount) > 0)
+        {
+            if ((sc.addedMeleeAmount) != 0)
+                fullString += "Melee Amount: " + (sc.baseMeleeAmount) + " (" + (sc.addedMeleeAmount > 0 ? "+" + sc.addedMeleeAmount : sc.addedMeleeAmount) + "\n";
+            else
+                fullString += "Melee Amount: " + (sc.baseMeleeAmount) + "\n";
+        }
+        if ((sc.baseCombo) > 0)
+        {
+            if ((sc.addedCombo) != 0)
+                fullString += "Combo: " + (sc.baseCombo) + " (" + (sc.addedCombo > 0 ? "+" + sc.addedCombo : sc.addedCombo) + ")\n";
+            else
+                fullString += "Combo: " + (sc.baseCombo) + "\n";
+        }
+        if ((sc.baseLifeStealChance) > 0)
+        {
+            if ((sc.addedLifeStealChance) != 0)
+                fullString += "Lifesteal Chance: " + (sc.baseLifeStealChance) + " (" + (sc.addedLifeStealChance > 0 ? "+" + sc.addedLifeStealChance : sc.addedLifeStealChance) + "%)\n";
+            else
+                fullString += "Lifesteal Chance: " + (sc.baseLifeStealChance) + "\n";
+        }
+        if ((sc.baseLifeSteal) > 0)
+        {
+            if ((sc.addedLifeSteal) != 0)
+                fullString += "Lifesteal Amount: " + (sc.baseLifeSteal) + " (" + (sc.addedLifeSteal > 0 ? "+" + sc.addedLifeSteal : sc.addedLifeSteal) + ")\n";
+            else
+                fullString += "Lifesteal Amount: " + (sc.baseLifeSteal) + "\n";
+        }
+        if ((sc.baseAttackRange) > 0)
+        {
+            if ((sc.addedAttackRange) != 0)
+                fullString += "Base Attack Range: " + (sc.baseAttackRange) + " (" + (sc.addedAttackRange > 0 ? "+" + sc.addedAttackRange : sc.addedAttackRange) + "%)\n";
+            else
+                fullString += "Base Attack Range: " + (sc.baseAttackRange) + "\n";
+        }
+        if ((sc.baseTravelRange) > 0)
+        {
+            if ((sc.addedTravelRange) != 0)
+                fullString += "Base Travel Range: " + (sc.baseTravelRange) + " (" + (sc.addedTravelRange > 0 ? "+" + sc.addedTravelRange : sc.addedTravelRange) + "%)\n";
+            else
+                fullString += "Base Travel Range: " + (sc.baseTravelRange) + "\n";
+        }
+        if ((sc.baseTravelSpeed) > 0)
+        {
+            if ((sc.addedTravelSpeed) != 0)
+                fullString += "Base Travel Speed: " + (sc.baseTravelSpeed) + " (" + (sc.addedTravelSpeed > 0 ? "+" + sc.addedTravelSpeed : sc.addedTravelSpeed) + "%)\n";
+            else
+                fullString += "Base Travel Speed: " + (sc.baseTravelSpeed) + "\n";
+        }
+        if ((sc.baseKnockBack) > 0)
+        {
+            if ((sc.addedKnockBack) != 0)
+                fullString += "Knockback: " + (sc.baseKnockBack) + " (" + (sc.addedKnockBack > 0 ? "+" + sc.addedKnockBack : sc.addedKnockBack) + ")\n";
+            else
+                fullString += "Knockback: " + (sc.baseKnockBack) + "\n";
+        }
+        if ((sc.addedAoe) > 0 && sc.isAoe)
+            fullString += "Size: (+" + sc.addedAoe + "%)\n";
 
         return fullString;
     }
@@ -714,6 +819,10 @@ public class UpdateStats : MonoBehaviour
         string fullString = "";
         fullString += "Health: " + instance.player.currentHealth + "/" + instance.player.maxHealth + " (" + (instance.gameplayManager.maxHealthMultiplier >= 0 ? "+" + instance.gameplayManager.maxHealthMultiplier : instance.gameplayManager.maxHealthMultiplier) + "%)\n";
         fullString += "Level: " + instance.gameplayManager.level + "\n";
+        if (instance.gameplayManager.expMultiplier != 0)
+            fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + " (" + (instance.gameplayManager.expMultiplier > 0 ? "+" + instance.gameplayManager.expMultiplier : instance.gameplayManager.expMultiplier) + "%)\n";
+        else
+            fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + "\n";
         if (instance.gameplayManager.defenseMultiplier != 0)
             fullString += "Defense: " + instance.player.defense + " (" + (instance.gameplayManager.defenseMultiplier > 0 ? "+" + instance.gameplayManager.defenseMultiplier : instance.gameplayManager.defenseMultiplier) + "%)\n";
         else
@@ -760,10 +869,6 @@ public class UpdateStats : MonoBehaviour
             fullString += "Magnet Range: " + instance.player.magnetRange + " (" + (instance.gameplayManager.magnetRangeMultiplier > 0 ? "+" + instance.gameplayManager.magnetRangeMultiplier : instance.gameplayManager.magnetRangeMultiplier) + "%)\n";
         else
             fullString += "Magnet Range: " + instance.player.magnetRange + "\n";
-        if (instance.gameplayManager.expMultiplier != 0)
-            fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + " (" + (instance.gameplayManager.expMultiplier > 0 ? "+" + instance.gameplayManager.expMultiplier : instance.gameplayManager.expMultiplier) + "%)\n";
-        else
-            fullString += "Exp: " + instance.gameplayManager.exp + "/" + instance.gameplayManager.expCap + "\n";
         if (instance.gameplayManager.coinDropChanceMultiplier != 0)
             fullString += "Coin Drop Chance: " + (instance.gameplayManager.coinDropChanceMultiplier > 0 ? "+" + instance.gameplayManager.coinDropChanceMultiplier : instance.gameplayManager.coinDropChanceMultiplier) + "%\n";
         if (instance.gameplayManager.dropChanceMultiplier != 0)
@@ -812,36 +917,36 @@ public class UpdateStats : MonoBehaviour
                 if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
                     fullString += "Bleed Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
                 if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
-                    fullString += "Bleed Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                    fullString += "Base Bleed Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + " (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
                 else
-                    fullString += "Bleed Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
+                    fullString += "Base Bleed Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "\n";
             }
             else if (i == 1) //Fire damage
             {
                 if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
                     fullString += "Burn Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
                 if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
-                    fullString += "Burn Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                    fullString += "Base Burn Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + " (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
                 else
-                    fullString += "Burn Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
+                    fullString += "Base Burn Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "\n";
             }
             else if (i == 2) //cold damage
             {
                 if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
                     fullString += "Chill Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
                 if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
-                    fullString += "Chill Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                    fullString += "Base Chill Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + " (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
                 else
-                    fullString += "Chill Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
+                    fullString += "Base Chill Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "\n";
             }
             else if (i == 3) //lightning damage
             {
                 if (instance.gameplayManager.ailmentsChanceAdditive[i] != 0)
                     fullString += "Shock Chance: " + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsChanceAdditive[i] : instance.gameplayManager.ailmentsChanceAdditive[i]) + "%\n";
                 if (instance.gameplayManager.ailmentsEffectMultiplier[i] != 0)
-                    fullString += "Shock Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "% (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
+                    fullString += "Base Shock Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + " (" + (instance.gameplayManager.ailmentsChanceAdditive[i] > 0 ? "+" + instance.gameplayManager.ailmentsEffectMultiplier[i] : instance.gameplayManager.ailmentsEffectMultiplier[i]) + "%)\n";
                 else
-                    fullString += "Shock Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "%\n";
+                    fullString += "Base Shock Effect: " + instance.gameplayManager.baseAilmentsEffect[i] * (1 + (instance.gameplayManager.ailmentsEffectMultiplier[i] / 100)) + "\n";
             }
         }
         if (instance.gameplayManager.criticalChanceAdditive != 0)
@@ -851,7 +956,7 @@ public class UpdateStats : MonoBehaviour
         if (instance.gameplayManager.meleeCriticalChanceAdditive != 0)
             fullString += "Melee Critical Chance: " + (instance.gameplayManager.meleeCriticalChanceAdditive > 0 ? "+" + instance.gameplayManager.meleeCriticalChanceAdditive : instance.gameplayManager.meleeCriticalChanceAdditive) + "%\n";
         if (instance.gameplayManager.criticalDamageAdditive != 0)
-            fullString += "Critical Damage: " + (instance.gameplayManager.criticalDamageAdditive > 0 ? "+" + instance.gameplayManager.criticalDamageAdditive : instance.gameplayManager.criticalDamageAdditive) + "%\n";
+            fullString += "Critical Damage: " + instance.gameplayManager.criticalDamageAdditive + "%\n";
         if (instance.gameplayManager.projectileCriticalDamageAdditive != 0)
             fullString += "Projectile Critical Damage: " + (instance.gameplayManager.projectileCriticalDamageAdditive > 0 ? "+" + instance.gameplayManager.projectileCriticalDamageAdditive : instance.gameplayManager.projectileCriticalDamageAdditive) + "%\n";
         if (instance.gameplayManager.meleeCriticalDamageAdditive != 0)

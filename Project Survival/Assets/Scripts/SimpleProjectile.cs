@@ -7,6 +7,7 @@ public class SimpleProjectile : MonoBehaviour
 {
     public bool isPlayerProjectile;
     public Rigidbody2D rb;
+    public Collider2D hitBoxCollider;
     public TrailRenderer trailRend;
     public Vector3 direction;
     public Vector3 startingPos;
@@ -39,11 +40,13 @@ public class SimpleProjectile : MonoBehaviour
     }
     public void OnEnable()
     {
-        trailRend.Clear();
+        if (trailRend != null)
+            trailRend.Clear();
         startingPos = transform.position;
     }
     private void OnDisable()
     {
-        trailRend.Clear();
+        if (trailRend != null)
+            trailRend.Clear();
     }
 }

@@ -119,7 +119,7 @@ public class PlayerStats : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy Projectile"))
         {
             if (isInvincible) return;
-            SimpleProjectile enemyProj = collision.GetComponent<SimpleProjectile>();
+            SimpleProjectile enemyProj = collision.GetComponentInParent<SimpleProjectile>();
             TakeDamage(enemyProj.damageTypes, false); //Do damage to player
             enemyProj.gameObject.SetActive(false);
             return;
