@@ -70,7 +70,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 15
   damageTypes:
-  - 22
+  - 10
   - 0
   - 0
   - 0
@@ -105,18 +105,17 @@ MonoBehaviour:
   circleAttack: 0
   burstAttack: 0
   barrageAttack: 0
-  aoeSpreadAttack: 0
-  aoeCircleAttack: 0
-  aoeBurstAttack: 0
-  aoeBarrageAttack: 0
-  isAoeProjectile: 1
-  isAoeOnTarget: 0
+  useAoeProjectile: 0
+  useAoeOnTarget: 1
+  aoeProjectileDuration: 1
+  aoeDespawnDuration: 0.3
+  aoeHitBoxDuration: 0.05
   barrageCooldown: 0
   barrageCounter: 0
-  attackCooldown: 1
+  attackCooldown: 3
   attackTimer: 0
-  attackRange: 6
-  projectile: 1
+  attackRange: 8
+  projectile: 4
   projectileSpeed: 7
   projectileRange: 10
   projectileSize: 0

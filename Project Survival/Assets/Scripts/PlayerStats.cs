@@ -83,7 +83,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (playerMovement.inIFrames)
         {
-            if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Enemy Projectile"))
+            if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Enemy Projectile") || collision.gameObject.CompareTag("Enemy AoE"))
             {
                 if (!dodgeList.Contains(collision.gameObject))
                 {
@@ -116,14 +116,6 @@ public class PlayerStats : MonoBehaviour
             }
             return;
         }
-        if (collision.gameObject.CompareTag("Enemy Projectile"))
-        {
-            if (isInvincible) return;
-            SimpleProjectile enemyProj = collision.GetComponentInParent<SimpleProjectile>();
-            TakeDamage(enemyProj.damageTypes, false); //Do damage to player
-            enemyProj.gameObject.SetActive(false);
-            return;
-        }
         ICollectibles collectible = collision.GetComponent<ICollectibles>();
         if (collision.tag.Contains("Coin"))
         {
@@ -148,6 +140,37 @@ public class PlayerStats : MonoBehaviour
             FloatingTextController.DisplayPlayerText(transform, "+1 " + collision.name, Color.white, 0.7f);
         }
         playerCollector.collectiblesList.Remove(collectible);
+    }
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (playerMovement.inIFrames)
+        {
+            if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Enemy Projectile") || collision.gameObject.CompareTag("Enemy AoE"))
+            {
+                if (!dodgeList.Contains(collision.gameObject))
+                {
+                    dodgeList.Add(collision.gameObject);
+                    FloatingTextController.DisplayPlayerText(transform, "Dodge", Color.white, 0.7f);
+                }
+            }
+            return;
+        }
+        if (collision.gameObject.CompareTag("Enemy Projectile"))
+        {
+            if (isInvincible) return;
+            SimpleProjectile enemyProj = collision.GetComponentInParent<SimpleProjectile>();
+            TakeDamage(enemyProj.damageTypes, false); //Do damage to player
+            enemyProj.gameObject.SetActive(false);
+            return;
+        }
+        if (collision.gameObject.CompareTag("Enemy AoE"))
+        {
+            if (isInvincible) return;
+            AoeDamage aoe = collision.transform.GetComponent<AoeDamage>();
+            aoe.hitBoxCollider.enabled = false;
+            TakeDamage(aoe.damageTypes, false); //Do damage to player
+            return;
+        }
     }
     public void TakeDamage(List<float> dmgType, bool triggerIframe)
     {

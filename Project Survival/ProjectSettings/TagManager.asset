@@ -15,6 +15,7 @@ TagManager:
   - Skill Orb
   - Coin
   - Damage Indicator
+  - Enemy AoE
   layers:
   - Default
   - TransparentFX

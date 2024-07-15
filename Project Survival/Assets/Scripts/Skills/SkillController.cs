@@ -608,7 +608,7 @@ public class SkillController : MonoBehaviour
                             if (p % 2 == 1)
                             {
                                 poolList[i].SetDirection((Quaternion.AngleAxis(spreadAngle * counter, Vector3.forward) * direction).normalized);
-                                if (direction.magnitude < 3)
+                                if (direction.magnitude < 3) //limit the spawn position minimum so it cannot spawn close to player.
                                     poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + spreadAngle * counter, Vector3.forward) * Vector3.right * 3;
                                 else
                                     poolList[i].transform.position = spawnPos.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + spreadAngle * counter, Vector3.forward) * Vector3.right * direction.magnitude;

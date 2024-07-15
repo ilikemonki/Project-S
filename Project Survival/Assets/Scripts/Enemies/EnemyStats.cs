@@ -33,8 +33,8 @@ public class EnemyStats : MonoBehaviour
     [Header("Attack")]
     public bool canAttack; //initialize in awake
     public bool spreadAttack, circleAttack, burstAttack, barrageAttack;
-    public bool aoeSpreadAttack, aoeCircleAttack, aoeBurstAttack, aoeBarrageAttack;
-    public bool isAoeProjectile, isAoeOnTarget;
+    public bool useAoeProjectile, useAoeOnTarget;
+    public float aoeProjectileDuration, aoeDespawnDuration, aoeHitBoxDuration;
     public float barrageCooldown, barrageCounter; //For barrage
     public float attackCooldown, attackTimer, attackRange;
     public float projectile;

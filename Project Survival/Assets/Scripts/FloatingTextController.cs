@@ -16,7 +16,7 @@ public class FloatingTextController : MonoBehaviour
     private void Start()
     {
         current = this;
-        DOTween.SetTweensCapacity(400, 50);
+        DOTween.SetTweensCapacity(400, 125);
         PopulatePool(50);
     }
 

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySkillController : MonoBehaviour
 {
     public SimpleProjectile prefab;
-    public DamageIndicator damageIndicatorPrefab;
+    public AoeDamage aoeDamagePrefab;
     public List<SimpleProjectile> projectileList;
-    public List<DamageIndicator> damageIndicatorList;
+    public List<AoeDamage> aoeDamageList;
     public GameObject damageIndicatorParent;
+    public AoeDamage aoeDamage;
 
     int counter;
     float spreadAngle;
@@ -15,38 +17,33 @@ public class EnemySkillController : MonoBehaviour
     private void Start()
     {
         PopulateProjectilePool(20);
-        PopulateIndicatorPool(10);
+        PopulateAoeDamagePool(10);
     }
     private void FixedUpdate()
     {
         for (int i = 0; i < projectileList.Count; i++)  //Loop through all projectiles and move them.
         {
-            if (projectileList[i].gameObject.activeSelf)
+            if (projectileList[i].gameObject.activeSelf && !projectileList[i].isAoeProjectile)
             {
-                projectileList[i].currentRange = Vector3.Distance(projectileList[i].transform.position, projectileList[i].startingPos);
-                if (projectileList[i].currentRange >= projectileList[i].travelRange)
-                {
-                    projectileList[i].gameObject.SetActive(false);
-                }
-                projectileList[i].rb.MovePosition(projectileList[i].transform.position + (projectileList[i].travelSpeed * Time.fixedDeltaTime * projectileList[i].direction));
+                projectileList[i].Move();
             }
         }
     }
-    public void SpawnDamageIndicator(SimpleProjectile proj, Transform targetPos)
+    public AoeDamage FindAoeDamage(Transform target, EnemyStats enemy)
     {
-        proj.hitBoxCollider.gameObject.layer = LayerMask.NameToLayer("Ignore All");
-        for (int i = 0; i < damageIndicatorList.Count; i++)
+        for (int i = 0; i < aoeDamageList.Count; i++)
         {
-            if (i > damageIndicatorList.Count - 2)
+            if (i > aoeDamageList.Count - 2)
             {
-                PopulateIndicatorPool(10);
+                PopulateAoeDamagePool(10);
             }
-            if (!damageIndicatorList[i].gameObject.activeSelf)
+            if (!aoeDamageList[i].gameObject.activeSelf)
             {
-                damageIndicatorList[i].SetIndicator(proj, targetPos);
-                break;
+                aoeDamageList[i].SetAoeDamage(target, enemy);
+                return aoeDamageList[i];
             }
         }
+        return null;
     }
     public void BarrageBehavior(EnemyStats enemy, Transform targetPos)       //Spawn/Activate skill. Projectiles barrages.
     {
@@ -71,8 +68,29 @@ public class EnemySkillController : MonoBehaviour
     public void SpreadBehavior(EnemyStats enemy, Transform targetPos)       //Spawn/Activate skill. Projectiles spread.
     {
         counter = 0;
-        spreadAngle = 90 / enemy.projectile;
+        if (enemy.useAoeProjectile || enemy.useAoeOnTarget)
+            spreadAngle = 60 / enemy.projectile;
+        else spreadAngle = 90 / enemy.projectile;
         direction = targetPos.position - enemy.transform.position;
+        if (enemy.useAoeOnTarget)
+        {
+            for (int p = 0; p < enemy.projectile; p++)
+            {
+                if (p != 0) counter++;
+                aoeDamage = FindAoeDamage(targetPos, enemy);
+                if (p % 2 != 0)
+                {
+                    counter--;
+                    aoeDamage.transform.position = enemy.transform.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + spreadAngle * (p - counter), Vector3.forward) * Vector3.right * direction.magnitude;
+                }
+                else
+                {
+                    aoeDamage.transform.position = enemy.transform.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + -spreadAngle * (p - counter), Vector3.forward) * Vector3.right * direction.magnitude;
+                }
+                aoeDamage.gameObject.SetActive(true);
+            }
+            return;
+        }
         for (int p = 0; p < enemy.projectile; p++)    //number of projectiles
         {
             if (p != 0) counter++;
@@ -99,8 +117,25 @@ public class EnemySkillController : MonoBehaviour
                         projectileList[i].direction = (Quaternion.AngleAxis(-spreadAngle * (p - counter), Vector3.forward) * direction).normalized;
                     }
                     projectileList[i].transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(projectileList[i].direction.y, projectileList[i].direction.x) * Mathf.Rad2Deg);
+                    projectileList[i].target = targetPos;
                     SetProjectileStats(projectileList[i], enemy);
-                    SpawnDamageIndicator(projectileList[i], targetPos);
+                    if (enemy.useAoeProjectile)
+                    {
+                        aoeDamage = FindAoeDamage(targetPos, enemy);
+                        if (p % 2 != 0)
+                        {
+                            aoeDamage.transform.position = enemy.transform.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + spreadAngle * (p - counter), Vector3.forward) * Vector3.right * direction.magnitude;
+                        }
+                        else
+                        {
+                            aoeDamage.transform.position = enemy.transform.position + Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + -spreadAngle * (p - counter), Vector3.forward) * Vector3.right * direction.magnitude;
+                        }
+                        projectileList[i].target = aoeDamage.transform;
+                        projectileList[i].hitBoxCollider.enabled = false;
+                        projectileList[i].isAoeProjectile = true;
+                        projectileList[i].aoeProjectileDuration = enemy.aoeProjectileDuration;
+                        aoeDamage.gameObject.SetActive(true);
+                    }
                     projectileList[i].gameObject.SetActive(true);
                     break;
                 }
@@ -171,13 +206,13 @@ public class EnemySkillController : MonoBehaviour
             projectileList.Add(projectile);
         }
     }
-    public void PopulateIndicatorPool(int spawnAmount)
+    public void PopulateAoeDamagePool(int spawnAmount)
     {
         for (int i = 0; i < spawnAmount; i++)
         {
-            DamageIndicator di = Instantiate(damageIndicatorPrefab, damageIndicatorParent.transform);    //Spawn, add to list, and initialize prefabs
+            AoeDamage di = Instantiate(aoeDamagePrefab, damageIndicatorParent.transform);    //Spawn, add to list, and initialize prefabs
             di.gameObject.SetActive(false);
-            damageIndicatorList.Add(di);
+            aoeDamageList.Add(di);
         }
     }
 }
