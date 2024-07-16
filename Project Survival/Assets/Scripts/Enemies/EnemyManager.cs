@@ -20,17 +20,7 @@ public class EnemyManager : MonoBehaviour
         public int numberToSpawn;
         public int whenToSpawn;   //start spawning when spawner reach the amount of mobs spawned
         public int currentSpawned;
-        //Make changes to these stats only when enemy stat changes happen. This way we don't need to keep calculating their stats everytime an enemy spawns.
-        //public List<float> damageTypes; //manually set to 4 in inspector
-        //public List<float> reductions;
-        //public float maxHealth;
-        //public float moveSpeed;
-        //public float exp;
-        //public float attackCooldown;
-        //public float projectile;
-        //public float projectileTravelSpeed;
-        //public float projectileSize;
-        public EnemyStats enemyStat;
+        public Enemy enemyStat;
     }
     public int enemiesAlive;
     public List<Round> rounds;
@@ -38,14 +28,15 @@ public class EnemyManager : MonoBehaviour
     public EnemyController enemyController;
     public EnemyDetector enemyDetector;
     public GameplayManager gameplayManager;
-    public EnemyStats basePrefab;
+    public Enemy basePrefab;
     public SpawnMarks spawnMarks;
     public DropRate dropRate;
     public RectTransform backGroundRect;
     public float spawnTimer;
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
-    public List<EnemyStats> enemyList = new();
+    public List<Enemy> enemyList = new();
+    public EnemyStats baseEnemy;
     float spawnPosX, spawnPosY;
     Vector2 spawnPos;
     private void Start()
@@ -78,15 +69,14 @@ public class EnemyManager : MonoBehaviour
         }
 
     }
-
     public void PopulatePool(int spawnAmount)
     {
-        for (int i = 0; i < spawnAmount; i++)
+        for (int i = 0; i < 100; i++)
         {
-            EnemyStats es = Instantiate(basePrefab, enemyController.transform);    //Spawn, add to list, and initialize prefabs
+            Enemy es = Instantiate(basePrefab, enemyController.transform);    //Spawn, add to list, and initialize prefabs
             es.gameObject.SetActive(false);
-            es.enemyManager = this;
-            es.dropRate = dropRate;
+            es.transform.position = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+            es.enemyStats = baseEnemy;
             enemyList.Add(es);
         }
     }
@@ -126,7 +116,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
     //Spawns the mark, waits a sec, then spawns the enemy on top of it.
-    public void SpawnMarkAndEnemy(EnemyStats enemy, EnemyGroup enemyGroup, bool isRare)
+    public void SpawnMarkAndEnemy(Enemy enemy, EnemyGroup enemyGroup, bool isRare)
     {
         enemy.isSpawning = true;
         spawnPosX = Random.Range(-backGroundRect.rect.width * 0.5f, backGroundRect.rect.width * 0.5f);
@@ -157,47 +147,47 @@ public class EnemyManager : MonoBehaviour
         enemy.spriteRenderer.transform.localScale = enemyGroup.enemyPrefab.spriteRenderer.transform.localScale;
         enemy.boxCollider.offset = enemyGroup.enemyPrefab.boxCollider.offset;
         enemy.boxCollider.size = enemyGroup.enemyPrefab.boxCollider.size;
-        enemy.knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
+        //enemy.knockBackImmune = enemyGroup.enemyPrefab.knockBackImmune;
         enemy.chilled = false; enemy.burned = false; enemy.shocked = false; enemy.bleeding = false;
         for (int i = 0; i < enemy.topAilmentsEffect.Count; i++)
         {
             enemy.topAilmentsEffect[i] = 0;
         }
-        enemy.SetStats(enemyGroup.enemyStat);   //Set new stats to enemy
+        //enemy.SetStats(enemyGroup.enemyStat);   //Set new stats to enemy
         spawnMarks.Spawn(spawnPos, enemy);
         if (enemy.burned)
             Debug.Log(enemy + "is spawned Burned");
     }
     public void UpdateAllEnemyStats()
     {
-        for (int i = 0; i < rounds.Count; ++i)
-        {
-            foreach (var eGroup in rounds[i].enemyGroups)
-            {
-                for (int j = 0; j < gameplayManager.damageTypeMultiplier.Count; j++)
-                {
-                    if (eGroup.enemyPrefab.damageTypes[j] > 0)
-                        eGroup.enemyStat.damageTypes[j] = eGroup.enemyPrefab.damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
-                    eGroup.enemyStat.reductions[j] = eGroup.enemyPrefab.reductions[j] + gameplayManager.enemyReductions[j];
-                }
-                eGroup.enemyStat.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
-                eGroup.enemyStat.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
-                eGroup.enemyStat.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.expMultiplier / 100);
-                eGroup.enemyStat.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
-                if (eGroup.enemyPrefab.canAttack == true)
-                {
-                    eGroup.enemyStat.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
-                    eGroup.enemyStat.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
-                    //eGroup.enemyStat.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
-                }
-                else
-                {
-                    eGroup.enemyStat.projectile = 0;
-                    eGroup.enemyStat.projectileSpeed = 0;
-                    eGroup.enemyStat.projectileSize = 0;
-                }
-            }
-        }
+        //for (int i = 0; i < rounds.Count; ++i)
+        //{
+        //    foreach (var eGroup in rounds[i].enemyGroups)
+        //    {
+        //        for (int j = 0; j < gameplayManager.damageTypeMultiplier.Count; j++)
+        //        {
+        //            if (eGroup.enemyPrefab.damageTypes[j] > 0)
+        //                eGroup.enemyStat.damageTypes[j] = eGroup.enemyPrefab.damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
+        //            eGroup.enemyStat.reductions[j] = eGroup.enemyPrefab.reductions[j] + gameplayManager.enemyReductions[j];
+        //        }
+        //        eGroup.enemyStat.moveSpeed = eGroup.enemyPrefab.baseMoveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
+        //        eGroup.enemyStat.maxHealth = eGroup.enemyPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
+        //        eGroup.enemyStat.exp = eGroup.enemyPrefab.exp * (1 + gameplayManager.expMultiplier / 100);
+        //        eGroup.enemyStat.attackCooldown = eGroup.enemyPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
+        //        if (eGroup.enemyPrefab.canAttack == true)
+        //        {
+        //            eGroup.enemyStat.projectile = eGroup.enemyPrefab.projectile + gameplayManager.enemyProjectileAdditive;
+        //            eGroup.enemyStat.projectileSpeed = eGroup.enemyPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
+        //            //eGroup.enemyStat.projectileSize = eGroup.enemyPrefab.projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
+        //        }
+        //        else
+        //        {
+        //            eGroup.enemyStat.projectile = 0;
+        //            eGroup.enemyStat.projectileSpeed = 0;
+        //            eGroup.enemyStat.projectileSize = 0;
+        //        }
+        //    }
+        //}
     }
 
 }

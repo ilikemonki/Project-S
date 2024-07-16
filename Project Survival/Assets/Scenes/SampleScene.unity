@@ -4905,7 +4905,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.19}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -4916,7 +4916,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.6}
+  m_Size: {x: 0.5, y: 0.4}
   m_EdgeRadius: 0
 --- !u!50 &177331395
 Rigidbody2D:
@@ -6026,7 +6026,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &230398754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6042,21 +6042,256 @@ MonoBehaviour:
   enemiesAlive: 0
   rounds:
   - enemyGroups:
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+    - enemyPrefab: {fileID: 537351024}
       numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
-      enemyStat: {fileID: 537351024}
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
       numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
-      enemyStat: {fileID: 537351024}
-    - enemyPrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
       numberToSpawn: 100
       whenToSpawn: 0
       currentSpawned: 0
-      enemyStat: {fileID: 537351024}
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
+    - enemyPrefab: {fileID: 537351024}
+      numberToSpawn: 100
+      whenToSpawn: 0
+      currentSpawned: 0
+      enemyStat: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
     totalEnemiesInRound: 0
     currentTotalSpawned: 0
     spawnInterval: 1
@@ -6064,17 +6299,15 @@ MonoBehaviour:
   enemyController: {fileID: 56640376}
   enemyDetector: {fileID: 1879265019}
   gameplayManager: {fileID: 944733854}
-  basePrefab: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+  basePrefab: {fileID: 4553056770363870060, guid: da786a3aadf97a744ac61feb2f5c8294, type: 3}
   spawnMarks: {fileID: 1306391348}
   dropRate: {fileID: 2135092638}
   backGroundRect: {fileID: 2004487906}
   spawnTimer: 0
   enemiesAliveCap: 1000
   maxEnemiesReached: 0
-  enemyList:
-  - {fileID: 1032330349}
-  - {fileID: 280882407}
-  - {fileID: 733687062}
+  enemyList: []
+  baseEnemy: {fileID: 537351024}
 --- !u!4 &230398755
 Transform:
   m_ObjectHideFlags: 0
@@ -7061,17 +7294,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6882981367253833175, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
   m_PrefabInstance: {fileID: 208440576}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &280882407 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-  m_PrefabInstance: {fileID: 208440576}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8be4ec79b5772424b8f940bd1dabf854, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &286448669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17835,17 +18057,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6882981367253833175, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
   m_PrefabInstance: {fileID: 414080734}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &733687062 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-  m_PrefabInstance: {fileID: 414080734}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8be4ec79b5772424b8f940bd1dabf854, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &735636685
 GameObject:
   m_ObjectHideFlags: 0
@@ -23144,7 +23355,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 937357421}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 230398754}
+        m_TargetAssemblyTypeName: EnemyManager, Assembly-CSharp
+        m_MethodName: PopulatePool2
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &937357421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24589,7 +24812,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.2}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -24600,7 +24823,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.6}
+  m_Size: {x: 0.5, y: 0.2}
   m_EdgeRadius: 0
 --- !u!1 &995685912
 GameObject:
@@ -25794,17 +26017,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6882981367253833175, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
   m_PrefabInstance: {fileID: 1547913926}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1032330349 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
-  m_PrefabInstance: {fileID: 1547913926}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8be4ec79b5772424b8f940bd1dabf854, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1036364561
 GameObject:
   m_ObjectHideFlags: 0
@@ -46374,7 +46586,7 @@ TrailRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2123694131
   m_SortingLayer: 2
-  m_SortingOrder: -11
+  m_SortingOrder: -5
   m_Time: 0.2
   m_Parameters:
     serializedVersion: 3
@@ -56162,6 +56374,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 230398755}
     m_Modifications:
+    - target: {fileID: 131203667826465492, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
+      propertyPath: enemyManager
+      value: 
+      objectReference: {fileID: 230398754}
     - target: {fileID: 1273539247791564998, guid: 818dea91b2798ab4cb5b3e3c3bdb8943, type: 3}
       propertyPath: m_Name
       value: Enemy

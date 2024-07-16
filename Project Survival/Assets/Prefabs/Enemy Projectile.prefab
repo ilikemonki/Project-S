@@ -173,8 +173,8 @@ MonoBehaviour:
   currentRange: 0
   travelRange: 0
   travelSpeed: 0
+  aoeProjectileDuration: 0
   isAoeProjectile: 0
-  aoeDamage: {fileID: 0}
   passiveItemEffect: {fileID: 0}
 --- !u!50 &5642709273626213055
 Rigidbody2D:

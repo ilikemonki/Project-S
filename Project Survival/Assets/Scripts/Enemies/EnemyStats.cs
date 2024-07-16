@@ -18,7 +18,6 @@ public class EnemyStats : MonoBehaviour
     public float exp;
     public bool chilled, burned, shocked, bleeding;
     public List<float> topAilmentsEffect;
-    //public List<float> ailmentsCounter;
     public SpriteRenderer spriteRenderer;
     float totalBurnDamage, totalBleedDamage;
     public Rigidbody2D rb;
@@ -34,15 +33,15 @@ public class EnemyStats : MonoBehaviour
     public bool canAttack; //initialize in awake
     public bool spreadAttack, circleAttack, burstAttack, barrageAttack;
     public bool useAoeProjectile, useAoeOnTarget;
-    public float aoeProjectileDuration, aoeDespawnDuration, aoeHitBoxDuration;
-    public float barrageCooldown, barrageCounter; //For barrage
+    public float aoeProjectileDuration, aoeDespawnDuration, aoeHitBoxDuration, aoeDelay;
+    public float barrageTimer, barrageCounter; //For barrage
     public float attackCooldown, attackTimer, attackRange;
     public float projectile;
     public float projectileSpeed;
     public float projectileRange;
     public float projectileSize;
     public bool isAttacking;
-    public GameObject attackImage;
+    public GameObject attackImage; //Exclamation mark
     //Status Timers
     float knockbackTimer, damageFlashTimer, chilledTimer, burnedTimer, shockedTimer, bleedingTimer;
     int burnOneSecCounter, bleedOneSecCounter; //When timer hits 1 sec, increment counter. 5 counters mean 5 seconds
@@ -77,9 +76,6 @@ public class EnemyStats : MonoBehaviour
         this.barrageAttack = enemy.barrageAttack;
 
         CheckAttack();
-    }
-    public void SetNonModifiedStats(EnemyStats enemyPrefab)
-    {
     }
     public void CheckAttack()
     {
@@ -165,7 +161,7 @@ public class EnemyStats : MonoBehaviour
         burnOneSecCounter = 0; bleedOneSecCounter = 0; 
         if (barrageAttack)
         {
-            barrageCooldown = 0; barrageCounter = 0;
+            barrageTimer = 0; barrageCounter = 0;
         }
         if (enemyManager != null)
             enemyManager.enemyDetector.RemoveEnemyFromList(this);

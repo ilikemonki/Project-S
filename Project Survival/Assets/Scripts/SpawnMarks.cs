@@ -25,7 +25,7 @@ public class SpawnMarks : MonoBehaviour
     }
 
     //spawn mark
-    public void Spawn(Vector2 spawnPos, EnemyStats enemy)
+    public void Spawn(Vector2 spawnPos, Enemy enemy)
     {
         for (int i = 0; i < spawnMarkList.Count; i++)
         {

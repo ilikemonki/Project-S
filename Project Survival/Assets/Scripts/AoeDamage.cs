@@ -21,16 +21,16 @@ public class AoeDamage : MonoBehaviour
         }
     }
 
-    public void SetAoeDamage(Transform targetPos, EnemyStats enemy)
+    public void SetAoeDamage(Transform targetPos, Enemy enemy, int currentNumOfAttack)
     {
         transform.position = targetPos.position;
-        aoeProjectileDuration = enemy.aoeProjectileDuration;
-        aoeDespawnDuration = enemy.aoeDespawnDuration;
-        aoeHitBoxDuration = enemy.aoeHitBoxDuration;
+        aoeProjectileDuration = enemy.enemyStats.aoeProjectileDuration + (currentNumOfAttack * enemy.enemyStats.aoeDelay);
+        aoeDespawnDuration = enemy.enemyStats.aoeDespawnDuration;
+        aoeHitBoxDuration = enemy.enemyStats.aoeHitBoxDuration;
         startFill = true;
         aoeDespawnTimer = 0;
         damageTypes.Clear();
-        damageTypes.AddRange(enemy.damageTypes);
+        damageTypes.AddRange(enemy.enemyStats.damageTypes);
         fillRect.localScale = new Vector3(0, 0, 1);
         indicatorRect.gameObject.SetActive(true);
         fillRect.gameObject.SetActive(true);

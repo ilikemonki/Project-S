@@ -370,28 +370,28 @@ public class SkillBehavior : MonoBehaviour
             {
                 for (int j = 0; j < rememberEnemyList.Count; j++)
                 {
-                    if (rememberEnemyList.Contains(skillController.enemyManager.enemyList[i]))
-                    {
-                        dontChain = true;
-                        break;
-                    }
+                    //if (rememberEnemyList.Contains(skillController.enemyManager.enemyList[i]))
+                    //{
+                    //    dontChain = true;
+                    //    break;
+                    //}
                 }
                 if (!dontChain)
                 {
-                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
-                    if (!closest)
-                    {
-                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
-                        {
-                            shortestDistance = distanceToEnemy;
-                            nearestEnemy = skillController.enemyManager.enemyList[i];
-                        }
-                    }
-                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
-                    {
-                        shortestDistance = distanceToEnemy;
-                        nearestEnemy = skillController.enemyManager.enemyList[i];
-                    }
+                    //distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
+                    //if (!closest)
+                    //{
+                    //    if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
+                    //    {
+                    //        shortestDistance = distanceToEnemy;
+                    //        nearestEnemy = skillController.enemyManager.enemyList[i];
+                    //    }
+                    //}
+                    //else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
+                    //{
+                    //    shortestDistance = distanceToEnemy;
+                    //    nearestEnemy = skillController.enemyManager.enemyList[i];
+                    //}
                 }
             }
         }
