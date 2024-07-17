@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 0}
+  hitboxCollider: {fileID: 2091443446569891467}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:

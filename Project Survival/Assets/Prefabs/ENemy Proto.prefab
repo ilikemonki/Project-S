@@ -161,24 +161,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3acb97450a2d1df49b6672f7db009458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 0}
+  enemyStats: {fileID: 0}
   currentHealth: 0
   moveSpeed: 0
   chilled: 0
   burned: 0
   shocked: 0
   bleeding: 0
-  topAilmentsEffect: []
+  topAilmentsEffect:
+  - 0
+  - 0
+  - 0
+  - 0
   spriteRenderer: {fileID: 3079849750608719041}
+  totalBurnDamage: 0
+  totalBleedDamage: 0
   rb: {fileID: 1872766183918427297}
   boxCollider: {fileID: 2963501724359659322}
   knockedBack: 0
   isSpawning: 0
+  isDead: 0
+  showDamageFlash: 0
   barrageTimer: 0
   barrageCounter: 0
   attackTimer: 0
   isAttacking: 0
   attackImage: {fileID: 450927004034512872}
+  knockbackTimer: 0
+  damageFlashTimer: 0
+  chilledTimer: 0
+  burnedTimer: 0
+  shockedTimer: 0
+  bleedingTimer: 0
+  burnOneSecCounter: 0
+  bleedOneSecCounter: 0
 --- !u!1 &6221360767215130778
 GameObject:
   m_ObjectHideFlags: 0

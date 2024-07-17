@@ -19,10 +19,13 @@ public class EnemyController : MonoBehaviour
     }
     public void CheckEnemyStatus(List<Enemy> enemyList)
     {
-        //for (int i = 0; i < enemyList.Count; ++i)
-        //{
-        //    enemyList[i].UpdateStatusEffect();
-        //}
+        for (int i = 0; i < enemyList.Count; ++i)
+        {
+            if (enemyList[i].gameObject.activeSelf)
+            {
+                enemyList[i].enemyStats.UpdateStatusEffect(enemyList[i]);
+            }
+        }
     }
     public void MoveAndAttack(List<Enemy> enemyList)
     {
@@ -50,34 +53,34 @@ public class EnemyController : MonoBehaviour
                 if (enemyList[i].enemyStats.canAttack && enemyList[i].isAttacking)    //Attack
                 {
                     if (!enemyList[i].knockedBack) enemyList[i].rb.velocity = Vector2.zero;
-                    enemyList[i].attackTimer -= Time.deltaTime;
-                    if (enemyList[i].attackTimer <= 0.5f && enemyList[i].attackImage.activeSelf == false)
+                    enemyList[i].attackTimer += Time.deltaTime;
+                    if (enemyList[i].attackTimer >= enemyList[i].enemyStats.attackCooldown - 0.5f && !enemyList[i].attackImage.activeSelf)
                     {
                         if (enemyList[i].enemyStats.barrageAttack && enemyList[i].barrageCounter <= 0) 
                             enemyList[i].attackImage.SetActive(true);
                         else
                             enemyList[i].attackImage.SetActive(true);
                     }
-                    if (enemyList[i].attackTimer <= 0f)
+                    if (enemyList[i].attackTimer >= enemyList[i].enemyStats.attackCooldown)
                     {
                         if (enemyList[i].enemyStats.spreadAttack)
                         {
                             enemyProjectilePool.SpreadBehavior(enemyList[i], enemyManager.player.transform);
-                            enemyList[i].attackTimer = enemyList[i].enemyStats.attackCooldown;
+                            enemyList[i].attackTimer = 0;
                             enemyList[i].attackImage.SetActive(false);
                             enemyList[i].isAttacking = false;
                         }
                         else if (enemyList[i].enemyStats.circleAttack)
                         {
                             enemyProjectilePool.CircleBehavior(enemyList[i], enemyManager.player.transform);
-                            enemyList[i].attackTimer = enemyList[i].enemyStats.attackCooldown;
+                            enemyList[i].attackTimer = 0;
                             enemyList[i].attackImage.SetActive(false);
                             enemyList[i].isAttacking = false;
                         }
                         else if (enemyList[i].enemyStats.burstAttack)
                         {
                             enemyProjectilePool.BurstBehavior(enemyList[i], enemyManager.player.transform);
-                            enemyList[i].attackTimer = enemyList[i].enemyStats.attackCooldown;
+                            enemyList[i].attackTimer = 0;
                             enemyList[i].attackImage.SetActive(false);
                             enemyList[i].isAttacking = false;
                         }
@@ -97,7 +100,7 @@ public class EnemyController : MonoBehaviour
                             else if (enemyList[i].barrageCounter >= enemyList[i].enemyStats.projectile)
                             {
                                 enemyList[i].barrageCounter = 0;
-                            enemyList[i].attackTimer = enemyList[i].enemyStats.attackCooldown;
+                            enemyList[i].attackTimer = 0;
                             enemyList[i].attackImage.SetActive(false);
                             enemyList[i].isAttacking = false;
                             }

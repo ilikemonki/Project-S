@@ -24,8 +24,8 @@ public class SimpleProjectile : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            EnemyStats enemy = collision.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
-            enemy.TakeDamage(damageTypes.Sum(), false);
+            Enemy enemy = collision.GetComponentInParent<Enemy>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
+            enemy.enemyStats.TakeDamage(enemy, damageTypes.Sum(), false);
             if (passiveItemEffect != null)
             {
                 passiveItemEffect.totalRecorded += damageTypes.Sum();

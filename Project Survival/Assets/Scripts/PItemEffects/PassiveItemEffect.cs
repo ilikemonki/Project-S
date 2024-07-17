@@ -18,7 +18,7 @@ public class PassiveItemEffect : MonoBehaviour
     {
 
     }
-    public virtual void CheckCondition(GameObject obj)
+    public virtual void CheckCondition(Enemy Enemy)
     {
 
     }

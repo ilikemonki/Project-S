@@ -56,11 +56,11 @@ public class BoneShardEffect : PassiveItemEffect
             }
         }
     }
-    public override void CheckCondition(GameObject obj)
+    public override void CheckCondition(Enemy enemy)
     {
         if (checkCondition)
         {
-            deadEnemyList.Add(obj.transform);
+            deadEnemyList.Add(enemy.transform);
         }
     }
     public override void RemoveEffect()

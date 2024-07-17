@@ -51,13 +51,13 @@ public class PItemEffectManager : MonoBehaviour
             }
         }
     }
-    public static void CheckAllPItemCondition(GameObject obj, ConditionTag condTag) //Go through list and check conditionTag with the other
+    public static void CheckAllPItemCondition(Enemy enemy, ConditionTag condTag) //Go through list and check conditionTag with the other
     {
         for (int i = 0; i < instance.pItemEffectList.Count; i++)
         {
             if (instance.pItemEffectList[i].conditionTag.Equals(condTag) && instance.pItemEffectList[i].checkCondition)
             {
-                instance.pItemEffectList[i].CheckCondition(obj);
+                instance.pItemEffectList[i].CheckCondition(enemy);
             }
         }
     }

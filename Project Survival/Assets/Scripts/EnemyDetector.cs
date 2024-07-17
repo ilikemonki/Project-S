@@ -5,14 +5,14 @@ using UnityEngine;
 public class EnemyDetector : MonoBehaviour
 {
     public CircleCollider2D detectorCollider;
-    public List<EnemyStats> enemyDetectorList;
+    public List<Enemy> enemyDetectorList;
 
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            EnemyStats enemy = collision.GetComponentInParent<EnemyStats>();
+            Enemy enemy = collision.GetComponentInParent<Enemy>();
             if (!enemyDetectorList.Contains(enemy))
             {
                 enemyDetectorList.Add(enemy);
@@ -23,7 +23,7 @@ public class EnemyDetector : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            EnemyStats enemy = collision.GetComponentInParent<EnemyStats>();
+            Enemy enemy = collision.GetComponentInParent<Enemy>();
             if (enemyDetectorList.Contains(enemy))
             {
                 enemyDetectorList.Remove(enemy);
@@ -34,17 +34,17 @@ public class EnemyDetector : MonoBehaviour
     {
         detectorCollider.radius = newRange;
     }
-    public void RemoveEnemyFromList(EnemyStats enemy)
+    public void RemoveEnemyFromList(Enemy enemy)
     {
         if (enemyDetectorList.Contains(enemy))
             enemyDetectorList.Remove(enemy);
     }
-    public EnemyStats FindNearestTarget()
+    public Enemy FindNearestTarget()
     {
         if (enemyDetectorList.Count <= 0) return null;
         float shortestDistance = Mathf.Infinity;
         float distanceToEnemy;
-        EnemyStats nearestEnemy = null;
+        Enemy nearestEnemy = null;
         for (int i = 0; i < enemyDetectorList.Count; i++) //search all mobs for nearest distance
         {
             if (enemyDetectorList[i] == null)
@@ -72,7 +72,7 @@ public class EnemyDetector : MonoBehaviour
         if (nearestEnemy != null) return nearestEnemy;
         else return null;
     }
-    public EnemyStats FindRandomTarget()
+    public Enemy FindRandomTarget()
     {
         if (enemyDetectorList.Count <= 0) return null;
         else

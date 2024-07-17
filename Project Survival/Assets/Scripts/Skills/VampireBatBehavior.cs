@@ -9,7 +9,7 @@ public class VampireBatBehavior : SkillBehavior
     {
         base.Update();
     }
-    public override void DoDamage(EnemyStats enemy, float damageEffectiveness)
+    public override void DoDamage(Enemy enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
         if (applyCrit)  //Crit damage
@@ -18,28 +18,28 @@ public class VampireBatBehavior : SkillBehavior
         }
         if (applyAilment[1])    //fire, burn
         {
-            enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
+            enemy.enemyStats.ApplyBurn(enemy, (damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
         }
         else if (applyAilment[2])   //cold, chill
         {
-            enemy.ApplyChill(skillController.ailmentsEffect[2]);
+            enemy.enemyStats.ApplyChill(enemy, skillController.ailmentsEffect[2]);
         }
         else if (applyAilment[3])   //lightning, shock
         {
-            enemy.ApplyShock(skillController.ailmentsEffect[3]);
+            enemy.enemyStats.ApplyShock(enemy, skillController.ailmentsEffect[3]);
         }
         else if (applyAilment[0]) //physical, bleed
         {
-            enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
+            enemy.enemyStats.ApplyBleed(enemy, (damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
         }
-        enemy.TakeDamage(totalDamage, applyCrit);
+        enemy.enemyStats.TakeDamage(enemy, totalDamage, applyCrit);
         if (skillController.damageCooldown > 0)
         {
             rememberEnemyList.Add(enemy);
         }
-        if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
+        if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.enemyStats.knockBackImmune)  //Apply knockback
         {
-            enemy.KnockBack((enemy.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
+            enemy.enemyStats.KnockBack(enemy, (enemy.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
         }
         if (skillController.isMelee && skillController.combo > 1 && !hasHitEnemy && skillController.comboCounter < skillController.combo)
         {
@@ -66,10 +66,10 @@ public class VampireBatBehavior : SkillBehavior
     {
         if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
+            Enemy enemy = col.GetComponentInParent<Enemy>(); if (enemy == null || !enemy.enemyStats.gameObject.activeSelf) return;
             //Will damage the target only.
             if (hasHitEnemy) return;
-            if (enemy.transform.Equals(target))
+            if (enemy.enemyStats.transform.Equals(target))
             {
                 DoDamage(enemy, 100); 
                 SetReturn();

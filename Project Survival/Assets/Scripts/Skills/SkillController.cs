@@ -13,13 +13,13 @@ public class SkillController : MonoBehaviour
     public GameplayManager gameplayManager;
     public List<SkillBehavior> poolList = new();
     public List<SkillBehavior> stayOnPlayerPoolList = new();
-    List<EnemyStats> multiTargetList = new(); //Used in multitarget behavior to remember enemies targeted.
+    List<Enemy> multiTargetList = new(); //Used in multitarget behavior to remember enemies targeted.
     public PlayerStats player;
     public EnemyManager enemyManager;
     public Upgrades levelUpgrades;
     public int level;
     public float exp;
-    EnemyStats enemyTarget;
+    Enemy enemyTarget;
     float shortestDistance, distanceToEnemy;
     [Header("Base Stats")]
     public List<float> baseDamageTypes; //[0]physical,[1]fire,[2]cold,[3]lightning
@@ -860,12 +860,12 @@ public class SkillController : MonoBehaviour
             }
         }
     }
-    public EnemyStats FindNearestMultiTarget()
+    public Enemy FindNearestMultiTarget()
     {
         if (multiTargetList.Count <= 0) return null;
         float shortestDistance = Mathf.Infinity;
         float distanceToEnemy;
-        EnemyStats nearestEnemy = null;
+        Enemy nearestEnemy = null;
         for (int i = 0; i < multiTargetList.Count; i++) //search all mobs for nearest distance
         {
             if (multiTargetList[i].gameObject.activeSelf)
@@ -894,7 +894,7 @@ public class SkillController : MonoBehaviour
         }
     }
     //Used for when orbit projectile has chain. Orbit proj will despawn and spawn a new projectile to chain.
-    public void SpawnChainProjectile(List<EnemyStats> chainList, Transform target, Transform spawnPos)
+    public void SpawnChainProjectile(List<Enemy> chainList, Transform target, Transform spawnPos)
     {
         for (int i = 0; i < poolList.Count; i++)
         {

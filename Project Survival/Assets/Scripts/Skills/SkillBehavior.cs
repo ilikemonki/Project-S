@@ -13,7 +13,7 @@ public class SkillBehavior : MonoBehaviour
     public List<bool> applyAilment;
     public float travelSpeed;
     public int pierce, chain;
-    protected EnemyStats nearestEnemy;
+    protected Enemy nearestEnemy;
     public Transform target;
     protected float shortestDistance, distanceToEnemy;
     public float totalDamage;
@@ -21,7 +21,7 @@ public class SkillBehavior : MonoBehaviour
     public bool hasHitEnemy;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRend;
-    public List<EnemyStats> rememberEnemyList = new(); //remember the enemies hit, will not hit the same enemy again. Cannot chain at same target
+    public List<Enemy> rememberEnemyList = new(); //remember the enemies hit, will not hit the same enemy again. Cannot chain at same target
     public bool stayUpRightOnly;
     public bool isOrbitSkill, rotateSkill, returnSkill, isHoming;
     public Vector3 startingPos;
@@ -189,7 +189,7 @@ public class SkillBehavior : MonoBehaviour
     }
 
 
-    public virtual void DoDamage(EnemyStats enemy, float damageEffectiveness)
+    public virtual void DoDamage(Enemy enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
         if (applyCrit)  //Crit damage
@@ -210,21 +210,21 @@ public class SkillBehavior : MonoBehaviour
         }
         if (applyAilment[1])    //fire, burn
         {
-            enemy.ApplyBurn((damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
+            enemy.enemyStats.ApplyBurn(enemy, (damageTypes[1] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[1] / 100));
         }
         else if (applyAilment[2])   //cold, chill
         {
-            enemy.ApplyChill(skillController.ailmentsEffect[2]);
+            enemy.enemyStats.ApplyChill(enemy, skillController.ailmentsEffect[2]);
         }
         else if (applyAilment[3])   //lightning, shock
         {
-            enemy.ApplyShock(skillController.ailmentsEffect[3]);
+            enemy.enemyStats.ApplyShock(enemy, skillController.ailmentsEffect[3]);
         }
         else if (applyAilment[0]) //physical, bleed
         {
-            enemy.ApplyBleed((damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
+            enemy.enemyStats.ApplyBleed(enemy, (damageTypes[0] * (damageEffectiveness / 100)) * (skillController.ailmentsEffect[0] / 100));
         }
-        enemy.TakeDamage(totalDamage, applyCrit);
+        enemy.enemyStats.TakeDamage(enemy, totalDamage, applyCrit);
         if ((!isOrbitSkill && skillController.damageCooldown <= 0) || skillController.damageCooldown > 0)
         {
             if (!rememberEnemyList.Contains(enemy))
@@ -232,9 +232,9 @@ public class SkillBehavior : MonoBehaviour
                 rememberEnemyList.Add(enemy);
             }
         }
-            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.knockBackImmune)  //Apply knockback
+            if (skillController.knockBack > 0 && !enemy.knockedBack && !enemy.enemyStats.knockBackImmune)  //Apply knockback
         {
-            enemy.KnockBack((enemy.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
+            enemy.enemyStats.KnockBack(enemy, (enemy.transform.position - skillController.player.transform.position).normalized * skillController.knockBack);
         }
         if (skillController.isMelee && skillController.combo > 1 && !hasHitEnemy && skillController.comboCounter < skillController.combo)
         {
@@ -263,7 +263,7 @@ public class SkillBehavior : MonoBehaviour
         if (hitOnceOnly) return;
         if (col.CompareTag("Enemy"))
         {
-            EnemyStats enemy = col.GetComponentInParent<EnemyStats>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
+            Enemy enemy = col.GetComponentInParent<Enemy>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
             if (rememberEnemyList.Count > 0)
             {
                 if (rememberEnemyList.Contains(enemy)) return;
