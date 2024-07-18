@@ -86,11 +86,12 @@ public class SkillBehavior : MonoBehaviour
         if (skillController.useHoming && !isHoming && !skillController.isMelee) //Activate homing
         {
             currentHomingTimer += Time.deltaTime;
-            if (currentHomingTimer >= (100 / travelSpeed) * 0.01)
+            if (currentHomingTimer >= 0.15)
             {
                 target = FindTarget(true);
                 isHoming = true; 
                 hitboxCollider.enabled = true;
+                startingPos = transform.position;
             }
         }
         if (rememberEnemyList.Count > 0 && skillController.damageCooldown > 0) //For damage cooldown
@@ -370,28 +371,28 @@ public class SkillBehavior : MonoBehaviour
             {
                 for (int j = 0; j < rememberEnemyList.Count; j++)
                 {
-                    //if (rememberEnemyList.Contains(skillController.enemyManager.enemyList[i]))
-                    //{
-                    //    dontChain = true;
-                    //    break;
-                    //}
+                    if (rememberEnemyList.Contains(skillController.enemyManager.enemyList[i]))
+                    {
+                        dontChain = true;
+                        break;
+                    }
                 }
                 if (!dontChain)
                 {
-                    //distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
-                    //if (!closest)
-                    //{
-                    //    if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
-                    //    {
-                    //        shortestDistance = distanceToEnemy;
-                    //        nearestEnemy = skillController.enemyManager.enemyList[i];
-                    //    }
-                    //}
-                    //else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
-                    //{
-                    //    shortestDistance = distanceToEnemy;
-                    //    nearestEnemy = skillController.enemyManager.enemyList[i];
-                    //}
+                    distanceToEnemy = Vector3.Distance(transform.position, skillController.enemyManager.enemyList[i].transform.position);
+                    if (!closest)
+                    {
+                        if (distanceToEnemy > shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
+                        {
+                            shortestDistance = distanceToEnemy;
+                            nearestEnemy = skillController.enemyManager.enemyList[i];
+                        }
+                    }
+                    else if (distanceToEnemy < shortestDistance && distanceToEnemy <= skillController.travelRange * 0.5)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = skillController.enemyManager.enemyList[i];
+                    }
                 }
             }
         }

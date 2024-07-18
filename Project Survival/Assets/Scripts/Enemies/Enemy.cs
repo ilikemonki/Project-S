@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public class Enemy : MonoBehaviour
     public bool chilled, burned, shocked, bleeding;
     public List<float> topAilmentsEffect;
     public SpriteRenderer spriteRenderer;
-    public float totalBurnDamage, totalBleedDamage;
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
     public bool knockedBack;
@@ -37,7 +37,6 @@ public class Enemy : MonoBehaviour
             topAilmentsEffect[i] = 0;
         }
         chilled = false; burned = false; shocked = false; bleeding = false;
-        totalBurnDamage = 0; totalBleedDamage = 0;
         attackTimer = 0;
         knockbackTimer = 0; damageFlashTimer = 0;
         burnedTimer = 0; chilledTimer = 0; shockedTimer = 0; bleedingTimer = 0;

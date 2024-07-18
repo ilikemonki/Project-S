@@ -286,7 +286,6 @@ public class EnemyStats : MonoBehaviour
             enemy.burnedTimer += Time.deltaTime;
             if (enemy.burnedTimer >= 1f) //Take burn damage per second
             {
-                enemy.totalBurnDamage += Mathf.Round(enemy.topAilmentsEffect[1]);
                 TakeDotDamage(enemy, enemy.topAilmentsEffect[1]);
                 GameManager.totalBurnDamage += enemy.topAilmentsEffect[1];
                 enemy.burnOneSecCounter++;
@@ -298,7 +297,6 @@ public class EnemyStats : MonoBehaviour
                 enemy.topAilmentsEffect[1] = 0;
                 enemy.burnedTimer = 0;
                 enemy.burnOneSecCounter = 0;
-                enemy.totalBurnDamage = 0; 
             }
         }
         if (enemy.bleeding) //bleed duration
@@ -306,7 +304,6 @@ public class EnemyStats : MonoBehaviour
             enemy.bleedingTimer += Time.deltaTime;
             if (enemy.bleedingTimer >= 1f) //Take bleed damage per second
             {
-                enemy.totalBleedDamage += Mathf.Round(enemy.topAilmentsEffect[0]);
                 TakeDotDamage(enemy, enemy.topAilmentsEffect[0]);
                 GameManager.totalBleedDamage += enemy.topAilmentsEffect[0];
                 enemy.bleedOneSecCounter++;
@@ -318,7 +315,6 @@ public class EnemyStats : MonoBehaviour
                 enemy.topAilmentsEffect[0] = 0;
                 enemy.bleedingTimer = 0;
                 enemy.bleedOneSecCounter = 0;
-                enemy.totalBleedDamage = 0;
             }
         }
     }

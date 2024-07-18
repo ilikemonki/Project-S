@@ -156,8 +156,8 @@ public class SkillController : MonoBehaviour
         }
         else if (!stopFiring && !useOrbit)
         {
-            currentCooldown += Time.deltaTime;
-            if (currentCooldown >= cooldown)
+            currentCooldown -= Time.deltaTime;
+            if (currentCooldown <= 0)
             {
                 if (!skillTrigger.isTriggerSkill)   //Use skill if it is not a skill trigger
                 {
@@ -170,7 +170,7 @@ public class SkillController : MonoBehaviour
             if (barrageCounter < meleeAmount + projectileAmount) //fires the amount of attacks
             {
                 barrageCooldown += Time.deltaTime;
-                if (barrageCooldown >= 0.10f) //firing interval here.
+                if (barrageCooldown >= 0.15f) //firing interval here.
                 {
                     if (useBarrage)
                         BarrageBehavior(targetPos, transform, null);
@@ -210,7 +210,7 @@ public class SkillController : MonoBehaviour
             if (enemyTarget == null) return;
         }
         stopFiring = true;
-        currentCooldown = 0;
+        currentCooldown = cooldown;
         if (combo > 0 && isMelee) //combo
         {
             if (comboCounter >= combo) 
@@ -316,7 +316,7 @@ public class SkillController : MonoBehaviour
                 if (sc.skillController.skillTrigger.useUsageTrigger)
                 {
                     sc.skillController.skillTrigger.currentCounter++; 
-                    if (sc.skillController.currentCooldown >= cooldown)
+                    if (sc.skillController.currentCooldown <= 0)
                         sc.skillController.UseSkill();
                 }
             }
@@ -796,7 +796,7 @@ public class SkillController : MonoBehaviour
             numOfAttacks -= numberOfSkillObjectsEnabled;
             if (numOfAttacks <= 0) //reset cd
             {
-                currentCooldown = cooldown - 0.5f;
+                currentCooldown = 0.5f;
                 stopFiring = false;
                 return;
             }
@@ -1058,7 +1058,7 @@ public class SkillController : MonoBehaviour
         highestDamageType = damageTypes.IndexOf(Mathf.Max(damageTypes.ToArray()));  //Find highest damage type.
         duration = baseDuration * (1 + (gameplayManager.durationMultiplier  + addedCooldown / 100));
         knockBack = baseKnockBack + addedKnockBack;
-        currentCooldown = 0;
+        currentCooldown = cooldown;
         if (useOrbit)
         {
             if (stayOnPlayerPoolList.Count < projectileAmount + meleeAmount) //if proj/melee has increased, spawn more to pool.

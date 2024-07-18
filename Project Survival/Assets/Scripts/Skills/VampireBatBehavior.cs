@@ -66,10 +66,10 @@ public class VampireBatBehavior : SkillBehavior
     {
         if (col.CompareTag("Enemy"))
         {
-            Enemy enemy = col.GetComponentInParent<Enemy>(); if (enemy == null || !enemy.enemyStats.gameObject.activeSelf) return;
+            Enemy enemy = col.GetComponentInParent<Enemy>(); if (enemy == null || !enemy.gameObject.activeSelf) return;
             //Will damage the target only.
             if (hasHitEnemy) return;
-            if (enemy.enemyStats.transform.Equals(target))
+            if (enemy.transform.Equals(target))
             {
                 DoDamage(enemy, 100); 
                 SetReturn();

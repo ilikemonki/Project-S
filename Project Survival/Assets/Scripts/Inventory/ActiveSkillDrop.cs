@@ -74,6 +74,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                         inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController = null; //null the skillController in skill list
                         inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].autoToggle.isOn = true;
                         inventory.activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].autoToggle.gameObject.SetActive(false);
+                        inventory.activeSkillUIList[draggableItem.activeSkillDrop.activeSlotNum].RemoveSkill();
                         //new active slot
                         draggableItem.activeSkillDrop = this; // Set New activeskilldrop
                         inventory.activeSkillList[activeSlotNum].skillController = draggableItem.skillController; //Set new skill Controller in skill list
@@ -91,6 +92,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                                 UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, inventory.activeSkillList[activeSlotNum].skillController, asd.frameImage, false);
                             }
                         }
+                        inventory.activeSkillUIList[activeSlotNum].SetSkill(inventory.activeSkillList[activeSlotNum].skillController);
                     }
                     else //skill gem
                     {
@@ -148,7 +150,7 @@ public class ActiveSkillDrop : MonoBehaviour, IDropHandler, IPointerClickHandler
                 inventory.activeSkillList[activeSlotNum].autoToggle.gameObject.SetActive(false);
                 inventory.DropInInventory(draggableItem);
             }
-            else
+            else // gem
             {
                 if (inventory.activeSkillList[activeSlotNum].skillController != null)
                 {

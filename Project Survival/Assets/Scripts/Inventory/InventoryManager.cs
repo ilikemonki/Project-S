@@ -16,6 +16,7 @@ public class InventoryManager : MonoBehaviour
     }
     public List<Skill> activeSkillList = new();
     public List<TextMeshProUGUI> generalStatistics = new(); //Statistics. List must be in order of the GameManager.totalIntStats and totalFloatStats list.
+    public List<ActiveSkillUI> activeSkillUIList = new();
     public SkillSlotUI uiPrefab;
     public GameObject skillParent;
     public GameObject skillPoolParent;
@@ -31,42 +32,12 @@ public class InventoryManager : MonoBehaviour
     {
         UpdateStats.FormatPlayerStatsToString();
         UpdateStats.FormatEnemyStatsToString();
-        //foreach(Skill skill in activeSkillList) //Set current skills at start of game.
-        //{
-        //    if (skill.activeSkillDrop.draggableItem != null)
-        //    {
-        //        InstantiateSkill(skill.activeSkillDrop.draggableItem);
-        //        skill.activeSkillDrop.nameText.text = "Lv. " + skill.skillController.level.ToString() + " " + skill.activeSkillDrop.draggableItem.itemDescription.itemName;
-        //        SkillSlotUI slotUI = Instantiate(uiPrefab, inventoryOrbDrop.contentParent.transform);
-        //        skill.activeSkillDrop.draggableItem.slotUI = slotUI;
-        //        slotUI.inUseText.gameObject.SetActive(true);
-        //        slotUI.name = uiPrefab.name;
-        //        slotUI.nameText.text = skill.activeSkillDrop.draggableItem.itemDescription.itemName;
-        //        slotUI.levelText.text = "Lv. " + skill.skillController.level.ToString();
-        //        slotUI.fadedImage.sprite = skill.activeSkillDrop.draggableItem.itemDescription.itemSprite;
-        //        itemManager.skillOrbList.Add(skill.activeSkillDrop.draggableItem, 1);
-        //        skill.autoToggle.gameObject.SetActive(true);
-        //    }
-        //    else
-        //    {
-        //        skill.autoToggle.gameObject.SetActive(false);
-        //    }
-        //}
-        //for (int i = 0; i < activeSkillList.Count; i++) //Apply gem mods to active skills
-        //{
-        //    foreach (ActiveSkillDrop asd in activeSkillList[i].skillGemDropList)
-        //    {
-        //        if (asd.draggableItem != null && activeSkillList[i].skillController != null)
-        //        {
-        //            UpdateStats.ApplyGemUpgrades(asd.draggableItem.itemDescription.upgrade, activeSkillList[i].skillController, false);
-        //        }
-        //    }
-        //}
     }
     public void DropInInventory(DraggableItem draggableItem)
     {
         if(draggableItem.itemDescription.itemType == ItemDescription.ItemType.SkillOrb)
         {
+            activeSkillUIList[draggableItem.activeSkillDrop.activeSlotNum].RemoveSkill();
             draggableItem.slotUI.inUseText.gameObject.SetActive(false);
             activeSkillList[draggableItem.activeSkillDrop.activeSlotNum].skillController = null;
             draggableItem.activeSkillDrop.draggableItem = null;
@@ -199,6 +170,7 @@ public class InventoryManager : MonoBehaviour
                     }
                     dragItem.skillController = skill;
                     activeSkillList[dragItem.activeSkillDrop.activeSlotNum].skillController = skill;
+                    activeSkillUIList[dragItem.activeSkillDrop.activeSlotNum].SetSkill(activeSkillList[dragItem.activeSkillDrop.activeSlotNum].skillController);
                     return;
                 }
             }
