@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7636711164442120139}
   - component: {fileID: 8558217897996643977}
+  - component: {fileID: 3128804589290839858}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -78,8 +79,8 @@ SpriteRenderer:
   m_SortingLayerID: -2123694131
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 4e94d679172ec2049abcec21bc9d9f3b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 97fcc87f1d720c34dae44c66902ead12, type: 3}
+  m_Color: {r: 0.3622641, g: 0.6716543, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -89,6 +90,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &3128804589290839858
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894399823435802500}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.3
 --- !u!1 &3139460322398848796
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,11 +115,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6593507805115416358}
-  - component: {fileID: -6595649996783161566}
+  - component: {fileID: 7106024182963288096}
   - component: {fileID: 2398783455814874361}
-  - component: {fileID: 8299049198692649782}
   m_Layer: 12
-  m_Name: Shield Throw Behavior
+  m_Name: Music Note Behavior
   m_TagString: Player Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +146,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &-6595649996783161566
+--- !u!114 &7106024182963288096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,10 +155,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3139460322398848796}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
+  m_Script: {fileID: 11500000, guid: e5e17463e95c5664d9fcca5782157db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 8299049198692649782}
+  hitboxCollider: {fileID: 3128804589290839858}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -163,9 +179,9 @@ MonoBehaviour:
   rb: {fileID: 2398783455814874361}
   spriteRend: {fileID: 8558217897996643977}
   rememberEnemyList: []
-  stayUpRightOnly: 0
+  stayUpRightOnly: 1
   isOrbitSkill: 0
-  rotateSkill: 1
+  rotateSkill: 0
   returnSkill: 0
   isHoming: 0
   startingPos: {x: 0, y: 0, z: 0}
@@ -196,22 +212,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &8299049198692649782
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3139460322398848796}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.4
 --- !u!1 &7367343785020446495
 GameObject:
   m_ObjectHideFlags: 0

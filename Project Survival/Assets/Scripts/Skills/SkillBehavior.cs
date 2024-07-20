@@ -68,7 +68,7 @@ public class SkillBehavior : MonoBehaviour
 
     public virtual void Update()
     {
-        if (stayUpRightOnly && target != null) //FlipX only if stayUpRight is true
+        if (stayUpRightOnly && target != null && isHoming) //FlipX only if stayUpRight is true
         {
             if (target.transform.position.x > transform.position.x)
             {
@@ -439,7 +439,7 @@ public class SkillBehavior : MonoBehaviour
         returnSkill = false;
         hitOnceOnly = false;
     }
-    private void OnEnable()
+    public virtual void OnEnable()
     {
         startingPos = transform.position;
     }
