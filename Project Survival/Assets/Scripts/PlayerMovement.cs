@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
+using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
     public PlayerStats player;
     public Rigidbody2D rb;
     public TrailRenderer trailRend;
     public SpriteRenderer spriteRenderer;
+    public List<Image> dashImageList = new();
+    public GameObject dashImageParent;
+    public Image dashImagePrefab;
+    public Image dashImageOnCooldown;
     public Vector3 moveDirection;
     public float dashIFrameSeconds, baseDashCooldown, dashCooldown;
     public float baseDashPower, dashPower;
@@ -22,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         UpdateDashStats();
+        currentDashCharges = maxDashCharges;
+        timer = 0;
     }
     // Update is called once per frame
     void Update()
@@ -29,19 +36,17 @@ public class PlayerMovement : MonoBehaviour
         if (Time.timeScale >= 1)
         {
             InputManagement();
-            if (currentDashCharges < maxDashCharges)
+            if (currentDashCharges < maxDashCharges && dashImageOnCooldown != null)
             {
-                timer -= Time.deltaTime;
-                player.gameplayManager.UpdateDashTime(timer);
-                if (timer <= 0)
+                timer += Time.deltaTime;
+                dashImageOnCooldown.fillAmount = timer / dashCooldown;
+                if (timer > dashCooldown)
                 {
+                    dashImageOnCooldown.fillAmount = 1;
+                    dashImageOnCooldown = null;
                     currentDashCharges++;
-                    player.gameplayManager.UpdateDashText();
-                    timer = dashCooldown;
-                    if (currentDashCharges == maxDashCharges)
-                    {
-                        player.gameplayManager.dashTimerText.text = "";
-                    }
+                    timer = 0;
+                    FindImageOnCooldown();
                 }
             }
             if (dashEnds)
@@ -64,6 +69,49 @@ public class PlayerMovement : MonoBehaviour
             PlayerMove();
         }
     }
+    public void FindImageOnCooldown()
+    {
+        if (currentDashCharges >= maxDashCharges) return;
+        if (dashImageOnCooldown == null)
+        {
+            for (int i = dashImageList.Count - 1; i >= 0; i--)
+            {
+                if (!dashImageList[i].gameObject.activeSelf)
+                {
+                    dashImageOnCooldown = dashImageList[i];
+                    dashImageOnCooldown.fillAmount = 0;
+                    dashImageList.Remove(dashImageList[i]);
+                    dashImageList.Add(dashImageOnCooldown);
+                    dashImageOnCooldown.transform.SetAsLastSibling();
+                    dashImageOnCooldown.gameObject.SetActive(true);
+                    return;
+                }
+            }
+        }
+    }
+    public void InactivateLastDashImage()
+    {
+        for (int i = dashImageList.Count - 1; i >= 0; i--)
+        {
+            if (dashImageList[i].gameObject.activeSelf)
+            {
+                if (dashImageOnCooldown != null)
+                {
+                    if (!dashImageList[i].Equals(dashImageOnCooldown))
+                    {
+                        dashImageList[i].gameObject.SetActive(false);
+                        return;
+                    }
+                }
+                else
+                {
+                    dashImageList[i].gameObject.SetActive(false);
+                    return;
+                }
+            }
+        }
+    }
+
 
     void InputManagement()
     {
@@ -90,8 +138,8 @@ public class PlayerMovement : MonoBehaviour
     void PlayerMove() 
     {
         smoothInput = Vector3.SmoothDamp(smoothInput, new Vector2(moveX, moveY).normalized, ref smoothVelocity, 0.1f);
-        rb.MovePosition(transform.position + (player.moveSpeed * Time.fixedDeltaTime * smoothInput));        
-        //rb.velocity = new Vector2(moveDirection.x * playertats.moveSpeed, moveDirection.y * playertats.moveSpeed);
+        rb.MovePosition(transform.position + (player.moveSpeed * Time.fixedDeltaTime * smoothInput));
+        //rb.velocity = new Vector2(moveDirection.x * player.moveSpeed, moveDirection.y * player.moveSpeed);
     }
 
     public IEnumerator<float> Dash()
@@ -110,10 +158,11 @@ public class PlayerMovement : MonoBehaviour
         dashEnds = false;
         afterIFrames = 0;
         currentDashCharges--;
-        player.gameplayManager.UpdateDashText();
         isDashing = true;
         inIFrames = true;
         trailRend.emitting = true;
+        InactivateLastDashImage();
+        FindImageOnCooldown();
         if (moveDirection.x > 0)
             dashDirectionX = player.moveSpeed;
         else if (moveDirection.x < 0)
@@ -135,9 +184,29 @@ public class PlayerMovement : MonoBehaviour
     {
         dashPower = baseDashPower * (1 + (player.gameplayManager.dashPowerMultiplier / 100)); ;
         maxDashCharges = baseDashCharges + player.gameplayManager.dashChargesAdditive;
-        currentDashCharges = maxDashCharges;
         dashCooldown = baseDashCooldown * (1 + (player.gameplayManager.dashCooldownMultiplier / 100));
-        timer = dashCooldown;
+        SetDashImages();
+    }
+    public void SetDashImages()
+    {
+        if (dashImageList.Count < maxDashCharges)
+        {
+            int p = maxDashCharges - dashImageList.Count;
+            for (int i = 0; i < p; i++)
+            {
+                Image img = Instantiate(dashImagePrefab, dashImageParent.transform);
+                dashImageList.Add(img);
+            }
+        }
+        if (dashImageList.Count > maxDashCharges)
+        {
+            int p = dashImageList.Count - maxDashCharges;
+            for (int i = 0; i < p; i++)
+            {
+                Destroy(dashImageList[i]);
+                dashImageList.RemoveAt(i);
+            }
+        }
     }
 }
 

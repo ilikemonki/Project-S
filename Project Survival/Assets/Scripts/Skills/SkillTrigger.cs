@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SkillTrigger : MonoBehaviour
 {
+    public SkillController skillController;
     [Header("Trigger Stats")]
     public float counterGoal;
     public float currentCounter;  //variable can be reused for multiple triggers that needs a counter.
@@ -26,5 +27,21 @@ public class SkillTrigger : MonoBehaviour
             return true;
         }
         else return false;
+    }
+
+    public void UpdateCounter()
+    {
+        foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
+        {
+            if (sc.skillController != null)
+            {
+                if (sc.skillController.skillTrigger.useCritTrigger)
+                {
+                    sc.skillController.skillTrigger.currentCounter++;
+                    if (sc.skillController.currentCooldown <= 0f)
+                        sc.skillController.UseSkill();
+                }
+            }
+        }
     }
 }

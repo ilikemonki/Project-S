@@ -19,7 +19,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public Slider expSlider; 
     public ParticleSystem expSliderParticle;
-    public TextMeshProUGUI coinText, hpText, regenText, expText, dashText, dashTimerText;
+    public TextMeshProUGUI coinText, hpText, regenText, expText;
     public Vector3 mousePos;
     public Camera cam;
     public float furthestAttackRange;    //Gets furthest range between all skills, used in EnemyDistances to find targets within the range.
@@ -77,7 +77,6 @@ public class GameplayManager : MonoBehaviour
         cam.transparencySortAxis = new Vector3(0, 1, 1);
         timer = maxTimer;
         UpdateCoinText();
-        UpdateDashText();
         UpdateExpBar();
         expSlider.maxValue = expCap;
         hpText.text = player.currentHealth.ToString() + "/" + player.maxHealth.ToString();
@@ -175,19 +174,11 @@ public class GameplayManager : MonoBehaviour
     {
         levelText.text = "Lv. " + level;
     }
-    public void UpdateDashText()
-    {
-        dashText.text = player.playerMovement.currentDashCharges.ToString();
-    }
     public void UpdateRegenText()
     {
         if (player.regen - player.degen == 0) regenText.text = "";
         else if (player.regen - player.degen < 0) regenText.text = "<color=red> -" + (player.regen - player.degen).ToString() + "<color=white> HP/s";
         else regenText.text = "<color=green> +" + (player.regen - player.degen).ToString() + "<color=white> HP/s";
-    }
-    public void UpdateDashTime(float timer)
-    {
-        dashTimerText.text = timer.ToString("F1");
     }
     public void UpdateExpBar()
     {

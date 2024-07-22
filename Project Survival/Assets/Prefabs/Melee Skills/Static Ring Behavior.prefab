@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7636711164442120139}
   - component: {fileID: 8558217897996643977}
+  - component: {fileID: 1229004368745049438}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -89,6 +90,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &1229004368745049438
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894399823435802500}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &3139460322398848796
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,7 +117,6 @@ GameObject:
   - component: {fileID: 6593507805115416358}
   - component: {fileID: -6595649996783161566}
   - component: {fileID: 2398783455814874361}
-  - component: {fileID: 4637542314292023886}
   m_Layer: 12
   m_Name: Static Ring Behavior
   m_TagString: Player Skill
@@ -142,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 4637542314292023886}
+  hitboxCollider: {fileID: 1229004368745049438}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -196,22 +212,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &4637542314292023886
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3139460322398848796}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!1 &7367343785020446495
 GameObject:
   m_ObjectHideFlags: 0

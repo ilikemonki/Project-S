@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7636711164442120139}
   - component: {fileID: 8558217897996643977}
+  - component: {fileID: 7580641766778698355}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -89,6 +90,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &7580641766778698355
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894399823435802500}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!1 &3139460322398848796
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,7 +117,6 @@ GameObject:
   - component: {fileID: 6593507805115416358}
   - component: {fileID: 6476299053214260335}
   - component: {fileID: 2398783455814874361}
-  - component: {fileID: 2532300490071692853}
   m_Layer: 12
   m_Name: Fireball Behavior
   m_TagString: Player Skill
@@ -142,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b08aaa40a430c4458dcb1aa55ce5932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 2532300490071692853}
+  hitboxCollider: {fileID: 7580641766778698355}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -197,22 +213,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &2532300490071692853
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3139460322398848796}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.4
 --- !u!1 &4793958572411847404
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,7 +224,6 @@ GameObject:
   - component: {fileID: 653739355993160930}
   - component: {fileID: 9021825088092231646}
   - component: {fileID: 8623314478798720431}
-  - component: {fileID: 1885873997803850467}
   m_Layer: 12
   m_Name: Explosion Behavior
   m_TagString: Player Skill
@@ -265,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7d04c6b39c3fb4386f9a30557d5c38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 1885873997803850467}
+  hitboxCollider: {fileID: 508705612305751270}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -323,22 +322,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &1885873997803850467
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4793958572411847404}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.4
 --- !u!1 &6076168414634801002
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2948795636800275566}
   - component: {fileID: 6716468415376783003}
+  - component: {fileID: 508705612305751270}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -428,3 +412,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &508705612305751270
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6076168414634801002}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4

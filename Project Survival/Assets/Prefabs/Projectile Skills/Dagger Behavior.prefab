@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7636711164442120139}
   - component: {fileID: 8558217897996643977}
+  - component: {fileID: 3156618648353221338}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -89,6 +90,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &3156618648353221338
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894399823435802500}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 64, y: 64}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.17}
+  m_EdgeRadius: 0
 --- !u!1 &3139460322398848796
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,7 +127,6 @@ GameObject:
   - component: {fileID: 6593507805115416358}
   - component: {fileID: -6595649996783161566}
   - component: {fileID: 2398783455814874361}
-  - component: {fileID: 8107869552629071974}
   m_Layer: 12
   m_Name: Dagger Behavior
   m_TagString: Player Skill
@@ -141,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2d17745ce94e248a3d5966453d13d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxCollider: {fileID: 8107869552629071974}
+  hitboxCollider: {fileID: 3156618648353221338}
   skillController: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
   damageTypes:
@@ -195,29 +221,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &8107869552629071974
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3139460322398848796}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.17}
-  m_EdgeRadius: 0
