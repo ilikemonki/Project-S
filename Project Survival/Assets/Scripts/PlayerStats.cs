@@ -33,9 +33,7 @@ public class PlayerStats : MonoBehaviour
     public List<float> reductions;
     //I-Frames
     public float iFrameDuration;
-    public float iFrameTimer;
-    public bool isInvincible;
-    public List<GameObject> dodgeList; 
+    public List<GameObject> dodgeList;
     float damageFlashTimer;
     bool showDamageFlash;
     [Header("Other Modifiers")]
@@ -59,14 +57,6 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        if(iFrameTimer > 0)
-        {
-            iFrameTimer -= Time.deltaTime;
-        }
-        else if (isInvincible)
-        {
-            isInvincible = false;
-        }
         if (showDamageFlash) //reset damage flash
         {
             damageFlashTimer += Time.deltaTime;
@@ -99,25 +89,16 @@ public class PlayerStats : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (isInvincible || isDead) return;
+            if (isDead) return;
             Enemy enemy = collision.GetComponentInParent<Enemy>();
+            if (enemy.iFrameTimer > 0) return;
             try
             {
-                TakeDamage(enemy.enemyStats.damageTypes, true); //Do damage to player
+                TakeDamage(enemy.enemyStats.damageTypes); //Do damage to player
+                enemy.iFrameTimer = iFrameDuration;
             }
             catch { return; }
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useContactTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.contactTrigger, 1); //Check trigger
             return;
         }
         ICollectibles collectible = collision.GetComponent<ICollectibles>();
@@ -161,22 +142,20 @@ public class PlayerStats : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy Projectile"))
         {
-            if (isInvincible) return;
             SimpleProjectile enemyProj = collision.GetComponentInParent<SimpleProjectile>();
-            TakeDamage(enemyProj.damageTypes, false); //Do damage to player
+            TakeDamage(enemyProj.damageTypes); //Do damage to player
             enemyProj.gameObject.SetActive(false);
             return;
         }
         if (collision.gameObject.CompareTag("Enemy AoE"))
         {
-            if (isInvincible) return;
             AoeDamage aoe = collision.transform.GetComponent<AoeDamage>();
             aoe.hitBoxCollider.enabled = false;
-            TakeDamage(aoe.damageTypes, false); //Do damage to player
+            TakeDamage(aoe.damageTypes); //Do damage to player
             return;
         }
     }
-    public void TakeDamage(List<float> dmgType, bool triggerIframe)
+    public void TakeDamage(List<float> dmgType)
     {
         if (isDead) return;
         for (int i = 0; i < dmgType.Count; i++)
@@ -186,43 +165,15 @@ public class PlayerStats : MonoBehaviour
                 float totalDamage = Mathf.Round((dmgType[i] - defense) * (1 - reductions[i] / 100));
                 if (totalDamage <= 0)
                     totalDamage = 1;
-                if (!triggerIframe) //hit w/ projectile will not trigger IFrame
+                if (gameObject.activeSelf)
                 {
-                    if (gameObject.activeSelf)
-                    {
-                        DamageFlash();
-                    }
-                    currentHealth -= totalDamage;
-                    UpdateHealthBar();
+                    DamageFlash();
                 }
-                else
-                {
-                    if (!isInvincible)
-                    {
-                        if (gameObject.activeSelf)
-                        {
-                            DamageFlash();
-                        }
-                        currentHealth -= totalDamage;
-                        UpdateHealthBar();
-                        iFrameTimer = iFrameDuration;
-                        isInvincible = true;
-                    }
-                }
+                currentHealth -= totalDamage;
+                UpdateHealthBar();
                 FloatingTextController.DisplayPlayerText(transform, "-" + (totalDamage).ToString(), Color.red, 0.7f);
                 GameManager.totalDamageTaken += totalDamage;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
-                {
-                    if (sc.skillController != null)
-                    {
-                        if (sc.skillController.skillTrigger.useDamageTakenTrigger)
-                        {
-                            sc.skillController.skillTrigger.currentCounter += totalDamage;
-                            if (sc.skillController.currentCooldown <= 0f)
-                                sc.skillController.UseSkill();
-                        }
-                    }
-                }
+                gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.damageTakenTrigger, totalDamage); //Check trigger
                 PItemEffectManager.CheckAllPItemCondition(totalDamage, PItemEffectManager.ConditionTag.DamageTaken);
                 break;
             }
@@ -238,19 +189,6 @@ public class PlayerStats : MonoBehaviour
         currentHealth -= dmg;
         PItemEffectManager.CheckAllPItemCondition(dmg, PItemEffectManager.ConditionTag.Degen);
         UpdateHealthBar();
-        GameManager.totalDamageTaken += dmg;
-        foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check damageTaken trigger skill condition
-        {
-            if (sc.skillController != null)
-            {
-                if (sc.skillController.skillTrigger.useDamageTakenTrigger)
-                {
-                    sc.skillController.skillTrigger.currentCounter += dmg;
-                    if (sc.skillController.currentCooldown <= 0f)
-                        sc.skillController.UseSkill();
-                }
-            }
-        }
     }
     public void UpdateMaxHealthBar()   //set health bar to current max
     {
@@ -278,18 +216,7 @@ public class PlayerStats : MonoBehaviour
                 FloatingTextController.DisplayPlayerText(transform, "+" + (maxHealth - currentHealth).ToString(), Color.green, 0.7f);
             currentHealth = maxHealth;
             GameManager.totalHealing += maxHealth - currentHealth;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useHealTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter += maxHealth - currentHealth;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.healTrigger, maxHealth - currentHealth); //Check trigger
         }
         else
         {
@@ -297,18 +224,7 @@ public class PlayerStats : MonoBehaviour
                 FloatingTextController.DisplayPlayerText(transform, "+" + (amt).ToString(), Color.green, 0.7f);
             currentHealth += amt;
             GameManager.totalHealing += amt;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useHealTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter += amt;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.healTrigger, amt); //Check trigger
         }
         UpdateHealthBar();
     }
@@ -330,55 +246,22 @@ public class PlayerStats : MonoBehaviour
                 GameManager.totalRegen += amt;
             }
             GameManager.totalDegen += degen;
-            foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useDegenTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter += degen;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.degenTrigger, degen); //Check trigger
         }
         else if (amt < 0 && currentHealth != 1) //Degen. Do not degen after 1 hp
         {
-            amt *= -1; //make it positive
+            amt = Mathf.Abs(amt); //make it positive
             if (amt >= currentHealth)
             {
                 TakeDegenDamage(currentHealth - 1);
                 GameManager.totalDegen += currentHealth - 1;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-                {
-                    if (sc.skillController != null)
-                    {
-                        if (sc.skillController.skillTrigger.useDegenTrigger)
-                        {
-                            sc.skillController.skillTrigger.currentCounter += currentHealth - 1;
-                            if (sc.skillController.currentCooldown <= 0f)
-                                sc.skillController.UseSkill();
-                        }
-                    }
-                }
+                gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.degenTrigger, currentHealth - 1); //Check trigger
             }
             else
             {
                 TakeDegenDamage(amt);
                 GameManager.totalDegen += amt;
-                foreach (InventoryManager.Skill sc in gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-                {
-                    if (sc.skillController != null)
-                    {
-                        if (sc.skillController.skillTrigger.useDegenTrigger)
-                        {
-                            sc.skillController.skillTrigger.currentCounter += amt;
-                            if (sc.skillController.currentCooldown <= 0f)
-                                sc.skillController.UseSkill();
-                        }
-                    }
-                }
+                gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.degenTrigger, amt); //Check trigger
             }
         }
     }

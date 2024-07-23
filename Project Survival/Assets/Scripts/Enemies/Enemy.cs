@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public bool chilled, burned, shocked, bleeding;
     public List<float> topAilmentsEffect;
     public SpriteRenderer spriteRenderer;
+    public RectTransform rectTrans;
     public Rigidbody2D rb;
     public BoxCollider2D boxCollider;
     public bool knockedBack;
@@ -24,7 +25,7 @@ public class Enemy : MonoBehaviour
     public bool isAttacking;
     public GameObject attackImage; //Exclamation mark
     //Status Timers
-    public float knockbackTimer, damageFlashTimer, chilledTimer, burnedTimer, shockedTimer, bleedingTimer;
+    public float knockbackTimer, damageFlashTimer, chilledTimer, burnedTimer, shockedTimer, bleedingTimer, iFrameTimer;
     public int burnOneSecCounter, bleedOneSecCounter; //When timer hits 1 sec, increment counter. 5 counters mean 5 seconds
 
     public void SetStats(EnemyStats enemy)
@@ -64,6 +65,7 @@ public class Enemy : MonoBehaviour
     }
     protected virtual void OnEnable()
     {
+        iFrameTimer = 0;
         isDead = false;
     }
 }

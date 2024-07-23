@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class VampireBatBehavior : SkillBehavior
 {
-    public override void Update()
-    {
-        base.Update();
-    }
     public override void DoDamage(Enemy enemy, float damageEffectiveness)
     {
         totalDamage = damageTypes.Sum() * (damageEffectiveness / 100);
@@ -48,18 +44,7 @@ public class VampireBatBehavior : SkillBehavior
         hasHitEnemy = true;
         if (applyCrit)
         {
-            foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useCritTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            skillController.gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.critTrigger, 1); //Check trigger
         }
     }
     public override void OnTriggerEnter2D(Collider2D col)

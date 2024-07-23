@@ -68,6 +68,18 @@ public class SkillBehavior : MonoBehaviour
 
     public virtual void Update()
     {
+        
+    }
+    private void FixedUpdate()
+    {
+        if (travelSpeed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
+        {
+            rb.MovePosition(transform.position + (travelSpeed * Time.fixedDeltaTime * direction));
+            if (isHoming) travelSpeed += 0.01f;
+        }
+    }
+    public virtual void BehaviorUpdate()
+    {
         if (stayUpRightOnly && target != null && isHoming) //FlipX only if stayUpRight is true
         {
             if (target.transform.position.x > transform.position.x)
@@ -89,7 +101,7 @@ public class SkillBehavior : MonoBehaviour
             if (currentHomingTimer >= 0.15)
             {
                 target = FindTarget(true);
-                isHoming = true; 
+                isHoming = true;
                 hitboxCollider.enabled = true;
                 startingPos = transform.position;
             }
@@ -180,15 +192,6 @@ public class SkillBehavior : MonoBehaviour
             }
         }
     }
-    private void FixedUpdate()
-    {
-        if (travelSpeed > 0 && !isOrbitSkill || !skillController.useOnTarget && !isOrbitSkill)
-        {
-            rb.MovePosition(transform.position + (travelSpeed * Time.fixedDeltaTime * direction));
-            if (isHoming) travelSpeed += 0.01f;
-        }
-    }
-
 
     public virtual void DoDamage(Enemy enemy, float damageEffectiveness)
     {
@@ -244,18 +247,7 @@ public class SkillBehavior : MonoBehaviour
         hasHitEnemy = true;
         if (applyCrit)
         {
-            foreach (InventoryManager.Skill sc in skillController.player.gameplayManager.inventory.activeSkillList) //Check crit trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useCritTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++; 
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            skillController.gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.critTrigger, 1); //Check trigger
         }
     }
 

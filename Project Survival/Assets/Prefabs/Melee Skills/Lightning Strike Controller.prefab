@@ -295,20 +295,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faff3d6ba3d55f045a423973b972149f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillController: {fileID: -8080742769469004546}
   counterGoal: 0
   currentCounter: 0
   isTriggerSkill: 0
-  useCritTrigger: 0
-  useDamageTakenTrigger: 0
-  useHealTrigger: 0
-  useDashTrigger: 0
-  useUsageTrigger: 0
-  useBleedTrigger: 0
-  useBurnTrigger: 0
-  useChillTrigger: 0
-  useShockTrigger: 0
-  useDegenTrigger: 0
-  useContactTrigger: 0
+  triggerType: 0
 --- !u!114 &7864732532003815873
 MonoBehaviour:
   m_ObjectHideFlags: 0

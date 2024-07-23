@@ -25,7 +25,7 @@ public class ExplosionBehavior : SkillBehavior
         this.applyAilment.AddRange(mainBehavior.applyAilment); 
         transform.localScale = new Vector3(baseLocalScale.x * (1 + aoe / 100), baseLocalScale.y * (1 + aoe / 100), 1);
     }
-    public override void Update()
+    public override void BehaviorUpdate()
     {
         if (stayUpRightOnly && target != null) //FlipX only if stayUpRight is true
         {
@@ -90,8 +90,5 @@ public class ExplosionBehavior : SkillBehavior
                 }
             }
         }
-    }
-    public override void ProjectileBehavior()
-    {
     }
 }

@@ -6,24 +6,16 @@ using MEC;
 public class EnemyManager : MonoBehaviour
 {
     [System.Serializable]
-    public class Round
-    {
-        public List<EnemyGroup> enemyGroups;
-        public int totalEnemiesInRound;
-        public int currentTotalSpawned;
-        public float spawnInterval;
-    }
-    [System.Serializable]
     public class EnemyGroup
     {
         public EnemyStats enemyStats;
-        public int numberToSpawn;
-        public int whenToSpawn;   //start spawning when spawner reach the amount of mobs spawned
-        public int currentSpawned;
-        //public Enemy enemy;
+        public int numberToSpawnAtOnce;
+        public float spawnTimer, spawnCooldown;   //start spawning when spawner reach the amount of mobs spawned
+        public int totalSpawned;
     }
     public int enemiesAlive;
-    public List<Round> rounds;
+    public List<EnemyStats> enemyStatsPrefabList;
+    public List<EnemyGroup> enemyGroupList;
     public PlayerStats player;
     public EnemyController enemyController;
     public EnemyDetector enemyDetector;
@@ -31,8 +23,7 @@ public class EnemyManager : MonoBehaviour
     public Enemy baseEnemyPrefab;
     public SpawnMarks spawnMarks;
     public DropRate dropRate;
-    public RectTransform backGroundRect;
-    public float spawnTimer;
+    public RectTransform backGroundRect; //spawn area
     public int enemiesAliveCap;
     public bool maxEnemiesReached;
     public List<Enemy> enemyList = new();
@@ -40,70 +31,52 @@ public class EnemyManager : MonoBehaviour
     Vector2 spawnPos;
     private void Start()
     {
-        
         PopulatePool(40);
-        CalculateTotalEnemiesInRound();
         UpdateAllEnemyStats();
     }
 
     private void Update()
     {
-        spawnTimer += Time.deltaTime;
-        if(spawnTimer >= rounds[gameplayManager.waveCounter].spawnInterval)
-        {
-            spawnTimer = 0f;
-            SpawnEnemies();
-        }
+        UpdateSpawnTimer();
     }
-    public void CalculateTotalEnemiesInRound()
+    public void UpdateSpawnTimer()
     {
-        for (int i = 0; i < rounds.Count; ++i)
+        if (enemiesAlive < enemiesAliveCap)
         {
-            int currentSpawnPerInterval = 0;
-            foreach (var enemyGroup in rounds[i].enemyGroups)
+            for (int i = 0; i < enemyGroupList.Count; ++i)
             {
-                currentSpawnPerInterval += enemyGroup.numberToSpawn;
+                enemyGroupList[i].spawnTimer += Time.deltaTime;
+                if (enemyGroupList[i].spawnTimer >= enemyGroupList[i].spawnCooldown)
+                {
+                    enemyGroupList[i].spawnTimer = 0;
+                    SpawnEnemies(enemyGroupList[i]);
+                }
             }
-            rounds[i].totalEnemiesInRound = currentSpawnPerInterval;
         }
-
     }
     public void PopulatePool(int spawnAmount)
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < spawnAmount; i++)
         {
             Enemy es = Instantiate(baseEnemyPrefab, enemyController.transform);    //Spawn, add to list, and initialize prefabs
             es.gameObject.SetActive(false);
             enemyList.Add(es);
         }
     }
-    public void SpawnEnemies()
+    public void SpawnEnemies(EnemyGroup eGroup)
     {
-        if (rounds[gameplayManager.waveCounter].currentTotalSpawned < rounds[gameplayManager.waveCounter].totalEnemiesInRound && !maxEnemiesReached)   //Check if there is still mobs left to spawn
+        for (int i = 0; i < eGroup.numberToSpawnAtOnce; i++) //Amount to spawn at once.
         {
-            foreach(var eGroup in rounds[gameplayManager.waveCounter].enemyGroups)     //For each enemy groups in a round, spawn the groups
+            for (int j = 0; j < enemyList.Count; j++)
             {
-                if(eGroup.currentSpawned < eGroup.numberToSpawn && (eGroup.whenToSpawn <= rounds[gameplayManager.waveCounter].currentTotalSpawned))      //Check if min number of mobs of this type have been spawned
+                if (j > enemyList.Count - 2)
                 {
-                    if(enemiesAlive >= enemiesAliveCap) //Stop spawning if cap is reached
-                    {
-                        maxEnemiesReached = true;
-                        return;
-                    }
-                    for (int i = 0; i < enemyList.Count; i++)   //Find an inactive enemy to spawn
-                    {
-                        if (i > enemyList.Count - 2)    //Check pool, add more if neccessary
-                        {
-                            PopulatePool(5);
-                        }
-                        if (!enemyList[i].gameObject.activeSelf && !enemyList[i].isSpawning)
-                        {
-                            SpawnMarkAndEnemy(enemyList[i], eGroup, false);
-                            eGroup.currentSpawned++;
-                            rounds[gameplayManager.waveCounter].currentTotalSpawned++;
-                            break;
-                        }
-                    }
+                    PopulatePool(20);
+                }
+                if (!enemyList[j].gameObject.activeSelf && !enemyList[j].isSpawning)
+                {
+                    SpawnMarkAndEnemy(enemyList[j], eGroup);
+                    break;
                 }
             }
         }
@@ -113,29 +86,28 @@ public class EnemyManager : MonoBehaviour
         }
     }
     //Spawns the mark, waits a sec, then spawns the enemy on top of it.
-    public void SpawnMarkAndEnemy(Enemy enemy, EnemyGroup enemyGroup, bool isRare)
+    public void SpawnMarkAndEnemy(Enemy enemy, EnemyGroup enemyGroup)
     {
         enemy.isSpawning = true;
-        spawnPosX = Random.Range(-backGroundRect.rect.width * 0.5f, backGroundRect.rect.width * 0.5f);
-        spawnPosY = Random.Range(-backGroundRect.rect.height * 0.5f, backGroundRect.rect.height * 0.5f);
-        spawnPos = new Vector2(spawnPosX, spawnPosY);
-        enemy.transform.localPosition = spawnPos;    //set starting position when spawn
+        enemy.rectTrans.sizeDelta = enemyGroup.enemyStats.rectTrans.sizeDelta;
         enemy.spriteRenderer.sprite = enemyGroup.enemyStats.spriteRenderer.sprite;
         enemy.spriteRenderer.transform.localScale = enemyGroup.enemyStats.spriteRenderer.transform.localScale;
         enemy.boxCollider.offset = enemyGroup.enemyStats.boxCollider.offset;
         enemy.boxCollider.size = enemyGroup.enemyStats.boxCollider.size;
-
         enemy.SetStats(enemyGroup.enemyStats);   //Set new stats to enemy
+
+        spawnPosX = Random.Range(-backGroundRect.rect.width * 0.5f, backGroundRect.rect.width * 0.5f);
+        spawnPosY = Random.Range(-backGroundRect.rect.height * 0.5f, backGroundRect.rect.height * 0.5f);
+        spawnPos = new Vector2(spawnPosX, spawnPosY);
+        enemy.transform.localPosition = spawnPos;    //set starting position when spawn
+
         spawnMarks.Spawn(spawnPos, enemy);
     }
     public void UpdateAllEnemyStats()
     {
-        for (int i = 0; i < rounds.Count; ++i)
+        for (int i = 0; i < enemyGroupList.Count; ++i)
         {
-            foreach (var eGroup in rounds[i].enemyGroups)
-            {
-                eGroup.enemyStats.UpdateStats();
-            }
+            enemyGroupList[i].enemyStats.UpdateStats();
         }
     }
 

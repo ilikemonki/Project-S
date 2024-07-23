@@ -187,6 +187,23 @@ public class SkillController : MonoBehaviour
                 stopFiring = false;
             }
         }
+        for (int i = 0; i < poolList.Count; i++)
+        {
+            if (poolList[i].gameObject.activeSelf)
+            {
+                poolList[i].BehaviorUpdate();
+            }
+        }
+        if (stayOnPlayerPoolList.Count > 0)
+        {
+            for (int i = 0; i < stayOnPlayerPoolList.Count; i++)
+            {
+                if (stayOnPlayerPoolList[i].gameObject.activeSelf)
+                {
+                    stayOnPlayerPoolList[i].BehaviorUpdate();
+                }
+            }
+        }
     }
     public void UseSkill()
     {
@@ -199,10 +216,6 @@ public class SkillController : MonoBehaviour
             {
                 return;
             }
-        }
-        if (skillTrigger.isTriggerSkill) //Is a trigger skill. Check trigger condition then return.
-        {
-            if (!skillTrigger.CheckTriggerCondition()) return;
         }
         if (useRandomTarget)
         {
@@ -309,18 +322,7 @@ public class SkillController : MonoBehaviour
         {
             MultiTargetBehavior(meleeAmount + projectileAmount, transform);
         }
-        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check use trigger skill condition
-        {
-            if (sc.skillController != null)
-            {
-                if (sc.skillController.skillTrigger.useUsageTrigger)
-                {
-                    sc.skillController.skillTrigger.currentCounter++; 
-                    if (sc.skillController.currentCooldown <= 0)
-                        sc.skillController.UseSkill();
-                }
-            }
-        }
+        gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.usageTrigger, 1); //Check trigger
         GameManager.totalSkillsUsed++;
     }
     public void BarrageBehavior(Vector3 target, Transform spawnPos, SkillBehavior objectToDespawn)       //Spawn/Activate skill. Projectiles barrages.

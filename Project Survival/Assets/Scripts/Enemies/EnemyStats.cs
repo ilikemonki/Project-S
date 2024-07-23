@@ -17,7 +17,7 @@ public class EnemyStats : MonoBehaviour
     public float moveSpeed; //baseMoveSpeed is the current movespeed, use to reset current movespeed back to normal when chilled.
     public float exp;
     public SpriteRenderer spriteRenderer;
-    //public Rigidbody2D rb;
+    public RectTransform rectTrans;
     public BoxCollider2D boxCollider;
     public Material defaultMaterial;
     public Material damageFlashMaterial;
@@ -151,18 +151,7 @@ public class EnemyStats : MonoBehaviour
             enemy.chilled = true;
             enemy.chilledTimer = 0;
             GameManager.totalChill++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useChillTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.chillTrigger, 1); //Check trigger
         }
     }
     public void ApplyBurn(Enemy enemy, float burnDamage)
@@ -176,18 +165,7 @@ public class EnemyStats : MonoBehaviour
             enemy.burnedTimer = 0;
             enemy.burnOneSecCounter = 0;
             GameManager.totalBurn++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useBurnTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.burnTrigger, 1); //Check trigger
         }
     }
     public void ApplyShock(Enemy enemy, float shockEffect)
@@ -198,18 +176,7 @@ public class EnemyStats : MonoBehaviour
             enemy.shocked = true;
             enemy.shockedTimer = 0;
             GameManager.totalShock++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useShockTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.shockTrigger, 1); //Check trigger
         }
     }
     public void ApplyBleed(Enemy enemy, float bleedDamage)
@@ -223,23 +190,16 @@ public class EnemyStats : MonoBehaviour
             enemy.bleedingTimer = 0;
             enemy.bleedOneSecCounter = 0;
             GameManager.totalBleed++;
-            foreach (InventoryManager.Skill sc in enemyManager.gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-            {
-                if (sc.skillController != null)
-                {
-                    if (sc.skillController.skillTrigger.useBleedTrigger)
-                    {
-                        sc.skillController.skillTrigger.currentCounter++;
-                        if (sc.skillController.currentCooldown <= 0f)
-                            sc.skillController.UseSkill();
-                    }
-                }
-            }
+            gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.bleedTrigger, 1); //Check trigger
         }
     }
     public void UpdateStatusEffect(Enemy enemy)
     {
         if (enemy.gameObject.activeSelf == false) return;
+        if (enemy.iFrameTimer > 0)
+        {
+            enemy.iFrameTimer -= Time.deltaTime;
+        }
         if (enemy.knockedBack) //reset velocity after knockedback
         {
             enemy.knockbackTimer += Time.deltaTime;

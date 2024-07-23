@@ -14,11 +14,6 @@ public class FireballBehavior : SkillBehavior
         secondarySkillBehavior.skillController = skillController;
         secondarySkillBehavior.SetStats(physical, fire, cold, lightning, travelSpeed, pierce, chain, aoe);
     }
-    public override void Update()
-    {
-        //if (!spriteRend.enabled) return;
-        base.Update();
-    }
     public override void ProjectileBehavior()
     {
         if (skillController.continuous || skillController.pierceAll || skillController.cannotChain || skillController.cannotPierce) return;

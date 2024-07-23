@@ -5,6 +5,7 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using static SkillTrigger;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -110,8 +111,6 @@ public class GameplayManager : MonoBehaviour
         GameManager.totalExp += amt;
         if (exp >= expCap)  //Level UP
         {
-            player.iFrameTimer = 1; //Set iFrames when level up.
-            player.isInvincible = true;
             if (expSliderParticle != null) expSliderParticle.Play();
             do
             {
@@ -187,10 +186,32 @@ public class GameplayManager : MonoBehaviour
     }
     public void GoToNextRound()
     {
-        if (waveCounter < enemyManager.rounds.Count - 1)
+        waveCounter++;
+        UpdateRoundText();
+    }
+
+    //Check all active trigger skill condition
+    public void UpdateTriggerCounter(TriggerType triggerType, float counterAmount)
+    {
+        foreach (InventoryManager.Skill sc in inventory.activeSkillList)
         {
-            waveCounter++;
-            UpdateRoundText();
+            if (sc.skillController != null)
+            {
+                if (sc.skillController.skillTrigger.isTriggerSkill)
+                {
+                    if (sc.skillController.skillTrigger.triggerType.Equals(triggerType))
+                    {
+                        sc.skillController.skillTrigger.currentCounter += counterAmount;
+                        if (sc.skillController.currentCooldown <= 0f || triggerType.Equals(TriggerType.dashTrigger)) //Check cooldown or if some triggers bypass cooldown
+                        {
+                            if (sc.skillController.skillTrigger.CheckTriggerCondition())
+                            {
+                                sc.skillController.UseSkill();
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

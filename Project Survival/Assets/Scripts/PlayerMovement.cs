@@ -145,16 +145,7 @@ public class PlayerMovement : MonoBehaviour
     public IEnumerator<float> Dash()
     {
         GameManager.totalDashes++;
-        foreach (InventoryManager.Skill sc in player.gameplayManager.inventory.activeSkillList) //Check trigger skill condition
-        {
-            if (sc.skillController != null)
-            {
-                if (sc.skillController.skillTrigger.useDashTrigger)
-                {
-                    sc.skillController.UseSkill();
-                }
-            }
-        }
+        player.gameplayManager.UpdateTriggerCounter(SkillTrigger.TriggerType.dashTrigger, 1); //Check trigger
         dashEnds = false;
         afterIFrames = 0;
         currentDashCharges--;
