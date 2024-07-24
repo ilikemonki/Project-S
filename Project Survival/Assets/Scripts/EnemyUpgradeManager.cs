@@ -17,45 +17,11 @@ public class EnemyUpgradeManager : MonoBehaviour
     }
     public GameObject enemyUpgradeUI;
     public GameplayManager gameplayManager;
+    public Options options;
     int randModifiers, valueBoost;
     public List<UpgradeUI> upgradeUIList;
     public EnemyUpgrades tempUpgrades = new();
     List<int> modifierList = new();
-    //Hand of Fate
-    public Slider handSlider;
-    public float rand;
-    bool moveHand, stopHand;
-    public float handTimer;
-    private void Update()
-    {
-        if (enemyUpgradeUI.activeSelf)
-        {
-            if (moveHand && !stopHand)
-            {
-                if (rand <= .5)
-                {
-                    handSlider.value -= Time.unscaledDeltaTime * 0.5f;
-                }
-                else
-                {
-                    handSlider.value += Time.unscaledDeltaTime * 0.5f;
-                }
-                if ((rand <= .5 && handSlider.value <= rand) || (rand >= .5 && handSlider.value >= rand))
-                {
-                    moveHand = false;
-                    stopHand = true;
-                }
-            }
-            else if (!moveHand && !stopHand)
-            {
-                handTimer += Time.unscaledDeltaTime;
-                if (handTimer >= 2f)
-                {
-                    moveHand = true;
-                }
-            }
-        }
-    }
     public void GetRandomEnemyGrowthStats()
     {
         for (int u = 0; u < upgradeUIList.Count; u++)
@@ -92,11 +58,6 @@ public class EnemyUpgradeManager : MonoBehaviour
             upgradeUIList[u].enemyUpgrade.amt.AddRange(tempUpgrades.amt);
             upgradeUIList[u].SetUI();
         }
-        HandOfFate();
-    }
-    public void HandOfFate()
-    {
-        rand = Random.Range(0f, 1f);
     }
 
     public float GetModifierValue(UpdateStats.EnemyModifier mod)
@@ -119,13 +80,6 @@ public class EnemyUpgradeManager : MonoBehaviour
         }
         return value;
     }
-    public void ButtonClick()
-    {
-        if (stopHand == true) CloseUI();
-        moveHand = false;
-        stopHand = true;
-        handSlider.value = rand;
-    }
     public void OpenUI()
     {
         if (enemyUpgradeUI.activeSelf == false)
@@ -133,22 +87,12 @@ public class EnemyUpgradeManager : MonoBehaviour
             GameManager.PauseGame();
             GetRandomEnemyGrowthStats();
             enemyUpgradeUI.SetActive(true);
-            handSlider.value = 0.5f;
-            handTimer = 0;
-            moveHand = false;
-            stopHand = false;
         }
     }
-    public void CloseUI()
+    public void ConfirmButton()
     {
-        if (enemyUpgradeUI.activeSelf == true)
-        {
-            GameManager.UnpauseGame();
-            enemyUpgradeUI.SetActive(false);
-            handSlider.value = 0.5f;
-            handTimer = 0;
-            moveHand = false;
-            stopHand = false;
-        }
+        enemyUpgradeUI.SetActive(false);
+        options.OpenCloseUI();
+        options.ShopUIButton();
     }
 }

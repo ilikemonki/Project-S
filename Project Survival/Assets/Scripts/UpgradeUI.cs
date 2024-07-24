@@ -30,7 +30,6 @@ public class UpgradeUI : MonoBehaviour
         else if (enemyUpgrade != null)
         {
             UpdateStats.ApplyEnemyUpgrades(enemyUpgrade);
-            enemyUpgradeManager.CloseUI();
         }
     }
     public void SetUI()

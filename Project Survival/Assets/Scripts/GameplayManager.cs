@@ -12,6 +12,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public PlayerStats player;
     public EnemyManager enemyManager;
+    public EnemyUpgradeManager enemyUpgradeManager;
     public LevelUpManager levelUpManager;
     public InventoryManager inventory;
     public ItemManager itemManager;
@@ -25,7 +26,7 @@ public class GameplayManager : MonoBehaviour
     public Camera cam;
     public float furthestAttackRange;    //Gets furthest range between all skills, used in EnemyDistances to find targets within the range.
     [Header("Game Stats")]
-    public int waveCounter;
+    public int waveCounter, maxWave;
     public float timer, maxTimer;
     public int level;
     public float exp, expCap, expCapIncrease;
@@ -86,6 +87,8 @@ public class GameplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale == 0) return;
+        UpdateAliveMobsText();
         GameManager.totalTime += Time.deltaTime;
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
@@ -96,10 +99,10 @@ public class GameplayManager : MonoBehaviour
         }
         else
         {
-            timer = 0;
-            GoToNextRound();
+            timer = maxTimer;
+            enemyUpgradeManager.OpenUI();
+            //GoToNextRound();
         }
-        UpdateAliveMobsText();
     }
     public void UpdateAliveMobsText()
     {
