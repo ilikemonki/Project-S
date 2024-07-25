@@ -67,6 +67,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyMovement: {fileID: 3096171719315698499}
   gameplayManager: {fileID: 0}
+  enemyStatsPrefab: {fileID: 0}
   maxHealth: 15
   damageTypes:
   - 10
@@ -103,7 +104,7 @@ MonoBehaviour:
   projectile: 2
   projectileSpeed: 7
   projectileRange: 10
-  projectileSize: 0
+  aoe: 1
 --- !u!50 &4105796019299493428
 Rigidbody2D:
   serializedVersion: 4

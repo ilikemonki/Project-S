@@ -10,6 +10,7 @@ public class EnemyStats : MonoBehaviour
     public EnemyManager enemyManager;
     public EnemyMovement enemyMovement;
     public GameplayManager gameplayManager;
+    public EnemyStats enemyStatsPrefab;
     //Stats
     public float maxHealth;
     public List<float> damageTypes;
@@ -32,7 +33,7 @@ public class EnemyStats : MonoBehaviour
     public float projectile;
     public float projectileSpeed;
     public float projectileRange;
-    public float projectileSize;
+    public float aoe;
 
 
     private void Awake()
@@ -53,13 +54,19 @@ public class EnemyStats : MonoBehaviour
         this.attackCooldown = enemy.attackCooldown;
         this.projectile = enemy.projectile;
         this.projectileSpeed = enemy.projectileSpeed;
-        this.projectileSize = enemy.projectileSize;
         this.attackRange = enemy.attackRange;
         this.projectileRange = enemy.projectileRange;
         this.spreadAttack = enemy.spreadAttack;
         this.circleAttack = enemy.circleAttack;
         this.burstAttack = enemy.burstAttack;
         this.barrageAttack = enemy.barrageAttack;
+        this.useAoeOnTarget = enemy.useAoeOnTarget;
+        this.useAoeProjectile = enemy.useAoeProjectile;
+        this.aoeProjectileDuration = enemy.aoeProjectileDuration;
+        this.aoeDespawnDuration = enemy.aoeDespawnDuration;
+        this.aoeHitBoxDuration = enemy.aoeHitBoxDuration;
+        this.aoeDelay = enemy.aoeDelay;
+        this.aoe = enemy.aoe;
         CheckAttack();
     }
     public void CheckAttack()
@@ -283,24 +290,20 @@ public class EnemyStats : MonoBehaviour
         for (int j = 0; j < gameplayManager.damageTypeMultiplier.Count; j++)
         {
             if (damageTypes[j] > 0)
-                damageTypes[j] = damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
-            reductions[j] = reductions[j] + gameplayManager.enemyReductions[j];
+                damageTypes[j] = enemyStatsPrefab.damageTypes[j] * (1 + (gameplayManager.enemyDamageMultiplier + gameplayManager.enemyDamageTypeMultiplier[j]) / 100);
+            reductions[j] = enemyStatsPrefab.reductions[j] + gameplayManager.enemyReductions[j];
         }
-        moveSpeed = moveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
-        maxHealth = maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
-        exp = exp * (1 + gameplayManager.expMultiplier / 100);
-        attackCooldown = attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
+        moveSpeed = enemyStatsPrefab.moveSpeed * (1 + gameplayManager.enemyMoveSpeedMultiplier / 100);
+        maxHealth = enemyStatsPrefab.maxHealth * (1 + gameplayManager.enemyMaxHealthMultiplier / 100);
+        exp = enemyStatsPrefab.exp * (1 + gameplayManager.expMultiplier / 100);
+        attackCooldown = enemyStatsPrefab.attackCooldown * (1 + gameplayManager.enemyAttackCooldownMultiplier / 100);
+        aoe = enemyStatsPrefab.aoe * (1 + gameplayManager.aoeMultiplier / 100);
         if (canAttack == true)
         {
-            projectile = projectile + gameplayManager.enemyProjectileAdditive;
-            projectileSpeed = projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
-            //projectileSize = projectileSize * (1 + gameplayManager.enemyProjectileSizeMultiplier / 100);
-        }
-        else
-        {
-            projectile = 0;
-            projectileSpeed = 0;
-            projectileSize = 0;
+            projectile = enemyStatsPrefab.projectile + gameplayManager.enemyProjectileAdditive;
+            projectileSpeed = enemyStatsPrefab.projectileSpeed * (1 + gameplayManager.enemyProjectileTravelSpeedMultiplier / 100);
+            if (useAoeProjectile)
+                aoeProjectileDuration = enemyStatsPrefab.aoeProjectileDuration * Mathf.Abs(1 - (gameplayManager.enemyProjectileTravelSpeedMultiplier * 0.5f)/ 100);
         }
     }
 }

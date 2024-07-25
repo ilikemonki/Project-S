@@ -10,9 +10,13 @@ public class AoeDamage : MonoBehaviour
     public List<float> damageTypes;
     public float aoeProjectileDuration, aoeDespawnDuration, aoeHitBoxDuration;
     public float aoeProjectileTimer, aoeDespawnTimer;
+    public float baseAoE, aoe;
     public RectTransform indicatorRect, fillRect;
     public bool startFill;
-    // Update is called once per frame
+    public void Awake()
+    {
+        baseAoE = transform.localScale.x;
+    }
     void Update()
     {
         if (spriteRend.enabled) 
@@ -23,6 +27,8 @@ public class AoeDamage : MonoBehaviour
 
     public void SetAoeDamage(Transform targetPos, Enemy enemy, int currentNumOfAttack)
     {
+        aoe = baseAoE * enemy.enemyStats.aoe;
+        transform.localScale = new Vector3(aoe, aoe, 1);
         transform.position = targetPos.position;
         aoeProjectileDuration = enemy.enemyStats.aoeProjectileDuration + (currentNumOfAttack * enemy.enemyStats.aoeDelay);
         aoeDespawnDuration = enemy.enemyStats.aoeDespawnDuration;

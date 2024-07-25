@@ -36,8 +36,9 @@ public class UpdateStats : MonoBehaviour
 }
     public enum EnemyModifier
     {
-        Move_Speed, Max_Health, Damage, Attack_Cooldown, Projectile, Projectile_Travel_Speed,
-        Physical_Reduction, Fire_Reduction, Cold_Reduction, Lightning_Reduction
+        Move_Speed, Max_Health, Damage, Attack_Cooldown, Projectile, Projectile_Travel_Speed, AoE,
+        Physical_Reduction, Fire_Reduction, Cold_Reduction, Lightning_Reduction,
+        Phyiscal_Damage, Fire_Damage, Cold_Damage, Lightning_Damage,
     }
     public static UpdateStats instance;
     public GameplayManager gameplayManager;
@@ -280,7 +281,6 @@ public class UpdateStats : MonoBehaviour
             if (frameImage != null) frameImage.color = Color.red;
             if (unapplyUpgrades) 
             {
-                Debug.Log("white");
                 frameImage.color = Color.white; 
             }
             Debug.Log(upgrade.name + "tags do not match. Not applied to orb.");
@@ -293,6 +293,7 @@ public class UpdateStats : MonoBehaviour
             switch (upgrade.modifier[i])
             {
                 case EnemyModifier.Attack_Cooldown: instance.gameplayManager.enemyAttackCooldownMultiplier += upgrade.amt[i]; break;
+                case EnemyModifier.AoE: instance.gameplayManager.aoeMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.Cold_Reduction: instance.gameplayManager.enemyReductions[2] += upgrade.amt[i]; break;
                 case EnemyModifier.Damage: instance.gameplayManager.enemyDamageMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.Fire_Reduction: instance.gameplayManager.enemyReductions[1] += upgrade.amt[i]; break;
@@ -301,9 +302,11 @@ public class UpdateStats : MonoBehaviour
                 case EnemyModifier.Move_Speed: instance.gameplayManager.enemyMoveSpeedMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.Physical_Reduction: instance.gameplayManager.enemyReductions[0] += upgrade.amt[i]; break;
                 case EnemyModifier.Projectile: instance.gameplayManager.enemyProjectileAdditive += upgrade.amt[i]; break;
-                //case EnemyModifier.Projectile_size: instance.gameplayManager.enemyProjectileSizeMultiplier += upgrade.amt[i]; break;
-                //case EnemyModifier.Projectile_Travel_Range: instance.gameplayManager.enemyProjectileTravelRangeMultiplier += upgrade.amt[i]; break;
                 case EnemyModifier.Projectile_Travel_Speed: instance.gameplayManager.enemyProjectileTravelSpeedMultiplier += upgrade.amt[i]; break;
+                case EnemyModifier.Phyiscal_Damage: instance.gameplayManager.enemyDamageTypeMultiplier[0] += upgrade.amt[i]; break;
+                case EnemyModifier.Fire_Damage: instance.gameplayManager.enemyDamageTypeMultiplier[1] += upgrade.amt[i]; break;
+                case EnemyModifier.Cold_Damage: instance.gameplayManager.enemyDamageTypeMultiplier[2] += upgrade.amt[i]; break;
+                case EnemyModifier.Lightning_Damage: instance.gameplayManager.enemyDamageTypeMultiplier[3]+= upgrade.amt[i]; break;
                 default: Debug.Log("ApplyEnemyUpgrades has no switch case for " + upgrade.modifier[i]); break;
             }
         }
@@ -1033,11 +1036,11 @@ public class UpdateStats : MonoBehaviour
             }
             else if (i == 2) //cold Reduction
             {
-                fullString += "<color=blue>Cold Resistance</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
+                fullString += "<color=blue>Cold Reduction</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
             }
             else if (i == 3) //lightning Reduction
             {
-                fullString += "<color=yellow>Lightning Resistance</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
+                fullString += "<color=yellow>Lightning Reduction</color>: " + (instance.gameplayManager.enemyReductions[i] > 0 ? "+" + instance.gameplayManager.enemyReductions[i] : instance.gameplayManager.enemyReductions[i]) + "%\n";
             }
         }
         fullString += "Damage: " + (instance.gameplayManager.enemyDamageMultiplier > 0 ? "+" + instance.gameplayManager.enemyDamageMultiplier : instance.gameplayManager.enemyDamageMultiplier) + "%\n";
@@ -1063,8 +1066,6 @@ public class UpdateStats : MonoBehaviour
         fullString += "Movement Speed: " + (instance.gameplayManager.enemyMoveSpeedMultiplier > 0 ? "+" + instance.gameplayManager.enemyMoveSpeedMultiplier : instance.gameplayManager.enemyMoveSpeedMultiplier) + "%\n";
         fullString += "Attack Cooldown: " + (instance.gameplayManager.enemyAttackCooldownMultiplier > 0 ? "+" + instance.gameplayManager.enemyAttackCooldownMultiplier : instance.gameplayManager.enemyAttackCooldownMultiplier) + "%\n";
         fullString += "Projectile: " + (instance.gameplayManager.enemyProjectileAdditive > 0 ? "+" + instance.gameplayManager.enemyProjectileAdditive : instance.gameplayManager.enemyProjectileAdditive) + "%\n";
-        //fullString += "Projectile Size: " + (instance.gameplayManager.enemyProjectileSizeMultiplier > 0 ? "+" + instance.gameplayManager.enemyProjectileSizeMultiplier : instance.gameplayManager.enemyProjectileSizeMultiplier) + "%\n";
-        //fullString += "Projectile Travel Range: " + instance.gameplayManager.enemyProjectileTravelRangeMultiplier + "%\n";
         fullString += "Projectile Travel Speed: " + (instance.gameplayManager.enemyProjectileTravelSpeedMultiplier > 0 ? "+" + instance.gameplayManager.enemyProjectileTravelSpeedMultiplier : instance.gameplayManager.enemyProjectileTravelSpeedMultiplier) + "%\n";
         instance.inventoryManager.enemyStatsText.text = fullString;
     }
@@ -1076,16 +1077,18 @@ public class UpdateStats : MonoBehaviour
             switch (mod.modifier[i])
             {
                 case EnemyModifier.Attack_Cooldown: fullString += "Attack Cooldown: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.Cold_Reduction: fullString += "Cold Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Cold_Reduction: fullString += "Cold Reduction: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.Damage: fullString += "Damage: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.Fire_Reduction: fullString += "Fire Resistance: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.Lightning_Reduction: fullString += "Lightning Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Fire_Reduction: fullString += "Fire Reduction: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Lightning_Reduction: fullString += "Lightning Reduction: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.Max_Health: fullString += "Max Health: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.Move_Speed: fullString += "Movement Speed: +" + mod.amt[i] + "%\n"; break;
-                case EnemyModifier.Physical_Reduction: fullString += "Physical Resistance: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Physical_Reduction: fullString += "Physical Reduction: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.Projectile: fullString += "Projectile: +" + mod.amt[i] + "\n"; break;
-                //case EnemyModifier.Projectile_size: fullString += "Projectile Size: +" + mod.amt[i] + "%\n"; break;
-                //case EnemyModifier.Projectile_Travel_Range: fullString += "Projectile Travel Range: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Phyiscal_Damage: fullString += "Physical Damage: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Fire_Damage: fullString += "Fire Damage: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Cold_Damage: fullString += "Cold Damage: +" + mod.amt[i] + "%\n"; break;
+                case EnemyModifier.Lightning_Damage: fullString += "Lightning Damage: +" + mod.amt[i] + "%\n"; break;
                 case EnemyModifier.Projectile_Travel_Speed: fullString += "Projectile Travel Speed: +" + mod.amt[i] + "%\n"; break;
                 default: Debug.Log("FormatEnemyUpgradeToString has no switch case for " + mod.modifier[i]); break;
             }

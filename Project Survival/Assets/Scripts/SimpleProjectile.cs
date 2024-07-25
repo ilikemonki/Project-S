@@ -57,7 +57,7 @@ public class SimpleProjectile : MonoBehaviour
         startingPos = transform.position;
         if (isAoeProjectile)
         {
-            transform.DOJump(target.position, 2, 1, aoeProjectileDuration).SetEase(Ease.InOutSine).OnComplete(() =>
+            transform.DOJump(target.position, 3, 1, aoeProjectileDuration).SetEase(Ease.InOutSine).OnComplete(() =>
             {
                 gameObject.SetActive(false);
             });

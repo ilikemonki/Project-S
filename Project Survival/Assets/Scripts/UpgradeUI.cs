@@ -27,10 +27,10 @@ public class UpgradeUI : MonoBehaviour
                 levelupManager.CloseUI();
             }
         }
-        else if (enemyUpgrade != null)
-        {
-            UpdateStats.ApplyEnemyUpgrades(enemyUpgrade);
-        }
+        //else if (enemyUpgrade != null)
+        //{
+        //    UpdateStats.ApplyEnemyUpgrades(enemyUpgrade);
+        //}
     }
     public void SetUI()
     {

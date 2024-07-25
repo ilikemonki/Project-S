@@ -67,6 +67,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   enemyMovement: {fileID: 3096171719315698499}
   gameplayManager: {fileID: 0}
+  enemyStatsPrefab: {fileID: 0}
   maxHealth: 30
   damageTypes:
   - 20
@@ -87,23 +88,23 @@ MonoBehaviour:
   damageFlashMaterial: {fileID: 2100000, guid: 500d9a9f0a337474899d23a092db3fde, type: 2}
   dropRate: {fileID: 0}
   knockBackImmune: 0
-  canAttack: 0
+  canAttack: 1
   spreadAttack: 0
   circleAttack: 0
-  burstAttack: 0
+  burstAttack: 1
   barrageAttack: 0
-  useAoeProjectile: 0
+  useAoeProjectile: 1
   useAoeOnTarget: 0
-  aoeProjectileDuration: 0.5
+  aoeProjectileDuration: 2
   aoeDespawnDuration: 0.3
   aoeHitBoxDuration: 0.05
   aoeDelay: 0
   attackCooldown: 2
-  attackRange: 8
+  attackRange: 12
   projectile: 2
-  projectileSpeed: 7
-  projectileRange: 10
-  projectileSize: 0
+  projectileSpeed: 0
+  projectileRange: 0
+  aoe: 1
 --- !u!50 &4105796019299493428
 Rigidbody2D:
   serializedVersion: 4

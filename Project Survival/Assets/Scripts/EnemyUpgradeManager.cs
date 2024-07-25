@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static EnemyUpgradeManager;
 
 public class EnemyUpgradeManager : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class EnemyUpgradeManager : MonoBehaviour
             tempUpgrades.ClearAll();
             randModifiers = Random.Range(1, 4); //Number of modifiers
             int num;
-            for (int i = 0; i < 1000; i++) //Get modifiers
+            for (int i = 0; i < 10000; i++) //Get modifiers
             {
                 num = Random.Range(0, System.Enum.GetValues(typeof(UpdateStats.EnemyModifier)).Length);
                 if ((UpdateStats.EnemyModifier)num == UpdateStats.EnemyModifier.Projectile) //if projectile is chosen, roll once more.
@@ -57,6 +58,7 @@ public class EnemyUpgradeManager : MonoBehaviour
             upgradeUIList[u].enemyUpgrade.modifier.AddRange(tempUpgrades.modifier);
             upgradeUIList[u].enemyUpgrade.amt.AddRange(tempUpgrades.amt);
             upgradeUIList[u].SetUI();
+            UpdateStats.ApplyEnemyUpgrades(upgradeUIList[u].enemyUpgrade);
         }
     }
 
@@ -66,6 +68,7 @@ public class EnemyUpgradeManager : MonoBehaviour
         switch (mod)
         {
             case UpdateStats.EnemyModifier.Attack_Cooldown: value = 5; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.AoE: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.Cold_Reduction: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.Damage: value = 20; value += valueBoost; break;
             case UpdateStats.EnemyModifier.Fire_Reduction: value = 5; value += valueBoost; break;
@@ -74,8 +77,11 @@ public class EnemyUpgradeManager : MonoBehaviour
             case UpdateStats.EnemyModifier.Move_Speed: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.Physical_Reduction: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.Projectile: value = 1; break;
-            //case UpdateStats.EnemyModifier.projectile_size: value = 5; value += valueBoost; break;
             case UpdateStats.EnemyModifier.Projectile_Travel_Speed: value = 5; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.Phyiscal_Damage: value = 40; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.Fire_Damage: value = 40; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.Cold_Damage: value = 40; value += valueBoost; break;
+            case UpdateStats.EnemyModifier.Lightning_Damage: value = 40; value += valueBoost; break;
             default: Debug.Log("GetModifierValue has no switch case for " + mod); break;
         }
         return value;

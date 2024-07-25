@@ -292,6 +292,8 @@ MonoBehaviour:
   aoeHitBoxDuration: 0
   aoeProjectileTimer: 0
   aoeDespawnTimer: 0
+  baseAoE: 0
+  aoe: 0
   indicatorRect: {fileID: 4528383776737437763}
   fillRect: {fileID: 4425836278169490093}
   startFill: 0
